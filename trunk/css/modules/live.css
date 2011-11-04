@@ -1,0 +1,441 @@
+.matcheslive {
+    background: url("../../images/matchbg.png") no-repeat scroll center top transparent;
+color:#FFFFFF;
+float:left;
+height:53px;
+margin:0 2px;
+padding:0;
+position:relative;
+width:57px;
+}
+
+.matchesliveBonus {
+    background: url("../../images/matchbgbonus.png") no-repeat scroll center top transparent;
+}
+
+.liveteamHome {
+width:25px;
+float:left;
+padding-left:3px;
+padding-top:3px;
+}
+.liveteamHome img{
+width:20px;
+height:20px;}
+
+.liveteamsep {
+width:3px;
+float:left;
+padding-top:6px;
+}
+
+.liveteamAway{
+width:20px;
+float:right;
+padding-right:3px;
+padding-top:3px;
+}
+.liveteamAway img {
+width:20px;
+height:20px;
+}
+
+
+.livescoreHome {
+width:22px;
+float:left;
+text-align:right;
+font-weight:bold;
+}
+
+.livescoresep{
+width:5px;
+float:left;
+text-align:center;
+visibility:hidden;
+}
+
+.livescoreAway{
+width:21px;
+float:right;
+text-align:left;
+font-weight:bold;
+}
+.livestatus{
+width:55px;
+text-align:center;
+font-size:9px;
+padding-top:25px;
+}
+
+.forecastmatch {
+float:left; 
+    width:57px;
+    margin-left:2px;
+    margin-right:2px;
+    height:33px;
+    background: url("../../images/matchbg.result.png") no-repeat scroll center top transparent;
+    
+}
+.forecastteamHome {
+width:25px;
+float:left;
+text-align:center;
+}
+.forecastsep{
+width:3px;
+float:left;
+margin-right:3px;
+}
+.forecastteamAway{
+width:20px;
+float:left;
+text-align:center;
+}
+.forecastScore{
+width:55px;
+text-align:center;
+font-size:9px;
+padding-top:15px;
+_padding-top:0px;
+}
+.playerforecastrow {
+width:700px;
+}
+.playerforecastrowcontent{
+margin-bottom:3px;
+width:720px;
+height:30px;
+}
+#playerDetail {
+overflow:auto; 
+height:475px;
+margin-top:55px;
+_margin-top:0px;
+position: relative;
+}
+
+.Failed {
+color:#EF6868;
+}
+
+.Success {
+color:#96EF95;
+}
+.NotStarted {
+color:#cccccc;
+}
+
+.StateListButton {
+	background: #D7E1F6;
+	border: solid 1px #D7E1F6;
+	color: #365F89;
+	font: bold 9px/ normal Tahoma, Verdana;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-right: 20px; 
+	padding-left: 20px;
+	text-decoration: none;
+	text-align:center;
+	_line-height:18px;
+}
+
+.StateListButton:hover {
+	font-weight:bold;
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+.StateListButtonDisabled{
+	background: #D7E1F6;
+	border: solid 1px #D7E1F6;
+	color: #cccccc;
+	font: bold 9px/ normal Tahoma, Verdana;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-right: 20px; 
+	padding-left: 20px;
+	text-decoration: none;
+	text-align:center;
+	_line-height:18px;
+}
+.StateListButtonDisabled:hover {
+	background: #D7E1F6;
+	border: solid 1px #D7E1F6;
+	color: #cccccc;
+	font: bold 9px/ normal Tahoma, Verdana;
+}
+/* HEADINGS
+------------------------------------------------ */
+.head,.head div {
+	height: 42px;
+}
+
+.head {
+	margin-bottom: 0px;
+}
+
+.head div {
+	position: relative;
+	margin-right: 10px;
+}
+
+.head h2 {
+	position: absolute;
+	bottom: 0;
+	left: 8px;
+	width: 100%;
+	height: 42px;
+	margin: 0;
+}
+
+/* PANEL
+------------------------------------------------ */
+.panel {
+	min-height: 220px;
+	overflow:auto;
+	height: 492px;
+}
+
+.panel .liste {
+	display: none;
+}
+
+.panel .liste:first-child,.panel ul.liste.first {
+	display: block;
+}
+
+/* MODULE CLASSEMENT
+------------------------------------------------ */
+#mod-classements h2 {
+	background-position: left top;
+}
+
+#mod-classements ol {
+	margin: 12px 0 0 0;
+	list-style: none;
+}
+
+#mod-classements ol li {
+	position: relative;
+	padding: 0px 40px 8px 0;
+	margin: 0 0 8px 0px;
+	_width: 200px;
+	_height: 30px;	
+}
+
+#mod-classements ol em {
+	display: block;
+	font-weight: bold;
+	font-style: normal;
+	font-size: 1.2em;
+}
+
+#mod-classements .var {
+	position: absolute;
+	right:0px;
+	_left:160px;
+	top: 50%;
+	_top: 0px;
+	width: 37px;
+	height: 25px;
+	margin-top: -13px;
+	_margin-top: 0px;
+}
+
+.head div {
+	background-position: left -42px;
+}
+
+/*node2*/
+.node2 .head {
+	background-color: #6D8AA8;
+	background-position: right -84px;
+}
+
+#mod-classements h4 {
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #6D8AA8;
+	padding: 10px 5px 0px 15px;
+	font-family: Georgia;
+	text-transform: uppercase;
+}
+
+#mod-classements ol li {
+	border-bottom: 1px solid #E6E7E9;
+}
+
+
+#mod-classements .avat {
+	border: 1px solid #E6E7E9;
+}
+
+#mod-classements ol a {
+	display: block;
+	text-decoration: none;
+	white-space:nowrap;
+}
+
+#mod-classements ol span {
+	display: block;
+	text-decoration: none;
+}
+
+#mod-classements ol li .avat {
+	width: 27px;
+	height: 27px;
+	float: left;
+	margin-right: 7px;
+	padding: 3px;
+}
+
+#mod-classements .var {
+	background-image: url(../../images/sprite.png);
+	background-repeat: no-repeat;
+}
+
+#mod-classements .eq {
+	background-position: -13px -263px;
+}
+
+#mod-classements .up {
+	background-position: -15px -315px;
+}
+
+#mod-classements .down {
+	background-position: -14px -366px;
+}
+
+#PlayerRanking .var {
+	background-image: url(../../images/sprite.png);
+	background-repeat: no-repeat;
+	display: block;
+	text-decoration: none;
+	float:right;
+	left:270px;
+	position:absolute;
+	margin-top:-15px;
+	width:25px;
+	height:25px;
+	
+}
+
+#PlayerRanking .eq {
+	background-position: -13px -263px;
+}
+
+#PlayerRanking .up {
+	background-position: -15px -315px;
+}
+
+#PlayerRanking .down {
+	background-position: -14px -366px;
+}
+
+
+
+
+.node2 {
+	padding: 0px ;
+}
+
+.node2 .head div {
+	background-position: left -126px;
+}
+
+.node2 .head h4 {
+	/* background: url(<?php echo ROOT_SITE;?>/images/head2-txt.png) left 50px
+		no-repeat; */
+}
+
+/* node2 */
+.node2 .liste .low,.node2 .liste .low a {
+	color: #888
+}
+
+.node2 .liste li:hover {
+	background: #f1f4f6;
+}
+
+/*node2*/
+.node2 .more a {
+	color: #192435;
+	background-position: -70px -214px;
+}
+
+#rankspan {
+background-color:#365F89;
+border:1px solid #FFFFFF;
+color:#FFFFFF;
+float:left;
+font-family:tahoma;
+font-size:10px;
+font-weight:bold;
+margin-left:2px;
+margin-right:5px;
+padding:2px 2px 4px 1px;
+text-align:center;
+width:18px;
+}
+
+#mod-classements p {
+padding :0 10px 0 10px
+}
+.mainBloc {
+	width:200px;
+}
+
+#tabsRanking a {
+	/*
+	text-decoration: none;
+	color: #000;
+	font-size:9px;
+	font-weight:normal;*/
+	background: #D7E1F6;
+	border: solid 1px #D7E1F6;
+	color: #FFFFFF;
+	font: bold 9px/ normal Tahoma, Verdana;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-right: 29px; padding-left: 29px;
+	text-decoration: none;
+	text-align:center;
+	_line-height:18px;
+}
+
+#tabsRanking{
+	width:200px;
+	height: 16px;
+}
+
+#tabsRanking a:hover,#tabsRanking a.selected:hover {
+	font-weight:bold;
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+#tabsRanking a.selected {
+	font-weight:bold;
+	background: #365F89;
+}
+.bsmList {
+	display:none;
+}
+.bsmContainer {
+padding-left:5px;
+padding-top:30px;
+_padding-top:0px;
+width:50px;
+}
+.bsmSelect {
+	width:80px;
+}
+
+.ui-dropdownchecklist{
+z-index:999;
+}
