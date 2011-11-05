@@ -1,0 +1,45 @@
+http://localhost/Ligue12010/index.php?
+Ouverture du thread 1 a Monday 28 February 2011 17:21:16
+Fermeture du thread 1 a Monday 28 February 2011 17:21:19	
+http://localhost/Ligue12010/index.php?logoff=1
+Ouverture du thread 2 a Monday 28 February 2011 17:21:24
+Fermeture du thread 2 a Monday 28 February 2011 17:21:25	
+http://localhost/Ligue12010/submodule.loader.php?SubModule=2&_=1298910090068
+Ouverture du thread 3 a Monday 28 February 2011 17:21:30
+Fermeture du thread 3 a Monday 28 February 2011 17:21:30	
+http://localhost/Ligue12010/submodule.post.php?SubModule=2&{tes:test}
+Ouverture du thread 4 a Monday 28 February 2011 17:21:31
+Fermeture du thread 4 a Monday 28 February 2011 17:21:31	
+http://localhost/Ligue12010/submodule.post.php?SubModule=2
+Ouverture du thread 5 a Monday 28 February 2011 17:22:14
+http://localhost/Ligue12010/submodule.post.php?SubModule=2
+Ouverture du thread 6 a Monday 28 February 2011 17:23:44
+Fermeture du thread 6 a Monday 28 February 2011 17:23:44	
+http://localhost/Ligue12010/submodule.post.php?SubModule=2
+Ouverture du thread 7 a Monday 28 February 2011 17:24:36
+http://localhost/Ligue12010/submodule.post.php?SubModule=2
+Ouverture du thread 8 a Monday 28 February 2011 17:25:18
+Fermeture du thread 8 a Monday 28 February 2011 17:25:18	
+http://localhost/Ligue12010/submodule.post.php?SubModule=2
+Ouverture du thread 9 a Monday 28 February 2011 17:27:21
+http://localhost/Ligue12010/submodule.post.php?SubModule=2
+Ouverture du thread 10 a Monday 28 February 2011 17:33:34
+Fermeture du thread 10 a Monday 28 February 2011 17:33:34	
+http://localhost/Ligue12010/index.php?
+Ouverture du thread 11 a Monday 28 February 2011 17:33:34
+Fermeture du thread 11 a Monday 28 February 2011 17:33:36	
+http://localhost/Ligue12010/index.php?Page=3
+Ouverture du thread 12 a Monday 28 February 2011 17:33:47
+Fermeture du thread 12 a Monday 28 February 2011 17:33:47	
+http://localhost/Ligue12010/get.ranking.php?
+Ouverture du thread 13 a Monday 28 February 2011 17:33:48
+Fermeture du thread 13 a Monday 28 February 2011 17:33:50	
+http://localhost/Ligue12010/index.php?Page=3&View=Group
+Ouverture du thread 14 a Monday 28 February 2011 17:33:55
+Fermeture du thread 14 a Monday 28 February 2011 17:33:55	
+http://localhost/Ligue12010/get.ranking.group.php?GroupKey=28
+Ouverture du thread 15 a Monday 28 February 2011 17:33:57
+Fermeture du thread 15 a Monday 28 February 2011 17:33:58	
+http://localhost/Ligue12010/get.ranking.group.php?GroupKey=17
+Ouverture du thread 16 a Monday 28 February 2011 17:34:03
+Fermeture du thread 16 a Monday 28 February 2011 17:34:04	
