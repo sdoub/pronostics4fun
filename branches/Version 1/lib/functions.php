@@ -21,6 +21,29 @@ function getElapsedTime ()
   return $totaltime;
 }
 
+/**
+ * Check if given time is during Europen Summer Time
+ *
+ * @link http://en.wikipedia.org/wiki/European_Summer_Time
+ * @param int $time UTC timestamp (GMT)
+ * @return boolean true if it is EST else false
+ */
+function is_est($time)
+{
+    // get year
+    $Y = gmdate("Y", $time);
+
+    // calc start / end dates and time for that year
+    $begin_date = (31 - (5*$Y/4 + 4) % 7);
+    $end_date = (31 - (5*$Y/4 + 1) % 7);
+    $begin_time = gmmktime(0,0,0,  3,$begin_date,$Y);
+    $end_time = gmmktime(0,0,0,  10,$end_date,$Y);
+
+    // if it's in that period
+    $is_dst = $time >= $begin_time && $time < $end_time;
+    return $is_dst;
+}
+
 $html_entities = array (
 			"À" =>  "&Agrave;",	#capital a, grave accent
 			"Á" =>  "&Aacute;", 	#capital a, acute accent
