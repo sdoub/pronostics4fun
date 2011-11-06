@@ -60,7 +60,7 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey) {
       $matchTime = explode(':',$matchDateTime[1]);
       date_default_timezone_set('Europe/Paris');
       $currentDate = time();
-      $matchDateTime = mktime($matchTime[0],$matchTime[1],$matchTime[2],$matchDate[1],$matchDate[2],$matchDate[0],is_est($currentDate)?0:1);
+      $matchDateTime = mktime($matchTime[0],$matchTime[1],$matchTime[2],$matchDate[1],$matchDate[2],$matchDate[0],is_est($currentDate)?1:0);
       $matchCurrentTime = floor(($currentDate - $matchDateTime)/60);
       echo '</br>$currentDate :'.$currentDate;
       echo '</br>$matchDateTime :'.$matchDateTime;
