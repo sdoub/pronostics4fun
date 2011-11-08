@@ -155,16 +155,14 @@ function callbackPostStats (data){
     	chartSubTitle = chartSubTitle.replace("%2",data.penalty);
     	chartSubTitle = chartSubTitle.replace("%3",Math.round(data.total/data.totalMatches*100)/100);
     	chart.setTitle(null,{text:chartSubTitle});
-    	chart.renderer.text('<?php echo utf8_encode("1ère période"); ?>', 240, 490, {
-            font: '14px Arial, Verdana, sans-serif'
-        }, 0, 'center').attr({
+    	chart.renderer.text('<?php echo utf8_encode("1ère période"); ?>', 240, 490).attr({
             zIndex: 20
-        }).css({color:'#FFFFFF'}).add();
-    	chart.renderer.text('<?php echo utf8_encode("2ème période"); ?>', 650, 490, {
-            font: '14px Arial, Verdana, sans-serif'
-        }, 0, 'center').attr({
+        }).css({color:'#FFFFFF',
+        	font: '14px Arial, Verdana, sans-serif'}).add();
+    	chart.renderer.text('<?php echo utf8_encode("2ème période"); ?>', 650, 490).attr({
             zIndex: 20
-        }).css({color:'#FFFFFF'}).add();
+        }).css({color:'#FFFFFF',
+        	font: '14px Arial, Verdana, sans-serif'}).add();
 
         chart.renderer.rect(480,45,410,450,0).attr ({'stroke-width':0,fill:'#6d8aa8',zIndex:-99}).add();
     }
