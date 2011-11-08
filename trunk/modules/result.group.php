@@ -38,7 +38,7 @@ WriteScripts();
 <div id="mainCol">
 <?php
 $groupList = "<div id='ContainerGroup' style='float: left; position: absolute; left: 505px; top: 10px; z-index: 999;'>
-<select id='ValueChoice' style='z-index: 999; display: none;'>";
+<select id='ValueChoice' style='z-index: 999; '>";
 
   $sql = "SELECT groups.PrimaryKey GroupKey, groups.Code GroupName, groups.Description FROM groups WHERE CompetitionKey=" . COMPETITION . " AND (IsCompleted='1' OR EXISTS (SELECT 1 FROM matches INNER JOIN results ON matches.PrimaryKey=results.MatchKey WHERE matches.GroupKey=groups.PrimaryKey)) ORDER BY PrimaryKey";
   $resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
@@ -199,8 +199,7 @@ $(document).ready(function($) {
     			url += groupKey;
     			window.location.replace( url );
     		}
-		} }).show(function () {
-			$("#ValueChoice").hide();});
+		} });
 
 
 	$("li",$("#matches")).cluetip(

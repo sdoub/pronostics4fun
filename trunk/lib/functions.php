@@ -500,9 +500,7 @@ function AddScriptReference ($name) {
         $_arrScripts[$name]=$tempScript;
         break;
       case "dropdownchecklist":
-        $tempScript=sprintf($jsScriptTemplate,"jquery-ui-1.8.5.custom.min");
-        $tempScript.=sprintf($jsScriptTemplate,"ui.dropdownchecklist");
-        $tempScript.=sprintf($cssScriptTemplate,"custom-theme/jquery-ui-1.8.5.custom");
+        $tempScript=sprintf($jsScriptTemplate,"ui.dropdownchecklist");
         $tempScript.=sprintf($cssScriptTemplate,"ui.dropdownchecklist.themeroller");
         $_arrScripts[$name]=$tempScript;
         break;

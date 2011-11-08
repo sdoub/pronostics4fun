@@ -96,16 +96,12 @@ $(document).ready(function() {
 		width: 180,
 		maxDropHeight: 150,
 		closeRadioOnClick:true
-	}).show(function () {
-			$("#ValueChoice").hide();
-		});
+	});
     $("#PlayerChoice").dropdownchecklist({
         icon: {},
         width: 250,
         maxDropHeight: 150
-    }).show(function () {
-        	$("#PlayerChoice").hide();
-        });
+    });
     $("#RefreshStats").click(function () {
 	   RefreshStats();
     });
