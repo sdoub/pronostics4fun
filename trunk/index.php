@@ -1,5 +1,6 @@
 <?php
 require_once("begin.file.php");
+require_once('lib/envolve_api_client.php');
 
 if (isset($_GET["Page"]))
 {
@@ -19,6 +20,7 @@ define('IEBROWSER',"Internet Explorer");
 <head>
 <meta name="robots" content="index,follow"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="gwt:property" content="locale=fr">
 <title>Pronostics4fun - Ligue 1</title>
 <meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnés de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journées de la ligue 1.
 Des classements et des statistiques sont établis à la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
@@ -185,43 +187,6 @@ else
 
 	</div>
 </div>
- <?php    	if ($_isAuthenticated)
-{
-  ?>
-  <?php
-if ($_browserInfo['name']!=IEBROWSER) {
-?>
-
-<div id="demo-bar">
-        <ul>
-            <li title="Contact" id="ContactLink"><a href="javascript:void(0);"><img src="<?php echo ROOT_SITE; ?>/images/email.png" style="width:20px;height: 20px;" alt="" /></a></li>
-        </ul>
-        <span class="jx-separator-left"></span>
-
-        <ul class="jx-bar-button-right">
-			<li title=""><a href="#"><img style="width:20px;height: 20px;" src="<?php echo ROOT_SITE; ?>/images/DefaultAvatar.jpg" alt="<?php echo $_nbrConnectedUser  . utf8_encode(" membre(s) connect&eacute;(s)");?>" /></a>
-                <ul>
-					<?php
-
-
-					$resultSet = $_databaseObject -> queryPerf ("SELECT NickName, AvatarName FROM playersenabled players
-					INNER JOIN connectedusers ON connectedusers.PlayerKey=players.PrimaryKey ORDER BY NickName");
-                    while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
-                      $avatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
-                      if (!empty($rowSet["AvatarName"])) {
-                        $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["AvatarName"];
-                      }
-
-                      echo '<li><a href="javascript:void(0);"><img style="width:30px;height: 30px;" src="' .$avatarPath.'" title="'.$rowSet["NickName"].'" />&nbsp;&nbsp;&nbsp;'.$rowSet["NickName"].'</a></li>';
-                    }
-					?>
-                </ul>
-			</li>
-        </ul>
-        <span class="jx-separator-right"></span>
-</div>
-<?php
-}}?>
 
 <div id="WaitingLayer" style="display:none;position: absolute; top: 380px; left: 500px; width: 350px; height: 40px; text-align:center;padding-top:20px;	background: #365F89;
 	border: solid 1px #D7E1F6;
@@ -230,18 +195,6 @@ if ($_browserInfo['name']!=IEBROWSER) {
 	"><img style="padding-right:10px;" src="<?php echo ROOT_SITE;?>/images/wait.gif"></img>Veuillez patienter pendant le chargement...</div>
 </body>
 <script>
-<?php    	if ($_isAuthenticated)
-{
-  ?>
-  <?php
-		  if ($_browserInfo['name']!=IEBROWSER) {
-		  ?>
-
-$(document).ready(function() {
-	$("#demo-bar").jixedbar();
-});
-<?php
-}}?>
 $(function() {
 	$.setupJMPopups({
 		screenLockerBackground: "#D7E1F6",
@@ -393,7 +346,22 @@ switch ($_currentPage)
 ?>
 });
 </script>
-
+<?php if ($_isAuthenticated)
+{
+$rootSite = "http://pronostics4fun.com"; //ROOT_SITE;
+  $avatarPath = $rootSite . '/images/DefaultAvatar.jpg';
+  $avatarName= $_authorisation->getConnectedUserInfo("AvatarName");
+  if (!empty($avatarName)) {
+    $avatarPath= $rootSite . '/images/avatars/'.$avatarName;
+  }
+  echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, "Bonjour!"));
+?>
+<!-- Envolve Chat -->
+<script type="text/javascript">
+var envoOptions={enableSharing : false,enableTranslation : false,enableNewChatButton : false,
+		strings : {Everyone: "Tout le monde", TypeAStatusMessageHere: "<?php echo utf8_encode("Message personnalisé"); ?>",NoOneIsHere: "<?php echo utf8_encode("Aucun membre connecté");?>", Everyone: "Membres", PeopleListHeaderText: "Tchatter avec les autres membres",PeopleListTitlePlural : " <?php echo utf8_encode("membres connectés")?>", PeopleListTitleSingular : " <?php echo utf8_encode("membre connecté");?>"}};
+</script>
+<?php } ?>
 
 </html>
 <?php
