@@ -46,17 +46,13 @@ $(document).ready(function() {
 		maxDropHeight: 150,
 		closeRadioOnClick:true,
 		firstItemChecksAll: true
-	}).show(function () {
-			$("#GroupChoice").hide();
-		});
+	});
     $("#TeamChoice").dropdownchecklist({
         icon: {},
         width: 250,
         maxDropHeight: 150,
 		firstItemChecksAll: true
-    }).show(function () {
-        	$("#TeamChoice").hide();
-        });
+    });
     $("#RefreshStats").click(function () {
 	   RefreshStats();
     });

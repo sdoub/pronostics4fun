@@ -124,8 +124,7 @@ $(document).ready(function() {
 		$("#flexGridRanking").flexOptions({url : 'get.ranking.group.php?GroupKey=' + groupKey });
 		$("#flexGridRanking").flexReload();
 
-		} }).show(function () {
-			$("#ValueChoice").hide();});
+		} });
 
 	$('a[player-key]').live('click', function() {
 		var playerKey = $(this).attr('player-key');

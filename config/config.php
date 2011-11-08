@@ -3,12 +3,13 @@ if(!defined('VALID_ACCESS_CONFIG_')) exit('Config.php -> direct access is not al
 
 if ($_SERVER['SERVER_NAME']=="localhost") {
 
+  $pathUrl = explode("/",$_SERVER["REQUEST_URI"]);
   /* -- Config de dev */
   DEFINE ('SQL_LOGIN','sdoub');
   DEFINE ('SQL_PWD','aurelie');
   DEFINE ('SQL_DB','Pronostics4Fun');
   DEFINE ('SQL_HOST','127.0.0.1');
-  DEFINE ('ROOT_SITE', "http://localhost/Ligue12010");
+  DEFINE ('ROOT_SITE', "http://localhost/".$pathUrl[1]);
   DEFINE ('REFRESH_LIVE_FROM_SERVER','0');
   DEFINE ('COMPETITION','3');
   DEFINE ('SHIFTED_HOUR','0');
