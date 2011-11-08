@@ -112,9 +112,7 @@ $(document).ready(function() {
         icon: {},
         width: 750,
         maxDropHeight: 150
-    }).show(function () {
-        	$("#PlayerChoice").hide();
-        });
+    });
     $( '#editor1' ).ckeditor();
 
     $('#Send').click(function () {

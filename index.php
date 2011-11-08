@@ -27,13 +27,15 @@ Des classements et des statistiques sont établis à la fin de chaque journée de c
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link href="<?php echo ROOT_SITE; ?>/css/default.css" type="text/css" rel="stylesheet"/>
 <link type="text/css" href="<?php echo ROOT_SITE; ?>/css/jixedbar.themes/rave/jx.stylesheet.css" rel="stylesheet" />
-<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jmpopups.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.log.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.text-overflow.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.cookies.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.requireScript.js"></script>
-<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-ui-1.8.16.custom.min.js"></script>
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/custom-theme/jquery-ui-1.8.16.custom.css' />
+
 
 <?php
 if ($_browserInfo['name']!=IEBROWSER) {

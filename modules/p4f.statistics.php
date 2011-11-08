@@ -54,9 +54,7 @@ $(document).ready(function() {
         width: 250,
         closeRadioOnClick:true,
         maxDropHeight: 150
-    }).show(function () {
-        	$("#ViewChoice").hide();
-        });
+    });
 
 	$("#GroupChoice").dropdownchecklist({
 		icon: {},
@@ -64,9 +62,7 @@ $(document).ready(function() {
 		maxDropHeight: 150,
 		closeRadioOnClick:true,
 		firstItemChecksAll: true
-	}).show(function () {
-			$("#GroupChoice").hide();
-		});
+	});
     $("#RefreshStats").click(function () {
 	   RefreshStats();
     });
