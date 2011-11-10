@@ -1,19 +1,48 @@
 <?php
 
+
 AddScriptReference("scrollpane");
 AddScriptReference("new.home.connected");
 
 WriteScripts();
 ?>
 
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.editinplace.js"></script>
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jHtmlArea-0.7.0.min.js"></script>
+<link rel="Stylesheet" type="text/css" href="<?php echo ROOT_SITE; ?>/css/jHtmlArea.css" />
+
 <div id="newsTitle" style="background:url('<?php echo ROOT_SITE; ?>/images/actu.png') no-repeat scroll left top
 		#D7E1F6;height:360px;margin-bottom:30px;_width:920px;">
 <!--  h3 style="text-align:left;color:#365F89;padding-left:25px;padding-top:10px;"><?php echo __encode("Actualité ...");?></h3> -->
-<div>&nbsp;</div>
+<div>
+<?php if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
+{
+?>
+<button class="buttonfield" id='AddNews'>Ajouter une news</button>
+<?php } ?>
+&nbsp;</div>
 <div style="font-size:16px;color:#365F89;font-weight:bold;margin-left:140px;margin-top:5px;"><?php echo __encode("Tout ce qui se passe sur Pronostics4Fun ...");?></div>
 <div id="news" class="flexcroll" style="background:#6D8AA8;height:300px;overflow: auto;margin-top:15px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
 <style>
-#news ul li {
+#newsTitle .buttonfield {
+	background: #365F89;
+	border: solid 1px #D7E1F6;
+	color: #FFFFFF;
+	font: bold 11px/ normal Tahoma, Verdana;
+	margin-top: 10px;
+	padding: 4px;
+	position: absolute;
+	right:46px;
+}
+
+#newsTitle .buttonfield:hover, #newsTitle .buttonfield:focus {
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+#news ul li.news {
 	border-bottom:1px solid #cccccc;
 	padding-left:10px;
 	padding-bottom:5px;
@@ -22,7 +51,27 @@ WriteScripts();
 	_height:50px;
 }
 
-#news ul li img {
+#news ul li.news div.news{
+	padding-top:5px;
+}
+
+#news .newsDate {
+	float:right;
+	border-left:1px solid #D7E1F6;
+	border-bottom:1px solid #D7E1F6;
+    background: #365F89;
+    color: #FFFFFF;
+    font: bold 11px/ normal Tahoma, Verdana;
+}
+
+img.news {
+	width:50px;
+	height:50px;
+	padding-right:10px;
+	float:left;
+}
+
+#news img.avat {
 	width:50px;
 	height:50px;
 	padding-right:10px;
@@ -38,7 +87,7 @@ WriteScripts();
 
 }
 </style>
-<ul>
+<ul id="newsList">
 
 <?php
 
@@ -63,7 +112,7 @@ $cnt = 0;
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   $playerKey = $rowSet["NewsKey"];
-  echo '<li class="" player-key="' . $playerKey . '">';
+  echo '<li class="news" player-key="' . $playerKey . '">';
   if ($rowSet["InfoType"]=="3"){
     echo "<div class='player'>";
 
@@ -80,32 +129,32 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   else {
   	setlocale(LC_TIME, "fr_FR");
 	$newsFormattedDate = strftime("%A %d %B %Y à %H:%M",$rowSet['NewsDate']);
-    echo "<div style='float:right;border-left:1px solid #D7E1F6;border-bottom:1px solid #D7E1F6;
-    	background: #365F89;color: #FFFFFF;font: bold 11px/ normal Tahoma, Verdana;'>";
+    echo "<div class='newsDate'>";
     echo "Le " . __encode($newsFormattedDate);
     echo "</div>";
-    echo "<div style='padding-top:5px;'>";
-
-    switch ($rowSet["InfoType"]) {
-      case "1":
-        echo '<img  src="' . ROOT_SITE . '/images/news.png" ></img>';
-        break;
-      case "2":
-        echo '<img  src="' . ROOT_SITE . '/images/stats.png" ></img>';
-        break;
-      case "5":
-        echo '<img  src="' . ROOT_SITE . '/images/calendar.png" ></img>';
-        break;
-      case "6":
-        echo '<img  src="' . ROOT_SITE . '/images/TropheeGold.png" ></img>';
-        break;
-      case "7":
-        echo '<img  src="' . ROOT_SITE . '/images/podium.png" ></img>';
-        break;
-      case "8":
-        echo '<img  src="' . ROOT_SITE . '/images/star_48.png" ></img>';
-        break;
-  }
+    echo "<div class='news' id='news.$playerKey'>";
+    if (strpos($rowSet["NewsInfos"],"<img") === false){
+      switch ($rowSet["InfoType"]) {
+        case "1":
+          echo '<img  class="news" src="' . ROOT_SITE . '/images/news.png" ></img>';
+          break;
+        case "2":
+          echo '<img  class="news" src="' . ROOT_SITE . '/images/stats.png" ></img>';
+          break;
+        case "5":
+          echo '<img  class="news" src="' . ROOT_SITE . '/images/calendar.png" ></img>';
+          break;
+        case "6":
+          echo '<img  class="news" src="' . ROOT_SITE . '/images/TropheeGold.png" ></img>';
+          break;
+        case "7":
+          echo '<img  class="news" src="' . ROOT_SITE . '/images/podium.png" ></img>';
+          break;
+        case "8":
+          echo '<img  class="news" src="' . ROOT_SITE . '/images/star_48.png" ></img>';
+          break;
+      }
+    }
 
   echo __encode($rowSet['NewsInfos']);
 
@@ -335,32 +384,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 </div>
 
 <script>
-//<img style="width:280px;height:231px;" src="<?php echo ROOT_SITE;?>/images/podium.home.png"/>
-/*
- * <canvas id="globalRankingCanvas" style="width:430px;height:250px">
- </canvas>
 
-
- <div style="float:left;width:150px;height:80px;">
- <div style="font-size:16px;color:#365F89;float:left;text-transform: uppercase;font-weight:bold;margin-left:20px;margin-top:15px;tex-align:left;"><?php echo __encode("Podium");?></div></div>
- <div style="float:left;width:125px;height:80px;"><img style="width:50px;height:50px;padding-top:15px;" src="<?php echo ROOT_SITE; ?>/images/avatars/21_1281953186.jpg"></img></div>
- <div style="float:left;width:125px;height:80px;"></div>
- <div style="float:left;width:150px;height:110px;"><img style="width:50px;height:50px;padding-left:50px;" src="<?php echo ROOT_SITE; ?>/images/avatars/19_1281972613.png"></img>
- <div style="font-weight:bold;color:#FFFFFF;padding-top:10px;padding-left:60px;">Sdoub</div>
- <div style="background-image: url(<?php echo ROOT_SITE; ?>/images/sprite.png);
-     background-repeat: no-repeat;background-position: -14px -366px;color:#FFFFFF;margin-top:10px;margin-left:50px;padding-bottom:15px;">125 pts</div>
- </div>
- <div style="float:left;width:125px;height:110px;"><span style="padding-left:20px;font-weight:bold;color:#FFFFFF;">Alix1005</span>
- <div style="background-image: url(<?php echo ROOT_SITE; ?>/images/sprite.png);
-     background-repeat: no-repeat;background-position: -13px -263px;color:#FFFFFF;margin-top:15px;margin-left:15px;padding-bottom:15px;font-size: 1.3em;">135 pts</div></div>
- <div style="float:left;width:125px;height:110px;"><img style="width:50px;height:50px;padding-right:30px;padding-top:30px;" src="<?php echo ROOT_SITE; ?>/images/avatars/23_1282145831.png"></img></div>
- <div style="float:left;width:150px;height:70px;"></div>
- <div style="float:left;width:125px;height:70px;"></div>
- <div style="float:left;width:125px;height:70px;"><div style="font-weight:bold;color:#FFFFFF;">Gigot</div>
- <div style="background-image: url(<?php echo ROOT_SITE; ?>/images/sprite.png);
-     background-repeat: no-repeat;background-position: -15px -315px;color:#FFFFFF;padding-top:10px;">115 pts</div></div>
-
- */
 $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
 	$("#newsTitle").corner();
 	$("#forecastsTitle").corner();
@@ -428,5 +452,131 @@ $("#forecastsTitle li").click(function() {
 
 });
 
+<?php
+	    if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) {
+?>
+$(document).ready(function() {
+	var options = {
+			url: "save.news.php",
+			bg_over: "#365F89",
+			field_type: "textarea",
+			textarea_rows: "8",
+			textarea_cols: "95",
+			saving_image: "./images/wait.loader.gif",
+			use_html : true,
+			show_buttons : true,
+			success : function (html) {
+				$.log(this);
 
+			},
+			delegate : {
+					// called while opening the editor.
+					// return false to prevent editor from opening
+					shouldOpenEditInPlace: function(aDOMNode, aSettingsDict, triggeringEvent) {
+						},
+					// return content to show in inplace editor
+					willOpenEditInPlace: function(aDOMNode, aSettingsDict) {
+
+
+							},
+					didOpenEditInPlace: function(aDOMNode, aSettingsDict) {
+
+								$("textarea.inplace_field").htmlarea(
+									{
+								        css: '<?php echo ROOT_SITE;?>/css/jHtmlArea.Editor.css',
+								        toolbar :  [["html"], ["bold", "italic", "underline", "strikethrough", "|", "subscript", "superscript"],
+								        ["increasefontsize", "decreasefontsize"],
+								        ["orderedlist", "unorderedlist"],
+								        ["indent", "outdent"],
+								        ["link", "unlink", "image", "horizontalrule"],
+								        [{
+								            // This is how to add a completely custom Toolbar Button
+								            css: "daynews",
+								            text: "End Day",
+								            action: function(btn) {
+								        	var html = this.toHtmlString();
+
+
+								        	 //Paste some specific HTML / Text value into the Editor
+								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/TropheeGold.png"/>');
+
+								        }
+								        },
+								        {
+								            // This is how to add a completely custom Toolbar Button
+								            css: "rankingnews",
+								            text: "Ranking",
+								            action: function(btn) {
+								        	 // Paste some specific HTML / Text value into the Editor
+								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/podium.png"/>');
+
+								        }
+								        },
+								        {
+								            // This is how to add a completely custom Toolbar Button
+								            css: "statsnews",
+								            text: "Stats",
+								            action: function(btn) {
+								        	 // Paste some specific HTML / Text value into the Editor
+								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/stats.png"/>');
+
+								        }
+								        },
+								        {
+								            // This is how to add a completely custom Toolbar Button
+								            css: "bonusnews",
+								            text: "Bonus",
+								            action: function(btn) {
+								        	 // Paste some specific HTML / Text value into the Editor
+								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/star_48.png"/>');
+
+								        }
+								        },
+								        {
+								            // This is how to add a completely custom Toolbar Button
+								            css: "p4fnews",
+								            text: "p4f",
+								            action: function(btn) {
+								        	 // Paste some specific HTML / Text value into the Editor
+								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/p4f.update.png"/>');
+
+								        }
+								        },
+								        {
+								            // This is how to add a completely custom Toolbar Button
+								            css: "calendarnews",
+								            text: "Calendrier",
+								            action: function(btn) {
+								        	 // Paste some specific HTML / Text value into the Editor
+								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/calendar.png"/>');
+
+								        }
+								        }]
+								        ]
+								    }
+									);
+						},
+
+					// called while closing the editor
+					// return false to prevent the editor from closing
+					shouldCloseEditInPlace: function(aDOMNode, aSettingsDict, triggeringEvent) {},
+					// return value will be shown during saving
+					willCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
+					didCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
+
+					missingCommaErrorPreventer:''
+				}
+
+		};
+	$('#AddNews').click (function () {
+		$('#newsList').prepend("<li class='news' player-key='newKey'><div style='float:right;border-left:1px solid #D7E1F6;border-bottom:1px solid #D7E1F6;background: #365F89;color: #FFFFFF;font: bold 11px normal Tahoma, Verdana;'>Maintenant</div><div style='padding-top:5px;' class='news' id='news.newKey'><br/><br/></div></li>");
+		$('#newsList > li:first > div.news').editInPlace(options);
+	});
+	$('div.news').editInPlace(options);
+
+
+});
+<?php
+}
+?>
 </script>
