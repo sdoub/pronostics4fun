@@ -739,6 +739,8 @@
             	// Must be an inner/outer/border problem, but IE6 needs an extra bit of space,
             	// otherwise you can get text pushed down into a second line when icons are active
             	controlWidth -= (controlIcon.outerWidth() + 4);
+            	if ($.browser.msie)
+            		controlWidth -= 10;
             	controlText.css( { width: controlWidth + "px" } );
             }
             // Account for padding, borders, etc
