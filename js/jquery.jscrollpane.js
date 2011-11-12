@@ -1337,6 +1337,7 @@
 		this.each(
 			function()
 			{
+				if (!$.browser.msie && !$.browser.safari) {
 				var elem = $(this), jspApi = elem.data('jsp');
 				if (jspApi) {
 					jspApi.reinitialise(settings);
@@ -1345,6 +1346,7 @@
 					elem.data('jsp', jspApi);
 				}
 				ret = ret ? ret.add(elem) : elem;
+				}
 			}
 		);
 		return ret;
