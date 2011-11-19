@@ -330,7 +330,7 @@ jaaulde.utils.cookies = ( function()
 				{
 					return this.each( function()
 					{
-						var i, nameAttrs = ['name', 'id'], name, $this = $( this ), value;
+						var i, nameAttrs = [ 'id'], name, $this = $( this ), value;
 
 						for( i in nameAttrs )
 						{
@@ -378,7 +378,7 @@ jaaulde.utils.cookies = ( function()
 				{
 					return this.each( function()
 					{
-						var n, getN, nameAttrs = ['name', 'id'], name, $this = $( this ), value;
+						var n, getN, nameAttrs = [ 'id'], name, $this = $( this ), value;
 
 						getN = function()
 						{
