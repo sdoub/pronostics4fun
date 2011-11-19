@@ -94,7 +94,7 @@ ORDER BY Score DESC";
 }
 function GetTeamsRanking () {
   global $_databaseObject;
-$sql = "SELECT TeamHome.PrimaryKey TeamHomeKey,
+  $sql = "SELECT TeamHome.PrimaryKey TeamHomeKey,
 			   TeamAway.PrimaryKey TeamAwayKey,
 			   TeamHome.Name TeamHomeName,
 			   TeamAway.Name TeamAwayName,
@@ -109,213 +109,244 @@ $sql = "SELECT TeamHome.PrimaryKey TeamHomeKey,
           LEFT JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus=10
           INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION;
 
-	$resultSet = $_databaseObject->queryPerf($sql,"Get match results");
-	$arrTeams = array();
-	while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-	{
-	  if (array_key_exists($rowSet["TeamHomeKey"],$arrTeams)) {
+  $resultSet = $_databaseObject->queryPerf($sql,"Get match results");
+  $arrTeams = array();
+  while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+  {
+    if (array_key_exists($rowSet["TeamHomeKey"],$arrTeams)) {
 
-	    $tempArray = $arrTeams[$rowSet["TeamHomeKey"]];
-        $tempArray["TeamKey"]=$rowSet["TeamHomeKey"];
-    	$tempArray["TeamName"]=$rowSet["TeamHomeName"];
-	    $tempArray["GoalsHome"]+=$rowSet["TeamHomeScore"];
-	    $tempArray["GoalsHomeAgainst"]+=$rowSet["TeamAwayScore"];
-	    $tempArray["Goals"]+=$rowSet["TeamHomeScore"];
-	    $tempArray["GoalsAgainst"]+=$rowSet["TeamAwayScore"];
-	    if ($rowSet["LiveStatus"]==10) {
-	      if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
-	        $tempScore=0;
-	        $tempArray["MatchLost"]+=1;
-	      }
-	      else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
-	        $tempScore=3;
-	        $tempArray["MatchWin"]+=1;
-	      }
-	      else {
-	        $tempScore=1;
-	        $tempArray["MatchDraw"]+=1;
-	      }
-	      $tempArray["Played"]+=1;
-	    }
-	    else {
-	      $tempScore=0;
-	      $tempArray["Played"]+=0;
-	    }
-
-
-	    $tempArray["Score"]+=$tempScore;
-
-	    $arrTeams[$rowSet["TeamHomeKey"]]=$tempArray;
-	  }
-	  else {
-
-	    $tempArray = array();
-	    $tempArray["TeamKey"]=$rowSet["TeamHomeKey"];
-	    $tempArray["TeamName"]=$rowSet["TeamHomeName"];
-	    $tempArray["GoalsHome"]=$rowSet["TeamHomeScore"];
-	    $tempArray["GoalsHomeAgainst"]=$rowSet["TeamAwayScore"];
-	    $tempArray["GoalsAway"]=0;
-	    $tempArray["GoalsAwayAgainst"]=0;
-	    $tempArray["Goals"]=$rowSet["TeamHomeScore"];
-	    $tempArray["GoalsAgainst"]=$rowSet["TeamAwayScore"];
-	    $tempArray["MatchWin"]=0;
-        $tempArray["MatchLost"]=0;
-        $tempArray["MatchDraw"]=0;
-	    if ($rowSet["LiveStatus"]==10) {
-
-	      if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
-	        $tempScore=0;
-	        $tempArray["MatchLost"]=1;
-
-	      }
-	      else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
-	        $tempScore=3;
-	        $tempArray["MatchWin"]=1;
-	      }
-	      else {
-	        $tempScore=1;
-	        $tempArray["MatchDraw"]=1;
-	      }
-	      $tempArray["Played"]=1;
-	    }
-	    else {
-	      $tempScore=0;
-	      $tempArray["Played"]=0;
-	    }
-	    $tempArray["Score"]=$tempScore;
-	    $arrTeams[$rowSet["TeamHomeKey"]]=$tempArray;
-	  }
-	  if (array_key_exists($rowSet["TeamAwayKey"],$arrTeams)) {
-
-	    $tempArray = $arrTeams[$rowSet["TeamAwayKey"]];
-	    $tempArray["TeamKey"]=$rowSet["TeamAwayKey"];
-	    $tempArray["TeamName"]=$rowSet["TeamAwayName"];
-	    $tempArray["GoalsAway"]+=$rowSet["TeamAwayScore"];
-	    $tempArray["GoalsAwayAgainst"]+=$rowSet["TeamHomeScore"];
-	    $tempArray["Goals"]+=$rowSet["TeamAwayScore"];
-	    $tempArray["GoalsAgainst"]+=$rowSet["TeamHomeScore"];
-	    if ($rowSet["LiveStatus"]==10) {
-	      if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
-	        $tempScore=3;
-	        $tempArray["MatchWin"]+=1;
-	      }
-	      else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
-	        $tempScore=0;
-	        $tempArray["MatchLost"]+=1;
-	      }
-	      else {
-	        $tempScore=1;
-	        $tempArray["MatchDraw"]+=1;
-	      }
-	      $tempArray["Played"]+=1;
-	    }
-	    else {
-	      $tempScore=0;
-	      $tempArray["Played"]+=0;
-	    }
-
-	    $tempArray["Score"]+=$tempScore;
-
-        $arrTeams[$rowSet["TeamAwayKey"]]=$tempArray;
-
-	  }
-	  else {
-
-	    $tempArray = array();
-	    $tempArray["TeamKey"]=$rowSet["TeamAwayKey"];
-	    $tempArray["TeamName"]=$rowSet["TeamAwayName"];
-	    $tempArray["GoalsHome"]=0;
-	    $tempArray["GoalsHomeAgainst"]=0;
-	    $tempArray["GoalsAway"]=$rowSet["TeamAwayScore"];
-	    $tempArray["GoalsAwayAgainst"]=$rowSet["TeamHomeScore"];
-	    $tempArray["Goals"]=$rowSet["TeamAwayScore"];
-	    $tempArray["GoalsAgainst"]=$rowSet["TeamHomeScore"];
-	    $tempArray["MatchWin"]=0;
-        $tempArray["MatchLost"]=0;
-        $tempArray["MatchDraw"]=0;
-
-	    if ($rowSet["LiveStatus"]==10) {
-	      if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
-	        $tempScore=3;
-	        $tempArray["MatchWin"]=1;
-	      }
-	      else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
-	        $tempScore=0;
-	        $tempArray["MatchLost"]=1;
-	      }
-	      else {
-	        $tempScore=1;
-	        $tempArray["MatchDraw"]=1;
-	      }
-	      $tempArray["Played"]=1;
-	    }
-	    else {
-	      $tempScore=0;
-          $tempArray["Played"]=0;
-	    }
-	    $tempArray["Score"]=$tempScore;
-        $arrTeams[$rowSet["TeamAwayKey"]]=$tempArray;
-	  }
-
-	}
+      $tempArray = $arrTeams[$rowSet["TeamHomeKey"]];
+      $tempArray["TeamKey"]=$rowSet["TeamHomeKey"];
+      $tempArray["TeamName"]=$rowSet["TeamHomeName"];
+      $tempArray["GoalsHome"]+=$rowSet["TeamHomeScore"];
+      $tempArray["GoalsHomeAgainst"]+=$rowSet["TeamAwayScore"];
+      $tempArray["Goals"]+=$rowSet["TeamHomeScore"];
+      $tempArray["GoalsAgainst"]+=$rowSet["TeamAwayScore"];
+      if ($rowSet["LiveStatus"]==10) {
+        if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
+          $tempScore=0;
+          $tempArray["MatchLost"]+=1;
+        }
+        else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
+          $tempScore=3;
+          $tempArray["MatchWin"]+=1;
+        }
+        else {
+          $tempScore=1;
+          $tempArray["MatchDraw"]+=1;
+        }
+        $tempArray["Played"]+=1;
+      }
+      else {
+        $tempScore=0;
+        $tempArray["Played"]+=0;
+      }
 
 
-	function compare($a, $b)
-	{
-	  if ($a["Score"]==$b["Score"]){
-	    if ($a["Goals"]-$a["GoalsAgainst"]==$b["Goals"]-$b["GoalsAgainst"]) {
-	      if ($a["Goals"]>$b["Goals"]) {
-	        return -1;
-	      }
-	      else if ($a["Goals"]==$b["Goals"])
-	      {
-	        if ($a["GoalsAgainst"]==$b["GoalsAgainst"]){
-	          return strcmp($a["TeamName"], $b["TeamName"]);
-	        }
-	        else  if ($a["GoalsAgainst"]>$b["GoalsAgainst"]) {
-	          return 1;
-	        }
-	        else
-	          return -1;
+      $tempArray["Score"]+=$tempScore;
 
-	      }
-	      else
-	        return 1;
-	    }
-	    else if ($a["Goals"]-$a["GoalsAgainst"]>$b["Goals"]-$b["GoalsAgainst"]) {
+      $arrTeams[$rowSet["TeamHomeKey"]]=$tempArray;
+    }
+    else {
+
+      $tempArray = array();
+      $tempArray["TeamKey"]=$rowSet["TeamHomeKey"];
+      $tempArray["TeamName"]=$rowSet["TeamHomeName"];
+      $tempArray["GoalsHome"]=$rowSet["TeamHomeScore"];
+      $tempArray["GoalsHomeAgainst"]=$rowSet["TeamAwayScore"];
+      $tempArray["GoalsAway"]=0;
+      $tempArray["GoalsAwayAgainst"]=0;
+      $tempArray["Goals"]=$rowSet["TeamHomeScore"];
+      $tempArray["GoalsAgainst"]=$rowSet["TeamAwayScore"];
+      $tempArray["MatchWin"]=0;
+      $tempArray["MatchLost"]=0;
+      $tempArray["MatchDraw"]=0;
+      if ($rowSet["LiveStatus"]==10) {
+
+        if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
+          $tempScore=0;
+          $tempArray["MatchLost"]=1;
+
+        }
+        else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
+          $tempScore=3;
+          $tempArray["MatchWin"]=1;
+        }
+        else {
+          $tempScore=1;
+          $tempArray["MatchDraw"]=1;
+        }
+        $tempArray["Played"]=1;
+      }
+      else {
+        $tempScore=0;
+        $tempArray["Played"]=0;
+      }
+      $tempArray["Score"]=$tempScore;
+      $arrTeams[$rowSet["TeamHomeKey"]]=$tempArray;
+    }
+    if (array_key_exists($rowSet["TeamAwayKey"],$arrTeams)) {
+
+      $tempArray = $arrTeams[$rowSet["TeamAwayKey"]];
+      $tempArray["TeamKey"]=$rowSet["TeamAwayKey"];
+      $tempArray["TeamName"]=$rowSet["TeamAwayName"];
+      $tempArray["GoalsAway"]+=$rowSet["TeamAwayScore"];
+      $tempArray["GoalsAwayAgainst"]+=$rowSet["TeamHomeScore"];
+      $tempArray["Goals"]+=$rowSet["TeamAwayScore"];
+      $tempArray["GoalsAgainst"]+=$rowSet["TeamHomeScore"];
+      if ($rowSet["LiveStatus"]==10) {
+        if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
+          $tempScore=3;
+          $tempArray["MatchWin"]+=1;
+        }
+        else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
+          $tempScore=0;
+          $tempArray["MatchLost"]+=1;
+        }
+        else {
+          $tempScore=1;
+          $tempArray["MatchDraw"]+=1;
+        }
+        $tempArray["Played"]+=1;
+      }
+      else {
+        $tempScore=0;
+        $tempArray["Played"]+=0;
+      }
+
+      $tempArray["Score"]+=$tempScore;
+
+      $arrTeams[$rowSet["TeamAwayKey"]]=$tempArray;
+
+    }
+    else {
+
+      $tempArray = array();
+      $tempArray["TeamKey"]=$rowSet["TeamAwayKey"];
+      $tempArray["TeamName"]=$rowSet["TeamAwayName"];
+      $tempArray["GoalsHome"]=0;
+      $tempArray["GoalsHomeAgainst"]=0;
+      $tempArray["GoalsAway"]=$rowSet["TeamAwayScore"];
+      $tempArray["GoalsAwayAgainst"]=$rowSet["TeamHomeScore"];
+      $tempArray["Goals"]=$rowSet["TeamAwayScore"];
+      $tempArray["GoalsAgainst"]=$rowSet["TeamHomeScore"];
+      $tempArray["MatchWin"]=0;
+      $tempArray["MatchLost"]=0;
+      $tempArray["MatchDraw"]=0;
+
+      if ($rowSet["LiveStatus"]==10) {
+        if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]<0){
+          $tempScore=3;
+          $tempArray["MatchWin"]=1;
+        }
+        else if ($rowSet["TeamHomeScore"] - $rowSet["TeamAwayScore"]>0){
+          $tempScore=0;
+          $tempArray["MatchLost"]=1;
+        }
+        else {
+          $tempScore=1;
+          $tempArray["MatchDraw"]=1;
+        }
+        $tempArray["Played"]=1;
+      }
+      else {
+        $tempScore=0;
+        $tempArray["Played"]=0;
+      }
+      $tempArray["Score"]=$tempScore;
+      $arrTeams[$rowSet["TeamAwayKey"]]=$tempArray;
+    }
+
+  }
+
+
+  function compare($a, $b)
+  {
+    if ($a["Score"]==$b["Score"]){
+      if ($a["Goals"]-$a["GoalsAgainst"]==$b["Goals"]-$b["GoalsAgainst"]) {
+        if ($a["Goals"]>$b["Goals"]) {
           return -1;
-	    }
-	    else {
-	      return 1;
-	    }
-	  }
-	  else {
-        return ($a["Score"]>$b["Score"]) ? -1 : 1;
-	  }
+        }
+        else if ($a["Goals"]==$b["Goals"])
+        {
+          if ($a["GoalsAgainst"]==$b["GoalsAgainst"]){
+            return strcmp($a["TeamName"], $b["TeamName"]);
+          }
+          else  if ($a["GoalsAgainst"]>$b["GoalsAgainst"]) {
+            return 1;
+          }
+          else
+          return -1;
 
-	}
+        }
+        else
+        return 1;
+      }
+      else if ($a["Goals"]-$a["GoalsAgainst"]>$b["Goals"]-$b["GoalsAgainst"]) {
+        return -1;
+      }
+      else {
+        return 1;
+      }
+    }
+    else {
+      return ($a["Score"]>$b["Score"]) ? -1 : 1;
+    }
 
-	usort($arrTeams, "compare");
+  }
 
-	$rank=0;
-	$realRank=0;
-	$previousScore = "0|0|0";
-    $arrTeamsWithRank = array();
-	while (list ($key, $value) = each ($arrTeams)) {
-	  $diff = $value['Goals'] - $value['GoalsAgainst'];
-	  $realRank++;
-	  if (strcmp($previousScore,$value['Score']."|".$diff."|".$value['Goals'])!=0) {
-	    $rank=$realRank;
-	  }
-	  $previousScore=$value['Score']."|".$diff."|".$value['Goals'];
+  usort($arrTeams, "compare");
 
-	  $tempArray = $value;
-	  $tempArray["TeamRank"]=$rank;
-	  $tempArray["GoalDifference"]=$diff;
-	  $arrTeamsWithRank[$value['TeamKey']]=$tempArray;
-	}
+  $rank=0;
+  $realRank=0;
+  $previousScore = "0|0|0";
+  $arrTeamsWithRank = array();
+  while (list ($key, $value) = each ($arrTeams)) {
+    $diff = $value['Goals'] - $value['GoalsAgainst'];
+    $realRank++;
+    if (strcmp($previousScore,$value['Score']."|".$diff."|".$value['Goals'])!=0) {
+      $rank=$realRank;
+    }
+    $previousScore=$value['Score']."|".$diff."|".$value['Goals'];
 
-	return $arrTeamsWithRank;
+    $tempArray = $value;
+    $tempArray["TeamRank"]=$rank;
+    $tempArray["GoalDifference"]=$diff;
+    $arrTeamsWithRank[$value['TeamKey']]=$tempArray;
+  }
+
+  return $arrTeamsWithRank;
+}
+
+function CalculateGroupRankingState ($groupKey,$stateDate) {
+  global $_databaseObject;
+
+  $query= "
+  SELECT playergroupstates.PlayerKey, playergroupstates.Score+playergroupstates.Bonus Score
+      FROM playergroupstates
+      WHERE playergroupstates.GroupKey =$groupKey
+      AND playergroupstates.StateDate=FROM_UNIXTIME($stateDate)
+ORDER BY Score DESC";
+
+  $resultSet = $_databaseObject->queryPerf($query,"Get players and score for current state group");
+
+  $rank = 0;
+  $realRank=0;
+  $previousScore = 0;
+  while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+  {
+    $playerKey =$rowSet["PlayerKey"];
+    $realRank++;
+    if ($rowSet["Score"]!=$previousScore) {
+      $rank=$realRank;
+    }
+
+    $previousScore=$rowSet["Score"];
+
+    $insertQuery="UPDATE playergroupstates SET Rank =$rank WHERE PlayerKey=$playerKey AND GroupKey=$groupKey AND StateDate=FROM_UNIXTIME($stateDate)";
+    $_databaseObject -> queryPerf ($insertQuery, "Update group rank of the current state");
+  }
+
 }
 
 ?>
