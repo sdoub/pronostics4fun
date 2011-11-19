@@ -79,6 +79,27 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       CalculateRanking($rowSet["ScheduleDate"]);
       CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
 
+
+      $_groupKey = $rowSet["GroupKey"];
+      GenerateMatchStates($_groupKey);
+
+      $query = "SELECT PrimaryKey MatchStateKey, MatchKey, TeamHomeScore, TeamAwayScore, UNIX_TIMESTAMP(StateDate) StateDate
+    FROM matchstates WHERE MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)";
+      $resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
+
+      while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
+        ComputeScoreState ($rowSetState["MatchKey"], $rowSetState["TeamHomeScore"], $rowSetState["TeamAwayScore"], $rowSetState["MatchStateKey"]);
+      }
+      $query = "SELECT UNIX_TIMESTAMP(StateDate) StateDate
+    FROM matchstates WHERE MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)
+    GROUP BY StateDate ORDER BY StateDate";
+      $resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
+
+      while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
+        ComputeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
+        CalculateGroupRankingState($_groupKey,$rowSetState["StateDate"]);
+      }
+
       $isCompleted = 0;
       $query = "SELECT IsCompleted FROM groups WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
       $resultSetGroup = $_databaseObject->queryPerf($query,"update group");

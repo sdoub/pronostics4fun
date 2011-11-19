@@ -507,7 +507,7 @@ function GetMatchCompleteInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchK
         $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",__encode(utf8_decode($teamPlayer))) . "')";
         $_queries[]=$updateQuery;
         $eventTime += $eventAdditionalTime;
-$teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($teamPlayer)))) . "')";
+        $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($teamPlayer)))) . "')";
         $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey) VALUES ($resultKey, $_teamAwayKey, $eventType, $eventTime, $half, (SELECT PrimaryKey TeamPlayerKey
     			        FROM teamplayers
     			       WHERE FullName='" . str_replace("'","''",__encode(utf8_decode($teamPlayer))) . "')) ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
@@ -631,4 +631,75 @@ $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName
 
   }
 
+}
+
+function GenerateMatchStates ($_groupKey) {
+  global $_databaseObject;
+  $query = "SELECT matches.PrimaryKey MatchKey, matches.GroupKey, (UNIX_TIMESTAMP(matches.ScheduleDate)+ (events.EventTime *60)) ScheduleDate, events.PrimaryKey EventKey,
+   IF (events.TeamKey=matches.TeamHomeKey,1,0) isHomeGoal, 1 'isGoalEvent' FROM events
+  INNER JOIN results ON results.PrimaryKey = events.ResultKey
+  INNER JOIN matches ON matches.PrimaryKey = results.MatchKey
+  INNER JOIN groups ON groups.PrimaryKey = matches.GroupKey AND groups.PrimaryKey=$_groupKey
+  WHERE events.EventType IN (1,2,3)
+UNION ALL
+SELECT matches.PrimaryKey, matches.GroupKey, UNIX_TIMESTAMP(matches.ScheduleDate),1, 1,0
+  FROM matches
+  INNER JOIN groups ON groups.PrimaryKey = matches.GroupKey AND groups.PrimaryKey=$_groupKey
+UNION ALL
+SELECT matches.PrimaryKey, matches.GroupKey, UNIX_TIMESTAMP(matches.ScheduleDate)+ (100 *60),2, 1,0
+  FROM matches
+  INNER JOIN groups ON groups.PrimaryKey = matches.GroupKey AND groups.PrimaryKey=$_groupKey
+  INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus=10
+ORDER BY 3,4";
+
+  $resultSet = $_databaseObject->queryPerf($query,"Get Group State");
+
+  $arrMatches = array();
+
+  while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
+    if (array_key_exists($rowSet["MatchKey"],$arrMatches)) {
+
+      $tempArray = $arrMatches[$rowSet["MatchKey"]];
+      $tempArray["GroupKey"]=$rowSet["GroupKey"];
+
+      $tempArray["ScheduleDate"]=$rowSet["ScheduleDate"];
+
+      if ($rowSet["isGoalEvent"]==1) {
+        if ($rowSet["isHomeGoal"] == 1) {
+          $tempArray["TeamHomeScore"]+=1;
+        } else {
+          $tempArray["TeamAwayScore"]+=1;
+        }
+      }
+
+      $arrMatches[$rowSet["MatchKey"]]=$tempArray;
+    }
+    else {
+
+      $tempArray = array();
+      $tempArray["GroupKey"]=$rowSet["GroupKey"];
+
+      $tempArray["ScheduleDate"]=$rowSet["ScheduleDate"];
+
+      if ($rowSet["isGoalEvent"]==1) {
+        if ($rowSet["isHomeGoal"] == 1) {
+          $tempArray["TeamHomeScore"]=1;
+          $tempArray["TeamAwayScore"]=0;
+        } else {
+          $tempArray["TeamHomeScore"]=0;
+          $tempArray["TeamAwayScore"]=1;
+        }
+      } else {
+        $tempArray["TeamHomeScore"]=0;
+        $tempArray["TeamAwayScore"]=0;
+      }
+
+      $arrMatches[$rowSet["MatchKey"]]=$tempArray;
+
+    }
+
+    $insertQuery= "INSERT IGNORE INTO matchstates (MatchKey, StateDate, EventKey, TeamHomeScore, TeamAwayScore) VALUES (" . $rowSet["MatchKey"] . ",FROM_UNIXTIME(" . $rowSet["ScheduleDate"] . ")," .$rowSet["EventKey"] .",". $tempArray["TeamHomeScore"] . "," . $tempArray["TeamAwayScore"] . ") ON DUPLICATE KEY UPDATE TeamHomeScore= ".$tempArray["TeamHomeScore"]. ", TeamAwayScore= ".$tempArray["TeamAwayScore"];
+
+    $_databaseObject->queryPerf($insertQuery,"Insert Match State");
+  }
 }

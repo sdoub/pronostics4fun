@@ -253,3 +253,158 @@ function ComputeGroupScore ($groupKey){
 
 
 }
+
+
+function ComputeScoreState ($matchKey, $teamHomeScore, $teamAwayScore, $matchStateKey){
+  global  $_databaseObject;
+
+
+
+  $query = "SELECT results.PrimaryKey, matches.IsBonusMatch FROM results INNER JOIN matches ON results.MatchKey=matches.PrimaryKey WHERE MatchKey=$matchKey AND LiveStatus>0";
+  $resulSetMatch = $_databaseObject -> queryPerf ($query, "Get match result");
+  if ($_databaseObject -> num_rows()>0) {
+    $rowSetMatch = $_databaseObject -> fetch_assoc ($resulSetMatch);
+
+    if ($rowSetMatch["IsBonusMatch"]==1) {
+      $isBonus = "*2";
+    }
+    else {
+      $isBonus ="";
+    }
+
+    $_teamHomeScore = $teamHomeScore;
+    $_teamAwayScore = $teamAwayScore;
+
+    //Compute Perfect
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PlayerKey,
+    $matchStateKey,
+15$isBonus
+FROM forecasts
+WHERE forecasts.MatchKey=$matchKey
+AND TeamHomeScore=$_teamHomeScore
+AND TeamAwayScore=$_teamAwayScore) ON DUPLICATE KEY UPDATE Score=15$isBonus";
+
+    $_databaseObject -> queryPerf ($query, "Compute perfect result");
+
+    //Compute correct with good diff
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PlayerKey,
+    $matchStateKey,
+8$isBonus
+FROM forecasts
+WHERE forecasts.MatchKey=$matchKey
+AND TeamHomeScore<>$_teamHomeScore
+AND TeamAwayScore<>$_teamAwayScore
+AND $_teamHomeScore-$_teamAwayScore=TeamHomeScore-TeamAwayScore) ON DUPLICATE KEY UPDATE Score=8$isBonus";
+
+    $_databaseObject -> queryPerf ($query, "Compute correct result with good diff");
+
+
+    //Compute correct and good goals for one team
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PlayerKey,
+    $matchStateKey,
+6$isBonus
+FROM forecasts
+WHERE forecasts.MatchKey=$matchKey
+AND (TeamHomeScore=$_teamHomeScore
+OR TeamAwayScore=$_teamAwayScore)
+AND $_teamHomeScore-$_teamAwayScore<>TeamHomeScore-TeamAwayScore
+AND SIGN($_teamHomeScore-$_teamAwayScore)=SIGN(TeamHomeScore-TeamAwayScore)) ON DUPLICATE KEY UPDATE Score=6$isBonus";
+
+    $_databaseObject -> queryPerf ($query, "Compute correct and good goals for one team");
+
+
+    //Compute correct
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PlayerKey,
+    $matchStateKey,
+5$isBonus
+FROM forecasts
+WHERE forecasts.MatchKey=$matchKey
+AND TeamHomeScore<>$_teamHomeScore
+AND TeamAwayScore<>$_teamAwayScore
+AND SIGN($_teamHomeScore-$_teamAwayScore)=SIGN(TeamHomeScore-TeamAwayScore)
+AND $_teamHomeScore-$_teamAwayScore<>TeamHomeScore-TeamAwayScore) ON DUPLICATE KEY UPDATE Score=5$isBonus";
+
+    $_databaseObject -> queryPerf ($query, "Compute correct");
+
+    //Compute good goal for one team
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PlayerKey,
+    $matchStateKey,
+1$isBonus
+FROM forecasts
+WHERE forecasts.MatchKey=$matchKey
+AND (TeamHomeScore=$_teamHomeScore
+OR TeamAwayScore=$_teamAwayScore)
+AND SIGN($_teamHomeScore-$_teamAwayScore)<>SIGN(TeamHomeScore-TeamAwayScore)) ON DUPLICATE KEY UPDATE Score=1$isBonus";
+
+    $_databaseObject -> queryPerf ($query, "Compute good goal for one team");
+
+
+    //Compute bad result
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PlayerKey,
+    $matchStateKey,
+0
+FROM forecasts
+WHERE forecasts.MatchKey=$matchKey
+AND TeamHomeScore<>$_teamHomeScore
+AND TeamAwayScore<>$_teamAwayScore
+AND SIGN($_teamHomeScore-$_teamAwayScore)<>SIGN(TeamHomeScore-TeamAwayScore)) ON DUPLICATE KEY UPDATE Score=0";
+
+    $_databaseObject -> queryPerf ($query, "bad result");
+
+    //Compute without forecasts
+    $query= "INSERT IGNORE INTO playermatchstates (PlayerKey, MatchStateKey, Score)
+(SELECT
+PrimaryKey,
+    $matchStateKey,
+0
+FROM players
+WHERE NOT EXISTS (SELECT 1 FROM forecasts WHERE forecasts.PlayerKey=players.PrimaryKey AND forecasts.MatchKey=$matchKey))
+ON DUPLICATE KEY UPDATE Score=0";
+
+    $_databaseObject -> queryPerf ($query, "Without forecasts");
+  }
+}
+
+function ComputeGroupScoreState ($groupKey,$stateDate){
+  global $_databaseObject;
+
+    $query= "INSERT IGNORE INTO playergroupstates (PlayerKey, GroupKey, StateDate, Score, Bonus)
+      (SELECT playermatchstates.PlayerKey, $groupKey,FROM_UNIXTIME($stateDate), SUM(playermatchstates.Score),
+       CASE SUM(IF (playermatchstates.Score>=5,1,0))
+        WHEN 7 THEN 20
+        WHEN 8 THEN 40
+        WHEN 9 THEN 60
+        WHEN 10 THEN 100
+        ELSE 0 END  +
+		(SELECT COUNT(1)*2
+		   FROM votes
+		  WHERE votes.MatchKey=TMP.MatchKey AND votes.PlayerKey=playermatchstates.PlayerKey) Bonus
+         FROM (
+           SELECT MAX(matchstates.PrimaryKey) MatchStateKey,
+				  MatchKey
+      		 FROM matchstates
+      		WHERE UNIX_TIMESTAMP(matchstates.StateDate) <= $stateDate
+      		AND EXISTS (SELECT 1 FROM matches WHERE matches.GroupKey = $groupKey AND matches.PrimaryKey=matchstates.MatchKey)
+      		GROUP BY MatchKey
+      		ORDER BY matchstates.StateDate DESC
+      	) TMP INNER JOIN playermatchstates ON playermatchstates.MatchStateKey=TMP.MatchStateKey
+      	LEFT JOIN votes ON votes.MatchKey=TMP.MatchKey AND playermatchstates.PlayerKey=votes.PlayerKey
+		GROUP BY playermatchstates.PlayerKey
+      )";
+
+      $_databaseObject -> queryPerf ($query, "Compute group score ");
+
+
+}
