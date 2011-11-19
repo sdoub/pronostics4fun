@@ -2,7 +2,6 @@
 	$.fn.numberInput = function() {
 		return this.each(function() {
 			$(this).keydown(function(event){
-				$.log(event.keyCode);
 				return KEYS_ALLOWED[event.keyCode] ? true : false;
 			});
 		});

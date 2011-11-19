@@ -11,7 +11,6 @@ WriteScripts();
 ?>
 
 <script type="text/javascript" src="<?php echo ROOT_SITE;?>/js/jquery.ibutton.js"></script>
-
 <link type="text/css" href="<?php echo ROOT_SITE;?>/css/jquery.ibutton.p4f.css" rel="stylesheet" media="all" />
 
 <style>
@@ -51,8 +50,8 @@ WriteScripts();
 	<div style="height:20px;">&nbsp;</div>
 </center>
 <div style="margin-left:40px;">
-<label for="displayHelp" style="font-weight:bold;color:#FFFFFF;float:left;"><?php echo __encode("Afficher l'aide aux pronostics : ")?></label><input type="checkbox" id="displayHelp" name="displayHelp" checked="checked"></input>
-
+<label for="displayHelp" style="font-weight:bold;color:#FFFFFF;float:left;"><?php echo __encode("Afficher l'aide aux pronostics : ")?></label><input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?>></input>
+<span class="autosave_saving" style="display: none; ">Sauvegarde...</span>
 </div>
 <form id='frmForecast'><div class="flexcroll" style='overflow: auto; width: 860px; height: 450px;margin:auto;'>
 
@@ -102,11 +101,11 @@ WHERE matches.ScheduleDate>=NOW()
 
 	    $status ="";
 	    if ($rowSet["RemainingDays"]==0) {
-          $status = __encode("Début aujourd'hui");
+          $status = __encode(utf8_decode("DÃ©but aujourd'hui"));
         } else if ($rowSet["RemainingDays"]==1) {
-          $status = __encode("Début demain");
+          $status = __encode(utf8_decode("DÃ©but demain"));
         } else {
-          $status = __encode("Début dans ") . $rowSet["RemainingDays"] . " jours";
+          $status = __encode(utf8_decode("DÃ©but dans ")) . $rowSet["RemainingDays"] . " jours";
         }
 
 	    echo '<tr class="day"
@@ -123,12 +122,12 @@ WHERE matches.ScheduleDate>=NOW()
       echo '<td width="50px;">
 
 		<input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
-			type="text" class="textfield" id="TeamHomeScore' . $rowSet['TeamHomeKey'] . '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
-			name="TeamHomeScore" maxlength="1" size="3em" /></td>
+			type="text" class="textfield" id="TeamHomeScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
+			name="TeamHomeScore" maxlength="1" size="3em" data-value="' .$rowSet["ForecastTeamHomeScore"] . '"/></td>
 		<td width="50px;"><input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
-			type="text" class="textfield" id="TeamAwayScore' . $rowSet['TeamHomeKey'] . '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
+			type="text" class="textfield" id="TeamAwayScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
 			name="TeamAwayScore" maxlength="1"
-			size="3em" /></td>
+			size="3em" data-value="' .$rowSet["ForecastTeamAwayScore"] . '"/></td>
 			';
       	  echo '<td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamAwayKey'] . '.png"></img></td>
       	  <td class="teamAway">' . $rowSet['TeamAwayName'] . '</td>';
@@ -196,112 +195,189 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 ?>
   </table>
   </div>
-  <div id="footerForecast" style="text-align:right;margin-right:30px;" ><input type="submit"
-	value="Valider" class="buttonfield" id="btn" name="btn"></div>
   </form>
 
   <script>
 		var _matchKey="";
-  $(function() {
-	//*/ submit handler
-	$("#frmForecast").submit( function() {
+  $(document).ready(function($) {
 
-		$("tr").each(function (index) {
-			try {
-			if ($(this).attr('match-key')) {
+	$('#displayHelp').cookieBind();
+	$("input[type='text']").cookieBind().html (function () {
+	$("input[type='text']").each(function (index) {
+		$("#"+this.id).unbind('blur');
+		$("#"+this.id).bind ('blur', function () {
+		var tr = $(this).parent().parent();
+		if ($(tr).attr('match-key')) {
+			var matchKey = $(tr).attr('match-key');
+			_matchKey =matchKey;
+			$(tr).find("input[name=TeamHomeScore]").each (function (index) {
+				teamHomeScore= $(this).val();
+				teamHomeScoreSavedValue= $(this).attr('data-value');
+			});
+			$(tr).find("input[name=TeamAwayScore]").each (function (index) {
+				teamAwayScore= $(this).val();
+				teamAwayScoreSavedValue= $(this).attr('data-value');
+			});
 
-				var matchKey = $(this).attr('match-key');
-				_matchKey =matchKey;
-				var teamHomeScore ="";
-				$(this).find("input[name=TeamHomeScore]").each (function (index) {
-					teamHomeScore= $(this).val();
-				});
-				var teamAwayScore ="";
-				$(this).find("input[name=TeamAwayScore]").each (function (index) {
-					teamAwayScore= $(this).val();
-				});
-				if (teamAwayScore && teamHomeScore){
+			if (teamHomeScore!="" && teamAwayScore && (teamAwayScore!=teamAwayScoreSavedValue || teamHomeScore!=teamHomeScoreSavedValue)){
+				$(tr).find("td:eq(0)").html("<img style='width:20px;height:20px;' title=\"Votre pronostic n'est pas sauvegard&eacute;!\nCliquer pour sauvegarder\" src='<?php echo ROOT_SITE;?>/images/warning.32px.png' />").unbind('click').bind('click', function () {
+					SaveForecast (matchKey);
+					$(this).unbind('click')
+				}).css('cursor','pointer');
 
-					$(this).find("td:eq(0)").html("<img src='<?php echo ROOT_SITE;?>/images/wait.gif' />");
+				SaveForecast (matchKey);
 
-					$.ajax({
-						type: "POST",
-						url: 'submodule.post.php?SubModule=3',
-						  dataType: 'json',
-						  data: { matchKey: matchKey, teamHomeScore: teamHomeScore, teamAwayScore: teamAwayScore},
-						  success: function (data) {
-							  if(data.status==true){
-								$("tr[match-key="+matchKey+"]").find("td:eq(0)").fadeOut('slow', function(){
-									$(this).html("<img style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.png' />").fadeIn();
-								}).html();
-							  }
-								else {
-									$("tr[match-key="+matchKey+"]").find("td:eq(0)").html("<img title='"+data.message+"' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
-								}
-						  }
-											  ,
-						  error: function (XMLHttpRequest, textStatus, errorThrown)
-						  {
-													$.log(XMLHttpRequest);
-													$.log(textStatus);
-													$.log(errorThrown);
-												}
-
-						});
-
-									}
+			} else {
+				if (teamHomeScore!="" && teamAwayScore!="" &&  teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
+					$(tr).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
+				else if (teamHomeScore!="" || teamAwayScore!="")
+					$(tr).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 Ã©quipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+				else
+					$(tr).find("td:eq(0)").html("");
 			}
-			}
-			catch(ex) {$.log(ex);}
-		});
-		return false;
+		}
+
+
+	})
 	});
 
-	function callbackForecast(data) {
 
-		if(data.status==true){
+	function SaveForecast (matchKey) {
+		var trMatch = $("tr[match-key="+matchKey+"]");
+		$(trMatch).find("input[name=TeamHomeScore]").each (function (index) {
+			teamHomeScore= $(this).val();
+			teamHomeScoreSavedValue= $(this).attr('data-value');
+		});
+		$(trMatch).find("input[name=TeamAwayScore]").each (function (index) {
+			teamAwayScore= $(this).val();
+			teamAwayScoreSavedValue= $(this).attr('data-value');
+		});
 
-			$("tr[match-key="+_matchKey+"]").find("td:eq(0)").html("<img src='<?php echo ROOT_SITE;?>/images/wait.gif' />");
-
-			$(waitId).fadeOut('slow', function(){
-					$(wrapperId).slideUp('slow',function(){
-						$(this).html(data.message).slideDown('fast',function(){
-							$.log('attach submit');
-							// */ submit handler
-							$("#frmForecastValidated").submit( function() {
-
-
-								$.closePopupLayer();
-								try {
-								$('div[match-key='+_matchKey+']').removeClass("ToBeDone" + data.isBonus);
-								$('div[match-key='+_matchKey+']').addClass("AlreadyDone" + data.isBonus);
-								}
-								catch (exception)
-								{
-									$.log(exception);
-								}
-								try {
-									$('a[match-key='+_matchKey+']').html(data.teamHomeScore + " - " + data.teamAwayScore);
-								}
-								catch (exception)
-								{
-									$.log(exception);
-								}
-								return false;
-							});
-
-							$("#btnClose").focus();
-							// */
-						});
-					});
+		$(trMatch).find("td:eq(0)").html("<img title='Sauvegarde en cours ...' src='<?php echo ROOT_SITE;?>/images/wait.gif' />").fadeIn('fast');
+		$.ajax({
+		type: "POST",
+		url: 'submodule.post.php?SubModule=3',
+		  dataType: 'json',
+		  data: { matchKey: matchKey, teamHomeScore: teamHomeScore, teamAwayScore: teamAwayScore},
+		  success: function (data) {
+			  if(data.status==true){
+				$(trMatch).find("input:eq(0)").attr("data-value",data.teamHomeScore);
+				$(trMatch).find("input:eq(1)").attr("data-value",data.teamAwayScore);
+				$(trMatch).find("td:eq(0)").fadeOut('slow', function(){
+					$(trMatch).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />").fadeIn();
 				}).html();
+				$(trMatch).find("#tendancyHome").css('width',data.forecastsHomeWidth + '%').html(data.forecastsHome + '%');
+				$(trMatch).find("#tendancyNull").css('width',data.forecastsDrawWidth + '%').html(data.forecastsDraw + '%');
+				$(trMatch).find("#tendancyAway").css('width',data.forecastsAwayWidth + '%').html(data.forecastsAway + '%');
+				$(trMatch).find("div.detail2").html(data.nbrOfPlayers + ' participants');
+			  }
+				else {
+					$(trMatch).find("td:eq(0)").html("<img title='"+data.message+"' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+				}
+		  }
+							  ,
+		  error: function (XMLHttpRequest, textStatus, errorThrown)
+		  {
+									$.log(XMLHttpRequest);
+									$.log(textStatus);
+									$.log(errorThrown);
+								}
 
-		} else {
-			$(waitId).html(data.message).slideDown('fast', function(){
-				$(teamHomeScoreId).focus();
-			});
-		}
+		});
 	}
+
+
+
+	$("tr").each(function (index) {
+		if ($(this).attr('match-key')) {
+			var matchKey = $(this).attr('match-key');
+			_matchKey =matchKey;
+			$(this).find("input[name=TeamHomeScore]").each (function (index) {
+				teamHomeScore= $(this).val();
+				teamHomeScoreSavedValue= $(this).attr('data-value');
+			});
+			$(this).find("input[name=TeamAwayScore]").each (function (index) {
+				teamAwayScore= $(this).val();
+				teamAwayScoreSavedValue= $(this).attr('data-value');
+			});
+
+			if (teamHomeScore!="" && teamAwayScore && (teamAwayScore!=teamAwayScoreSavedValue || teamHomeScore!=teamHomeScoreSavedValue)){
+				$(this).find("td:eq(0)").html("<img style='width:20px;height:20px;' title=\"Votre pronostic n'est pas sauvegard&eacute;!\nCliquer pour sauvegarder\" src='<?php echo ROOT_SITE;?>/images/warning.32px.png' />").unbind('click').bind('click', function () {
+						SaveForecast (matchKey);
+						$(this).unbind('click')
+					}).css('cursor','pointer');
+
+
+			} else {
+				if (teamHomeScore!="" && teamAwayScore!="" && teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
+					$(this).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
+				else if (teamHomeScore!="" || teamAwayScore!="")
+					$(this).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 Ã©quipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+			}
+		}
+	})
+	});
+
+	//*/ submit handler
+//	$("#frmForecast").submit( function() {
+//
+//		$("tr").each(function (index) {
+//			try {
+//			if ($(this).attr('match-key')) {
+//
+//				var matchKey = $(this).attr('match-key');
+//				_matchKey =matchKey;
+//				var teamHomeScore ="";
+//				var teamHomeScoreSavedValue="";
+//				$(this).find("input[name=TeamHomeScore]").each (function (index) {
+//					teamHomeScore= $(this).val();
+//					teamHomeScoreSavedValue= $(this).attr('data-value');
+//				});
+//				var teamAwayScore ="";
+//				var teamAwayScoreSavedValue="";
+//				$(this).find("input[name=TeamAwayScore]").each (function (index) {
+//					teamAwayScore= $(this).val();
+//					teamAwayScoreSavedValue= $(this).attr('data-value');
+//				});
+//				if (teamAwayScore && teamHomeScore && (teamAwayScore!=teamAwayScoreSavedValue || teamHomeScore!=teamHomeScoreSavedValue)){
+//
+//					$(this).find("td:eq(0)").html("<img title='Sauvegarde en cours ...' src='<?php echo ROOT_SITE;?>/images/wait.gif' />");
+//
+//					$.ajax({
+//						type: "POST",
+//						url: 'submodule.post.php?SubModule=3',
+//						  dataType: 'json',
+//						  data: { matchKey: matchKey, teamHomeScore: teamHomeScore, teamAwayScore: teamAwayScore},
+//						  success: function (data) {
+//							  if(data.status==true){
+//								$("tr[match-key="+matchKey+"]").find("input:eq(0)").attr("data-value",data.teamHomeScore);
+//								$("tr[match-key="+matchKey+"]").find("input:eq(1)").attr("data-value",data.teamAwayScore);
+//								$("tr[match-key="+matchKey+"]").find("td:eq(0)").fadeOut('slow', function(){
+//									$(this).html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />").fadeIn();
+//								}).html();
+//							  }
+//								else {
+//									$("tr[match-key="+matchKey+"]").find("td:eq(0)").html("<img title='"+data.message+"' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+//								}
+//						  }
+//											  ,
+//						  error: function (XMLHttpRequest, textStatus, errorThrown)
+//						  {
+//													$.log(XMLHttpRequest);
+//													$.log(textStatus);
+//													$.log(errorThrown);
+//												}
+//
+//						});
+//
+//									}
+//			}
+//			}
+//			catch(ex) {$.log(ex);}
+//		});
+//		return false;
+//	});
+
 	$("input[name=TeamHomeScore]").numberInput();
 	$("input[name=TeamAwayScore]").numberInput();
   });
@@ -327,7 +403,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 	   	$(":input[rel]").spin({max:9, min:0,btnCss: {cursor: 'pointer', padding: 0, margin: '5px 0px 0px 0px', verticalAlign: 'top'}});
 
 
-	   	$("#displayHelp").iButton({
+	   	$("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").iButton({
 	   	    labelOn: "Oui"
 	   	     , labelOff: "Non",
 	   	  change : function ($input){
@@ -340,7 +416,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 	   	}
 	   	   });
 	function attachToolTip () {
-
+		if($("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").is(":checked")) {
 		$(":input[rel]").cluetip(
 				{positionBy:'fixed',
 					showTitle:false,
@@ -361,6 +437,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 						$('#sameMatchHistory').removeClass('active');
 					}
 				});
+		}
 	}
 
 	attachToolTip();
