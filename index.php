@@ -21,7 +21,20 @@ define('IEBROWSER',"Internet Explorer");
 <meta name="robots" content="index,follow"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="gwt:property" content="locale=fr">
-<title>Pronostics4fun - Ligue 1</title>
+<title>
+<?php
+if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
+?>
+Beta -
+<?php }?>
+
+<?php
+if ($_SERVER['SERVER_NAME']=="localhost") {
+?>
+Dev -
+<?php }?>
+Pronostics4fun - Ligue 1</title>
+
 <meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnés de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journées de la ligue 1.
 Des classements et des statistiques sont établis à la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
 <meta name="keywords" content="p4f, pronostics 4 fun, pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
@@ -39,11 +52,25 @@ Des classements et des statistiques sont établis à la fin de chaque journée de c
 <link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/custom-theme/jquery-ui-1.8.16.custom.css' />
 
 
+
 <?php
-if ($_browserInfo['name']!=IEBROWSER) {
+if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
 ?>
-<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jixedbar.min.js"></script>
+<style>
+#header h1 a span {
+	background: url(<?php echo ROOT_SITE; ?>/images/logobeta.png) no-repeat scroll left top transparent;}
+</style>
 <?php }?>
+
+<?php
+if ($_SERVER['SERVER_NAME']=="localhost") {
+?>
+<style>
+#header h1 a span {
+	background: url(<?php echo ROOT_SITE; ?>/images/logodev.png) no-repeat scroll left top transparent;}
+</style>
+<?php }?>
+
 
 </head>
 <body>
