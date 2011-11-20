@@ -498,7 +498,7 @@ $(document).ready(function() {
 
 
 								        	 //Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/TropheeGold.png"/>');
+								            this.pasteHTML('<img class="news" src="images/TropheeGold.png"/>');
 
 								        }
 								        },
@@ -508,7 +508,7 @@ $(document).ready(function() {
 								            text: "Ranking",
 								            action: function(btn) {
 								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/podium.png"/>');
+								            this.pasteHTML('<img class="news" src="images/podium.png"/>');
 
 								        }
 								        },
@@ -518,7 +518,7 @@ $(document).ready(function() {
 								            text: "Stats",
 								            action: function(btn) {
 								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/stats.png"/>');
+								            this.pasteHTML('<img class="news" src="images/stats.png"/>');
 
 								        }
 								        },
@@ -528,7 +528,7 @@ $(document).ready(function() {
 								            text: "Bonus",
 								            action: function(btn) {
 								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/star_48.png"/>');
+								            this.pasteHTML('<img class="news" src="images/star_48.png"/>');
 
 								        }
 								        },
@@ -538,7 +538,7 @@ $(document).ready(function() {
 								            text: "p4f",
 								            action: function(btn) {
 								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/p4f.update.png"/>');
+								            this.pasteHTML('<img class="news" src="images/p4f.update.png"/>');
 
 								        }
 								        },
@@ -548,7 +548,7 @@ $(document).ready(function() {
 								            text: "Calendrier",
 								            action: function(btn) {
 								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="http://localhost/Ligue12010/images/calendar.png"/>');
+								            this.pasteHTML('<img class="news" src="images/calendar.png"/>');
 
 								        }
 								        }]
