@@ -1,15 +1,17 @@
 <?php
 if(!defined('VALID_ACCESS_CONFIG_')) exit('Config.php -> direct access is not allowed.');
 
-if ($_SERVER['SERVER_NAME']=="localhost") {
+$posLocalAddress = strpos($_SERVER['SERVER_NAME'],"192.168.");
+if ($_SERVER['SERVER_NAME']=="localhost" || $posLocalAddress==0) {
 
   $pathUrl = explode("/",$_SERVER["REQUEST_URI"]);
+
   /* -- Config de dev */
   DEFINE ('SQL_LOGIN','sdoub');
   DEFINE ('SQL_PWD','aurelie');
   DEFINE ('SQL_DB','Pronostics4Fun');
   DEFINE ('SQL_HOST','127.0.0.1');
-  DEFINE ('ROOT_SITE', "http://localhost/".$pathUrl[1]);
+  DEFINE ('ROOT_SITE', "http://".$_SERVER['SERVER_NAME']."/".$pathUrl[1]);
   DEFINE ('REFRESH_LIVE_FROM_SERVER','0');
   DEFINE ('COMPETITION','3');
   DEFINE ('SHIFTED_HOUR','0');
