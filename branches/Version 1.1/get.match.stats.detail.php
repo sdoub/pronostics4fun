@@ -55,9 +55,9 @@ if ($rowSet["IsBonusMatch"]==1) {
 echo "<div style='width:560px;height:350px;width: 560px; padding-top: 20px; background: url(\"".ROOT_SITE."/images/tooltipmatchbg.png\") no-repeat scroll center bottom transparent;'>";
 
 echo "<div style='width:560px;'>
-  <div  style='float: left; width: 100px; text-align: center;'><img src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png'></img></div>
+  <div  style='float: left; width: 100px; text-align: center;'><img style='width:50px;height:50px;' src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png'></img></div>
   <div style='white-space:nowrap;color:#FFFFFF;float: left; text-align: center; font-weight: bold; font-size: 30px; width: 180px;height:36px;line-height:33px;' >$teamHomeName</div>
-  <div  style='float: right;width: 100px; text-align: center;' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png'></img></div>
+  <div  style='float: right;width: 100px; text-align: center;' ><img style='width:50px;height:50px;' src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png'></img></div>
   <div  style='white-space:nowrap;color:#FFFFFF;float: right; width: 180px; text-align: center; font-size: 30px; font-weight: bold;height:36px;line-height:33px;'>$teamAwayName</div>";
 echo"</div>";
 
