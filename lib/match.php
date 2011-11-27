@@ -645,6 +645,7 @@ UNION ALL
 SELECT matches.PrimaryKey, matches.GroupKey, UNIX_TIMESTAMP(matches.ScheduleDate),1, 1,0
   FROM matches
   INNER JOIN groups ON groups.PrimaryKey = matches.GroupKey AND groups.PrimaryKey=$_groupKey
+  INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus>0
 UNION ALL
 SELECT matches.PrimaryKey, matches.GroupKey, UNIX_TIMESTAMP(matches.ScheduleDate)+ (100 *60),2, 1,0
   FROM matches
