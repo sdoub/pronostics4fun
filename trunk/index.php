@@ -373,15 +373,19 @@ switch ($_currentPage)
 ?>
 });
 </script>
-<?php if ($_isAuthenticated)
+<?php if ($_isAuthenticated && !IS_LOCAL)
 {
-$rootSite = "http://pronostics4fun.com"; //ROOT_SITE;
+  $rootSite = "http://pronostics4fun.com"; //ROOT_SITE;
   $avatarPath = $rootSite . '/images/DefaultAvatar.jpg';
   $avatarName= $_authorisation->getConnectedUserInfo("AvatarName");
   if (!empty($avatarName)) {
     $avatarPath= $rootSite . '/images/avatars/'.$avatarName;
   }
-  echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, "Bonjour!"));
+  if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
+    echo(envapi_get_html_for_reg_user('44429-vgUMa3nty16XWIxxSJmZlcu3sErngC2o', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
+  } else {
+    echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
+  }
 ?>
 <!-- Envolve Chat -->
 <script type="text/javascript">
