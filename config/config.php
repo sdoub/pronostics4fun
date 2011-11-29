@@ -2,7 +2,7 @@
 if(!defined('VALID_ACCESS_CONFIG_')) exit('Config.php -> direct access is not allowed.');
 
 $posLocalAddress = strpos($_SERVER['SERVER_NAME'],"192.168.");
-if ($_SERVER['SERVER_NAME']=="localhost" || $posLocalAddress==0) {
+if ($_SERVER['SERVER_NAME']=="localhost" || ($posLocalAddress!="" && $posLocalAddress==0)) {
 
   $pathUrl = explode("/",$_SERVER["REQUEST_URI"]);
 
@@ -17,6 +17,7 @@ if ($_SERVER['SERVER_NAME']=="localhost" || $posLocalAddress==0) {
   DEFINE ('SHIFTED_HOUR','0');
   DEFINE ('WITH_PERF_AND_ERROR',true);
   DEFINE ('EXTERNAL_WEB_SITE','www.lfp.fr');
+  DEFINE ('IS_LOCAL',true);
   date_default_timezone_set('Europe/Paris');
 } else {
 
@@ -31,6 +32,7 @@ if ($_SERVER['SERVER_NAME']=="localhost" || $posLocalAddress==0) {
   DEFINE ('SHIFTED_HOUR','0');
   DEFINE ('WITH_PERF_AND_ERROR',false);
   DEFINE ('EXTERNAL_WEB_SITE','www.lfp.fr');
+  DEFINE ('IS_LOCAL',false);
   date_default_timezone_set('Europe/Paris');
 }
 ?>
