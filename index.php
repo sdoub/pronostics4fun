@@ -381,7 +381,7 @@ $rootSite = "http://pronostics4fun.com"; //ROOT_SITE;
   if (!empty($avatarName)) {
     $avatarPath= $rootSite . '/images/avatars/'.$avatarName;
   }
-  echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, "Bonjour!"));
+  echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', utf8_encode(__decode($_authorisation->getConnectedUser())) , '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
 ?>
 <!-- Envolve Chat -->
 <script type="text/javascript">
