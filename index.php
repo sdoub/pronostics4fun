@@ -384,7 +384,7 @@ switch ($_currentPage)
   if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
     echo(envapi_get_html_for_reg_user('44429-vgUMa3nty16XWIxxSJmZlcu3sErngC2o', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
   } else {
-    echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
+    echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', utf8_encode(__decode($_authorisation->getConnectedUser())), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
   }
 ?>
 <!-- Envolve Chat -->
