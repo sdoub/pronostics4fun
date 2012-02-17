@@ -209,7 +209,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 		var _matchKey="";
   $(document).ready(function($) {
 
-	$('#displayHelp').cookieBind();
+	$('#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>').cookieBind();
 	$("input[type='text']").cookieBind().html (function () {
 	$("input[type='text']").each(function (index) {
 		$("#"+this.id).unbind('blur');
