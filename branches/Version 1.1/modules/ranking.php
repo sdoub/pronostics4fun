@@ -76,7 +76,7 @@ echo '<script type="text/javascript">
 				{display: "' . __encode("Joueur") . '", name : "NickName", width : columnSize[1], sortable : true, align: "left"},
 				{display: "' . __encode("Total") . '", name : "Score", width : columnSize[2], sortable : true, align: "right"},
 				{display: "' . __encode("Points") . '", name : "ScoreWithoutBonus", width : columnSize[3], sortable : true, align: "right"},
-				{display: "' . __encode("Bonus") . '", name : "Bonus", width : columnSize[4], sortable : true, align: "right"},
+				{display: "' . __encode("Bonus") . '", name : "BonusScore", width : columnSize[4], sortable : true, align: "right"},
 				{display: "' . __encode("Max.") . '", name : "ScoreMax", width : columnSize[5], sortable : true, align: "right"},
 				{display: "' . __encode("Min.") . '", name : "ScoreMin", width : columnSize[6], sortable : true, align: "right"},
 				{display: "' . __encode("1<sup>er</sup>") . '", name : "FirstRank", width : columnSize[7], sortable : true, align: "right"},
