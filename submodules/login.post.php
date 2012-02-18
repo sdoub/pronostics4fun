@@ -24,7 +24,7 @@ else
       if ($is_reset) {
         //@ success
         $arr["status"] = true;
-        $arr["message"] = __encode("Un email avec votre nouveau mot de passe a été envoyé.");
+        $arr["message"] = __encode("Un email vous a été envoyé avec la procédure à suivre.");
       }
       else {
         $arr["status"] = false;

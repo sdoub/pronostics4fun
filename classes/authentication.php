@@ -6,7 +6,7 @@ define('VALID_ACCESS_SENDEMAIL_', true);
 define('SESSION_DURATION', 45);
 
 require_once("sendemail.php");
-require_once(dirname(__FILE__)."/../lib/PHPMailer/class.phpmailer.php");
+require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
 include_once (dirname(__FILE__)."/../lib/safeIO.php");
 
 class Authorization
@@ -31,21 +31,21 @@ class Authorization
   public function form()
   {
     try {
-    $nickName= "";
-    if (isset($_COOKIE["NickName"])) {
-      $nickName=$_COOKIE["NickName"];
-    }
+      $nickName= "";
+      if (isset($_COOKIE["NickName"])) {
+        $nickName=$_COOKIE["NickName"];
+      }
 
-    $htmlForm =	'<form id="frmlogin">'.
+      $htmlForm =	'<form id="frmlogin">'.
 						'<label>Pseudo / Email:</label>'.
 						 '<input type="text" name="u" id="u" class="textfield" value="'.$nickName.'"/>'.
 						 '<label>Mot de passe</label>'.
 						 '<input type="password" name="p" id="p" class="textfield" />'.
-                         '<label style="margin-bottom:15px;text-align:right;font-size:10px;text-decoration:underline;cursor:pointer;" id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
+                         '<label style="margin-bottom:15px;text-align:left;font-size:10px;text-decoration:underline;cursor:pointer;" id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
 						 '<span style="padding-top:10px;"><input type="checkbox" name="keepConnection" id="keepConnection" class="checkboxfield" /><label for="keepConnection" class="checkboxlabel">Connexion automatique</label></span>'.
 						 '<input type="submit" name="btn" id="btn" class="buttonfield" value="Se connecter" />'.
 						 '</form>';
-    return $htmlForm;
+      return $htmlForm;
     }
     catch (Exception $e) {
       return $_COOKIE["NickName"];
@@ -281,6 +281,33 @@ class Authorization
     return $return;
   }
 
+  public function changePassword ($password, $activationKey,$nickName,$email)
+  {
+    global $_databaseObject;
+    $return = false;
+    if($password && $activationKey)
+    {
+      $newActivationKey = generatePassword(15,4);
+      if ($password) {
+        $sql = "UPDATE players SET `Password`='".md5(mysql_real_escape_string($password))."' , ActivationKey='".$newActivationKey."' WHERE ActivationKey='" . $activationKey . "'";
+        if(!$_databaseObject->queryPerf($sql,"Update Account"))
+        {
+          return false;
+        }
+        else
+        {
+          $this->SendEmailChangeAccountPassword($nickName, $email, $activationKey);
+          $return = true;
+        }
+      }
+      else {
+        $return = true;
+      }
+      unset($sql);
+    }
+    return $return;
+  }
+
   public function update ($password, $firstName, $lastName, $email, $defaultView, $avatar, $receiveAlert,$receiveResult)
   {
     global $_databaseObject;
@@ -310,16 +337,7 @@ class Authorization
       else
       {
         if ($password) {
-          $sql = "UPDATE players SET `Password`='".md5(mysql_real_escape_string($password))."' WHERE PrimaryKey=" . $_SESSION['exp_user']['PrimaryKey'];
-          if(!$_databaseObject->queryPerf($sql,"Update Account"))
-          {
-            return false;
-          }
-          else
-          {
-            $this->SendEmailUpdateAccount($_SESSION['exp_user']['NickName'], $email, $activationKey);
-            $return = true;
-          }
+          $return = $this->changePassword($password, $activationKey, $_SESSION['exp_user']['NickName'],$email);
         }
         else {
           $return = true;
@@ -342,89 +360,109 @@ class Authorization
 
   private function SendEmailNewAccount ($pseudo, $email, $activationKey)
   {
-    $cMail = new cPHPezMail();
 
-    //Don't try to add invalid e-mail address format
-    $cMail->AddTo('admin@pronostics4fun.com', 'Pronostics4Fun Administrateur');
+    $mail = new P4FMailer();
+    $return = false;
+    try {
+      $mail->SetFrom($email, $pseudo);
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - $pseudo vient de s'inscrire!";
 
-    $cMail->SetFrom($email, $pseudo);
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>" . __encode($pseudo . ' a créé un nouveau compte') . "</h3>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
 
-    $cMail->SetSubject($pseudo . " vient de s'inscrire!");
+      $mail->MsgHTML($emailBody);
 
-    $emailBody = "<h3>" . __encode($pseudo . ' a créé un nouveau compte') . "</h3>";
-    $emailBody .= "</br>";
-    $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 
-    $cMail->SetBodyHTML($emailBody);
+      $mail->AddAttachment("images/Logo.png");      // attachment
 
-    $cMail->SetCharset('windows-1252');
-    $cMail->SetEncodingBit("8bit");
+      $mail->Send();
+      $return = true;
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
 
-    //send your e-mail
-    return $cMail->Send();
-
-    unset($cMail);
-
+    unset($mail);
+    return $return;
 
   }
 
-  private function SendEmailUpdateAccount ($pseudo, $email, $activationKey)
+  private function SendEmailChangeAccountPassword ($pseudo, $email, $activationKey)
   {
-    $cMail = new cPHPezMail();
+    $mail = new P4FMailer();
+    $return = false;
 
-    //Don't try to add invalid e-mail address format
-    $cMail->AddTo('admin@pronostics4fun.com', 'Pronostics4Fun Administrateur');
+    try {
+      $mail->SetFrom($email, $pseudo);
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - Changement de mot de passe";
 
-    $cMail->SetFrom($email, $pseudo);
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>" . __encode($pseudo . ' a changé son mot de passe') . "</h3>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
 
-    $cMail->SetSubject('Modification de compte');
+      $mail->MsgHTML($emailBody);
 
-    $emailBody = "<h3>" . __encode($pseudo . ' a mis à jour son compte') . "</h3>";
-    $emailBody .= "</br>";
-    $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 
-    $cMail->SetBodyHTML($emailBody);
+      $mail->AddAttachment("images/Logo.png");      // attachment
 
-    $cMail->SetCharset('windows-1252');
-    $cMail->SetEncodingBit("8bit");
+      $mail->Send();
+      $return = true;
 
-    //send your e-mail
-    return $cMail->Send();
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
 
-    unset($cMail);
-
+    unset($mail);
+    return $return;
 
   }
 
   private function SendEmail ($pseudo, $email, $activationKey)
   {
-    $cMail = new cPHPezMail();
 
-    //Don't try to add invalid e-mail address format
-    $cMail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+    $mail = new P4FMailer();
+    $return = false;
 
-    $cMail->AddTo($email, $pseudo);
+    try {
+      $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - Activez votre compte";
 
-    $cMail->SetSubject('Activation de votre compte Pronostics4Fun');
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>" . __encode('Merci ' . $pseudo . ' de vous êtes inscrit sur Pronostics4Fun') . "</h3>";
+      $emailBody .= "<br/>";
+      $emailBody .= "<p>" . __encode('Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :') . "</p>";
+      $emailBody .= "<a href='" . ROOT_SITE . "/account.activation.php?ActivationKey=" . $activationKey . "'>" . ROOT_SITE . "/AccountActivation.php?ActivationKey=" . $activationKey . "</a>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
 
-    $emailBody = "<h3>" . __encode('Merci ' . $pseudo . ' de vous êtes inscrit sur Pronostics4Fun') . "</h3>";
-    $emailBody .= "<br/>";
-    $emailBody .= "<p>" . __encode('Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :') . "</p>";
-    $emailBody .= "<a href='" . ROOT_SITE . "/account.activation.php?ActivationKey=" . $activationKey . "'>" . ROOT_SITE . "/AccountActivation.php?ActivationKey=" . $activationKey . "</a>";
-    $emailBody .= "</br>";
-    $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $mail->MsgHTML($emailBody);
 
-    $cMail->SetBodyHTML($emailBody);
+      $mail->AddAddress($email, $pseudo);
 
-    $cMail->SetCharset('TIS-620');
-    $cMail->SetEncodingBit(8);
+      $mail->AddAttachment("images/Logo.png");      // attachment
 
-    //send your e-mail
-    return $cMail->Send();
+      $mail->Send();
+      $return = true;
 
-    unset($cMail);
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
 
-
+    unset($mail);
+    return $return;
   }
 
 
@@ -490,49 +528,25 @@ class Authorization
       $playerKey = $rowSet["PrimaryKey"];
       $nickName = $rowSet["NickName"];
       $emailAddress = $rowSet["EmailAddress"];
+      //$activationKey = $rowSet["ActivationKey"];
 
-      $newPassword = generatePassword(15,4);
-      $sqlReset = "UPDATE players SET Password = '".md5($newPassword)."' WHERE ";
+      $activationKey = generatePassword(15,4);
+      $sqlReset = "UPDATE players SET ActivationKey = '".$activationKey."' WHERE ";
       $sqlReset .= "PrimaryKey=". $playerKey;
 
       if ($_databaseObject->queryPerf($sqlReset,"Reset password with new one generated")) {
 
-        $mail = new PHPMailer(true);
+        $mail = new P4FMailer();
 
         try {
-//          if (ROOT_SITE!="http://pronostics4fun.com") {
-//            $mail->IsSMTP(); // telling the class to use SMTP
-//            $mail->Host       = "pronotics4fun.com"; // SMTP server
-//            $mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
-//            // 1 = errors and messages
-//            // 2 = messages only
-//            $mail->SMTPAuth   = true;                  // enable SMTP authentication
-//            $mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-//            $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
-//            $mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-//            $mail->Username   = "sebastien.dubuc@gmail.com";  // GMAIL username
-//            $mail->Password   = "aurelie040697";            // GMAIL password
-//          }
-          //$mail->AddCustomHeader("Precedence: bulk");
-          //pronostics4fun.com. IN TXT "v=spf1 a mx ptr include:gmail.com ~all"
-
           $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
           $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
           $mail->Subject    = "Pronostics4Fun - Réinitialisation du mot de passe";
 
           $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
-          $mail->MsgHTML(file_get_contents(ROOT_SITE.'/email.reset.password.php?NickName='.$nickName.'&Password='.$newPassword));
-          //$mail->MsgHTML($emailBody);
-
-//          if (ROOT_SITE=="http://pronostics4fun.com") {
-            $address= $emailAddress;
-//          }
-//          else {
-//            $address = "sebastien.dubuc@gmail.com";
-//          }
+          $mail->MsgHTML(file_get_contents(ROOT_SITE.'/email.reset.password.php?NickName='.$nickName.'&Key='.$activationKey));
+          $address= $emailAddress;
 
           $mail->AddAddress($address, $nickName);
 
@@ -625,9 +639,9 @@ class Authorization
 
     setcookie("UserId", "", time() - 60, "/");
     if (isset($_COOKIE["UserId"]))
-      unset($_COOKIE["UserId"]);
+    unset($_COOKIE["UserId"]);
     if (isset($_SESSION['exp_user']))
-      unset($_SESSION['exp_user']);
+    unset($_SESSION['exp_user']);
   }
 
   public function renew_session()
