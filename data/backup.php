@@ -1,14 +1,14 @@
 #!/usr/local/bin/php
 <?
 
-require_once(dirname(__FILE__)."/../lib/PHPMailer/class.phpmailer.php");
+require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
 
 $currentDate = strftime("%d %b %Y",time());
 $filename= strftime("pronostilxp4f-%Y%m%d",time()). ".sql";
 system("mysqldump --host=mysql51-39.perso --user=pronostilxp4f --password=jQjspq2q pronostilxp4f > " . $filename );
 system("gzip " . $filename);
 
-$mail             = new PHPMailer(true);
+$mail = new P4FMailer();
 try {
 
   $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
@@ -19,7 +19,7 @@ try {
 
   $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
-  $mail->MsgHTML("Sauvegarde de la base !!");
+  $mail->MsgHTML(file_get_contents('http://pronostics4fun.com/database.stats.php'));
 
   $mail->AddAddress("sebastien.dubuc@gmail.com", "Sébastien Dubuc");
 
