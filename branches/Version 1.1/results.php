@@ -13,7 +13,7 @@ $currentTime = time();
 $query= "SELECT players.PrimaryKey PlayerKey,
 players.EmailAddress,
 players.NickName,
-(SELECT MAX(PrimaryKey) FROM groups WHERE IsCompleted=1 AND CompetitionKey=" . COMPETITION . ") GroupKey
+(SELECT MAX(PrimaryKey) FROM groups WHERE IsCompleted=1 AND CompetitionKey=" . COMPETITION . " AND DATE(groups.EndDate)=DATE(NOW())-1) GroupKey
 FROM playersenabled players
 WHERE players.ReceiveResult=1
   AND players.IsResultEmailSent=0
