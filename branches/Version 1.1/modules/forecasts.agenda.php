@@ -454,7 +454,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 
 		$.openPopupLayer({
 			name: "VotePopup",
-			width: "500",
+			width: "550",
 			height: "500",
 			url: "submodule.loader.php?SubModule=14"
 		});
