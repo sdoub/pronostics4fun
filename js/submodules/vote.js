@@ -75,7 +75,7 @@ function callbackPost (data){
 		$(wrapperId).html(data.message).slideDown('fast',function (){
 			// hide message
 			$(waitId).fadeOut('fast',function(){
-				   $("#wrapper span[rel]").cluetip(
+				   $("#wrapper span.votePlayers[rel]").cluetip(
 							{positionBy:"fixed",
 								showTitle:false,
 								width:350,
@@ -88,7 +88,21 @@ function callbackPost (data){
 								cluezIndex: 999999
 					});
 				
-				var values = 10;
+				   $("#wrapper span.bonusMatch[rel]").cluetip(
+							{positionBy:"fixed",
+								showTitle:false,
+								width:500,
+								ajaxCache:false,
+								cluetipClass:"p4f",
+								arrows:false,
+								sticky:false,
+								topOffset: 30,
+								leftOffset: -200,
+								cluezIndex: 999999
+					});
+
+				   
+				   var values = 10;
 				$('div[name^="stars-wrapper"]').each(function (index){
 					if (eval($(this).attr("vote-value"))) {
 						values -= eval($(this).attr("vote-value"));
