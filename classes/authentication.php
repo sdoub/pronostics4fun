@@ -14,7 +14,7 @@ class Authorization
 
   public function IsAuthenticated()
   {
-    if (isset($_COOKIE["UserId"]) && $_COOKIE["UserId"] !="") {
+    if (isset($_COOKIE["UserToken"]) && $_COOKIE["UserToken"] !="") {
       $this->refreshUserData();
     }
 
@@ -161,6 +161,15 @@ class Authorization
   {
     if (isset($_SESSION['exp_user'])) {
       return $_SESSION['exp_user']['PrimaryKey'];
+    } else {
+      return 0;
+    }
+  }
+
+  public function getConnectedUserToken()
+  {
+    if (isset($_SESSION['exp_user'])) {
+      return $_SESSION['exp_user']['Token'];
     } else {
       return 0;
     }
@@ -497,11 +506,12 @@ class Authorization
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
         //   Création des cookies
-        setcookie("UserId", $this->getConnectedUserKey(), $expiration, "/");
+        $userToken = generatePassword(50,10);
+        setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
         setcookie("keepConnection", $keepConnection, time() + 90 * 24 * 60 * 60, "/");
       }
-      $this->updateLastConnection();
+      $this->updateLastConnection($userToken);
       return $return;
     }
 
@@ -583,9 +593,9 @@ class Authorization
     if(empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time())
     {
       $sql = "SELECT * FROM players WHERE ";
-      $sql .= "PrimaryKey=".$_COOKIE["UserId"];
+      $sql .= "Token=".$_COOKIE["UserToken"];
 
-      $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du match");
+      $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
 
       if(!$resultSet) return false;
       //TODO: Check if the account is enabled
@@ -604,7 +614,8 @@ class Authorization
         $expiration =  time() + (60*SESSION_DURATION);
       }
       // Création des cookies
-      setcookie("UserId", $this->getConnectedUserKey(), $expiration, "/");
+      $userToken = generatePassword(50,10);
+      setcookie("UserToken", $userToken, $expiration, "/");
       setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
       if (isset($_COOKIE["keepConnection"])){
         setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
@@ -614,7 +625,7 @@ class Authorization
       }
 
       unset($rowSet,$resultSet,$sql);
-      $this->updateLastConnection();
+      $this->updateLastConnection($userToken);
       return $return;
     }
 
@@ -622,9 +633,9 @@ class Authorization
     return $return;
   }
 
-  private function updateLastConnection () {
+  private function updateLastConnection ($userToken) {
     global $_databaseObject;
-    $sql = "UPDATE players SET IsEnabled=1, LastConnection=NOW() WHERE ";
+    $sql = "UPDATE players SET IsEnabled=1, LastConnection=NOW(), Token='$userToken' WHERE ";
     $sql .= "PrimaryKey=". $this->getConnectedUserKey();
 
     $_databaseObject->queryPerf($sql,"Refresh last connection date");
@@ -637,9 +648,9 @@ class Authorization
 
     $_databaseObject -> queryPerf ("DELETE FROM connectedusers WHERE PlayerKey=" . $this->getConnectedUserKey() );
 
-    setcookie("UserId", "", time() - 60, "/");
-    if (isset($_COOKIE["UserId"]))
-    unset($_COOKIE["UserId"]);
+    setcookie("UserToken", "", time() - 60, "/");
+    if (isset($_COOKIE["UserToken"]))
+    unset($_COOKIE["UserToken"]);
     if (isset($_SESSION['exp_user']))
     unset($_SESSION['exp_user']);
   }
@@ -647,10 +658,10 @@ class Authorization
   public function renew_session()
   {
     if (isset($_COOKIE["keepConnection"]) && $_COOKIE["keepConnection"]=="true"){
-      setcookie("UserId", $_COOKIE["UserId"], time() + 90 * 24 * 60 * 60, "/");
+      setcookie("UserToken", $_COOKIE["UserToken"], time() + 90 * 24 * 60 * 60, "/");
     }
     else {
-      setcookie("UserId", $_COOKIE["UserId"], time() + (60*SESSION_DURATION), "/");
+      setcookie("UserToken", $_COOKIE["UserToken"], time() + (60*SESSION_DURATION), "/");
     }
 
     $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
