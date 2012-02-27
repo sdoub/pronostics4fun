@@ -506,7 +506,7 @@ class Authorization
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
         //   Création des cookies
-        $userToken = generatePassword(50,10);
+        $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
         setcookie("keepConnection", $keepConnection, time() + 90 * 24 * 60 * 60, "/");
@@ -593,8 +593,7 @@ class Authorization
     if(empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time())
     {
       $sql = "SELECT * FROM players WHERE ";
-      $sql .= "Token=".$_COOKIE["UserToken"];
-
+      $sql .= "Token='".$_COOKIE["UserToken"] ."'";
       $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
 
       if(!$resultSet) return false;
@@ -614,7 +613,7 @@ class Authorization
         $expiration =  time() + (60*SESSION_DURATION);
       }
       // Création des cookies
-      $userToken = generatePassword(50,10);
+      $userToken = generatePassword(50,7);
       setcookie("UserToken", $userToken, $expiration, "/");
       setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
       if (isset($_COOKIE["keepConnection"])){
