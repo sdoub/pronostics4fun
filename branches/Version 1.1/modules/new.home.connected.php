@@ -129,7 +129,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   else {
   	setlocale(LC_TIME, "fr_FR");
 	$newsFormattedDate = strftime("%A %d %B %Y à %H:%M",$rowSet['NewsDate']);
-    echo "<div class='newsDate'>";
+    echo "<div class='newsDate' news-key='$playerKey'>";
     echo "Le " . __encode($newsFormattedDate);
     echo "</div>";
     echo "<div class='news' id='news.$playerKey'>";
@@ -573,7 +573,33 @@ $(document).ready(function() {
 		$('#newsList > li:first > div.news').editInPlace(options);
 	});
 	$('div.news').editInPlace(options);
-
+	$('div.newsDate').mouseenter(function() {
+		var newsKey = $(this).attr("news-key");
+		$(this).append('<img id="DeleteNews" src="<?php echo ROOT_SITE;?>/images/error.png" style="cursor:pointer;width:16px;height:16px;"/>').unbind('click').click(function () {
+			if (confirm('Voulez vous vraiment supprimer cette news ?'))
+			{
+				var currentNews = $(this).parent();
+				$.ajax({
+					  url: "save.news.php",
+					  dataType: 'json',
+					  data: {NewsKey:newsKey,ToBeDeleted:true},
+					  success: function (data){
+						if (!data.error)
+						  currentNews.slideUp();
+						  },
+					  error: callbackPostError
+					});
+			}
+			});
+	  }).mouseleave(function() {
+		  $(this).find('img').remove();
+	  });
+	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
+	{
+		$.log(XMLHttpRequest);
+		$.log(textStatus);
+		$.log(errorThrown);
+	}
 
 });
 <?php
