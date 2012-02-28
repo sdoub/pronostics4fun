@@ -11,7 +11,7 @@ include_once (dirname(__FILE__)."/../lib/safeIO.php");
 
 class Authorization
 {
-
+private $_alreadyRefresh   = false;
   public function IsAuthenticated()
   {
     if (isset($_COOKIE["UserToken"]) && $_COOKIE["UserToken"] !="") {
@@ -155,7 +155,11 @@ class Authorization
 
   public function getConnectedUser()
   {
-    return $_SESSION['exp_user']['NickName'];
+    if (isset($_SESSION['exp_user'])) {
+      return $_SESSION['exp_user']['NickName'];
+    } else {
+      return "";
+    }
   }
   public function getConnectedUserKey()
   {
@@ -590,7 +594,7 @@ class Authorization
 
     $return = false;
 
-    if(empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time())
+    if(!$this->_alreadyRefresh && (empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time()))
     {
       $sql = "SELECT * FROM players WHERE ";
       $sql .= "Token='".$_COOKIE["UserToken"] ."'";
@@ -625,6 +629,7 @@ class Authorization
 
       unset($rowSet,$resultSet,$sql);
       $this->updateLastConnection($userToken);
+      $this->_alreadyRefresh = true;
       return $return;
     }
 
