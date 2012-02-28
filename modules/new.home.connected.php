@@ -575,7 +575,7 @@ $(document).ready(function() {
 	$('div.news').editInPlace(options);
 	$('div.newsDate').mouseenter(function() {
 		var newsKey = $(this).attr("news-key");
-		$(this).append('<img id="DeleteNews" src="<?php echo ROOT_SITE;?>/images/error.png" style="cursor:pointer;width:16px;height:16px;"/>').unbind('click').click(function () {
+		$(this).append('<img id="DeleteNews" src="<?php echo ROOT_SITE;?>/images/delete.off.png" style="cursor:pointer;width:12px;height:12px;"/>').find('#DeleteNews').mouseenter(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.on.png');}).mouseleave(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.off.png');}).unbind('click').click(function () {
 			if (confirm('Voulez vous vraiment supprimer cette news ?'))
 			{
 				var currentNews = $(this).parent();
