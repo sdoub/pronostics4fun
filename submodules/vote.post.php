@@ -36,7 +36,7 @@ SELECT matches.TeamAwayKey, 1
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=".COMPETITION."
 WHERE matches.IsBonusMatch=1 ) TMP
 GROUP BY TMP.TeamKey
-HAVING SUM(NbrOfBonus)>10";
+HAVING SUM(NbrOfBonus)>9";
   $rowsTeamsExcluded10 = $_databaseObject -> queryGetFullArray ($sql, "Get all teams exceeded number of bonus match");
 
 
