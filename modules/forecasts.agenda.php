@@ -408,7 +408,20 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 					topOffset: 30,
 					leftOffset: -250
 	});
-	   	$(":input[rel]").spin({max:9, min:0,btnCss: {cursor: 'pointer', padding: 0, margin: '5px 0px 0px 0px', verticalAlign: 'top'}});
+	   	$(":input[rel]").spin({
+		   	max:9,
+		   	min:-1,
+		   	btnCss: {cursor: 'pointer', padding: 0, margin: '5px 0px 0px 0px', verticalAlign: 'top'},
+		   	beforeChange : function (n,o){
+				//$('<div>'+o+' to '+n+'</div>').appendTo($('#console'));
+				//$('#console').text(o+' to '+n).show().fadeOut(400);
+				$(this).focus();
+				if (n==-1) {
+					$(this).val(0);
+					return false;
+				}
+		    }
+	   	});
 
 
 	   	$("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").iButton({
