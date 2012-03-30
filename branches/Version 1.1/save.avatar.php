@@ -144,8 +144,8 @@ $destinationFileName = $_authorisation->getConnectedUserKey()."_".time().".".$fi
 // set data source -- do this first, any settings must be made AFTER this call
 $phpThumb->setSourceFilename('images/avatars/'.$_authorisation->getConnectedUserKey()."original.".$fileExt);  // for static demo only
 
-$phpThumb->setParameter('config_document_root', '/homez.462/pronostilx/www');
-$phpThumb->setParameter('config_cache_directory', '/homez.462/pronostilx/www/cache/');
+//$phpThumb->setParameter('config_document_root', '/www');
+//$phpThumb->setParameter('config_cache_directory', '/www/cache/');
 
 // set parameters (see "URL Parameters" in phpthumb.readme.txt)
 $phpThumb->setParameter('w', 82);
@@ -158,30 +158,37 @@ $phpThumb->setParameter('sh', $h);
 // set options (see phpThumb.config.php)
 // here you must preface each option with "config_"
 $phpThumb->setParameter('config_output_format', $fileExt);
-
+$arr = array();
 // generate & output thumbnail
 $output_filename = 'images/avatars/'.$destinationFileName;
 if ($phpThumb->GenerateThumbnail()) { // this line is VERY important, do not remove it!
   //$output_size_x = ImageSX($phpThumb->gdimg_output);
   //$output_size_y = ImageSY($phpThumb->gdimg_output);
+  $arr["generated"]= true;
+
+
   if ($output_filename || $capture_raw_data) {
     $cropped= $phpThumb->RenderToFile($output_filename);
+    $arr["rendered"]= true;
   }
 
 } else {
+  $arr["generated"]= false;
+
   $cropped = false;
   $arr["error"] = $phpThumb->fatalerror;
 }
-
 //$cropped = resizeThumbnailImage('images/avatars/'.$_authorisation->getConnectedUserKey().'.'.$fileExt, 'images/avatars/'.$_authorisation->getConnectedUserKey()."original.".$fileExt,$w,$h,$x1,$y1,$scale);
 //Reload the page again to view the thumbnail
-$arr = array();
+
 if ($cropped) {
   $arr["success"]=true;
   $arr["filePath"]= ROOT_SITE . '/images/avatars/'.$destinationFileName;
   $arr["fileName"]= $destinationFileName;
 }
 else {
+  $arr["filePath"]= ROOT_SITE . '/images/avatars/'.$destinationFileName;
+  $arr["fileName"]= $destinationFileName;
   $arr["success"]=false;
 }
 

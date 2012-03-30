@@ -88,18 +88,18 @@ private $_alreadyRefresh   = false;
     $defaultView = $_SESSION['exp_user']['IsCalendarDefaultView'];
     $receiveAlert = $_SESSION['exp_user']['ReceiveAlert'];
     $receiveResult = $_SESSION['exp_user']['ReceiveResult'];
+    $fileExt = substr($_SESSION['exp_user']['AvatarName'],-3);
     $htmlForm =	'
 <div id="accountAvatarDiv" style="display:none;float: left;width:300px;padding-left:20px;padding-top:30px;">
-<div style="height: 350px; margin-top: 20px; width: 300px;">
-<img src="' . $this->getAvatarPath() .'" id="HiddenAvatar" style="display:none;"/>
-<img src="' . $this->getAvatarPath() . '" id="OriginalAvatar" style="width:300px;"/>
-    <div  id="file-uploader">
+<div style="height: 350px; margin-top: 20px; width: 300px;overflow:scroll;">
+<img src="images/avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt.'" id="OriginalAvatar" style=""/>
+
+</div>
+<div  id="file-uploader">
     <noscript>
         <p>Please enable JavaScript to use file uploader.</p>
         <!-- or put a simple form for upload here -->
     </noscript>
-</div>
-
 </div>
 
 </div>
@@ -594,45 +594,48 @@ private $_alreadyRefresh   = false;
 
     $return = false;
 
-    if(!$this->_alreadyRefresh && (empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time()))
-    {
-      $sql = "SELECT * FROM players WHERE ";
-      $sql .= "Token='".$_COOKIE["UserToken"] ."'";
-      $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
-
-      if(!$resultSet) return false;
-      //TODO: Check if the account is enabled
-      while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+    if (!$this->_alreadyRefresh) {
+      if((empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time()))
       {
-        $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
-        $return = true;
-      }
+        $sql = "SELECT * FROM players WHERE ";
+        $sql .= "Token='".$_COOKIE["UserToken"] ."'";
+        $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
+
+        if(!$resultSet) return false;
+        //TODO: Check if the account is enabled
+        while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+        {
+          $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
+          $return = true;
+        }
 
 
-      // Définition du temps d'expiration des cookies
-      if (isset($_COOKIE["keepConnection"])){
-        $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
-      }
-      else {
-        $expiration =  time() + (60*SESSION_DURATION);
-      }
-      // Création des cookies
-      $userToken = generatePassword(50,7);
-      setcookie("UserToken", $userToken, $expiration, "/");
-      setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
-      if (isset($_COOKIE["keepConnection"])){
-        setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
-      }
-      else {
-        setcookie("keepConnection", "false", time() + 90 * 24 * 60 * 60, "/");
-      }
+        // Définition du temps d'expiration des cookies
+        if (isset($_COOKIE["keepConnection"])){
+          $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
+        }
+        else {
+          $expiration =  time() + (60*SESSION_DURATION);
+        }
+        // Création des cookies
+        $userToken = generatePassword(50,7);
+        setcookie("UserToken", $userToken, $expiration, "/");
+        setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
+        if (isset($_COOKIE["keepConnection"])){
+          setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
+        }
+        else {
+          setcookie("keepConnection", "false", time() + 90 * 24 * 60 * 60, "/");
+        }
 
-      unset($rowSet,$resultSet,$sql);
-      $this->updateLastConnection($userToken);
-      $this->_alreadyRefresh = true;
-      return $return;
+        unset($rowSet,$resultSet,$sql);
+        $this->updateLastConnection($userToken);
+        $this->_alreadyRefresh = true;
+        return $return;
+      }
+    } else {
+      $return =true;
     }
-
 
     return $return;
   }

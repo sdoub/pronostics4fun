@@ -12,10 +12,10 @@ else
   $firstName = (!empty($_POST['firstName']))?trim($_POST['firstName']):false;	// retrive password var
   $lastName = (!empty($_POST['lastName']))?trim($_POST['lastName']):false;	// retrive password var
   $email = (!empty($_POST['email']))?trim($_POST['email']):false;	// retrive password var
-  $defaultView = (!empty($_POST['defaultview']))?trim($_POST['defaultview']):false;
-  $receiveAlert = (!empty($_POST['receiveAlert']))?trim($_POST['receiveAlert']):false;
-  $receiveResult = (!empty($_POST['receiveResult']))?trim($_POST['receiveResult']):false;
-  $avatar = (!empty($_POST['avatarName']))?trim($_POST['avatarName']):false;
+  $defaultView = (!empty($_POST['defaultview']))?trim($_POST['defaultview']):0;
+  $receiveAlert = (!empty($_POST['receiveAlert']))?trim($_POST['receiveAlert']):0;
+  $receiveResult = (!empty($_POST['receiveResult']))?trim($_POST['receiveResult']):0;
+  $avatar = (!empty($_POST['avatarName']))?trim($_POST['avatarName']):"";
   $activationKey = (!empty($_POST['key']))?trim($_POST['key']):false;
   $nickName = (!empty($_POST['nickName']))?trim($_POST['nickName']):false;
   if ($activationKey){
