@@ -1,5 +1,5 @@
 <?php
-if ($_authorisation->IsAuthenticated())
+if ($_isAuthenticated)
 {
   switch ($_currentPage) {
     case "1":

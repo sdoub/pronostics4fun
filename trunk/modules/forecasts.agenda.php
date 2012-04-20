@@ -80,7 +80,7 @@ INNER JOIN teams TeamHome ON TeamHome.PrimaryKey = matches.TeamHomeKey
 INNER JOIN teams TeamAway ON TeamAway.PrimaryKey = matches.TeamAwayKey
 LEFT JOIN forecasts ON matches.PrimaryKey = forecasts.MatchKey AND forecasts.PlayerKey=" . $_authorisation->getConnectedUserKey() . "
 LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
-WHERE matches.ScheduleDate>=NOW()
+WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
  ORDER BY matches.ScheduleDate,matches.PrimaryKey";
 
 
@@ -101,11 +101,13 @@ WHERE matches.ScheduleDate>=NOW()
 
 	    $status ="";
 	    if ($rowSet["RemainingDays"]==0) {
-          $status = __encode(utf8_decode("DÃ©but aujourd'hui"));
+          $status = __encode("Début aujourd'hui");
         } else if ($rowSet["RemainingDays"]==1) {
-          $status = __encode(utf8_decode("DÃ©but demain"));
+          $status = __encode("Début demain");
+        } else if ($rowSet["RemainingDays"]<0) {
+          $status = __encode("Reporté");
         } else {
-          $status = __encode(utf8_decode("DÃ©but dans ")) . $rowSet["RemainingDays"] . " jours";
+          $status = __encode("Début dans ") . $rowSet["RemainingDays"] . " jours";
         }
 
 	    echo '<tr class="day"
@@ -114,8 +116,14 @@ WHERE matches.ScheduleDate>=NOW()
       	</tr>';
 	  }
 
-	  echo '<tr class="match" match-key="' . $rowSet['MatchKey'] . '" status="' . $rowSet["LiveStatus"] . '">
-      	  <td width="20px"></td><td class="time' . $rowSet["IsBonusMatch"] . '">' . strftime("%H:%M",$rowSet['ScheduleDate']) . '</td>
+	  $classPostponed = "";
+	  $matchTime = strftime("%H:%M",$rowSet['ScheduleDate']);
+	  if ($rowSet["Status"]==1) {
+	    $classPostponed = " postponed ";
+	    $matchTime = __encode("Reporté");
+	  }
+	  echo '<tr class="match " match-key="' . $rowSet['MatchKey'] . '" status="' . $rowSet["LiveStatus"] . '">
+      	  <td width="20px"></td><td class="time' . $rowSet["IsBonusMatch"] . $classPostponed . '">' . $matchTime . '</td>
       	  <td class="teamHome">' . $rowSet['TeamHomeName'] . '</td>
       	  <td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamHomeKey'] . '.png" width="30px" height="30px"></img></td>';
 
@@ -201,7 +209,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 		var _matchKey="";
   $(document).ready(function($) {
 
-	$('#displayHelp').cookieBind();
+	$('#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>').cookieBind();
 	$("input[type='text']").cookieBind().html (function () {
 	$("input[type='text']").each(function (index) {
 		$("#"+this.id).unbind('blur');
@@ -231,7 +239,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 				if (teamHomeScore!="" && teamAwayScore!="" &&  teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
 					$(tr).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
 				else if (teamHomeScore!="" || teamAwayScore!="")
-					$(tr).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 Ã©quipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+					$(tr).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 équipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
 				else
 					$(tr).find("td:eq(0)").html("");
 			}
@@ -312,7 +320,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 				if (teamHomeScore!="" && teamAwayScore!="" && teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
 					$(this).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
 				else if (teamHomeScore!="" || teamAwayScore!="")
-					$(this).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 Ã©quipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+					$(this).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 équipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
 			}
 		}
 	})
@@ -400,7 +408,20 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 					topOffset: 30,
 					leftOffset: -250
 	});
-	   	$(":input[rel]").spin({max:9, min:0,btnCss: {cursor: 'pointer', padding: 0, margin: '5px 0px 0px 0px', verticalAlign: 'top'}});
+	   	$(":input[rel]").spin({
+		   	max:9,
+		   	min:-1,
+		   	btnCss: {cursor: 'pointer', padding: 0, margin: '5px 0px 0px 0px', verticalAlign: 'top'},
+		   	beforeChange : function (n,o){
+				//$('<div>'+o+' to '+n+'</div>').appendTo($('#console'));
+				//$('#console').text(o+' to '+n).show().fadeOut(400);
+				$(this).focus();
+				if (n==-1) {
+					$(this).val(0);
+					return false;
+				}
+		    }
+	   	});
 
 
 	   	$("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").iButton({
@@ -446,7 +467,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 
 		$.openPopupLayer({
 			name: "VotePopup",
-			width: "500",
+			width: "550",
 			height: "500",
 			url: "submodule.loader.php?SubModule=14"
 		});

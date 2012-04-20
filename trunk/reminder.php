@@ -36,7 +36,7 @@ $emailSent = false;
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
   if ($rowSet["PlayerKey"]) {
     setlocale(LC_TIME, "fr_FR");
-    $tomorrowFormattedDate = __encode(strftime("%A %d %B %Y",$rowSet['tomorrowDate']));
+    $tomorrowFormattedDate = strftime("%A %d %B %Y",$rowSet['tomorrowDate']);
 
     $emailSent = true;
     echo "email to : ". $rowSet["NickName"]."<br/>";

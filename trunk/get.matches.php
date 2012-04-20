@@ -4,7 +4,9 @@ require_once(dirname(__FILE__)."/begin.file.php");
 require_once(BASE_PATH . "/lib/simple_html_dom.php");
 
 
-$query = "SELECT PrimaryKey GroupKey, DayKey, IF (TIMEDIFF(BeginDate,(NOW()+ INTERVAL 1 HOUR))<0,1,0) isVoteClosed
+$query = "SELECT PrimaryKey GroupKey, DayKey, IF (TIMEDIFF(BeginDate,(NOW()+ INTERVAL 1 HOUR))<0,1,0) isVoteClosed,
+(SELECT COUNT(1) FROM matches WHERE matches.IsBonusMatch=1 AND matches.GroupKey=groups.PrimaryKey) IsBonusMatchValidated,
+Status
             FROM groups
            WHERE IsCompleted=0 AND CompetitionKey = ".COMPETITION."
            LIMIT 0,5";
@@ -34,7 +36,7 @@ foreach ($rowsSet as $rowSet)
       break;
   }
 
-print($url);
+  print($url);
   if ($html = file_get_html($url))
   {
     {
@@ -48,7 +50,7 @@ print($url);
         foreach($table->find('tbody tr') as $rows) {
 
           if ($rows->find('td',0)){
-
+            $isMatchReported = false;
             // Get "Feuille de match Id
             $lfpUrl = split('/',$rows->find('td',0)->first_child ()->getAttribute("href"));
             $lfpMatchKey = $lfpUrl[3];
@@ -57,10 +59,15 @@ print($url);
             if (strpos($rows->find('td',0)->plaintext,":")!==false ) {
               $hourMatchArray = split(':',$rows->find('td',0)->plaintext);
             } else {
-              $hourMatchArray = array();
-              $hourMatchArray[0] = 0;
-              $hourMatchArray[1] = 0;
-              $isGroupScheduled =false;
+              echo "<br/>". utf8_decode($rows->find('td',0)->plaintext);
+              if (strpos(utf8_decode($rows->find('td',0)->plaintext),"Reporté")!==false ) {
+                $isMatchReported = true;
+              } else {
+                $hourMatchArray = array();
+                $hourMatchArray[0] = 0;
+                $hourMatchArray[1] = 0;
+                $isGroupScheduled =false;
+              }
             }
             $hours = (int)$hourMatchArray[0]==0?19:(int)$hourMatchArray[0];
             $minutes = $hourMatchArray[1];
@@ -93,7 +100,11 @@ print($url);
 
             $queries[]=$insertQuery;
 
-            $updateQuery = "UPDATE matches SET ExternalKey=$lfpMatchKey, ScheduleDate=FROM_UNIXTIME($scheduleDate) WHERE GroupKey=";
+            $matchStatus=0;
+            if ($isMatchReported) {
+              $matchStatus=1;
+            }
+            $updateQuery = "UPDATE matches SET ExternalKey=$lfpMatchKey, ScheduleDate=FROM_UNIXTIME($scheduleDate), Status=$matchStatus WHERE GroupKey=";
             $updateQuery .= "$groupKey AND TeamHomeKey=$teamHomeKey AND TeamAwayKey=$teamAwayKey";
             $queries[]=$updateQuery;
 
@@ -127,9 +138,9 @@ print($url);
   $queries[]=$updateQuery;
 
   if ($rowSet["isVoteClosed"]=="1") {
-    $updateQuery = "UPDATE matches SET IsBonusMatch=1 
- WHERE PrimaryKey IN 
-          (SELECT TMP2.MatchKey FROM (SELECT TMP.MatchKey,TMP.GlobalVoteValue  FROM 
+    $updateQuery = "UPDATE matches SET IsBonusMatch=1
+ WHERE PrimaryKey IN
+          (SELECT TMP2.MatchKey FROM (SELECT TMP.MatchKey,TMP.GlobalVoteValue  FROM
                                     (SELECT matches.PrimaryKey MatchKey,
                                             groups.PrimaryKey GroupKey,
                                             (SELECT SUM(GlobalVotes.value) FROM votes GlobalVotes WHERE GlobalVotes.MatchKey=matches.PrimaryKey) GlobalVoteValue,
@@ -137,7 +148,7 @@ print($url);
                                       FROM matches
                                      INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
                                      WHERE matches.GroupKey = $groupKey
-                                    ) TMP 
+                                    ) TMP
                                       ORDER BY TMP.GlobalVoteValue desc
                                 LIMIT 0,1) TMP2)";
     $queries[]=$updateQuery;
@@ -145,10 +156,65 @@ print($url);
 }
 //Open a new connection to execute all queries
 $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
+
 foreach ($queries as $query) {
   print($query);
   print("<br/>");
   $_databaseObject -> queryPerf ($query , "Execute query");
+}
+
+$query = "SELECT PrimaryKey GroupKey, DayKey, Description, IF (TIMEDIFF(BeginDate,(NOW()+ INTERVAL 1 HOUR))<0,1,0) isVoteClosed,
+(SELECT COUNT(1) FROM matches WHERE matches.IsBonusMatch=1 AND matches.GroupKey=groups.PrimaryKey) IsBonusMatchValidated,
+Status
+            FROM groups
+           WHERE IsCompleted=0 AND CompetitionKey = ".COMPETITION."
+           LIMIT 0,5";
+$rowsSetAfter = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
+
+foreach ($rowsSet as $rowSet)
+{
+  foreach ($rowsSetAfter as $rowSetAfter){
+    // If the vote have just been closed
+    if ($rowSetAfter["GroupKey"]==$rowSet["GroupKey"] && $rowSetAfter["IsBonusMatchValidated"]==1 && $rowSet["IsBonusMatchValidated"]==0) {
+
+      $queryVotes = "SELECT TMP.MatchKey, TeamHomeName, TeamAwayName,TMP.GlobalVoteValue stars,TMP.GlobalVoteCount NbrOfPlayers,TMP.GlobalVoteValue/TMP.GlobalVoteCount average FROM
+                                (SELECT matches.PrimaryKey MatchKey,
+TeamHome.Name TeamHomeName, TeamAway.Name TeamAwayName,
+                                        groups.PrimaryKey GroupKey,
+                                        (SELECT SUM(GlobalVotes.value) FROM votes GlobalVotes WHERE GlobalVotes.MatchKey=matches.PrimaryKey) GlobalVoteValue,
+                                        (SELECT COUNT(GlobalVotes.value) FROM votes GlobalVotes WHERE GlobalVotes.MatchKey=matches.PrimaryKey) GlobalVoteCount
+                                  FROM matches
+INNER JOIN teams TeamHome ON TeamHome.PrimaryKey=matches.TeamHomeKey
+INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
+                                 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+                                 WHERE groups.PrimaryKey = ".$rowSetAfter["GroupKey"]." AND groups.CompetitionKey=".COMPETITION."
+                                ) TMP
+                                  ORDER BY TMP.GlobalVoteValue desc";
+
+      $resultSet = $_databaseObject->queryPerf($queryVotes,"Get matches to be played by current day");
+
+      $infonews = '<span><img class="news" src="images/star_48.png"></span><div>Résultat du vote pour le match bonus de la '.$rowSetAfter["Description"].':</div>';
+
+      $rank = 0;
+      $realRank = 0;
+      $oldRank = -1;
+      while ($rowSetVotes = $_databaseObject -> fetch_assoc ($resultSet)) {
+        $rank++;
+        $infonews .= '<div>'.$rank.'- <u>'.$rowSetVotes["TeamHomeName"].' - '.$rowSetVotes["TeamAwayName"].'</u> : '.$rowSetVotes["stars"].' étoile(s)</div>';
+      }
+
+      $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
+    }
+
+    // If a group is opened for giving pronostics
+    if ($rowSetAfter["GroupKey"]==$rowSet["GroupKey"] && $rowSetAfter["Status"]==1 && $rowSet["Status"]==0) {
+
+      $infonews = '<img class="news" src="images/calendar.png">La programmation des matchs de la '.$rowSetAfter["Description"].' est définitive, par conséquent les pronostics sont ouverts !';
+
+      $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
+    }
+
+  }
 }
 
 
@@ -165,4 +231,3 @@ if (sizeOf($arrDatabaseInfo["errorLog"])>0) {
 
 require_once(dirname(__FILE__)."/end.file.php");
 ?>
-	

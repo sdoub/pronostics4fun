@@ -6,15 +6,15 @@ define('VALID_ACCESS_SENDEMAIL_', true);
 define('SESSION_DURATION', 45);
 
 require_once("sendemail.php");
-require_once(dirname(__FILE__)."/../lib/PHPMailer/class.phpmailer.php");
+require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
 include_once (dirname(__FILE__)."/../lib/safeIO.php");
 
 class Authorization
 {
-
+private $_alreadyRefresh   = false;
   public function IsAuthenticated()
   {
-    if (isset($_COOKIE["UserId"]) && $_COOKIE["UserId"] !="") {
+    if (isset($_COOKIE["UserToken"]) && $_COOKIE["UserToken"] !="") {
       $this->refreshUserData();
     }
 
@@ -31,21 +31,21 @@ class Authorization
   public function form()
   {
     try {
-    $nickName= "";
-    if (isset($_COOKIE["NickName"])) {
-      $nickName=$_COOKIE["NickName"];
-    }
+      $nickName= "";
+      if (isset($_COOKIE["NickName"])) {
+        $nickName=$_COOKIE["NickName"];
+      }
 
-    $htmlForm =	'<form id="frmlogin">'.
+      $htmlForm =	'<form id="frmlogin">'.
 						'<label>Pseudo / Email:</label>'.
 						 '<input type="text" name="u" id="u" class="textfield" value="'.$nickName.'"/>'.
 						 '<label>Mot de passe</label>'.
 						 '<input type="password" name="p" id="p" class="textfield" />'.
-                         '<label style="margin-bottom:15px;text-align:right;font-size:10px;text-decoration:underline;cursor:pointer;" id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
+                         '<label style="margin-bottom:15px;text-align:left;font-size:10px;text-decoration:underline;cursor:pointer;" id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
 						 '<span style="padding-top:10px;"><input type="checkbox" name="keepConnection" id="keepConnection" class="checkboxfield" /><label for="keepConnection" class="checkboxlabel">Connexion automatique</label></span>'.
 						 '<input type="submit" name="btn" id="btn" class="buttonfield" value="Se connecter" />'.
 						 '</form>';
-    return $htmlForm;
+      return $htmlForm;
     }
     catch (Exception $e) {
       return $_COOKIE["NickName"];
@@ -88,18 +88,18 @@ class Authorization
     $defaultView = $_SESSION['exp_user']['IsCalendarDefaultView'];
     $receiveAlert = $_SESSION['exp_user']['ReceiveAlert'];
     $receiveResult = $_SESSION['exp_user']['ReceiveResult'];
+    $fileExt = substr($_SESSION['exp_user']['AvatarName'],-3);
     $htmlForm =	'
 <div id="accountAvatarDiv" style="display:none;float: left;width:300px;padding-left:20px;padding-top:30px;">
-<div style="height: 350px; margin-top: 20px; width: 300px;">
-<img src="' . $this->getAvatarPath() .'" id="HiddenAvatar" style="display:none;"/>
-<img src="' . $this->getAvatarPath() . '" id="OriginalAvatar" style="width:300px;"/>
-    <div  id="file-uploader">
+<div style="height: 350px; margin-top: 20px; width: 300px;overflow:scroll;">
+<img src="images/avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt.'" id="OriginalAvatar" style=""/>
+
+</div>
+<div  id="file-uploader">
     <noscript>
         <p>Please enable JavaScript to use file uploader.</p>
         <!-- or put a simple form for upload here -->
     </noscript>
-</div>
-
 </div>
 
 </div>
@@ -155,12 +155,25 @@ class Authorization
 
   public function getConnectedUser()
   {
-    return $_SESSION['exp_user']['NickName'];
+    if (isset($_SESSION['exp_user'])) {
+      return $_SESSION['exp_user']['NickName'];
+    } else {
+      return "";
+    }
   }
   public function getConnectedUserKey()
   {
     if (isset($_SESSION['exp_user'])) {
       return $_SESSION['exp_user']['PrimaryKey'];
+    } else {
+      return 0;
+    }
+  }
+
+  public function getConnectedUserToken()
+  {
+    if (isset($_SESSION['exp_user'])) {
+      return $_SESSION['exp_user']['Token'];
     } else {
       return 0;
     }
@@ -281,6 +294,33 @@ class Authorization
     return $return;
   }
 
+  public function changePassword ($password, $activationKey,$nickName,$email)
+  {
+    global $_databaseObject;
+    $return = false;
+    if($password && $activationKey)
+    {
+      $newActivationKey = generatePassword(15,4);
+      if ($password) {
+        $sql = "UPDATE players SET `Password`='".md5(mysql_real_escape_string($password))."' , ActivationKey='".$newActivationKey."' WHERE ActivationKey='" . $activationKey . "'";
+        if(!$_databaseObject->queryPerf($sql,"Update Account"))
+        {
+          return false;
+        }
+        else
+        {
+          $this->SendEmailChangeAccountPassword($nickName, $email, $activationKey);
+          $return = true;
+        }
+      }
+      else {
+        $return = true;
+      }
+      unset($sql);
+    }
+    return $return;
+  }
+
   public function update ($password, $firstName, $lastName, $email, $defaultView, $avatar, $receiveAlert,$receiveResult)
   {
     global $_databaseObject;
@@ -310,16 +350,7 @@ class Authorization
       else
       {
         if ($password) {
-          $sql = "UPDATE players SET `Password`='".md5(mysql_real_escape_string($password))."' WHERE PrimaryKey=" . $_SESSION['exp_user']['PrimaryKey'];
-          if(!$_databaseObject->queryPerf($sql,"Update Account"))
-          {
-            return false;
-          }
-          else
-          {
-            $this->SendEmailUpdateAccount($_SESSION['exp_user']['NickName'], $email, $activationKey);
-            $return = true;
-          }
+          $return = $this->changePassword($password, $activationKey, $_SESSION['exp_user']['NickName'],$email);
         }
         else {
           $return = true;
@@ -342,89 +373,109 @@ class Authorization
 
   private function SendEmailNewAccount ($pseudo, $email, $activationKey)
   {
-    $cMail = new cPHPezMail();
 
-    //Don't try to add invalid e-mail address format
-    $cMail->AddTo('admin@pronostics4fun.com', 'Pronostics4Fun Administrateur');
+    $mail = new P4FMailer();
+    $return = false;
+    try {
+      $mail->SetFrom($email, $pseudo);
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - $pseudo vient de s'inscrire!";
 
-    $cMail->SetFrom($email, $pseudo);
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>" . __encode($pseudo . ' a créé un nouveau compte') . "</h3>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
 
-    $cMail->SetSubject($pseudo . " vient de s'inscrire!");
+      $mail->MsgHTML($emailBody);
 
-    $emailBody = "<h3>" . __encode($pseudo . ' a créé un nouveau compte') . "</h3>";
-    $emailBody .= "</br>";
-    $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 
-    $cMail->SetBodyHTML($emailBody);
+      $mail->AddAttachment("images/Logo.png");      // attachment
 
-    $cMail->SetCharset('windows-1252');
-    $cMail->SetEncodingBit("8bit");
+      $mail->Send();
+      $return = true;
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
 
-    //send your e-mail
-    return $cMail->Send();
-
-    unset($cMail);
-
+    unset($mail);
+    return $return;
 
   }
 
-  private function SendEmailUpdateAccount ($pseudo, $email, $activationKey)
+  private function SendEmailChangeAccountPassword ($pseudo, $email, $activationKey)
   {
-    $cMail = new cPHPezMail();
+    $mail = new P4FMailer();
+    $return = false;
 
-    //Don't try to add invalid e-mail address format
-    $cMail->AddTo('admin@pronostics4fun.com', 'Pronostics4Fun Administrateur');
+    try {
+      $mail->SetFrom($email, $pseudo);
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - Changement de mot de passe";
 
-    $cMail->SetFrom($email, $pseudo);
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>" . __encode($pseudo . ' a changé son mot de passe') . "</h3>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
 
-    $cMail->SetSubject('Modification de compte');
+      $mail->MsgHTML($emailBody);
 
-    $emailBody = "<h3>" . __encode($pseudo . ' a mis à jour son compte') . "</h3>";
-    $emailBody .= "</br>";
-    $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 
-    $cMail->SetBodyHTML($emailBody);
+      $mail->AddAttachment("images/Logo.png");      // attachment
 
-    $cMail->SetCharset('windows-1252');
-    $cMail->SetEncodingBit("8bit");
+      $mail->Send();
+      $return = true;
 
-    //send your e-mail
-    return $cMail->Send();
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
 
-    unset($cMail);
-
+    unset($mail);
+    return $return;
 
   }
 
   private function SendEmail ($pseudo, $email, $activationKey)
   {
-    $cMail = new cPHPezMail();
 
-    //Don't try to add invalid e-mail address format
-    $cMail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+    $mail = new P4FMailer();
+    $return = false;
 
-    $cMail->AddTo($email, $pseudo);
+    try {
+      $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - Activez votre compte";
 
-    $cMail->SetSubject('Activation de votre compte Pronostics4Fun');
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>" . __encode('Merci ' . $pseudo . ' de vous êtes inscrit sur Pronostics4Fun') . "</h3>";
+      $emailBody .= "<br/>";
+      $emailBody .= "<p>" . __encode('Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :') . "</p>";
+      $emailBody .= "<a href='" . ROOT_SITE . "/account.activation.php?ActivationKey=" . $activationKey . "'>" . ROOT_SITE . "/AccountActivation.php?ActivationKey=" . $activationKey . "</a>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
 
-    $emailBody = "<h3>" . __encode('Merci ' . $pseudo . ' de vous êtes inscrit sur Pronostics4Fun') . "</h3>";
-    $emailBody .= "<br/>";
-    $emailBody .= "<p>" . __encode('Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :') . "</p>";
-    $emailBody .= "<a href='" . ROOT_SITE . "/account.activation.php?ActivationKey=" . $activationKey . "'>" . ROOT_SITE . "/AccountActivation.php?ActivationKey=" . $activationKey . "</a>";
-    $emailBody .= "</br>";
-    $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $mail->MsgHTML($emailBody);
 
-    $cMail->SetBodyHTML($emailBody);
+      $mail->AddAddress($email, $pseudo);
 
-    $cMail->SetCharset('TIS-620');
-    $cMail->SetEncodingBit(8);
+      $mail->AddAttachment("images/Logo.png");      // attachment
 
-    //send your e-mail
-    return $cMail->Send();
+      $mail->Send();
+      $return = true;
 
-    unset($cMail);
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
 
-
+    unset($mail);
+    return $return;
   }
 
 
@@ -459,11 +510,12 @@ class Authorization
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
         //   Création des cookies
-        setcookie("UserId", $this->getConnectedUserKey(), $expiration, "/");
+        $userToken = generatePassword(50,7);
+        setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
         setcookie("keepConnection", $keepConnection, time() + 90 * 24 * 60 * 60, "/");
       }
-      $this->updateLastConnection();
+      $this->updateLastConnection($userToken);
       return $return;
     }
 
@@ -490,49 +542,25 @@ class Authorization
       $playerKey = $rowSet["PrimaryKey"];
       $nickName = $rowSet["NickName"];
       $emailAddress = $rowSet["EmailAddress"];
+      //$activationKey = $rowSet["ActivationKey"];
 
-      $newPassword = generatePassword(15,4);
-      $sqlReset = "UPDATE players SET Password = '".md5($newPassword)."' WHERE ";
+      $activationKey = generatePassword(15,4);
+      $sqlReset = "UPDATE players SET ActivationKey = '".$activationKey."' WHERE ";
       $sqlReset .= "PrimaryKey=". $playerKey;
 
       if ($_databaseObject->queryPerf($sqlReset,"Reset password with new one generated")) {
 
-        $mail = new PHPMailer(true);
+        $mail = new P4FMailer();
 
         try {
-//          if (ROOT_SITE!="http://pronostics4fun.com") {
-//            $mail->IsSMTP(); // telling the class to use SMTP
-//            $mail->Host       = "pronotics4fun.com"; // SMTP server
-//            $mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
-//            // 1 = errors and messages
-//            // 2 = messages only
-//            $mail->SMTPAuth   = true;                  // enable SMTP authentication
-//            $mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-//            $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
-//            $mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-//            $mail->Username   = "sebastien.dubuc@gmail.com";  // GMAIL username
-//            $mail->Password   = "aurelie040697";            // GMAIL password
-//          }
-          //$mail->AddCustomHeader("Precedence: bulk");
-          //pronostics4fun.com. IN TXT "v=spf1 a mx ptr include:gmail.com ~all"
-
           $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
           $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
           $mail->Subject    = "Pronostics4Fun - Réinitialisation du mot de passe";
 
           $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
-          $mail->MsgHTML(file_get_contents(ROOT_SITE.'/email.reset.password.php?NickName='.$nickName.'&Password='.$newPassword));
-          //$mail->MsgHTML($emailBody);
-
-//          if (ROOT_SITE=="http://pronostics4fun.com") {
-            $address= $emailAddress;
-//          }
-//          else {
-//            $address = "sebastien.dubuc@gmail.com";
-//          }
+          $mail->MsgHTML(file_get_contents(ROOT_SITE.'/email.reset.password.php?NickName='.$nickName.'&Key='.$activationKey));
+          $address= $emailAddress;
 
           $mail->AddAddress($address, $nickName);
 
@@ -566,51 +594,55 @@ class Authorization
 
     $return = false;
 
-    if(empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time())
-    {
-      $sql = "SELECT * FROM players WHERE ";
-      $sql .= "PrimaryKey=".$_COOKIE["UserId"];
-
-      $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du match");
-
-      if(!$resultSet) return false;
-      //TODO: Check if the account is enabled
-      while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+    if (!$this->_alreadyRefresh) {
+      if((empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time()))
       {
-        $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
-        $return = true;
-      }
+        $sql = "SELECT * FROM players WHERE ";
+        $sql .= "Token='".$_COOKIE["UserToken"] ."'";
+        $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
+
+        if(!$resultSet) return false;
+        //TODO: Check if the account is enabled
+        while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+        {
+          $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
+          $return = true;
+        }
 
 
-      // Définition du temps d'expiration des cookies
-      if (isset($_COOKIE["keepConnection"])){
-        $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
-      }
-      else {
-        $expiration =  time() + (60*SESSION_DURATION);
-      }
-      // Création des cookies
-      setcookie("UserId", $this->getConnectedUserKey(), $expiration, "/");
-      setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
-      if (isset($_COOKIE["keepConnection"])){
-        setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
-      }
-      else {
-        setcookie("keepConnection", "false", time() + 90 * 24 * 60 * 60, "/");
-      }
+        // Définition du temps d'expiration des cookies
+        if (isset($_COOKIE["keepConnection"])){
+          $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
+        }
+        else {
+          $expiration =  time() + (60*SESSION_DURATION);
+        }
+        // Création des cookies
+        $userToken = generatePassword(50,7);
+        setcookie("UserToken", $userToken, $expiration, "/");
+        setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
+        if (isset($_COOKIE["keepConnection"])){
+          setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
+        }
+        else {
+          setcookie("keepConnection", "false", time() + 90 * 24 * 60 * 60, "/");
+        }
 
-      unset($rowSet,$resultSet,$sql);
-      $this->updateLastConnection();
-      return $return;
+        unset($rowSet,$resultSet,$sql);
+        $this->updateLastConnection($userToken);
+        $this->_alreadyRefresh = true;
+        return $return;
+      }
+    } else {
+      $return =true;
     }
-
 
     return $return;
   }
 
-  private function updateLastConnection () {
+  private function updateLastConnection ($userToken) {
     global $_databaseObject;
-    $sql = "UPDATE players SET IsEnabled=1, LastConnection=NOW() WHERE ";
+    $sql = "UPDATE players SET IsEnabled=1, LastConnection=NOW(), Token='$userToken' WHERE ";
     $sql .= "PrimaryKey=". $this->getConnectedUserKey();
 
     $_databaseObject->queryPerf($sql,"Refresh last connection date");
@@ -623,20 +655,20 @@ class Authorization
 
     $_databaseObject -> queryPerf ("DELETE FROM connectedusers WHERE PlayerKey=" . $this->getConnectedUserKey() );
 
-    setcookie("UserId", "", time() - 60, "/");
-    if (isset($_COOKIE["UserId"]))
-      unset($_COOKIE["UserId"]);
+    setcookie("UserToken", "", time() - 60, "/");
+    if (isset($_COOKIE["UserToken"]))
+    unset($_COOKIE["UserToken"]);
     if (isset($_SESSION['exp_user']))
-      unset($_SESSION['exp_user']);
+    unset($_SESSION['exp_user']);
   }
 
   public function renew_session()
   {
     if (isset($_COOKIE["keepConnection"]) && $_COOKIE["keepConnection"]=="true"){
-      setcookie("UserId", $_COOKIE["UserId"], time() + 90 * 24 * 60 * 60, "/");
+      setcookie("UserToken", $_COOKIE["UserToken"], time() + 90 * 24 * 60 * 60, "/");
     }
     else {
-      setcookie("UserId", $_COOKIE["UserId"], time() + (60*SESSION_DURATION), "/");
+      setcookie("UserToken", $_COOKIE["UserToken"], time() + (60*SESSION_DURATION), "/");
     }
 
     $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
