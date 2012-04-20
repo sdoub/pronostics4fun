@@ -174,6 +174,7 @@ TeamHome.Code TeamHomeName,
 TeamAway.Code TeamAwayName,
 matches.GroupKey,
 matches.IsBonusMatch,
+matches.Status,
 groups.Description GroupName,
 UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
 (SELECT COUNT(*) FROM events WHERE events.ResultKey=results.PrimaryKey AND events.TeamKey=matches.TeamHomeKey AND events.EventType IN (1,2,3)) TeamHomeScore,
@@ -228,9 +229,13 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
       echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . getStatus($rowSet["LiveStatus"]) . "</div>";
       break;
     case 0:
-      echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;' >".$rowSet["ActualTime"]."'</div>";
-      $scheduleDate = $rowSet["ScheduleDate"];
-      echo "<div style='display:none;'  countdown='true' year='". date("Y",$scheduleDate) ."' month='". date("n",$scheduleDate) ."' day='". date("j",$scheduleDate) ."' hour='". date("G",$scheduleDate) ."' minute='". date("i",$scheduleDate) ."'></div>";
+      if ($rowSet["Status"]==1) { //Postponed
+        echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . __encode("Reporté") . "</div>";
+      } else {
+        echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;' >".$rowSet["ActualTime"]."'</div>";
+        $scheduleDate = $rowSet["ScheduleDate"];
+        echo "<div style='display:none;'  countdown='true' year='". date("Y",$scheduleDate) ."' month='". date("n",$scheduleDate) ."' day='". date("j",$scheduleDate) ."' hour='". date("G",$scheduleDate) ."' minute='". date("i",$scheduleDate) ."'></div>";
+      }
       break;
     default:
       echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . $rowSet["ActualTime"] . "'</div>";

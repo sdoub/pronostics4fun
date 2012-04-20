@@ -45,6 +45,44 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
       AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
       AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)),0) + IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
       AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")),0)) Score,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)),0)) ScoreWithoutBonus,
+SUM(IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
+      AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")),0)) BonusScore,
+(SELECT MAX(TMP.Score) FROM (
+SELECT TMP2.PlayerKey, TMP2.GroupKey, SUM(TMP2.Score) Score FROM (
+SELECT playergroupresults.PlayerKey, playergroupresults.GroupKey GroupKey, SUM(Score) Score FROM playergroupresults
+INNER JOIN groups ON groups.PrimaryKey=playergroupresults.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+ AND groups.IsCompleted=1
+GROUP BY  playergroupresults.PlayerKey,playergroupresults.GroupKey
+UNION ALL
+SELECT playermatchresults.PlayerKey, matches.GroupKey, SUM(Score) FROM playermatchresults
+INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+ AND groups.IsCompleted=1
+GROUP BY  playermatchresults.PlayerKey,matches.GroupKey
+) TMP2
+GROUP BY TMP2.PlayerKey,TMP2.GroupKey
+) TMP
+WHERE TMP.PlayerKey=players.PrimaryKey) ScoreMax,
+(SELECT MIN(TMP.Score) FROM (
+SELECT TMP2.PlayerKey, TMP2.GroupKey, SUM(TMP2.Score) Score FROM (
+SELECT playergroupresults.PlayerKey, playergroupresults.GroupKey GroupKey, SUM(Score) Score FROM playergroupresults
+INNER JOIN groups ON groups.PrimaryKey=playergroupresults.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+ AND groups.IsCompleted=1
+GROUP BY  playergroupresults.PlayerKey,playergroupresults.GroupKey
+UNION ALL
+SELECT playermatchresults.PlayerKey, matches.GroupKey, SUM(Score) FROM playermatchresults
+INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey
+INNER JOIN forecasts ON forecasts.PlayerKey=playermatchresults.PlayerKey AND forecasts.MatchKey=matches.PrimaryKey
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+ AND groups.IsCompleted=1
+ GROUP BY playermatchresults.PlayerKey, matches.GroupKey
+) TMP2
+GROUP BY TMP2.PlayerKey,TMP2.GroupKey
+) TMP
+WHERE TMP.PlayerKey=players.PrimaryKey) ScoreMin,
 (SELECT COUNT(1)
    FROM playergroupranking PGR
   WHERE PGR.Rank=1
@@ -111,14 +149,18 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["AvatarName"];
   }
   $tempArray["cell"][1]= "<img class='avat' border='0' src='" . $avatarPath . "'>".addslashes($rowSet["NickName"]);
-  $tempArray["cell"][2]= $rowSet["Score"];
-  $tempArray["cell"][3]= $rowSet["FirstRank"];
-  $tempArray["cell"][4]= $rowSet["SecondRank"];
-  $tempArray["cell"][5]= $rowSet["ThirdRank"];
-  $tempArray["cell"][6]= $rowSet["MatchPlayed"];
-  $tempArray["cell"][7]= $rowSet["MatchGood"];
-  $tempArray["cell"][8]= $rowSet["MatchPerfect"];
-  $tempArray["cell"][9]= "<a href='javascript:void(0);' player-key='" . $rowSet["PlayerKey"] . "'>Details ...</a>";
+  $tempArray["cell"][2]= "<strong>".$rowSet["Score"]."</strong>";
+  $tempArray["cell"][3]= $rowSet["ScoreWithoutBonus"];
+  $tempArray["cell"][4]= $rowSet["BonusScore"];
+  $tempArray["cell"][5]= $rowSet["ScoreMax"];
+  $tempArray["cell"][6]= $rowSet["ScoreMin"];
+  $tempArray["cell"][7]= $rowSet["FirstRank"];
+  $tempArray["cell"][8]= $rowSet["SecondRank"];
+  $tempArray["cell"][9]= $rowSet["ThirdRank"];
+  $tempArray["cell"][10]= $rowSet["MatchPlayed"];
+  $tempArray["cell"][11]= $rowSet["MatchGood"];
+  $tempArray["cell"][12]= $rowSet["MatchPerfect"];
+  $tempArray["cell"][13]= "<a href='javascript:void(0);' player-key='" . $rowSet["PlayerKey"] . "'>Details ...</a>";
 
 
   $arr["rows"][]=$tempArray;

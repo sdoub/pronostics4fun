@@ -53,6 +53,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   echo "Refresh match with key ".$rowSet["MatchKey"] ;
   $_queries = array();
   if (!isset($_GET["DontGetMatchInfo"])) {
+    echo "Get info from external web site";
     GetMatchInfo($rowSet["TeamHomeKey"],$rowSet["TeamAwayKey"],$rowSet["ExternalKey"],$rowSet["MatchKey"]);
   }
   foreach ($_queries as $query) {
