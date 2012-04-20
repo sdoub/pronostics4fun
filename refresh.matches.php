@@ -4,6 +4,7 @@ include_once(dirname(__FILE__)."/begin.file.php");
 include_once(dirname(__FILE__). "/lib/match.php");
 include_once(dirname(__FILE__). "/lib/ranking.php");
 include_once(dirname(__FILE__). "/lib/score.php");
+require_once(dirname(__FILE__). "/lib/http.php");
 
 $_jobName='RefreshMatches';
 $_logInfo = "";
@@ -56,11 +57,32 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
 
   $_queries = array();
   $totaltime = getElapsedTime();
-
+  $http = Http::connect("pronostics4fun.com", 80);
+  $http->silentMode();
   foreach ($rowsSet as $rowSet)
   {
-    GetMatchInfo($rowSet["TeamHomeKey"],$rowSet["TeamAwayKey"],$rowSet["ExternalKey"],$rowSet["MatchKey"]);
+    $parameter = array();
+    $parameter["TeamHomeKey"] = $rowSet["TeamHomeKey"];
+    $parameter["TeamAwayKey"] = $rowSet["TeamAwayKey"];
+    $parameter["ExternalKey"] = $rowSet["ExternalKey"];
+    $parameter["MatchKey"] = $rowSet["MatchKey"];
+    $parameter["Live"] = 1;
+    $http->post('refresh.match.php', $parameter);
   }
+
+  $results = $http ->run();
+  //print_r($results);
+
+  $_queries = array();
+  foreach ($results as $result) {
+
+    $queries = json_decode(trim($result));
+    foreach ($queries->Queries as $query)
+    {
+      $_queries[] = $query;
+    }
+  }
+
 
   $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
   foreach ($_queries as $query) {
