@@ -56,7 +56,7 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey = matches.TeamAwayKey
 LEFT JOIN forecasts ON matches.PrimaryKey = forecasts.MatchKey AND forecasts.PlayerKey=$_playerKey
 LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
 LEFT JOIN playermatchresults ON playermatchresults.PlayerKey=$_playerKey AND playermatchresults.MatchKey=matches.PrimaryKey
-INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND DATE(groups.EndDate)=DATE(FROM_UNIXTIME($_rankDate))
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND DATE(groups.EndDate)=DATE(FROM_UNIXTIME($_rankDate)) AND groups.CompetitionKey = " . COMPETITION . "
 ORDER BY matches.ScheduleDate";
 
 } else {
@@ -84,7 +84,7 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey = matches.TeamAwayKey
 LEFT JOIN forecasts ON matches.PrimaryKey = forecasts.MatchKey AND forecasts.PlayerKey=$_playerKey
 LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
 LEFT JOIN playermatchresults ON playermatchresults.PlayerKey=$_playerKey AND playermatchresults.MatchKey=matches.PrimaryKey
-INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey = " . COMPETITION . "
 WHERE DATE(matches.ScheduleDate)=DATE(FROM_UNIXTIME($_rankDate))
 ORDER BY matches.ScheduleDate";
 }
