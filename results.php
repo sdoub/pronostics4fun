@@ -4,7 +4,7 @@ error_reporting(E_ALL | E_STRICT);
 
 date_default_timezone_set('Europe/Paris');
 
-require_once(dirname(__FILE__)."/lib/PHPMailer/class.phpmailer.php");
+require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 include_once (dirname(__FILE__)."/lib/safeIO.php");
 
@@ -13,7 +13,7 @@ $currentTime = time();
 $query= "SELECT players.PrimaryKey PlayerKey,
 players.EmailAddress,
 players.NickName,
-(SELECT MAX(PrimaryKey) FROM groups WHERE IsCompleted=1 AND CompetitionKey=" . COMPETITION . ") GroupKey
+(SELECT MAX(PrimaryKey) FROM groups WHERE IsCompleted=1 AND CompetitionKey=" . COMPETITION . " AND DATE(groups.EndDate)=DATE(NOW())-1) GroupKey
 FROM playersenabled players
 WHERE players.ReceiveResult=1
   AND players.IsResultEmailSent=0
@@ -35,21 +35,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
     $mail             = new PHPMailer(true);
 
     try {
-      //    if (ROOT_SITE!="http://pronostics4fun.net46.net/Ligue12010") {
-      //      $mail->IsSMTP(); // telling the class to use SMTP
-      //      $mail->Host       = "pronotics4fun.com"; // SMTP server
-      //      $mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
-      //      // 1 = errors and messages
-      //      // 2 = messages only
-      //      $mail->SMTPAuth   = true;                  // enable SMTP authentication
-      //      $mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-      //      $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
-      //      $mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-      //      $mail->Username   = "sebastien.dubuc@gmail.com";  // GMAIL username
-      //      $mail->Password   = "aurelie040697";            // GMAIL password
-      //    }
-      //$mail->AddCustomHeader("Precedence: bulk");
-      //pronostics4fun.com. IN TXT "v=spf1 a mx ptr include:gmail.com ~all"
 
       $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 

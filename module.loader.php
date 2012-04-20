@@ -166,6 +166,9 @@ SELECT 1
         include("modules/home.connected.php");
       }
       break;
+    case "8":
+      include("modules/account.change.password.php");
+      break;
     default:
       include("modules/new.home.connected.php");
   }

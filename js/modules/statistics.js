@@ -1,5 +1,18 @@
+var chart;
+var words = new Array(2);
+
 var themes = {
 p4f: {
+	lang: {
+		months: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin',
+				'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+			weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+			shortMonths : ['Janv.', 'Fev.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept.', 'Oct.', 'Nov.', 'Dec.'],
+			decimalPoint : ",",
+			thousandsSep : " ",
+			loading : "Chargement ...",
+			resetZoom : "RaZ zoom"
+		},
 	colors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee", 
 		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
 	chart: {
@@ -29,6 +42,14 @@ p4f: {
 		}
 	},
 	xAxis: {
+		type: 'datetime',
+        maxZoom: 2 * 3600000, // fourteen days
+        dateTimeLabelFormats: { // don't display the dummy year
+   	  minute: '%H:%M',
+   		hour: '%H:%M',
+         month: '%e. %b',
+           year: '%b'
+        },
 		gridLineWidth: 0,
 		lineColor: '#FFF',
 		tickColor: '#FFF',
@@ -160,7 +181,7 @@ p4f: {
 // Set the options
 var highchartsOptions = Highcharts.setOptions(themes['p4f']);
 
-var chart;
+var chartImagePath;
 
 function CreateScoreChart(ptitle, pcategories) {
 
@@ -213,6 +234,289 @@ function CreateScoreChart(ptitle, pcategories) {
 		}
 	});
 	
+}
+
+function CreateRankingChartWithTimeScale (ptitle, plotBands, fullDay)
+{
+	 chart = new Highcharts.Chart({
+	      chart: {
+	         renderTo: 'containerCharts',
+	         zoomType: 'x',
+	         type: 'line',
+	         marginRight: 130,
+			 marginBottom: 120
+	      },
+	      legend: {
+				layout: 'vertical',
+				align: 'right',
+				verticalAlign: 'top',
+				x: -10,
+				y: 100,
+				borderWidth: 0
+			},
+	      title: {
+	         text: ptitle
+	      },
+	      subtitle: {
+	         text: ''
+	      },
+	      xAxis: {
+	         type: 'datetime',
+	         maxZoom: 7 * 24 * 3600000,
+	         dateTimeLabelFormats: { // don't display the dummy year
+	    	  minute: '%H:%M',
+	    		hour: '%H:%M',
+	          month: '%e. %b',
+	            year: '%b'
+	         },
+	         plotBands: plotBands
+	      },
+	      yAxis: [{
+			min:-35,
+			max:-1,
+	         title: {
+	            text: 'Classement',
+	         style: {
+					color:'#FFFFFF'
+				}
+	         },
+	         labels: {
+	        	 formatter: function() {
+	             return Math.abs(this.value) + (Math.abs(this.value)==1? ' er' : ' '+words[0]) ;
+	          },
+	             style: {
+	                color: '#FFFFFF'
+	             }
+	          }
+
+	      }],
+		      plotOptions: {
+	    	  series: {
+				cursor: 'pointer',
+				point: {
+					events: {
+						click: function() {
+	                      var groupDescription = "";
+	                      var currentDate = this.x;
+	                      $.each (plotBands, function(i,group) {
+	                      	if (currentDate>=group.from && currentDate<=group.to) {
+	                      		groupDescription = group.label.text;
+	                      	}
+	                      });
+
+						  hs.htmlExpand(null, {
+	    					pageOrigin: {
+	    						x: this.pageX,
+	    						y: this.pageY
+	    					},
+	    					headingText: groupDescription+" : "+Highcharts.dateFormat('%A, %e %b %Y', this.x),
+
+	    					objectType: 'ajax',
+	    					src: "get.group.day.php?RankDate="+this.x+"&NickName="+this.series.name+"&FullDay="+fullDay,
+	    					captionText: this.series.name,
+	    					width: 400
+						  });
+						}
+					}
+				},
+				events: {
+					hide: function(event) {
+					var currentSerieName = this.name;
+					$.each (chart.series,function(i,serie) {
+	    			    if (currentSerieName+"LR" == serie.name && serie.visible) {
+	    			    	serie.hide();
+	    			    }
+					});
+	            },show: function(event) {
+					var currentSerieName = this.name;
+					$.each (chart.series,function(i,serie) {
+	    			    if (currentSerieName+"LR" == serie.name && !serie.visible) {
+	    			    	serie.show();
+	    			    }
+					});
+	            }}
+		     }
+	      }
+	      ,
+	      tooltip: {
+	          crosshairs: true,
+	          shared: true,
+	          useHTML : true,
+
+	      	formatter: function() {
+
+              var groupDescription = "";
+              var currentDate = this.points[0].x;
+              $.each (plotBands, function(i,group) {
+              	if (currentDate>=group.from && currentDate<=group.to) {
+              		groupDescription = group.label.text;
+              	}
+              });
+
+	    	 var htmlTooltip = groupDescription+" : "+Highcharts.dateFormat('%e. %b %Y', this.points[0].x);
+	         $.each
+	         (
+	          this.points,
+	          function(i,point)
+	                 {
+	        	  htmlTooltip += '<table style="font-size:8pt;color:#FFFFFF;width:150px;"><tr><td style="color:'+point.series.color+';width:150px;">'+ point.series.name +': </td>';
+	        	  htmlTooltip += '<td style="text-align: right;width:80px;"><b>' + Math.abs(point.y) + (Math.abs(point.y)==1? 'er' : ' '+words[0]) + '</b></td></tr></table>';
+	                 }
+	          );
+	         return htmlTooltip;
+		}
+	  	       }
+	   }, function(chart) { // on complete
+		   	    chart.renderer.image(chartImagePath+'/images/bullet.worst.png', 150, 10, 16, 16).add();
+	 			chart.renderer.image(chartImagePath+'/images/bullet.best.png', 30, 10, 16, 16).add();
+		   	    chart.renderer.text('Plus mauvaise position', 170, 22).css({
+		            color: '#FFFFFF',
+		            fontSize: '7pt'
+		        }).add();
+	 			chart.renderer.text('Meilleur place', 50, 22).css({
+	 	            color: '#FFFFFF',
+	 	            fontSize: '7pt'
+	 	        }).add();
+	   });
+}
+
+function CreateScoreChartWithTimeScale (ptitle, plotBands, fullDay)
+{
+	 chart = new Highcharts.Chart({
+	      chart: {
+	         renderTo: 'containerCharts',
+	         zoomType: 'x',
+	         type: 'line',
+	         marginRight: 130,
+			 marginBottom: 120
+	      },
+	      legend: {
+				layout: 'vertical',
+				align: 'right',
+				verticalAlign: 'top',
+				x: -10,
+				y: 100,
+				borderWidth: 0
+			},
+	      title: {
+	         text: ptitle
+	      },
+	      subtitle: {
+	         text: ''
+	      },
+	      xAxis: {
+	         type: 'datetime',
+	         maxZoom: 7 * 24 * 3600000,
+	         dateTimeLabelFormats: { // don't display the dummy year
+	    	  minute: '%H:%M',
+	    		hour: '%H:%M',
+	          month: '%e. %b',
+	            year: '%b'
+	         },
+	         plotBands: plotBands
+	      },
+	      yAxis: [{
+	    	  
+	    	  min:0,
+	    	  title: {
+	            text: 'Point',
+	         style: {
+					color:'#FFFFFF'
+				}
+	         },
+	         labels: {
+	        	 formatter: function() {
+	             return this.value + (this.value==1? ' pt' : ' pts') ;
+	          },
+	             style: {
+	                color: '#FFFFFF'
+	             }
+	          }
+
+	      }],
+		      plotOptions: {
+	    	  series: {
+				cursor: 'pointer',
+				point: {
+					events: {
+						click: function() {
+	                      var groupDescription = "";
+	                      var currentDate = this.x;
+	                      $.each (plotBands, function(i,group) {
+	                      	if (currentDate>=group.from && currentDate<=group.to) {
+	                      		groupDescription = group.label.text;
+	                      	}
+	                      });
+
+						  hs.htmlExpand(null, {
+	    					pageOrigin: {
+	    						x: this.pageX,
+	    						y: this.pageY
+	    					},
+	    					headingText: groupDescription+" : "+Highcharts.dateFormat('%A, %e %b %Y', this.x),
+
+	    					objectType: 'ajax',
+	    					src: "get.group.day.php?RankDate="+this.x+"&NickName="+this.series.name+"&FullDay="+fullDay,
+	    					captionText: this.series.name,
+	    					width: 400
+						  });
+						}
+					}
+				},
+				events: {
+					hide: function(event) {
+					var currentSerieName = this.name;
+					$.each (chart.series,function(i,serie) {
+	    			    if (currentSerieName+"LR" == serie.name && serie.visible) {
+	    			    	serie.hide();
+	    			    }
+					});
+	            },show: function(event) {
+					var currentSerieName = this.name;
+					$.each (chart.series,function(i,serie) {
+	    			    if (currentSerieName+"LR" == serie.name && !serie.visible) {
+	    			    	serie.show();
+	    			    }
+					});
+	            }}
+		     }
+	      }
+	      ,
+	      tooltip: {
+	          crosshairs: true,
+	          shared: true,
+	          useHTML : true,
+
+	      	formatter: function() {
+
+              var groupDescription = "";
+              var currentDate = this.points[0].x;
+              $.each (plotBands, function(i,group) {
+              	if (currentDate>=group.from && currentDate<=group.to) {
+              		groupDescription = group.label.text;
+              	}
+              });
+
+	    	 var htmlTooltip = groupDescription+" : "+Highcharts.dateFormat('%e. %b %Y', this.points[0].x);
+	         $.each
+	         (
+	          this.points,
+	          function(i,point)
+	                 {
+	        	  htmlTooltip += '<table style="font-size:8pt;color:#FFFFFF;width:150px;"><tr><td style="color:'+point.series.color+';width:150px;">'+ point.series.name +': </td>';
+	        	  htmlTooltip += '<td style="text-align: right;width:80px;"><b>' + Math.abs(point.y) + (Math.abs(point.y)==1? 'pt' : ' '+'pts') + '</b></td></tr></table>';
+	                 }
+	          );
+	         return htmlTooltip;
+		}
+	  	       }
+	   }, function(chart) { // on complete
+			chart.renderer.image(chartImagePath+'/images/bullet.bonus.png', 30, 10, 16, 16).add();
+ 			chart.renderer.text('Bonus (20pts, 40pts, 60pts, 100pts)', 50, 22).css({
+ 	            color: '#FFFFFF',
+ 	            fontSize: '7pt'
+ 	        }).add();
+	   });
 }
 
 function CreateRankingChart(ptitle, pcategories) {

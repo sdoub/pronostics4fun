@@ -2,6 +2,28 @@
 if($_SERVER['REQUEST_METHOD']=='GET')
 {
 
+  $sql = "SELECT TeamKey, SUM(NbrOfBonus) NbrOfBonus
+FROM (
+SELECT matches.TeamHomeKey TeamKey, 1 NbrOfBonus
+  FROM matches
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=".COMPETITION."
+WHERE matches.IsBonusMatch=1
+UNION ALL
+SELECT matches.TeamAwayKey, 1
+  FROM matches
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=".COMPETITION."
+WHERE matches.IsBonusMatch=1
+UNION ALL
+SELECT teams.PrimaryKey, 0
+  FROM teams
+WHERE NOT EXISTS (SELECT 1 FROM matches
+  INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=".COMPETITION."
+WHERE matches.IsBonusMatch=1
+  AND (teams.PrimaryKey=matches.TeamHomeKey OR teams.PrimaryKey=matches.TeamAwayKey))
+) TMP
+GROUP BY TMP.TeamKey";
+  $rowsTeamsBonus = $_databaseObject -> queryGetFullArray ($sql, "Get all teams with number of bonus match participate");
+
   $sql = "SELECT TeamKey, SUM(NbrOfBonus)
 FROM (
 SELECT matches.TeamHomeKey TeamKey, 1 NbrOfBonus
@@ -14,7 +36,7 @@ SELECT matches.TeamAwayKey, 1
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=".COMPETITION."
 WHERE matches.IsBonusMatch=1 ) TMP
 GROUP BY TMP.TeamKey
-HAVING SUM(NbrOfBonus)>10";
+HAVING SUM(NbrOfBonus)>9";
   $rowsTeamsExcluded10 = $_databaseObject -> queryGetFullArray ($sql, "Get all teams exceeded number of bonus match");
 
 
@@ -102,7 +124,7 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
         $isExceeded = "false";
       }
       $html .= '<tr class="day" is-exceeded="'.$isExceeded.'">
-      	  <td colspan="7">' . $rowSet["GroupName"] . ' - <span style="font-size:10px;cursor:help" rel="get.group.vote.players.php?GroupKey='. $rowSet['GroupKey'] .'">'  . $rowSet["GlobalVoteCount"].' vote(s)</span></td>
+      	  <td colspan="7">' . $rowSet["GroupName"] . ' - <span class="votePlayers" style="font-size:10px;cursor:help" rel="get.group.vote.players.php?GroupKey='. $rowSet['GroupKey'] .'">'  . $rowSet["GlobalVoteCount"].' vote(s)</span></td>
       	</tr>';
       $displayGroup = true;
     }
@@ -150,11 +172,18 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
 
 
     $html .= '<tr class="match"  match-key="' . $rowSet['MatchKey'] . '" status="' . $rowSet["LiveStatus"] . '">
-      	  <td class="teamHome">' . $rowSet['TeamHomeName'] . '</td>
+      	  <td class="teamHome">' . $rowSet['TeamHomeName'] ;
+
+    $arrnbrOfBonus = seekKey($rowsTeamsBonus,"TeamKey",$rowSet['TeamHomeKey']);
+    $nbrOfBonus = $arrnbrOfBonus[0]["NbrOfBonus"];
+    $html .= '<span class="bonusMatch" style="cursor:help;" rel="get.match.bonus.php?TeamKey='. $rowSet['TeamHomeKey'] .'"><sup>('.$nbrOfBonus.')</sup></span></td>
       	  <td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamHomeKey'] . '.png" width="30px" height="30px"></img></td>';
 
     $html .= '<td width="50px;" style="text-align:center;">&nbsp;Vs&nbsp;</td><td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamAwayKey'] . '.png"></img></td>
-      	  <td class="teamAway">' . $rowSet['TeamAwayName'] . '</td>';
+      	  <td class="teamAway">' . $rowSet['TeamAwayName'] ;
+    $arrnbrOfBonus = seekKey($rowsTeamsBonus,"TeamKey",$rowSet['TeamAwayKey']);
+    $nbrOfBonus = $arrnbrOfBonus[0]["NbrOfBonus"];
+    $html .= '<span class="bonusMatch" style="cursor:help;" rel="get.match.bonus.php?TeamKey='. $rowSet['TeamAwayKey'] .'"><sup>('.$nbrOfBonus.')</sup></span></td>';
 
     $html .= '<td width="450px;">
         <div id="stars-wrapper'.$rowSet['MatchKey'] .'" is-disabled="'.$isDisabled.'" name="stars-wrapper'.$rowSet['MatchKey'] .'" match-key="' . $rowSet['MatchKey'] . '" vote-value="'.$rowSet["VoteValue"].'">';
@@ -191,6 +220,7 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
   if ($teamExcluded10!="") {
     $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>" . __encode("Il n'est plus possible de voter pour un match de ".$teamExcluded10.", car ".$teamExcluded10." a/ont déjà particpé à 10 matchs Bonus"). "</div>";
   }
+
   $arr["status"] = false;
   $arr["message"] = $html;
 

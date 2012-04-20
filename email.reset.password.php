@@ -16,12 +16,9 @@ echo "<div ><a style='border:0;' href='".ROOT_SITE."'><img style='border:0;' src
 
 echo '<p>Bonjour <strong>' . $_GET["NickName"] . '</strong>,</p>';
 
-echo '<p>Vous recevez ce message suite à votre perte de mot de passe sur Pronostics4Fun, voici vos nouvelles information de connexion.</p>
+echo '<p>Vous recevez ce message suite à votre perte de mot de passe sur Pronostics4Fun, veuillez cliquer <a href="'. ROOT_SITE . '/change.password.php?key=' . $_GET["Key"] . '">ici</a> pour réinitialiser votre mot de passe.</p>
 
-<p>Pseudo : <strong>' . $_GET["NickName"] . '</strong><br/>
-Mot de passe : <strong>' . $_GET["Password"] . '</strong></p>
-
-<p>Merci et à bientôt sur <a href="'. ROOT_SITE . '">Pronostics4Fun</a> </p>';
+<p>Merci et à très bientôt sur <a href="'. ROOT_SITE . '">Pronostics4Fun</a> </p>';
 
 require_once("end.file.php");
 ?>

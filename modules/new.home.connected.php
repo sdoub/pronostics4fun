@@ -1,6 +1,5 @@
 <?php
 
-
 AddScriptReference("scrollpane");
 AddScriptReference("new.home.connected");
 
@@ -11,6 +10,193 @@ WriteScripts();
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jHtmlArea-0.7.0.min.js"></script>
 <link rel="Stylesheet" type="text/css" href="<?php echo ROOT_SITE; ?>/css/jHtmlArea.css" />
 
+<style>
+
+#tendancyHidden {
+	background: transparent;
+	/* background-color: #B3D207; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+
+#tendancyYes {
+	background: url('<?php echo ROOT_SITE;?>/images/green1px.gif') repeat-x scroll left center transparent;
+	/* background-color: #B3D207; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+#tendancyMultiple {
+	background: url('<?php echo ROOT_SITE;?>/images/yellow1px.gif') repeat-x scroll left center transparent;
+	/* background-color: #2B9BC0; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+#tendancyNo {
+	background: url('<?php echo ROOT_SITE;?>/images/red1px.gif') repeat-x scroll left center transparent;
+	/* background-color: #EF0000; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+</style>
+
+<?php
+$query = "SELECT *, UNIX_TIMESTAMP(surveys.StartDate) UnixStartDate,UNIX_TIMESTAMP(surveys.EndDate) UnixEndDate FROM surveys
+WHERE StartDate<=NOW() AND EndDate>=NOW()
+ORDER BY StartDate
+";
+$resultSet = $_databaseObject->queryPerf($query,"Get survey");
+
+while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+{
+  $surveyKey = $rowSet["PrimaryKey"];
+  $participants = explode(",", substr($rowSet["Participants"],1));
+  $isValidated = array_value_exists2($participants, $_authorisation->getConnectedUserKey());
+  if (sizeof($participants)>0) {
+    $score1Percentage = round(100*$rowSet["Score1"] /sizeof($participants),2);
+    $score2Percentage = round(100*$rowSet["Score2"] /sizeof($participants),2);
+    $score3Percentage = round(100*$rowSet["Score3"] /sizeof($participants),2);
+    $score4Percentage = round(100*$rowSet["Score4"] /sizeof($participants),2);
+  } else {
+    $score1Percentage = 0;
+    $score2Percentage = 0;
+    $score3Percentage = 0;
+    $score4Percentage = 0;
+  }
+
+  setlocale(LC_TIME, "fr_FR");
+  $startFormattedDate = strftime("%d %B %Y",$rowSet['UnixStartDate']);
+  $endFormattedDate = strftime("%d %B %Y",$rowSet['UnixEndDate']);
+
+  $divHeight=0;
+  $tendancy1="tendancyYes";
+  $tendancy2="tendancyNo";
+  if ($rowSet["Answer3"]!="") {
+    $divHeight+=15;
+    $tendancy1="tendancyMultiple";
+    $tendancy2="tendancyMultiple";
+  }
+
+  if ($rowSet["Answer4"]!="")
+    $divHeight+=15;
+
+
+?>
+
+<div id="surveyTitle<?php echo $surveyKey;?>" name="surveyTitle<?php echo $surveyKey;?>" style="background:url('<?php echo ROOT_SITE; ?>/images/survey.small.png') no-repeat scroll left top
+		#D7E1F6;height:<?php echo 160+$divHeight;?>px;margin-bottom:30px;_width:920px;">
+	<div style="font-size:18px;color:#365F89;font-weight:bold;margin-left:140px;margin-top:15px;padding-top:15px;">
+	<?php echo __encode("Sondage (" . $startFormattedDate . " - " .$endFormattedDate . ")");?></div>
+	<div id="survey<?php echo $surveyKey;?>" class="flexcroll" style="background:#6D8AA8;height:<?php echo 100+$divHeight;?>px;overflow: auto;margin-top:15px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
+		<p style="padding-top:10px;color:#FFFFFF;">
+		<?php echo __encode($rowSet["Question"]);
+		//__encode("Comme vous le savez probablement, le championnat d'europe des nations commencera le 06 Juin 2012. Au mettre titre que le championnat de Ligue1, voulez-vous donner des pronostics sur cette compétition?");
+		?></p>
+		<ul>
+		<li>
+<table style="font-size:12px;font-weight:bold;padding-left:30px;color:#FFFFFF;"><tr><td  width="150px;">
+<?php if (!$isValidated) {?>
+<input type="radio" name="survey<?php echo $surveyKey;?>" id="survey<?php echo $surveyKey;?>_1" value="1"/>
+<?php }?>
+
+<label for="survey<?php echo $surveyKey;?>_1" style="padding-right:20px;" >
+<?php echo $rowSet["Answer1"];
+//__encode("Oui");
+?></label>
+</td><td width="300px;">
+					<table width="200px;font-size:9px;">
+			<tr id="ResultSurvey<?php echo $surveyKey;?>_1" style="<?php if (!$isValidated) {echo "display:none;";}?>">
+				<td id="<?php echo $tendancy1;?>" value="1"  width="<?php echo $score1Percentage;?>%"><?php echo $score1Percentage;?>%</td>
+				<td id="tendancyHidden" value="2" width="<?php echo $score2Percentage;?>%">&nbsp;</td>
+<?php if ($rowSet["Answer4"]!="") {?>
+				<td id="tendancyHidden" value="3" width="<?php echo $score3Percentage;?>%">&nbsp;</td>
+				<td id="tendancyHidden" value="4" width="<?php echo $score4Percentage;?>%">&nbsp;</td>
+<?php }?>
+
+			</tr>
+		</table>
+		</td></tr></table>
+</li><li>
+<table style="font-size:12px;font-weight:bold;padding-left:30px;color:#FFFFFF;"><tr><td  width="150px;">
+<?php if (!$isValidated) {?>
+<input type="radio" name="survey<?php echo $surveyKey;?>" id="survey<?php echo $surveyKey;?>_2" value="2"/>
+<?php }?>
+
+<label for="survey<?php echo $surveyKey;?>_2" style="padding-right:20px;" >
+<?php echo $rowSet["Answer2"];?></label>
+</td><td width="300px;">
+					<table  width="200px;font-size:9px;">
+			<tr id="ResultSurvey<?php echo $surveyKey;?>_2" style="<?php if (!$isValidated) {echo "display:none;";}?>">
+				<td id="<?php echo $tendancy2;?>" value="2" width="<?php echo $score2Percentage;?>%"><?php echo $score2Percentage;?>%</td>
+				<td id="tendancyHidden" value="1" width="<?php echo $score1Percentage;?>%">&nbsp;</td>
+<?php if ($rowSet["Answer3"]!="") {?>
+				<td id="tendancyHidden" value="3" width="<?php echo $score3Percentage;?>%">&nbsp;</td>
+				<td id="tendancyHidden" value="4" width="<?php echo $score4Percentage;?>%">&nbsp;</td>
+<?php }?>
+
+
+			</tr>
+		</table>
+		</td></tr></table>
+		</li>
+<?php if ($rowSet["Answer3"]!="") {?>
+<li>
+<table style="font-size:12px;font-weight:bold;padding-left:30px;color:#FFFFFF;"><tr><td  width="150px;">
+<?php if (!$isValidated) {?>
+<input type="radio" name="survey<?php echo $surveyKey;?>" id="survey<?php echo $surveyKey;?>_3" value="3"/>
+<?php }?>
+
+<label for="survey<?php echo $surveyKey;?>_3" style="padding-right:20px;" >
+<?php echo $rowSet["Answer3"];?></label>
+</td><td width="300px;">
+					<table  width="200px;font-size:9px;">
+			<tr id="ResultSurvey<?php echo $surveyKey;?>_3" style="<?php if (!$isValidated) {echo "display:none;";}?>">
+				<td id="tendancyMultiple" value="3" width="<?php echo $score3Percentage;?>%"><?php echo $score3Percentage;?>%</td>
+				<td id="tendancyHidden" value="1" width="<?php echo $score1Percentage;?>%">&nbsp;</td>
+				<td id="tendancyHidden" value="2" width="<?php echo $score2Percentage;?>%">&nbsp;</td>
+<?php if ($rowSet["Answer4"]!="") {?>
+				<td id="tendancyHidden" value="4" width="<?php echo $score4Percentage;?>%">&nbsp;</td>
+<?php }?>
+			</tr>
+		</table>
+		</td></tr></table>
+		</li>
+<?php }?>
+<?php if ($rowSet["Answer4"]!="") {?>
+
+<li>
+<table style="font-size:12px;font-weight:bold;padding-left:30px;color:#FFFFFF;"><tr><td  width="150px;">
+<?php if (!$isValidated) {?>
+<input type="radio" name="survey<?php echo $surveyKey;?>" id="survey<?php echo $surveyKey;?>_4" value="4"/>
+<?php }?>
+
+<label for="survey4" style="padding-right:20px;" >
+<?php echo $rowSet["Answer4"];?></label>
+</td><td width="300px;">
+       <table  width="200px;font-size:9px;">
+			<tr id="ResultSurvey<?php echo $surveyKey;?>_4" style="<?php if (!$isValidated) {echo "display:none;";}?>">
+				<td id="tendancyMultiple"  value="4" width="<?php echo $score4Percentage;?>%"><?php echo $score4Percentage;?>%</td>
+				<td id="tendancyHidden" value="1" width="<?php echo $score1Percentage;?>%">&nbsp;</td>
+				<td id="tendancyHidden" value="2" width="<?php echo $score2Percentage;?>%">&nbsp;</td>
+				<td id="tendancyHidden" value="3" width="<?php echo $score3Percentage;?>%">&nbsp;</td>
+			</tr>
+		</table>
+		</td></tr></table>
+		</li>
+<?php }?>
+
+		</ul>
+		<div id="TotalSurvey<?php echo $surveyKey;?>" style="text-align:right;color:#FFFFFF;padding-right:10px;<?php if (!$isValidated) {echo "display:none;";}?>">Total votes : <?php echo sizeof($participants);?></div>
+	</div>
+</div>
+<?php } ?>
 <div id="newsTitle" style="background:url('<?php echo ROOT_SITE; ?>/images/actu.png') no-repeat scroll left top
 		#D7E1F6;height:360px;margin-bottom:30px;_width:920px;">
 <!--  h3 style="text-align:left;color:#365F89;padding-left:25px;padding-top:10px;"><?php echo __encode("Actualité ...");?></h3> -->
@@ -129,7 +315,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   else {
   	setlocale(LC_TIME, "fr_FR");
 	$newsFormattedDate = strftime("%A %d %B %Y à %H:%M",$rowSet['NewsDate']);
-    echo "<div class='newsDate'>";
+    echo "<div class='newsDate' news-key='$playerKey'>";
     echo "Le " . __encode($newsFormattedDate);
     echo "</div>";
     echo "<div class='news' id='news.$playerKey'>";
@@ -386,66 +572,16 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 <script>
 
 $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
+	$("div[name^='surveyTitle']").corner();
 	$("#newsTitle").corner();
 	$("#forecastsTitle").corner();
 	$("#globalRankingTitle").corner();
+
 	$("div.flexcroll").jScrollPane({
 		showArrows: true,
 		horizontalGutter: 10
 	});
 });
-
-//$.log($("#globalRankingCanvas")[0].getContext('2d'));
-
-//$.requireScript('<?php echo ROOT_SITE; ?>/js/jcanvas.min.js', function() {
-//
-//	 $("#globalRankingCanvas").drawText({
-//		  fillStyle: "#D7E1F6",
-//		  strokeStyle: "#000",
-//		  strokeWidth: 0,
-//		  text: "Sdoub",
-//		  align: "right",
-//		  baseline: "middle",
-//		  font: "normal 12pt Helvetica",
-//		  x: 100,
-//		  y: 45
-//		});
-//
-//	 $("#globalRankingCanvas").drawText({
-//		  fillStyle: "#D7E1F6",
-//		  strokeStyle: "#000",
-//		  strokeWidth: 0,
-//		  text: "Alix1005",
-//		  align: "center",
-//		  baseline: "middle",
-//		  font: "normal 12pt Helvetica",
-//		  x: 150,
-//		  y: 20
-//		});
-//
-//	 $("#globalRankingCanvas").drawText({
-//		  fillStyle: "#D7E1F6",
-//		  strokeStyle: "#000",
-//		  strokeWidth: 0,
-//		  text: "Aurel",
-//		  align: "left",
-//		  baseline: "middle",
-//		  font: "normal 12pt Helvetica",
-//		  x: 200,
-//		  y: 70
-//		});
-//
-//	$("#globalRankingCanvas").drawImage({
-//		  source: "<?php echo ROOT_SITE;?>/images/podium.home.png",
-//		  x: 65, y: 5,
-//		  width:180 ,
-//		  height:148,
-//		  fromCenter: false
-//		});
-//
-//
-//
-//});
 
 $("#forecastsTitle li").click(function() {
 	window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=1');
@@ -572,11 +708,119 @@ $(document).ready(function() {
 		$('#newsList').prepend("<li class='news' player-key='newKey'><div style='float:right;border-left:1px solid #D7E1F6;border-bottom:1px solid #D7E1F6;background: #365F89;color: #FFFFFF;font: bold 11px normal Tahoma, Verdana;'>Maintenant</div><div style='padding-top:5px;' class='news' id='news.newKey'><br/><br/></div></li>");
 		$('#newsList > li:first > div.news').editInPlace(options);
 	});
-	$('div.news').editInPlace(options);
 
+	$('div.news').editInPlace(options);
+	$('div.newsDate').mouseenter(function() {
+		var newsKey = $(this).attr("news-key");
+		$(this).append('<img id="DeleteNews" src="<?php echo ROOT_SITE;?>/images/delete.off.png" style="cursor:pointer;width:12px;height:12px;"/>').find('#DeleteNews').mouseenter(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.on.png');}).mouseleave(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.off.png');}).unbind('click').click(function () {
+			if (confirm('Voulez vous vraiment supprimer cette news ?'))
+			{
+				var currentNews = $(this).parent();
+				$.ajax({
+					  url: "save.news.php",
+					  dataType: 'json',
+					  data: {NewsKey:newsKey,ToBeDeleted:true},
+					  success: function (data){
+						if (!data.error)
+						  currentNews.slideUp();
+						  },
+					  error: callbackPostError
+					});
+			}
+			});
+	  }).mouseleave(function() {
+		  $(this).find('img').remove();
+	  });
+	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
+	{
+		$.log(XMLHttpRequest);
+		$.log(textStatus);
+		$.log(errorThrown);
+	}
 
 });
 <?php
 }
 ?>
+$(document).ready(function() {
+
+	$('input[name^="survey"]').click (function () {
+
+	$.log($(this).attr('name'));
+	$.log($(this).val());
+	var selectedValue =  $(this).val();
+	$.log(selectedValue);
+		var surveyKey = $(this).attr('name').substring(6);
+		var selectedValue =  $(this).val();
+		var answer1 = selectedValue==1?1:0;
+		var answer2 = selectedValue==2?1:0;
+		var answer3 = selectedValue==3?1:0;
+		var answer4 = selectedValue==4?1:0;
+
+
+		$.ajax({
+			  url: "save.survey.php",
+			  dataType: 'json',
+			  data: {SurveyKey:surveyKey,Answer1:answer1,Answer2:answer2,Answer3:answer3,Answer4:answer4},
+			  success: function (data){
+				  $.log(data);
+				if (!data.error)
+
+					$('#ResultSurvey'+surveyKey+'_1 td').each(function (){
+						var idTd = $(this).attr('value').substring(-1);
+						$.log("data.Score"+idTd+"Percentage");
+						$.log(eval("data.Score"+idTd+"Percentage"));
+						$(this).attr('width',eval("data.Score"+idTd+"Percentage")+'%');
+						if (idTd==1)
+							$(this).html(eval("data.Score"+idTd+"Percentage")+'%');
+					});
+				$('#ResultSurvey'+surveyKey+'_2 td').each(function (){
+					var idTd = $(this).attr('value').substring(-1);
+					$(this).attr('width',eval("data.Score"+idTd+"Percentage")+'%');
+					if (idTd==2)
+						$(this).html(eval("data.Score"+idTd+"Percentage")+'%');
+				});
+				$('#ResultSurvey'+surveyKey+'_3 td').each(function (){
+					var idTd = $(this).attr('value').substring(-1);
+					$(this).attr('width',eval("data.Score"+idTd+"Percentage")+'%');
+					if (idTd==3)
+						$(this).html(eval("data.Score"+idTd+"Percentage")+'%');
+				});
+				$('#ResultSurvey'+surveyKey+'_4 td').each(function (){
+					var idTd = $(this).attr('value').substring(-1);
+					$(this).attr('width',eval("data.Score"+idTd+"Percentage")+'%');
+					if (idTd==4)
+						$(this).html(eval("data.Score"+idTd+"Percentage")+'%');
+				});
+					$('#survey'+surveyKey+'_1').fadeOut('slow', function () {
+						$('#ResultSurvey'+surveyKey+'_1').fadeIn();
+						});
+					$('#survey'+surveyKey+'_2').fadeOut('slow', function () {
+							$('#ResultSurvey'+surveyKey+'_2').show();
+						});
+					$('#survey'+surveyKey+'_3').fadeOut('slow', function () {
+						$('#ResultSurvey'+surveyKey+'_3').show();
+					});
+					$('#survey'+surveyKey+'_4').fadeOut('slow', function () {
+						$('#ResultSurvey'+surveyKey+'_4').show();
+					});
+					$('#TotalSurvey'+surveyKey).html ('Total votes : ' + data.Participants).fadeIn();
+
+				  },
+			  error: callbackPostError
+			});
+
+
+	});
+
+	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
+	{
+		$.log(XMLHttpRequest);
+		$.log(textStatus);
+		$.log(errorThrown);
+	}
+
+	});
+
+
 </script>

@@ -65,7 +65,6 @@ var _fileExt = "";
 var _orginalW = 0;
 var _orginalH = 0;
 function callbackPost (data){
-	$.log(data.status);
 	if(data.status==true) {
 		// status is authorized
 		if(autoRedir){ 
@@ -74,7 +73,6 @@ function callbackPost (data){
 			$(waitId).fadeOut('slow', function(){ $(wrapperId).html(data.message).slideDown(); }).html();
 		}
 	} else {
-		$.log(data.message);
 		// show form
 		$(wrapperId).html(data.message).slideDown('fast',function (){
 			// hide  message
@@ -92,12 +90,13 @@ function callbackPost (data){
 					var _ln = $(lastNameId).val();	// form id
 					var _e = $(emailId).val();	// form user
 					var _avatar = $('#avatarName').val();
+					var parameters = {  password: _p, firstName: _fn, lastName: _ln, email: _e , defaultview:_defaultView, avatarName:_avatar, receiveAlert:_receiveAlert, receiveResult:_receiveResult};
 					
 					$.ajax({
 						type: "POST",
 						url: postFile,
 						  dataType: 'json',
-						  data: {  password: _p, firstName: _fn, lastName: _ln, email: _e , defaultview:_defaultView, avatarName:_avatar, receiveAlert:_receiveAlert, receiveResult:_receiveResult},
+						  data: parameters,
 						  success: callbackRegister,
 						  error: callbackPostError
 						});	
@@ -142,31 +141,37 @@ function callbackPost (data){
 				    onComplete: function(id, fileName, responseJSON){
 					jcrop_api.release();
 					jcrop_api.destroy();
-					$('#OriginalAvatar').fadeOut("fast").html();
-					$('#HiddenAvatar').attr("src",responseJSON.filePath).load('slow',function () {
+					$('#OriginalAvatar').fadeOut();
+					$('#OriginalAvatar').css("width","");
+					$('#OriginalAvatar').css("height","");
+					$('#OriginalAvatar').attr("src",responseJSON.filePath).fadeIn('slow',function () {
 						_orginalW = $(this).width();    // Current image width
 						_orginalH = $(this).height();  // Current image height
-					});
-					$('#OriginalAvatar').attr("src",responseJSON.filePath).fadeIn('slow',function () {
 						_fileExt = responseJSON.fileExt;
-						$.log(_fileExt);
 						$('#file-uploader').find("ul li:not(:has(.qq-upload-fail))").fadeOut();
 						$('#avatar').attr("src",responseJSON.filePath).fadeIn();
 						initJcrop();
-						
 					});
 					
-					/*$('#OriginalAvatar').fadeOut("fast").html();
-					$('#OriginalAvatar').attr("src","http://localhost/Ligue12010/images/avatars/" + fileName).fadeIn('slow');
-					$('#avatar').attr("src","http://localhost/Ligue12010/images/avatars/" + fileName).fadeIn('slow');*/
 				}
 				});
 				
 				$('#AvatarLink').click(function (){
 					if (!$(this).hasClass("apply")){
 						$('#accountDiv').fadeOut('slow', function (){
-							$('#accountAvatarDiv img').attr('src',$('#avatar').attr('src'));
+							var originalPath = $('#avatar').attr('src');
+							var fileName = originalPath.split('_');
+							var filePath = fileName[0]; 
+							var fileExt = fileName[1].split('.');
+							filePath+="original.";
+							_fileExt = fileExt[1].substring(0,3);
+							filePath+=fileExt[1];
+							$('#accountAvatarDiv img').attr('src',filePath);
+							$('#avatar').attr("src",filePath).fadeIn();
 							$('#accountAvatarDiv').fadeIn('slow',function (){
+								_orginalW = $('#OriginalAvatar').width();    // Current image width
+								_orginalH = $('#OriginalAvatar').height();  // Current image height
+								
 								initJcrop();
 								
 							}).html();
@@ -176,35 +181,22 @@ function callbackPost (data){
 					}
 					else {
 						$('#accountAvatarDiv').fadeOut('slow', function (){
-							if($("ul.qq-upload-list > li").length>0) {
-							$.log(jcrop_api.tellScaled());
-							$.log(jcrop_api.tellSelect());
+							//if($("ul.qq-upload-list > li").length>0) {
 							var rect = jcrop_api.tellScaled();
 							
-							$.log('_orginalW:'+_orginalW);
-							$.log('_orginalH:'+_orginalH);
+							var scaleW = 1;// _orginalW / 300;
+					        var scaleH = 1; //_orginalH / 300;
 							
-							var scaleW = _orginalW / 300;
-					        var scaleH = _orginalH / 300;
-							
-					        $.log(rect.x);
-					        $.log(rect.x*scaleW);
-					        
-							$.log(_fileExt);
 							$.ajax({
 								type: "POST",
 								url: 'save.avatar.php',
 								  dataType: 'json',
 								  data: { x1: rect.x*scaleW, y1: rect.y*scaleH, w: rect.w*scaleW, h: rect.h*scaleH, fileExt: _fileExt},
 								  success: function (data) { 
-									  $.log(data.filePath);
 									  $('#avatar').attr("src",data.filePath).fadeIn();
-									  
-									  $.log(data.fileName);
-									  $.log($('#avatarName'));
 									  $('#avatarName').val(data.fileName);
 									  
-									  jQuery('#avatar').css({
+									  $('#avatar').css({
 											width: '82px',
 											height: '82px',
 											marginLeft: '0px',
@@ -213,7 +205,7 @@ function callbackPost (data){
 									  return true;},
 								  error: callbackPostError
 								});	
-							}
+							//}
 							$('#accountDiv').fadeIn().html();
 						}).html();
 						$(this).html("Modifier").css("padding-left","19px").css("padding-right","19px").toggleClass("apply");
@@ -245,46 +237,16 @@ function callbackPost (data){
 		   			  _defaultView = $input.is(":checked") ? 1 : 0;
 		   		}
 		   	   }).trigger("change");
-				  /* $('#OriginalAvatar').live('change',function() {
-				        var maxWidth = 300; // Max width for the image
-				        var maxHeight = 300;    // Max height for the image
-				        var ratio = 0;  // Used for aspect ratio
-				        var width = $(this).width();    // Current image width
-				        var height = $(this).height();  // Current image height
-				        _orginalW = width;
-				        _orginalH = height;
-
-				        // Check if the current width is larger than the max
-				        if(width > maxWidth){
-				            ratio = maxWidth / width;   // get ratio for scaling image
-				            $(this).css("width", maxWidth); // Set new width
-				            $(this).css("height", height * ratio);  // Scale height based on ratio
-				            height = height * ratio;    // Reset height to match scaled image
-				            width = width * ratio;    // Reset width to match scaled image
-				        }
-				 
-				        // Check if current height is larger than max
-				        if(height > maxHeight){
-				            ratio = maxHeight / height; // get ratio for scaling image
-				            $(this).css("height", maxHeight);   // Set new height
-				            $(this).css("width", width * ratio);    // Scale width based on ratio
-				            width = width * ratio;    // Reset width to match scaled image
-				        }
-				        
-				    });*/
-				   
-
-					
 			}).html();
 		});
 		
 	}
 	
 }
+
+
 function initJcrop () {
-	if (jcrop_api){
-		jcrop_api.destroy();
-	}
+	$.log(jcrop_api);
 
 	jcrop_api = $.Jcrop('#OriginalAvatar');
 	jcrop_api.setOptions( {
@@ -298,14 +260,14 @@ function initJcrop () {
 		boxWidth:300,
 		boxHeight:300
 	});
-	if($("ul.qq-upload-list > li").length>0) {
+	//if($("ul.qq-upload-list > li").length>0) {
 		jcrop_api.setSelect([0,0,300,300]);
 		jcrop_api.focus();
 	
-	}
-	else {
-		jcrop_api.release();
-	}
+//	}
+//	else {
+//		jcrop_api.release();
+//	}
 }
 
 
@@ -316,9 +278,9 @@ function showPreview(coords)
 		var rx = 82 / coords.w;
 		var ry = 82 / coords.h;
 
-		jQuery('#avatar').css({
-			width: Math.round(rx * 300) + 'px',
-			height: Math.round(ry * 300) + 'px',
+		$('#avatar').css({
+			width: Math.round(rx * _orginalW) + 'px',
+			height: Math.round(ry * _orginalH) + 'px',
 			marginLeft: '-' + Math.round(rx * coords.x) + 'px',
 			marginTop: '-' + Math.round(ry * coords.y) + 'px'
 		});
@@ -327,11 +289,10 @@ function showPreview(coords)
 
 
 function callbackRegister(data) {
-	
 	if(data.status==true){ 
 		if(autoRedir){ 
 			$(waitId).html('Redirection...').fadeIn('fast', function(){
-			  $.log("redirection :"+data.url);
+			  //$.log("redirection :"+data.url);
 				window.location.replace(data.url);
 				//window.location=data.url;
 			});

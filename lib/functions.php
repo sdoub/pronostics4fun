@@ -368,6 +368,31 @@ function seekKey($array, $key, $value)
   return $ret;
 }
 
+function array_value_exists2 ($array, $value){
+  if (is_array($array)  && $value) {
+    if (seekKey2 ($array, $value)) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+
+}
+
+
+function seekKey2($array, $value)
+{
+  $ret = array();
+  for ($i=0;$i<count($array);$i++)
+  {
+    if ($array[$i]==$value)
+    $ret[] = $array[$i];
+  }
+  return $ret;
+}
+
 function writeJsonResponse ($arr){
   global $_databaseObject;
 

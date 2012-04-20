@@ -5,6 +5,10 @@ AddScriptReference("statistics");
 WriteScripts();
 
 ?>
+<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
+<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide.config.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/highslide/highslide.css" />
+
 <script type="text/javascript">
 
 <?php
@@ -27,6 +31,46 @@ $(document).ready(function() {
 });
 
 <?php
+
+$query = "SELECT MIN(UNIX_TIMESTAMP(DATE(matches.ScheduleDate))) BeginDate, MAX(UNIX_TIMESTAMP(DATE(matches.ScheduleDate)))+86400 EndDate, groups.Description
+FROM matches
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND LiveStatus=10
+GROUP BY DATE(matches.ScheduleDate)
+ORDER BY matches.ScheduleDate
+";
+$resultSet = $_databaseObject->queryPerf($query,"Get players and score");
+$separator ="";
+$plotsBand = "";
+$arrPlotBands = array();
+$currentPlotBand = 0;
+$previousGroup = "";
+$previousBeginDate = 0;
+while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
+  $beginDate = ((int)$rowSet['BeginDate']*1000+((is_est((int)$rowSet['BeginDate'])?2:1)*3600*1000));
+  $endDate = ((int)$rowSet['EndDate']*1000+((is_est((int)$rowSet['EndDate'])?2:1)*3600*1000));
+
+  $plotsBand = "{ from: " . $beginDate.", to: " . $endDate.",color: 'rgba(228, 228, 225, 0.1)',";
+  $plotsBand .= "label: {y:65,text: '". utf8_encode(__decode($rowSet['Description']))."',rotation:270,align:'center',verticalAlign:'bottom',style: {color: 'rgba(255, 255, 255, 0.5)'}}}";
+
+  if ($previousGroup == $rowSet['Description'])
+  {
+    $beginDate = $previousBeginDate;
+    $plotsBand = "{ from: " . $beginDate.", to: " . $endDate.",color: 'rgba(228, 228, 225, 0.1)',";
+      $plotsBand .= "label: {y:65,text: '". utf8_encode(__decode($rowSet['Description']))."',rotation:270,align:'center',verticalAlign:'bottom',style: {color: 'rgba(255, 255, 255, 0.5)'}}}";
+  }
+  else {
+    $previousBeginDate = $beginDate;
+    $currentPlotBand ++;
+  }
+
+
+  $arrPlotBands[$currentPlotBand] = $plotsBand;
+  $previousGroup = $rowSet['Description'];
+
+}
+$plotsBand = implode(",", $arrPlotBands);
+//print_r( $plotsBand);
 $categories = "[";
 
   $sql = "SELECT GROUP_CONCAT(groups.Code) GroupName FROM groups WHERE CompetitionKey=" . COMPETITION . " AND IsCompleted='1' GROUP BY EndDate ORDER BY EndDate";
@@ -90,6 +134,23 @@ echo "chartTitle='" . utf8_encode($chartTitle) . "'";
 <?php
 echo "var _currentView = '" . $view . "';";
 ?>
+chartImagePath = "<?php echo ROOT_SITE;?>";
+
+words[0] = '<?php echo utf8_encode("ème");?>';
+
+words[1]= {
+	months: <?php echo utf8_encode("['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+		'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']");?>,
+	weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+	shortMonths : <?php echo utf8_encode("['Janv.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.']");?>,
+	decimalPoint : ",",
+	thousandsSep : " ",
+	loading : "Chargement ...",
+	resetZoom : "<?php echo utf8_encode("RàZ zoom");?>"
+};
+
+var _groups = [<?php echo $plotsBand;?>];
+
 $(document).ready(function() {
 	$("#ValueChoice").dropdownchecklist({
 		icon: {},
@@ -100,7 +161,8 @@ $(document).ready(function() {
     $("#PlayerChoice").dropdownchecklist({
         icon: {},
         width: 250,
-        maxDropHeight: 150
+        maxDropHeight: 150,
+		firstItemChecksAll: false
     });
     $("#RefreshStats").click(function () {
 	   RefreshStats();
@@ -113,9 +175,6 @@ var _currentChartType;
 function initialiseChart (){
 
 	switch ($("#ValueChoice").val()[0]) {
-		case "MinMaxAvg":
-			currentView = "MinMaxAvg" + _currentView;
-			break;
 		case "Group":
 			currentView = "Group" + _currentView;
 			break;
@@ -124,33 +183,32 @@ function initialiseChart (){
 			break;
 	}
 
-	if (_currentChartType!= null && _currentChartType!=_currentView)
+		if (_currentChartType!= null && _currentChartType!=currentView)
+		{
 		chart.destroy();
+		}
 
 	switch (currentView) {
 		case 'Ranking':
-			CreateRankingChart(chartTitle,defaultRankingCategories);
+			CreateRankingChartWithTimeScale (chartTitle,_groups, false);
+			//CreateRankingChart(chartTitle,defaultRankingCategories);
 			_currentChartType = 'Ranking';
 			break;
 		case 'Score':
-			CreateScoreChart(chartTitle,defaultScoreCategories);
+			CreateScoreChartWithTimeScale(chartTitle,_groups, false);
 			_currentChartType = 'Score';
 			break;
 		case 'GroupRanking':
-			CreateRankingChart(chartTitle,defaultDayByDayRankingCategories);
-			_currentChartType = 'Ranking';
+			CreateRankingChartWithTimeScale (chartTitle,_groups, true);
+			_currentChartType = 'GroupRanking';
 			break;
 		case 'GroupScore':
-			CreateScoreChart(chartTitle,defaultDayByDayScoreCategories);
-			_currentChartType = 'Score';
+			CreateScoreChartWithTimeScale(chartTitle,_groups, true);
+			_currentChartType = 'GroupScore';
 			break;
   		case 'MinMaxAvgScore':
     		CreateMinMaxAvgScoreChart(chartTitle,defaultMinMaxAvgCategories);
 			_currentChartType = 'MinMaxAvgScore';
-			break;
-  		case 'MinMaxAvgRanking':
-    		CreateMinMaxAvgRankingChart(chartTitle,defaultMinMaxAvgCategories);
-			_currentChartType = 'MinMaxAvgRanking';
 			break;
 	}
 
@@ -166,7 +224,6 @@ function RefreshStats () {
     }
    var selectedPlayers = $("#PlayerChoice").val();
    var viewMode = $("#ValueChoice").val()[0];
-   numberOfSelectedUsers = selectedPlayers.length;
    for (var currentIndex=0;currentIndex<selectedPlayers.length; currentIndex++) {
 	$.ajax({
 		  url: "get.player.statistics.php?PlayerKey=" + selectedPlayers[currentIndex] + "&View="+_currentView+"&ViewMode="+viewMode+"&Position="+currentIndex,
@@ -186,25 +243,7 @@ function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
 }
 
 function callbackPost (data){
-	numberOfSelectedUsers--;
 	chart.addSeries(data);
-	if ($("#ValueChoice").val()[0]=="MinMaxAvg")
-		if (numberOfSelectedUsers==0){
-			var categories = new Array ();
-			for (var currentIndex=0;currentIndex<chart.series.length; currentIndex++) {
-				  categories.push(chart.series[currentIndex].name);
-			}
-			categories.sort(function(a, b){
-				 var nameA=a.toLowerCase();
-				 var nameB=b.toLowerCase();
-				 if (nameA < nameB) //sort string ascending
-				  return -1;
-				 if (nameA > nameB)
-				  return 1;
-				 return 0; //default return value (no sorting)
-				});
-			chart.xAxis[0].setCategories(categories);
-		}
 }
 </script>
 <span
@@ -212,7 +251,6 @@ function callbackPost (data){
 <select id="ValueChoice" style="z-index: 999; display: none;">
 	<option selected="selected" value="Global"><?php echo __encode("général");?></option>
 	<option value="Group"><?php echo __encode("par journée");?></option>
-	<option value="MinMaxAvg"><?php echo __encode("Mini - Maxi - Moyenne");?></option>
 </select>
 <span
 	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Joueur(s):</span>
@@ -220,6 +258,7 @@ function callbackPost (data){
 $sql = "SELECT PrimaryKey PlayerKey, NickName FROM playersenabled players ORDER BY NickName";
 $resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
 $content = "<select id='PlayerChoice'  multiple='multiple' style='z-index:999;display:none;'>";
+//$content .= "<option selected='selected' value='All'>".__encode("Tous")."</option>";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   if ($_authorisation->getConnectedUserKey() == $rowSet["PlayerKey"]) {
