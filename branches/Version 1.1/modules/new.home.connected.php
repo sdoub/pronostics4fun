@@ -366,7 +366,6 @@ echo "</div>";
 <div style="font-size:16px;text-transform: uppercase;font-weight:bold;margin-left:180px;margin-top:15px;"><?php echo __encode("Pronostics à venir ...");?></div>
 </div>
 <div class="flexcroll" style="height:180px;width:420px;overflow: auto; margin-top:25px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
-<ul>
 <?php
 
 $query= "SELECT Description,UNIX_TIMESTAMP( BeginDate) unixBeginDate, UNIX_TIMESTAMP(EndDate) unixEndDate,
@@ -396,8 +395,9 @@ ORDER BY groups.DayKey, groups.BeginDate";
 
 
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
-
-foreach ($rowsSet as $rowSet)
+if (count($rowsSet)>0) {
+echo "<ul>";
+  foreach ($rowsSet as $rowSet)
 {
 
   $status = "";
@@ -468,10 +468,11 @@ foreach ($rowsSet as $rowSet)
   }
   echo '</li>';
 }
-
+echo "</ul>";
+} else {
+  echo __encode("<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminée !</div>");
+}
 ?>
-
-</ul>
 </div>
 
 </div>
