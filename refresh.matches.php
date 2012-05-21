@@ -21,7 +21,10 @@ if ($rowSet["LastStatus"]!=1 || $rowSet["LastExecution"]>60) {
   if (isset($_GET["Days"])) {
     $days="- INTERVAL ".$_GET["Days"]." DAY";
   }
-
+  $limit ="";
+  if (isset($_GET["Limit"])) {
+    $limit=" LIMIT ".$_GET["Limit"];
+  }
   $currentTime = time();
 
   if ($days){
@@ -34,7 +37,7 @@ matches.TeamAwayKey,
 matches.ExternalKey
  FROM matches
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
-WHERE DATE(matches.ScheduleDate)=(CURDATE()$days)";
+WHERE DATE(matches.ScheduleDate)=(CURDATE()$days) $limit";
 
   }
   else {
