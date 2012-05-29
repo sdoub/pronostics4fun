@@ -94,12 +94,7 @@ echo '<script type="text/javascript">
 </script>';
 
 ?>
-<style>
 
-.ui-dropdownchecklist{
-z-index:999;
-}
-</style>
 <script type="text/javascript">
 function refreshScrollBar() {
 	$("div.bDiv").jScrollPane({

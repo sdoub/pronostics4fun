@@ -6,56 +6,25 @@ AddScriptReference("scrollpane");
 AddScriptReference("numberinput");
 AddScriptReference("spin");
 AddScriptReference("forecasts.agenda");
+AddScriptReference("ibutton");
+AddScriptReference("match.stats.detail");
 
 WriteScripts();
 ?>
 
-<script type="text/javascript" src="<?php echo ROOT_SITE;?>/js/jquery.ibutton.js"></script>
-<link type="text/css" href="<?php echo ROOT_SITE;?>/css/jquery.ibutton.p4f.css" rel="stylesheet" media="all" />
-
-<style>
-.title-trigger {
-	cursor:pointer;
-}
-
-#sameMatchHistory {
-	background : url(<?php echo ROOT_SITE;?>/images/arrows.png) no-repeat scroll top left #365F89;
-	background-position : 5px -47px;
-}
-
-#matchesHistory {
-	background : url(<?php echo ROOT_SITE;?>/images/arrows.png) no-repeat scroll top left #365F89;
-	background-position : 5px -47px;
-}
-
-#sameMatchHistory.active {
-	background : url(<?php echo ROOT_SITE;?>/images/arrows.png) no-repeat scroll top left #365F89;
-	background-position : 5px -25px;
-}
-
-#matchesHistory.active {
-	background : url(<?php echo ROOT_SITE;?>/images/arrows.png) no-repeat scroll top left #365F89;
-	background-position : 5px -25px;
-}
-
-.container-history {
-	overflow: hidden;
-	clear: both;
-}
-</style>
-
 <center>
 <input type="submit"
 	value="Voter pour le match bonus" class="buttonfield" id="btnVote" name="btnVote">
-	<div style="height:20px;">&nbsp;</div>
+	<div class="divHeightSpace" >&nbsp;</div>
 </center>
-<div style="margin-left:40px;">
-<label for="displayHelp" style="font-weight:bold;color:#FFFFFF;float:left;"><?php echo __encode("Afficher l'aide aux pronostics : ")?></label><input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?>></input>
-<span class="autosave_saving" style="display: none; ">Sauvegarde...</span>
+<div id="helpContainer">
+<label for="displayHelp" class="help"><?php echo __encode("Afficher l'aide aux pronostics : ")?></label>
+<input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?>></input>
+<span class="autosave_saving" >Sauvegarde...</span>
 </div>
-<form id='frmForecast'><div class="flexcroll" style='overflow: auto; width: 860px; height: 450px;margin:auto;'>
+<form id='frmForecast'><div class="forecastContent flexcroll">
 
-<table width="100%">
+<table class="mainTable" >
 <?php
 
 	$sql = "SELECT matches.PrimaryKey MatchKey,
@@ -110,9 +79,8 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
           $status = __encode("Début dans ") . $rowSet["RemainingDays"] . " jours";
         }
 
-	    echo '<tr class="day"
-      	    style="">
-      	  <td colspan="10">' . $rowSet["GroupName"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '<span style="float:right;margin-right:10px;font-size:10px;background:#365F89;">'.$status.'</span></td>
+	    echo '<tr class="day">
+      	  <td colspan="10">' . $rowSet["GroupName"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '<span class="dayStatus">'.$status.'</span></td>
       	</tr>';
 	  }
 
@@ -123,16 +91,16 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
 	    $matchTime = __encode("Reporté");
 	  }
 	  echo '<tr class="match " match-key="' . $rowSet['MatchKey'] . '" status="' . $rowSet["LiveStatus"] . '">
-      	  <td width="20px"></td><td class="time' . $rowSet["IsBonusMatch"] . $classPostponed . '">' . $matchTime . '</td>
+      	  <td class="forecastStatus"></td><td class="time' . $rowSet["IsBonusMatch"] . $classPostponed . '">' . $matchTime . '</td>
       	  <td class="teamHome">' . $rowSet['TeamHomeName'] . '</td>
-      	  <td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamHomeKey'] . '.png" width="30px" height="30px"></img></td>';
+      	  <td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamHomeKey'] . '.png"></img></td>';
 
-      echo '<td width="50px;">
+      echo '<td class="forecastInput" >
 
 		<input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
 			type="text" class="textfield" id="TeamHomeScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
 			name="TeamHomeScore" maxlength="1" size="3em" data-value="' .$rowSet["ForecastTeamHomeScore"] . '"/></td>
-		<td width="50px;"><input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
+		<td class="forecastInput"><input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
 			type="text" class="textfield" id="TeamAwayScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
 			name="TeamAwayScore" maxlength="1"
 			size="3em" data-value="' .$rowSet["ForecastTeamAwayScore"] . '"/></td>
@@ -183,16 +151,16 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 
       	  echo '<td rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'">
 
-      	  <table width="200px;font-size:9px;">
+      	  <table class="tableTendancy">
 			<tr>
-				<td id="tendancyHome"  width="' . $forecastsHomeWidth . '%">' . $forecastsHome .'%</td>
-				<td id="tendancyNull"  width="' . $forecastsDrawWidth . '%">' . $forecastsDraw .'%</td>
-				<td id="tendancyAway"  width="' . $forecastsAwayWidth . '%">' . $forecastsAway .'%</td>
+				<td class="tdTendancyHome" id="tendancyHome"  width="' . $forecastsHomeWidth . '%">' . $forecastsHome .'%</td>
+				<td class="tdTendancyDraw" id="tendancyNull"  width="' . $forecastsDrawWidth . '%">' . $forecastsDraw .'%</td>
+				<td class="tdTendancyAway" id="tendancyAway"  width="' . $forecastsAwayWidth . '%">' . $forecastsAway .'%</td>
 			</tr>
 		</table>
 
       	  </td>';
-      	  echo "<td style='width:100px;'><div class='detail2' rel='get.match.players.php?MatchKey=". $rowSet['MatchKey'] ."'>" . $rowSet["NbrOfPlayers"] . " participants</div></td>";
+      	  echo "<td class='forecastsDetail'><div class='detail2' rel='get.match.players.php?MatchKey=". $rowSet['MatchKey'] ."'>" . $rowSet["NbrOfPlayers"] . " participants</div></td>";
       echo '</tr>';
 
 	  $scheduleMonth = strftime("%m",$rowSet['ScheduleDate']);
@@ -325,66 +293,6 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 		}
 	})
 	});
-
-	//*/ submit handler
-//	$("#frmForecast").submit( function() {
-//
-//		$("tr").each(function (index) {
-//			try {
-//			if ($(this).attr('match-key')) {
-//
-//				var matchKey = $(this).attr('match-key');
-//				_matchKey =matchKey;
-//				var teamHomeScore ="";
-//				var teamHomeScoreSavedValue="";
-//				$(this).find("input[name=TeamHomeScore]").each (function (index) {
-//					teamHomeScore= $(this).val();
-//					teamHomeScoreSavedValue= $(this).attr('data-value');
-//				});
-//				var teamAwayScore ="";
-//				var teamAwayScoreSavedValue="";
-//				$(this).find("input[name=TeamAwayScore]").each (function (index) {
-//					teamAwayScore= $(this).val();
-//					teamAwayScoreSavedValue= $(this).attr('data-value');
-//				});
-//				if (teamAwayScore && teamHomeScore && (teamAwayScore!=teamAwayScoreSavedValue || teamHomeScore!=teamHomeScoreSavedValue)){
-//
-//					$(this).find("td:eq(0)").html("<img title='Sauvegarde en cours ...' src='<?php echo ROOT_SITE;?>/images/wait.gif' />");
-//
-//					$.ajax({
-//						type: "POST",
-//						url: 'submodule.post.php?SubModule=3',
-//						  dataType: 'json',
-//						  data: { matchKey: matchKey, teamHomeScore: teamHomeScore, teamAwayScore: teamAwayScore},
-//						  success: function (data) {
-//							  if(data.status==true){
-//								$("tr[match-key="+matchKey+"]").find("input:eq(0)").attr("data-value",data.teamHomeScore);
-//								$("tr[match-key="+matchKey+"]").find("input:eq(1)").attr("data-value",data.teamAwayScore);
-//								$("tr[match-key="+matchKey+"]").find("td:eq(0)").fadeOut('slow', function(){
-//									$(this).html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />").fadeIn();
-//								}).html();
-//							  }
-//								else {
-//									$("tr[match-key="+matchKey+"]").find("td:eq(0)").html("<img title='"+data.message+"' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
-//								}
-//						  }
-//											  ,
-//						  error: function (XMLHttpRequest, textStatus, errorThrown)
-//						  {
-//													$.log(XMLHttpRequest);
-//													$.log(textStatus);
-//													$.log(errorThrown);
-//												}
-//
-//						});
-//
-//									}
-//			}
-//			}
-//			catch(ex) {$.log(ex);}
-//		});
-//		return false;
-//	});
 
 	$("input[name=TeamHomeScore]").numberInput();
 	$("input[name=TeamAwayScore]").numberInput();

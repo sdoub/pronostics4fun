@@ -41,8 +41,8 @@ private $_alreadyRefresh   = false;
 						 '<input type="text" name="u" id="u" class="textfield" value="'.$nickName.'"/>'.
 						 '<label>Mot de passe</label>'.
 						 '<input type="password" name="p" id="p" class="textfield" />'.
-                         '<label style="margin-bottom:15px;text-align:left;font-size:10px;text-decoration:underline;cursor:pointer;" id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
-						 '<span style="padding-top:10px;"><input type="checkbox" name="keepConnection" id="keepConnection" class="checkboxfield" /><label for="keepConnection" class="checkboxlabel">Connexion automatique</label></span>'.
+                         '<label id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
+						 '<span id="keepConnectionContainer"><input type="checkbox" name="keepConnection" id="keepConnection" class="checkboxfield" /><label for="keepConnection" class="checkboxlabel">Connexion automatique</label></span>'.
 						 '<input type="submit" name="btn" id="btn" class="buttonfield" value="Se connecter" />'.
 						 '</form>';
       return $htmlForm;
@@ -57,7 +57,7 @@ private $_alreadyRefresh   = false;
   {
     $htmlForm =	'
 <form id="frmRegister">
-<div style="float: left;width:300px;padding-left:20px;padding-top:10px;">
+<div>
 <label >Pseudo : </label>
 <input	name="nickname" id="nickName" class="textfield" type="text">
 <label>Nom: </label>
@@ -73,13 +73,6 @@ private $_alreadyRefresh   = false;
 <input name="btn" id="btn" class="buttonfield" value="Cr&eacute;er" type="submit">
 </div>
 </form>';
-    /*
-     * <div id="avatDiv" style="float: right;width:200px;padding-top:50px;">
-     <label>Choisissez votre Avatar:</label>
-     <center><img class="avat" style="padding-top:30px;" src="images/big-user-default.jpg"/></center>
-     </div>
-
-     */
     return $htmlForm;
   }
 
@@ -90,9 +83,9 @@ private $_alreadyRefresh   = false;
     $receiveResult = $_SESSION['exp_user']['ReceiveResult'];
     $fileExt = substr($_SESSION['exp_user']['AvatarName'],-3);
     $htmlForm =	'
-<div id="accountAvatarDiv" style="display:none;float: left;width:300px;padding-left:20px;padding-top:30px;">
-<div style="height: 350px; margin-top: 20px; width: 300px;overflow:scroll;">
-<img src="images/avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt.'" id="OriginalAvatar" style=""/>
+<div id="accountAvatarDiv" >
+<div >
+<img src="images/avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt.'" id="OriginalAvatar" />
 
 </div>
 <div  id="file-uploader">
@@ -104,7 +97,7 @@ private $_alreadyRefresh   = false;
 
 </div>
     <form id="frmAccount">
-<div style="float: left;width:300px;padding-left:20px;padding-top:0px;" id="accountDiv">
+<div id="accountDiv">
 <label class="title">Pseudo : </label>
 <label class="read title">' . $_SESSION['exp_user']['NickName'] . '</label>
 <label class="title">Nom: </label>
@@ -135,9 +128,9 @@ private $_alreadyRefresh   = false;
 
     $htmlForm .= '<input name="btn" id="btn" class="buttonfield" value="Valider" type="submit"/>
 </div>
-<div style="float: right;width:100px;padding-top:44px;">
-		<div style="width:82px;height:82px;overflow:hidden;margin-bottom:10px;">
-<img src="' . $this->getAvatarPath() . '" id="avatar" style=""/>
+<div class="avatarContainer">
+		<div >
+<img src="' . $this->getAvatarPath() . '" id="avatar"/>
 		</div>
 <a id="AvatarLink" href="javascript:void(0);" >Modifier</a>
 
