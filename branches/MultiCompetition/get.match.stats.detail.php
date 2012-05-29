@@ -52,49 +52,51 @@ if ($rowSet["IsBonusMatch"]==1) {
   $classBonus =" matchesliveBonus";
 }
 
-echo "<div style='width:560px;height:350px;width: 560px; padding-top: 20px; background: url(\"".ROOT_SITE."/images/tooltipmatchbg.png\") no-repeat scroll center bottom transparent;'>";
+echo "<div class='divPopup'>";
 
-echo "<div style='width:560px;'>
-  <div  style='float: left; width: 100px; text-align: center;'><img style='width:50px;height:50px;' src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png'></img></div>
-  <div style='white-space:nowrap;color:#FFFFFF;float: left; text-align: center; font-weight: bold; font-size: 30px; width: 180px;height:36px;line-height:33px;' >$teamHomeName</div>
-  <div  style='float: right;width: 100px; text-align: center;' ><img style='width:50px;height:50px;' src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png'></img></div>
-  <div  style='white-space:nowrap;color:#FFFFFF;float: right; width: 180px; text-align: center; font-size: 30px; font-weight: bold;height:36px;line-height:33px;'>$teamAwayName</div>";
+echo "<div class='teams'>
+  <div  class='home'><img src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png'></img></div>
+  <div class='homeName'>$teamHomeName</div>
+  <div  class='away' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png'></img></div>
+  <div class='awayName'>$teamAwayName</div>";
 echo"</div>";
 
-echo "<div style='height:80px;padding-top: 60px;_padding-top: 10px;'>";
-echo "<div style='background: url(\"".ROOT_SITE."/images/team.stats.bg.png\") no-repeat scroll center top transparent;text-align:center;font-family:Century Gothic,Trebuchet MS,Arial;font-size:12px;font-weight:bolder;color:#FFFFFF;width:200px;height:79px;float:left;margin-left: 50px;'>
-  <table style='height:40px;margin-top:20px;background: url(\"".ROOT_SITE."/images/stats.bg.png\") no-repeat scroll left top transparent;' class='TeamStats'><tr style='text-align:center;font-size:12px;color:#FFFFFF;'>
-  <td rowspan='2' style='font-size:18px;font-weight:bold;width:40px;'>" . $teamHomeInfo["TeamRank"] . "</td>
-  <td style='width:25px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='" . __encode("Points au classement général") . "'>Pts</td>
-  <td style='width:25px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='But pour'>Bp</td>
-  <td style='width:25px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='But contre'>Bc</td>
-  <td style='width:40px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='" . __encode("But pour à domicile") . "'>Bpad</td>
-  <td style='width:40px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='" . __encode("But contre à domicile") . "'>Bcad</td>
+echo "<div class='teamRankings'>";
+echo "<div class='home'>
+  <table class='TeamStats'>
+  <tr class='title'>
+  <td class='rank' rowspan='2'>" . $teamHomeInfo["TeamRank"] . "</td>
+  <td class='points' title='" . __encode("Points au classement général") . "'>Pts</td>
+  <td class='goals' title='But pour'>Bp</td>
+  <td class='goalsAgainst' title='But contre'>Bc</td>
+  <td class='goalsHome' title='" . __encode("But pour à domicile") . "'>Bpad</td>
+  <td class='goalsAgainstHome' title='" . __encode("But contre à domicile") . "'>Bcad</td>
   </tr>
-  <tr style='font-size:12px;color:#FFFFFF;font-weight:bold;text-align:center;'>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamHomeInfo["Score"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamHomeInfo["Goals"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamHomeInfo["GoalsAgainst"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamHomeInfo["GoalsHome"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamHomeInfo["GoalsHomeAgainst"] . "</td>
+  <tr class='content'>
+  <td class='points'>" . $teamHomeInfo["Score"] . "</td>
+  <td class='goals'>" . $teamHomeInfo["Goals"] . "</td>
+  <td class='goalsAgainst'>" . $teamHomeInfo["GoalsAgainst"] . "</td>
+  <td class='goalsHome'>" . $teamHomeInfo["GoalsHome"] . "</td>
+  <td class='goalsAgainstHome' >" . $teamHomeInfo["GoalsHomeAgainst"] . "</td>
   </tr></table></div>";
 
 
-echo "<div style='background: url(\"".ROOT_SITE."/images/team.stats.bg.png\") no-repeat scroll center top transparent;text-align:center;font-family:Century Gothic,Trebuchet MS,Arial;font-size:12px;font-weight:bolder;color:#FFFFFF;width:200px;height:79px;float:right;margin-right: 50px;'>
-  <table style='height:40px;margin-top:20px;background: url(\"".ROOT_SITE."/images/stats.bg.png\") no-repeat scroll left top transparent;' class='TeamStats'><tr style='text-align:center;font-size:12px;color:#FFFFFF;'>
-  <td rowspan='2' style='font-size:18px;font-weight:bold;width:40px;'>" . $teamAwayInfo["TeamRank"] . "</td>
-  <td style='width:25px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='" . __encode("Points au classement général") . "'>Pts</td>
-  <td style='width:25px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='But pour'>Bp</td>
-  <td style='width:25px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title='But contre'>Bc</td>
-  <td style='width:40px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title=\"" . __encode("But pour à l'extérieur") ."\">Bpae</td>
-  <td style='width:40px;border-left:1px solid #4F74A0;border-bottom:1px solid #4F74A0;' title=\"" . __encode("But contre à l'extérieur") ."\">Bcae</td>
+echo "<div class='away'>
+  <table class='TeamStats'>
+  <tr class='title'>
+  <td rowspan='2' class='rank'>" . $teamAwayInfo["TeamRank"] . "</td>
+  <td class='points' title='" . __encode("Points au classement général") . "'>Pts</td>
+  <td class='goals' title='But pour'>Bp</td>
+  <td class='goalsAgainst' title='But contre'>Bc</td>
+  <td class='goalsAway' title=\"" . __encode("But pour à l'extérieur") ."\">Bpae</td>
+  <td class='goalsAgainstAway' title=\"" . __encode("But contre à l'extérieur") ."\">Bcae</td>
   </tr>
-  <tr style='font-size:12px;color:#FFFFFF;font-weight:bold;text-align:center;'>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamAwayInfo["Score"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamAwayInfo["Goals"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamAwayInfo["GoalsAgainst"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamAwayInfo["GoalsAway"] . "</td>
-  <td style='border-left:1px solid #4F74A0;'>" . $teamAwayInfo["GoalsAwayAgainst"] . "</td>
+  <tr class='content'>
+  <td class='points'>" . $teamAwayInfo["Score"] . "</td>
+  <td class='goals'>" . $teamAwayInfo["Goals"] . "</td>
+  <td class='goalsAgainst'>" . $teamAwayInfo["GoalsAgainst"] . "</td>
+  <td class='goalsAway' >" . $teamAwayInfo["GoalsAway"] . "</td>
+  <td class='goalsAgainstAway'>" . $teamAwayInfo["GoalsAwayAgainst"] . "</td>
   </tr></table></div>";
 echo"</div>";
 
@@ -127,8 +129,8 @@ $resultSetFirstLeg = $_databaseObject->queryPerf($query,"Get matches to be playe
 $rowSetFirstLeg = $_databaseObject -> fetch_assoc ($resultSetFirstLeg);
 
 if ($rowSetFirstLeg){
-  echo "<div style='margin-top:10px;width:560px;text-align:center;color:#365F89;font-size:12px;'>";
-  echo "<div style='margin-left:20px;margin-right:25px;text-align:center;color:#365F89;font-size:12px;background-color:#D7E1F6;font-weight: bold;'>";
+  echo "<div class='previousMatch'>";
+  echo "<div class='content'>";
   if ($rowSetFirstLeg["TeamHomeScore"]>$rowSetFirstLeg["TeamAwayScore"]) {
     $resultFirstLeg = __encode("Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamHomeName"] ." l'avait emporté sur le score de " . $rowSetFirstLeg["TeamHomeScore"] ."-" .$rowSetFirstLeg["TeamAwayScore"]);
   }
@@ -144,26 +146,26 @@ if ($rowSetFirstLeg){
 
 }
 
-echo "<div style='margin-top:10px;width:560px;text-align:center;color:#FFFFFF;font-size:12px;'>";
-echo "<div class='title-trigger' id='matchesHistory' style='margin-left:20px;margin-right:25px;text-align:center;color:#FFFFFF;font-size:12px;font-weight: bold;'>";
-echo __encode("Historique des rencontres por la saison en cours");
+echo "<div class='historyTitle'>";
+echo "<div class='title-trigger' id='matchesHistory'>";
+echo __encode("Historique des rencontres pour la saison en cours");
 echo"</div>";
 echo"</div>";
 
-echo "<div class='container-history' id='matchesHistoryContainer' style='height:140px;overflow:hidden;'>";
+echo "<div class='container-history' id='matchesHistoryContainer'>";
 
-echo "<div style='padding-top:0px;text-align:left;font-family:Century Gothic,Trebuchet MS,Arial;font-size:12px;font-weight:bolder;color:#FFFFFF;width:250px;height:79px;float:left;margin-left: 20px;'>";
-echo"<table style='font-size:12px;color:#FFFFFF;font-weight:bold;text-align:center;'>";
+echo "<div class='history teamHome'>";
+echo"<table>";
 echo"<thead>";
-echo"<tr style='font-size: 12px;text-align: center;	background-color: #D7E1F6;	color: #365F89;	font-weight: bold;'>";
+echo"<tr class='title'>";
 
-echo"<th title='D=Domicile; E=Exterieur' style='width:25px;'>D/E</th>";
-echo"<th style='width:120px;'>Equipe</th>";
-echo"<th style='width:50px;'>Resultat</th>";
-echo"<th style='width:50px;'>Score</th>";
+echo"<th class='homeAway' title='D=Domicile; E=Exterieur'>D/E</th>";
+echo"<th class='team' >Equipe</th>";
+echo"<th class='result' >Resultat</th>";
+echo"<th class='score' >Score</th>";
 echo"</tr>";
 echo"</thead>";
-echo "<tbody style='height:115px;_height:0px;overflow: hidden;' class='flexcroll'>";
+echo "<tbody class='content'>";
 $sql = "SELECT TeamHome.PrimaryKey TeamHomeKey,
 			   TeamAway.PrimaryKey TeamAwayKey,
 			   TeamHome.Name TeamHomeName,
@@ -188,7 +190,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
 
   if ($rowSet["TeamHomeKey"]==$teamHomeKey) {
 
-    echo '<tr style="height:12px;font-size:11px;">';
+    echo '<tr class="match">';
     echo '<td>D</td>';
     echo '<td>' . $rowSet["TeamAwayName"] . '</td>';
     if ($diff == 0) {
@@ -206,7 +208,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
     echo '</tr>';
   }
   else {
-    echo '<tr style="height:12px;font-size:11px;">';
+    echo '<tr class="match">';
     echo '<td>E</td>';
     echo '<td>' . $rowSet["TeamHomeName"] . '</td>';
     if ($diff == 0) {
@@ -228,18 +230,18 @@ echo "</tbody>";
 echo"</table>";
 echo"</div>";
 
-echo "<div style='padding-top:0px;text-align:left;font-family:Century Gothic,Trebuchet MS,Arial;font-size:12px;font-weight:bolder;color:#FFFFFF;width:250px;height:79px;float:right;margin-right: 20px;'>";
-echo"<table style='font-size:12px;color:#FFFFFF;font-weight:bold;text-align:center;'>";
+echo "<div class='history teamAway' >";
+echo"<table>";
 echo"<thead>";
-echo"<tr style='font-size: 12px;text-align: center;	background-color: #D7E1F6; color: #365F89;	font-weight: bold;'>";
+echo"<tr class='title'>";
 
-echo"<th title='D=Domicile; E=Exterieur' style='width:25px;'>D/E</th>";
-echo"<th style='width:120px;'>Equipe</th>";
-echo"<th style='width:50px;'>Resultat</th>";
-echo"<th style='width:50px;'>Score</th>";
+echo"<th class='homeAway' title='D=Domicile; E=Exterieur' >D/E</th>";
+echo"<th class='team' >Equipe</th>";
+echo"<th class='result'>Resultat</th>";
+echo"<th class='score'>Score</th>";
 echo"</tr>";
 echo"</thead>";
-echo "<tbody style='height:115px;_height:0px;overflow: hidden;' class='flexcroll'>";
+echo "<tbody class='content'>";
 $sql = "SELECT TeamHome.PrimaryKey TeamHomeKey,
 			   TeamAway.PrimaryKey TeamAwayKey,
 			   TeamHome.Name TeamHomeName,
@@ -262,7 +264,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
   $diff = $rowSet["TeamHomeScore"]-$rowSet["TeamAwayScore"];
   if ($rowSet["TeamHomeKey"]==$teamAwayKey) {
     $color = "#FFFFFF";
-    echo '<tr style="height:12px;font-size:11px;">';
+    echo '<tr class="match">';
     echo '<td>D</td>';
     echo '<td>' . $rowSet["TeamAwayName"] . '</td>';
     if ($diff == 0) {
@@ -282,7 +284,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
   }
   else {
     $color = "#FFFFFF";
-    echo '<tr style="height:12px;font-size:11px;">';
+    echo '<tr class="match">';
     echo '<td>E</td>';
     echo '<td>' . $rowSet["TeamHomeName"] . '</td>';
     if ($diff == 0) {
@@ -384,7 +386,7 @@ TeamHome.PrimaryKey TeamHomeKey,
       $styleHome = "";
       $styleAway = "font-weight:bold;";
     }
-    echo '<td  style=""><span style="'.$styleHome.'">' . $rowSet["TeamHomeScore"] . '</span> - <span style="'.$styleAway.'">'.$rowSet["TeamAwayScore"] . '</span></td>';
+    echo '<td><span style="'.$styleHome.'">' . $rowSet["TeamHomeScore"] . '</span> - <span style="'.$styleAway.'">'.$rowSet["TeamAwayScore"] . '</span></td>';
     echo '</tr>';
 
   }
@@ -401,22 +403,8 @@ echo"</table>";
 
 
 echo"</div>";
-//echo "<div style='width:560px;text-align:center;color:#FFFFFF;font-size:9px;'>";
-//echo __encode("D=Domicile; E=Extérieur; Bp=But pour; Bc=But contre; Bpad=But pour à domicile; Bcad=But contre à domicile; Bpae=But pour à l'extérieur; Bcae=But contre à l'extérieur");
-//echo"</div>";
 echo"</div>";
-
-
-
-//http://lfp.fr/ligue1/stat/confrontation.asp?no_affil_fff_rec=500211&no_affil_fff_vis=500091
-
 
 writePerfInfo();
 require_once("end.file.php");
 ?>
-
-<style>
-.TeamStats {
-	margin-top: 10px;
-}
-</style>

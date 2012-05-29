@@ -1,9 +1,9 @@
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/fullcalendar.css' />
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/jquery-ui.custom.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/fullcalendar.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/jquery-ui.custom.css' />
 <script type='text/javascript' src='<?php echo ROOT_SITE;?>/js/fullcalendar.js'></script>
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/jquery.cluetip.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/jquery.cluetip.css' />
 <script type='text/javascript' src='<?php echo ROOT_SITE;?>/js/jquery.cluetip.min.js'></script>
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/modules/forecasts.calendar.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/modules/forecasts.calendar.css' />
 
 <center>
 <input type="submit"

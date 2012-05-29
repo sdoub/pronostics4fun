@@ -60,73 +60,8 @@ if($_SERVER['REQUEST_METHOD']=='GET')
 
 
   $divHeight = 80 + (sizeof($matches)*50);
-  $htmlContent = "<div style='height:" . $divHeight . "px;'> <img src='" .ROOT_SITE ."/images/warning.png' style='height:50px;width:50px;float:left;padding-right:5px;'/> <div style='color:red;font-size:10px;'>Malheureusement le site est actuellement indisponible, néanmoins, afin que vous ne perdiez pas de précieux points, vous pouvez utiliser le formulaire ci-dessous pour donner vos pronostics sur les matchs à venir!<br/>Bon pronostics et désolé pour le désagrément occasioné.</div><div style='text-align: right;color:#000;font-weight:normal;padding-top:10px;font-size:10px;'>L'administrateur de Pronostics4Fun.</div><hr/><form id='frmForecast'><style>
-.day {
-	font-size: 14px;
-	text-align: center;
-	background-color: #6D8AA8;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-.match {
-	font-size: 12px;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-.equipeRankUp {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: bold;
-}
-
-.equipeRankDown {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-
-.teamAway {
-	text-align: left;
-	width: 150px;
-}
-
-.teamFlag {
-	width: 30px;
-}
-
-.teamFlag img {
-	width: 30px;
-	height: 30px;
-}
-
-.score {
-	width: 80px;
-	text-align: center;
-}
-
-.teamHome {
-	width: 150px;
-	text-align: right;
-}
-
-.time0 {
-	width: 60px;
-	padding-left: 20px;
-}
-.time1 {
-	width: 60px;
-	padding-left: 20px;
-	background: url('" . ROOT_SITE . "/images/star_25.png') no-repeat scroll left center transparent;
-
-}
-</style>		<div><label>Veuillez indiquer votre adresse email utilisé sur Pronostics4Fun</label><input
+  $htmlContent = "<div style='height:" . $divHeight . "px;'> <img src='" .ROOT_SITE ."/images/warning.png' style='height:50px;width:50px;float:left;padding-right:5px;'/> <div style='color:red;font-size:10px;'>Malheureusement le site est actuellement indisponible, néanmoins, afin que vous ne perdiez pas de précieux points, vous pouvez utiliser le formulaire ci-dessous pour donner vos pronostics sur les matchs à venir!<br/>Bon pronostics et désolé pour le désagrément occasioné.</div><div style='text-align: right;color:#000;font-weight:normal;padding-top:10px;font-size:10px;'>L'administrateur de Pronostics4Fun.</div><hr/><form id='frmForecast'>
+<div><label>Veuillez indiquer votre adresse email utilisé sur Pronostics4Fun</label><input
 			type='text' class='textfield' id='Email'
 			name='EmailAddress' /></div><table>
 ";
@@ -200,69 +135,7 @@ else {
   $emailAddress = strtolower(__encode($emailAddress));
   $queries = array();
 
-  $htmlContent = "<style>
-.day {
-	font-size: 14px;
-	text-align: center;
-	background-color: #6D8AA8;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-.match {
-	font-size: 12px;
-	color: #000000;
-	font-weight: bold;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-.equipeRankUp {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: bold;
-}
-
-.equipeRankDown {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-
-.teamAway {
-	text-align: left;
-	width: 150px;
-}
-
-.teamFlag {
-	width: 30px;
-}
-
-.teamFlag img {
-	width: 30px;
-	height: 30px;
-}
-
-.score {
-	width: 80px;
-	text-align: center;
-}
-
-.teamHome {
-	width: 150px;
-	text-align: right;
-}
-
-.time0 {
-	width: 60px;
-	padding-left: 20px;
-}
-
-</style><table>
-";
+  $htmlContent = "<table>";
   $scheduleMonth = "00";
   $scheduleDay = "00";
   while (list ($key, $value) = each ($_POST["matches"])) {
