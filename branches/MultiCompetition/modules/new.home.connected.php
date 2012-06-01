@@ -290,7 +290,8 @@ ORDER BY groups.DayKey, groups.BeginDate";
 
 
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
-
+if (count($rowsSet)>0) {
+echo "<ul>";
 foreach ($rowsSet as $rowSet)
 {
 
@@ -361,7 +362,10 @@ foreach ($rowsSet as $rowSet)
   }
   echo '</li>';
 }
-
+echo "</ul>";
+} else {
+  echo __encode("<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminée !</div>");
+}
 ?>
 
 </ul>
