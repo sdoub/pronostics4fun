@@ -168,7 +168,7 @@ function CreateForecastsChart(ptitle,psubTitle, pcategories) {
 	chart = new Highcharts.Chart( {
 		chart : {
 			renderTo : 'containerCharts',
-			defaultSeriesType : 'bar',
+			defaultSeriesType : 'column',
 			marginRight : 40,
 			marginBottom : 50
 		},
