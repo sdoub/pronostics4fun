@@ -1,5 +1,15 @@
 var themes = {
 	p4f : {
+		lang: {
+		months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+				'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+			weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+			shortMonths : ['Janv.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+			decimalPoint : ",",
+			thousandsSep : " ",
+			loading : "Chargement ...",
+			resetZoom : "RàZ zoom"
+		},	
 		colors : [ "#aaeeee", "#DF5353", "#55BF3B", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee", 
 		   		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
 		chart : {
@@ -450,7 +460,7 @@ function CreateRankingChart(ptitle, pcategories) {
 			labels : {
 				formatter : function() {
 					return Math.abs(this.value)
-							+ (Math.abs(this.value) == 1 ? ' er' : ' eme');
+							+ (Math.abs(this.value) == 1 ? ' er' : ' ème');
 				}
 			},
 			plotLines : [ {
@@ -463,7 +473,7 @@ function CreateRankingChart(ptitle, pcategories) {
 			formatter : function() {
 				return '<b>' + this.series.name + '</b><br/>' + this.x + ': '
 						+ Math.abs(this.y)
-						+ (Math.abs(this.y) == 1 ? 'er' : 'eme');
+						+ (Math.abs(this.y) == 1 ? 'er' : 'ème');
 			}
 		},
 		legend : {
@@ -595,7 +605,7 @@ function CreateMinMaxAvgRankingChart(ptitle, pcategories) {
 						formatter : function() {
 							return Math.abs(this.value)
 									+ (Math.abs(this.value) == 1 ? ' er'
-											: ' eme');
+											: ' ème');
 						}
 					}
 				},
@@ -609,7 +619,7 @@ function CreateMinMaxAvgRankingChart(ptitle, pcategories) {
 							formatter : function() {
 								return Math.abs(this.y)
 										+ (Math.abs(this.y) == 1 ? ' er'
-												: ' eme');
+												: ' ème');
 							},
 							style : {
 								fontWeight : 'bold',
@@ -645,7 +655,7 @@ function CreateMinMaxAvgRankingChart(ptitle, pcategories) {
 						}
 						return '<b>' + this.series.name + '</b><br/>'
 								+ pointType + ' : ' + Math.abs(this.y)
-								+ (Math.abs(this.y) == 1 ? ' er' : ' eme');
+								+ (Math.abs(this.y) == 1 ? ' er' : ' ème');
 					}
 				},
 				legend : {
