@@ -359,7 +359,7 @@ function CreateRankingChartWithTimeScale (ptitle, plotBands, fullDay)
 	          function(i,point)
 	                 {
 	        	  htmlTooltip += '<table style="font-size:8pt;color:#FFFFFF;width:150px;"><tr><td style="color:'+point.series.color+';width:150px;">'+ point.series.name +': </td>';
-	        	  htmlTooltip += '<td style="text-align: right;width:80px;"><b>' + Math.abs(point.y) + (Math.abs(point.y)==1? 'er' : ' ème</b></td></tr></table>';
+	        	  htmlTooltip += '<td style="text-align: right;width:80px;"><b>' + Math.abs(point.y) + (Math.abs(point.y)==1? 'er' : ' ème')+'</b></td></tr></table>';
 	                 }
 	          );
 	         return htmlTooltip;

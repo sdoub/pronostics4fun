@@ -157,7 +157,7 @@ SELECT 1
           $mode=$_GET['Mode'];
         }
         else {
-          $mode="Reminder";
+          $mode="Matches";
         }
 
         switch ($mode) {
