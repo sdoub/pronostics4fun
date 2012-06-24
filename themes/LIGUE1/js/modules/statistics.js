@@ -1,17 +1,16 @@
 var chart;
-var words = new Array(2);
 
 var themes = {
 p4f: {
 	lang: {
-		months: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin',
-				'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+		months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+				'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
 			weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-			shortMonths : ['Janv.', 'Fev.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept.', 'Oct.', 'Nov.', 'Dec.'],
+			shortMonths : ['Janv.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
 			decimalPoint : ",",
 			thousandsSep : " ",
 			loading : "Chargement ...",
-			resetZoom : "RaZ zoom"
+			resetZoom : "RàZ zoom"
 		},
 	colors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee", 
 		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
@@ -282,7 +281,7 @@ function CreateRankingChartWithTimeScale (ptitle, plotBands, fullDay)
 	         },
 	         labels: {
 	        	 formatter: function() {
-	             return Math.abs(this.value) + (Math.abs(this.value)==1? ' er' : ' '+words[0]) ;
+	             return Math.abs(this.value) + (Math.abs(this.value)==1? ' er' : ' ème') ;
 	          },
 	             style: {
 	                color: '#FFFFFF'
@@ -360,7 +359,7 @@ function CreateRankingChartWithTimeScale (ptitle, plotBands, fullDay)
 	          function(i,point)
 	                 {
 	        	  htmlTooltip += '<table style="font-size:8pt;color:#FFFFFF;width:150px;"><tr><td style="color:'+point.series.color+';width:150px;">'+ point.series.name +': </td>';
-	        	  htmlTooltip += '<td style="text-align: right;width:80px;"><b>' + Math.abs(point.y) + (Math.abs(point.y)==1? 'er' : ' '+words[0]) + '</b></td></tr></table>';
+	        	  htmlTooltip += '<td style="text-align: right;width:80px;"><b>' + Math.abs(point.y) + (Math.abs(point.y)==1? 'er' : ' ème</b></td></tr></table>';
 	                 }
 	          );
 	         return htmlTooltip;
