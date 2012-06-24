@@ -41,7 +41,7 @@ private $_alreadyRefresh   = false;
 						 '<input type="text" name="u" id="u" class="textfield" value="'.$nickName.'"/>'.
 						 '<label>Mot de passe</label>'.
 						 '<input type="password" name="p" id="p" class="textfield" />'.
-                         '<label id="passwordForgotten">'.__encode("Mot de passe oublié ?").'</label>' .
+                         '<label id="passwordForgotten">Mot de passe oubliÃ© ?</label>' .
 						 '<span id="keepConnectionContainer"><input type="checkbox" name="keepConnection" id="keepConnection" class="checkboxfield" /><label for="keepConnection" class="checkboxlabel">Connexion automatique</label></span>'.
 						 '<input type="submit" name="btn" id="btn" class="buttonfield" value="Se connecter" />'.
 						 '</form>';
@@ -62,7 +62,7 @@ private $_alreadyRefresh   = false;
 <input	name="nickname" id="nickName" class="textfield" type="text">
 <label>Nom: </label>
 <input name="lastName" id="lastName" class="textfield" type="text">
-<label>' . __encode("Prénom") . ': </label>
+<label>PrÃ©nom : </label>
 <input name="firstName" id="firstName" class="textfield" type="text">
 <label>Email: </label>
 <input name="email" id="email" class="textfield" type="text">
@@ -84,7 +84,7 @@ private $_alreadyRefresh   = false;
     $fileExt = substr($_SESSION['exp_user']['AvatarName'],-3);
     $htmlForm =	'
 <div id="accountAvatarDiv" >
-<div >
+<div class="avatarDiv">
 <img src="images/avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt.'" id="OriginalAvatar" />
 
 </div>
@@ -102,7 +102,7 @@ private $_alreadyRefresh   = false;
 <label class="read title">' . $_SESSION['exp_user']['NickName'] . '</label>
 <label class="title">Nom: </label>
 <input name="lastName" id="lastName" class="textfield" type="text" value="'. $_SESSION['exp_user']['LastName'] .'">
-<label class="title">Prénom: </label>
+<label class="title">Prï¿½nom: </label>
 <input name="firstName" id="firstName" class="textfield" type="text" value="'. $_SESSION['exp_user']['FirstName'] .'">
 <label class="title">Email: </label>
 <input name="email" id="email" class="textfield" type="text" value="'. $_SESSION['exp_user']['EmailAddress'] .'">
@@ -110,7 +110,7 @@ private $_alreadyRefresh   = false;
 <input name="password" id="password" class="textfield"	type="password">
 <label class="title">Confirmer votre mot de passe : </label>
 <input name="pbis" id="pbis" class="textfield" type="password">
-<div><label class="titleCheckbox" for="DefaultForecastView">Vue par défaut des pronostics : </label>
+<div><label class="titleCheckbox" for="DefaultForecastView">Vue par dï¿½faut des pronostics : </label>
 <input type="checkbox" name="DefaultForecastView" id="DefaultForecastView" ';
     if ($defaultView=="1")
     $htmlForm .=	' checked';
@@ -120,7 +120,7 @@ private $_alreadyRefresh   = false;
     if ($receiveAlert=="1")
     $htmlForm .=	' checked';
 
-    $htmlForm .= '/></div><div><label class="titleCheckbox" for="ReceiveResult">Recevoir les Résultats par email : </label>
+    $htmlForm .= '/></div><div><label class="titleCheckbox" for="ReceiveResult">Recevoir les Rï¿½sultats par email : </label>
 <input type="checkbox" name="ReceiveResult" id="ReceiveResult" ';
     if ($receiveResult=="1")
     $htmlForm .=	' checked';
@@ -138,7 +138,7 @@ private $_alreadyRefresh   = false;
 
 </div>
 </form>';
-    return __encode($htmlForm);
+    return $htmlForm;
   }
 
   public function getConnectedUserInfo($value)
@@ -189,7 +189,7 @@ private $_alreadyRefresh   = false;
 
     if($nickName)
     {
-      $nickName = utf8_decode($nickName);
+      $nickName = $nickName;
       $nickName = strtolower($nickName);
       $sql = "SELECT * FROM players WHERE ";
       $sql .= "lower(NickName)='".mysql_real_escape_string(__encode($nickName))."'";
@@ -251,9 +251,9 @@ private $_alreadyRefresh   = false;
       //INSERT INTO `pronostics4fun`.`players` (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`) VALUES (NULL, 'sdoub', 'S?bastien', 'Dubuc', 'sebastien.dubuc@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '0');
       $sql = "INSERT INTO players (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`, AvatarName, ActivationKey, CreationDate)";
       $sql .= "VALUES ('". mysql_real_escape_string(__encode($nickName))."',
-      '".mysql_real_escape_string(__encode($firstName))."',
-      '".mysql_real_escape_string(__encode($lastName))."',
-      '".mysql_real_escape_string(__encode($email))."',
+      '".mysql_real_escape_string($firstName)."',
+      '".mysql_real_escape_string($lastName)."',
+      '".mysql_real_escape_string($email)."',
       '".md5(mysql_real_escape_string($password))."', '0', '', '" . $activationKey . "',CURRENT_DATE())";
       if(!$_databaseObject->queryPerf($sql,"Account creation"))
       {
@@ -326,9 +326,9 @@ private $_alreadyRefresh   = false;
 
       $activationKey = generatePassword(15,4);
       //INSERT INTO `pronostics4fun`.`players` (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`) VALUES (NULL, 'sdoub', 'S?bastien', 'Dubuc', 'sebastien.dubuc@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '0');
-      $sql = "UPDATE players SET `FirstName`='".mysql_real_escape_string(__encode($firstName))."',
-      `LastName`='".mysql_real_escape_string(__encode($lastName))."',
-      `EmailAddress`='".mysql_real_escape_string(__encode($email))."',
+      $sql = "UPDATE players SET `FirstName`='".mysql_real_escape_string($firstName)."',
+      `LastName`='".mysql_real_escape_string($lastName)."',
+      `EmailAddress`='".mysql_real_escape_string($email)."',
       AvatarName='',
       ActivationKey='" . $activationKey . "',
       IsCalendarDefaultView = " . $defaultView .",
@@ -375,9 +375,9 @@ private $_alreadyRefresh   = false;
       $mail->Subject    = "Pronostics4Fun - $pseudo vient de s'inscrire!";
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-      $emailBody = "<h3>" . __encode($pseudo . ' a créé un nouveau compte') . "</h3>";
+      $emailBody = "<h3>" . $pseudo . " a crÃ©Ã© un nouveau compte</h3>";
       $emailBody .= "</br>";
-      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
 
       $mail->MsgHTML($emailBody);
 
@@ -409,9 +409,9 @@ private $_alreadyRefresh   = false;
       $mail->Subject    = "Pronostics4Fun - Changement de mot de passe";
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-      $emailBody = "<h3>" . __encode($pseudo . ' a changé son mot de passe') . "</h3>";
+      $emailBody = "<h3>$pseudo a changÃ© son mot de passe</h3>";
       $emailBody .= "</br>";
-      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
 
       $mail->MsgHTML($emailBody);
 
@@ -445,12 +445,12 @@ private $_alreadyRefresh   = false;
       $mail->Subject    = "Pronostics4Fun - Activez votre compte";
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-      $emailBody = "<h3>" . __encode('Merci ' . $pseudo . ' de vous êtes inscrit sur Pronostics4Fun') . "</h3>";
+      $emailBody = "<h3>Merci $pseudo de vous Ãªtes inscrit sur Pronostics4Fun</h3>";
       $emailBody .= "<br/>";
-      $emailBody .= "<p>" . __encode('Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :') . "</p>";
+      $emailBody .= "<p>Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :</p>";
       $emailBody .= "<a href='" . ROOT_SITE . "/account.activation.php?ActivationKey=" . $activationKey . "'>" . ROOT_SITE . "/AccountActivation.php?ActivationKey=" . $activationKey . "</a>";
       $emailBody .= "</br>";
-      $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
+      $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
 
       $mail->MsgHTML($emailBody);
 
@@ -499,10 +499,10 @@ private $_alreadyRefresh   = false;
 
       unset($rowSet,$resultSet,$sql);
       if ($return) {
-        // Définition du temps d'expiration des cookies
+        // Dï¿½finition du temps d'expiration des cookies
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
-        //   Création des cookies
+        //   Crï¿½ation des cookies
         $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
@@ -548,7 +548,7 @@ private $_alreadyRefresh   = false;
         try {
           $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
           $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-          $mail->Subject    = "Pronostics4Fun - Réinitialisation du mot de passe";
+          $mail->Subject    = "Pronostics4Fun - Rï¿½initialisation du mot de passe";
 
           $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
@@ -603,14 +603,14 @@ private $_alreadyRefresh   = false;
         }
 
 
-        // Définition du temps d'expiration des cookies
+        // Dï¿½finition du temps d'expiration des cookies
         if (isset($_COOKIE["keepConnection"])){
           $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
         }
         else {
           $expiration =  time() + (60*SESSION_DURATION);
         }
-        // Création des cookies
+        // Crï¿½ation des cookies
         $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");

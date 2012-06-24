@@ -54,7 +54,7 @@ echo '<p>Bonjour <strong>' . $rowSet["NickName"] . '</strong>,</p>';
 
 echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collapse:collapse">
 <tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
-<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="' . ROOT_SITE . '/images/TropheeGold.png" style="height:20px;width:20px;padding-right:15px;"/>Vos résultats de la '.$_groupDescription.'</td>
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="' . ROOT_SITE . '/images/TropheeGold.png" style="height:20px;width:20px;padding-right:15px;"/>Vos résultats - '.$_groupDescription.'</td>
 </tr>';
 
 
@@ -197,7 +197,7 @@ echo '<tr>
 
 echo '</tr>
 <tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
-<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/TropheeGold.png" style="height:20px;width:20px;padding-right:15px;"/>Classement de la '.$_groupDescription.'</td>
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/TropheeGold.png" style="height:20px;width:20px;padding-right:15px;"/>Classement - '.$_groupDescription.'</td>
 </tr>
 ';
 $sql = "SELECT

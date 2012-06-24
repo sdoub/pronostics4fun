@@ -16,16 +16,37 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
       ),0) +
       IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
       AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")),0)) Score,
-(SELECT DATE(MAX(results.ResultDate)) FROM results WHERE results.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . " ) AND DATE(results.ResultDate)<=DATE(FROM_UNIXTIME($scheduleDate))) ResultDate
+(SELECT DATE(MAX(results.ResultDate)) FROM results WHERE results.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . " ) AND DATE(results.ResultDate)<=DATE(FROM_UNIXTIME($scheduleDate))) ResultDate,
+(SELECT COUNT(1) FROM forecasts WHERE forecasts.PlayerKey = players.PrimaryKey
+AND forecasts.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus=10 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")) MatchPlayed,
+(SELECT COUNT(1) FROM playermatchresults PMR
+  WHERE PMR.PlayerKey = players.PrimaryKey
+    AND PMR.MatchKey IN (SELECT results.MatchKey
+                           FROM results
+                          INNER JOIN matches ON matches.PrimaryKey=results.MatchKey
+                                AND matches.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")
+                          WHERE results.LiveStatus=10)
+    AND PMR.Score>=5) MatchGood,
+(SELECT COUNT(1) FROM playermatchresults PMR
+  WHERE PMR.IsPerfect=1
+    AND PMR.PlayerKey = players.PrimaryKey
+    AND PMR.MatchKey IN (SELECT results.MatchKey
+                           FROM results
+                          INNER JOIN matches ON matches.PrimaryKey=results.MatchKey
+                                AND matches.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")
+                          WHERE results.LiveStatus=10)) MatchPerfect
 FROM players
 GROUP BY players.PrimaryKey
-ORDER BY Score DESC";
+ORDER BY Score DESC,MatchGood DESC,MatchPerfect DESC,MatchPlayed DESC";
 
     $resultSet = $_databaseObject->queryPerf($query,"Get players and score");
 
     $rank = 0;
     $realRank = 0;
     $previousScore = 0;
+    $previousMatchGood = 0;
+    $previousMatchPerfect = 0;
+    $previousMatchPlayed = 0;
 
     while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     {
@@ -33,11 +54,20 @@ ORDER BY Score DESC";
       $realRank++;
       if ($rowSet["Score"]!=$previousScore) {
         $rank=$realRank;
+      } elseif ($rowSet["MatchGood"]!=$previousMatchGood){
+        $rank=$realRank;
+      } elseif ($rowSet["MatchPerfect"]!=$previousMatchPerfect){
+        $rank=$realRank;
+      } elseif ($rowSet["MatchPlayed"]!=$previousMatchPlayed){
+        $rank=$realRank;
       }
 
       if ($rowSet["ResultDate"]) {
         $resultDate = $rowSet["ResultDate"];
         $previousScore=$rowSet["Score"];
+        $previousMatchGood=$rowSet["MatchGood"];
+        $previousMatchPerfect=$rowSet["MatchPerfect"];
+        $previousMatchPlayed=$rowSet["MatchPlayed"];
 
         $insertQuery="INSERT IGNORE INTO playerranking (CompetitionKey,PlayerKey, RankDate, Rank)
                 VALUES (". COMPETITION . ",$playerKey,'$resultDate',$rank) ON DUPLICATE KEY UPDATE Rank=$rank";
@@ -63,27 +93,58 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
       AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.PrimaryKey=$groupKey AND groups.CompetitionKey=" . COMPETITION . "  AND DATE(matches.ScheduleDate)<=DATE(FROM_UNIXTIME($scheduleDate)))
       AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)),0) + IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
       AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . " AND groups.PrimaryKey=$groupKey)),0)) Score,
-  (SELECT DATE(MAX(results.ResultDate)) FROM results WHERE results.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "  ) AND DATE(results.ResultDate)<=DATE(FROM_UNIXTIME($scheduleDate))) ResultDate
+  (SELECT DATE(MAX(results.ResultDate)) FROM results WHERE results.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "  ) AND DATE(results.ResultDate)<=DATE(FROM_UNIXTIME($scheduleDate))) ResultDate,
+(SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+  WHERE players.PrimaryKey=playermatchresults.PlayerKey
+    AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
+    									FROM matches
+    									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+    									       AND groups.PrimaryKey=$groupKey
+    									       AND groups.CompetitionKey=" . COMPETITION . "
+    									       AND DATE(matches.ScheduleDate)<=DATE(FROM_UNIXTIME($scheduleDate)))
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
+      AND playermatchresults.Score>=5) ScoreCorrect,
+(SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+  WHERE players.PrimaryKey=playermatchresults.PlayerKey
+    AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
+    									FROM matches
+    									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+    									       AND groups.PrimaryKey=$groupKey
+    									       AND groups.CompetitionKey=" . COMPETITION . "
+    									       AND DATE(matches.ScheduleDate)<=DATE(FROM_UNIXTIME($scheduleDate)))
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
+      AND playermatchresults.Score>=15) ScorePerfect
 FROM players
 GROUP BY players.PrimaryKey
-ORDER BY Score DESC";
+ORDER BY Score DESC, ScoreCorrect DESC, ScorePerfect DESC";
 
     $resultSet = $_databaseObject->queryPerf($query,"Get players and score for current group");
 
     $rank = 0;
     $realRank=0;
     $previousScore = 0;
+    $previousMatchGood = 0;
+    $previousMatchPerfect = 0;
+
+
     while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     {
       $playerKey =$rowSet["PrimaryKey"];
       $realRank++;
-      if ($rowSet["Score"]!=$previousScore) {
+      if ($rowSet["Score"]!=$previousScore || $rowSet["Score"]>0) {
+        $rank=$realRank;
+      } elseif ($rowSet["ScoreCorrect"]!=$previousMatchGood){
+        $rank=$realRank;
+      } elseif ($rowSet["ScorePerfect"]!=$previousMatchPerfect){
         $rank=$realRank;
       }
+
 
       if ($rowSet["ResultDate"]) {
         $resultDate = $rowSet["ResultDate"];
         $previousScore=$rowSet["Score"];
+        $previousMatchGood=$rowSet["ScoreCorrect"];
+        $previousMatchPerfect=$rowSet["ScorePerfect"];
 
         $insertQuery="INSERT IGNORE INTO playergroupranking (PlayerKey, GroupKey, RankDate, Rank)
                 VALUES ($playerKey,$groupKey,'$resultDate',$rank) ON DUPLICATE KEY UPDATE Rank=$rank";
@@ -319,6 +380,7 @@ function GetTeamsRanking () {
 }
 
 function CalculateGroupRankingState ($groupKey,$stateDate) {
+//TODO: Review the issue regarding the equal score
   global $_databaseObject;
 
   $query= "

@@ -26,8 +26,8 @@ include_once(BASE_PATH . "/lib/functions.php");
 saveStartTime();
 
 // @ error reporting setting  ( modify as needed )
-ini_set("display_errors", 1);
-error_reporting(E_ALL);
+ini_set("display_errors", 0);
+error_reporting(NULL);
 
 //@ validate inclusion
 define('VALID_ACCESS_AUTHENTICATION_',		true);
@@ -62,10 +62,12 @@ else
    //header("location:index.php");	//@ redirect
 }
 
-//TODO: Créer une session pour stocker la session courante
+//TODO: CrÃ©er une session pour stocker la session courante
 DEFINE ('COMPETITION','4');
-//TODO: Récupérer l'information de la base de données
+//TODO: RÃ©cupÃ©rer l'information de la base de donnÃ©es
 $_themePath = "/themes/EURO2012";
+$_competitionType =3;
+$_competitionName="Euro 2012";
 
 
 ?>

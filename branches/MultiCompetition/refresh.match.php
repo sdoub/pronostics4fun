@@ -17,14 +17,27 @@ if (isset($_POST["TeamHomeKey"])) {
   $matchKey = $_POST["MatchKey"];
   $isLive = $_POST["Live"];
 
-  $matchInfo = GetMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
-  foreach ($matchInfo["Queries"] as $query) {
-    $_queries[] =$query;
+  switch ($_competitionType) {
+    case 3:
+      $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+      foreach ($matchInfo["Queries"] as $query) {
+        $_queries[] =$query;
+      }
+      break;
+    default:
+      $matchInfo = GetMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+      foreach ($matchInfo["Queries"] as $query) {
+        $_queries[] =$query;
+      }
+      $matchInfo = GetMatchsLineupsInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1",$matchInfo["HomeId"],$matchInfo["AwayId"]);
+      foreach ($matchInfo["Queries"] as $query) {
+        $_queries[] =$query;
+      }
+
+      break;
   }
-  $matchInfo = GetMatchsLineupsInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1",$matchInfo["HomeId"],$matchInfo["AwayId"]);
-  foreach ($matchInfo["Queries"] as $query) {
-    $_queries[] =$query;
-  }
+
+
   $arr["Parameters"] = $_POST;
   $arr["Status"] = "Success";
 } else

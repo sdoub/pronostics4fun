@@ -30,12 +30,12 @@ IFNULL(results.livestatus,0) LiveStatus,
 matches.IsBonusMatch,
 (SELECT COUNT(1) FROM forecasts WHERE forecasts.MatchKey =matches.PrimaryKey) NbrOfPlayers
 FROM matches
-INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.IsCompleted=0
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
 INNER JOIN teams TeamHome ON TeamHome.PrimaryKey = matches.TeamHomeKey
 INNER JOIN teams TeamAway ON TeamAway.PrimaryKey = matches.TeamAwayKey
 LEFT JOIN forecasts ON matches.PrimaryKey = forecasts.MatchKey AND forecasts.PlayerKey=" . $_authorisation->getConnectedUserKey() . "
 LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
- ORDER BY matches.ScheduleDate,matches.PrimaryKey";
+ ORDER BY matches.ScheduleDate DESC,matches.PrimaryKey";
 	$resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
 
 	$scheduleMonth = "00";
@@ -62,10 +62,10 @@ LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
 
       echo '<td width="30px;">
 
-		<input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
+		<input READONLY rel="get.live.match.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
 			type="text" class="textfield" id="TeamHomeScore' . $rowSet['TeamHomeKey'] . '" value="' .$rowSet["TeamHomeScore"] . '"
 			name="TeamHomeScore" maxlength="1" size="3em" /></td>
-		<td width="30px;"><input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
+		<td width="30px;"><input READONLY rel="get.live.match.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
 			type="text" class="textfield" id="TeamAwayScore' . $rowSet['TeamHomeKey'] . '" value="' .$rowSet["TeamAwayScore"] . '"
 			name="TeamAwayScore" maxlength="1"
 			size="3em" /></td>
@@ -126,7 +126,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 
       	  </td>';
       	  echo "<td><div class='detail2' rel='get.match.players.php?MatchKey=". $rowSet['MatchKey'] ."'>" . $rowSet["NbrOfPlayers"] . " participants</div></td>";
-      echo '<td><input type="submit" value="Refresh" class="buttonfield" match-key="'. $rowSet['MatchKey'] .'" id="btn'. $rowSet['MatchKey'] .'" name="btn'. $rowSet['MatchKey'] .'"/></td>';
+      echo '<td><input type="button" value="Refresh" class="buttonfield" match-key="'. $rowSet['MatchKey'] .'" id="btn'. $rowSet['MatchKey'] .'" name="btn'. $rowSet['MatchKey'] .'"/></td>';
       	  echo '</tr>';
 
 	  $scheduleMonth = strftime("%m",$rowSet['ScheduleDate']);
@@ -137,8 +137,6 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 ?>
   </table>
   </div>
-  <div id="footerForecast" style="text-align:right;margin-right:30px;" ><input type="submit"
-	value="Valider" class="buttonfield" id="btn" name="btn"></div>
   </form>
 
   <script>
@@ -177,6 +175,40 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 	});
 		$("input[name=TeamHomeScore]").numberInput();
 		$("input[name=TeamAwayScore]").numberInput();
-  });
 
+		$("input.buttonField").click (function () {
+			var matchKey = $(this).attr('match-key');
+			$(this).parent();
+
+			var addParameter = "";
+			if (!confirm ("Voulez-vous rafarichir les données à partir de la source ?")) {
+				addParameter += "&DontGetMatchInfo=true"
+			}
+
+			if (!confirm ("Voulez-vous recalculer les résultats ?")) {
+				addParameter += "&DontComputeScore=true"
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "manual.refresh.match.php?MatchKey="+matchKey+addParameter,
+				data: { },
+				dataType: 'json',
+				success: function (data){
+					var matchKey = data.MatchData.MatchKey;
+					$("tr[match-key="+matchKey+"] input").val(data.MatchData.TeamHomeScore)
+					},
+				error: callbackPostError
+			});
+
+			return false;
+		});
+
+  });
+	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
+	{
+		$.log(XMLHttpRequest);
+		$.log(textStatus);
+		$.log(errorThrown);
+	}
   </script>

@@ -1,176 +1,197 @@
 .matcheslive {
-    background: url("../../images/matchbg.png") no-repeat scroll center top transparent;
-color:#FFFFFF;
-float:left;
-height:53px;
-margin:0 2px;
-padding:0;
-position:relative;
-width:57px;
+	background: url("../../images/matchbg.png") no-repeat scroll center top
+		transparent;
+	color: #FFFFFF;
+	float: left;
+	height: 53px;
+	margin: 0 2px;
+	padding: 0;
+	position: relative;
+	width: 57px;
 }
 
 .matchesliveBonus {
-    background: url("../../images/matchbgbonus.png") no-repeat scroll center top transparent;
+	background: url("../../images/matchbgbonus.png") no-repeat scroll center
+		top transparent;
 }
 
 .liveteamHome {
-width:25px;
-float:left;
-padding-left:3px;
-padding-top:3px;
+	width: 25px;
+	float: left;
+	padding-left: 3px;
+	padding-top: 3px;
 }
-.liveteamHome img{
-width:20px;
-height:20px;}
+
+.liveteamHome img {
+	width: 15px;
+	height: 15px;
+	padding-left:5px;
+}
 
 .liveteamsep {
-width:3px;
-float:left;
-padding-top:6px;
+	width: 3px;
+	float: left;
+	padding-top: 6px;
 }
 
-.liveteamAway{
-width:20px;
-float:right;
-padding-right:3px;
-padding-top:3px;
+.liveteamAway {
+	width: 20px;
+	float: right;
+	padding-right: 3px;
+	padding-top: 3px;
 }
+
 .liveteamAway img {
-width:20px;
-height:20px;
+	width: 15px;
+	height: 15px;
 }
-
 
 .livescoreHome {
-width:22px;
-float:left;
-text-align:right;
-font-weight:bold;
+	width: 22px;
+	float: left;
+	text-align: right;
+	font-weight: bold;
+	position:absolute;
+	top:23px;
 }
 
-.livescoresep{
-width:5px;
-float:left;
-text-align:center;
-visibility:hidden;
+.livescoresep {
+	width: 5px;
+	float: left;
+	text-align: center;
+	visibility: hidden;
 }
 
-.livescoreAway{
-width:21px;
-float:right;
-text-align:left;
-font-weight:bold;
-}
-.livestatus{
-width:55px;
-text-align:center;
-font-size:9px;
-padding-top:25px;
+.livescoreAway {
+	width: 21px;
+	float: right;
+	text-align: left;
+	font-weight: bold;
+	position:absolute;
+	top:23px;
+	left:36px;
 }
 
-.postponed{
-  color:red;
+.livestatus {
+	width: 55px;
+	text-align: center;
+	font-size: 9px;
+	padding-top: 25px;
+}
+
+.postponed {
+	color: red;
 }
 
 .forecastmatch {
-float:left; 
-    width:57px;
-    margin-left:2px;
-    margin-right:2px;
-    height:33px;
-    background: url("../../images/matchbg.result.png") no-repeat scroll center top transparent;
-    
+	float: left;
+	width: 57px;
+	margin-left: 2px;
+	margin-right: 2px;
+	height: 33px;
+	background: url("../../images/matchbg.result.png") no-repeat scroll
+		center top transparent;
 }
+
 .forecastteamHome {
-width:25px;
-float:left;
-text-align:center;
+	width: 25px;
+	float: left;
+	text-align: center;
 }
-.forecastsep{
-width:3px;
-float:left;
-margin-right:3px;
+
+.forecastsep {
+	width: 3px;
+	float: left;
+	margin-right: 3px;
 }
-.forecastteamAway{
-width:20px;
-float:left;
-text-align:center;
+
+.forecastteamAway {
+	width: 20px;
+	float: left;
+	text-align: center;
 }
-.forecastScore{
-width:55px;
-text-align:center;
-font-size:9px;
-padding-top:15px;
-_padding-top:0px;
+
+.forecastScore {
+	width: 55px;
+	text-align: center;
+	font-size: 9px;
+	padding-top: 15px;
+	_padding-top: 0px;
 }
+
 .playerforecastrow {
-width:700px;
+	width: 700px;
 }
-.playerforecastrowcontent{
-margin-bottom:3px;
-width:720px;
-height:30px;
+
+.playerforecastrowcontent {
+	margin-bottom: 3px;
+	width: 720px;
+	height: 30px;
 }
+
 #playerDetail {
-overflow:auto; 
-height:475px;
-margin-top:55px;
-_margin-top:0px;
-position: relative;
+	overflow: auto;
+	height: 475px;
+	margin-top: 55px;
+	_margin-top: 0px;
+	position: relative;
 }
 
 .Failed {
-color:#EF6868;
+	color: #EF6868;
 }
 
 .Success {
-color:#96EF95;
+	color: #96EF95;
 }
+
 .NotStarted {
-color:#cccccc;
+	color: #cccccc;
 }
 
 .StateListButton {
 	background: #BECDB6;
 	border: solid 1px #BECDB6;
 	color: #1B3D1C;
-	font: bold 9px/ normal Tahoma, Verdana;
-	padding-top:4px;
-	padding-bottom:4px;
-	padding-right: 20px; 
+	font: bold 9px/normal Tahoma, Verdana;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 20px;
 	padding-left: 20px;
 	text-decoration: none;
-	text-align:center;
-	_line-height:18px;
+	text-align: center;
+	_line-height: 18px;
 }
 
 .StateListButton:hover {
-	font-weight:bold;
+	font-weight: bold;
 	background: #000;
 	border: solid 1px #fff;
 	color: #fff;
 	cursor: pointer;
 }
 
-.StateListButtonDisabled{
+.StateListButtonDisabled {
 	background: #BECDB6;
 	border: solid 1px #BECDB6;
 	color: #cccccc;
-	font: bold 9px/ normal Tahoma, Verdana;
-	padding-top:4px;
-	padding-bottom:4px;
-	padding-right: 20px; 
+	font: bold 9px/normal Tahoma, Verdana;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 20px;
 	padding-left: 20px;
 	text-decoration: none;
-	text-align:center;
-	_line-height:18px;
+	text-align: center;
+	_line-height: 18px;
 }
+
 .StateListButtonDisabled:hover {
 	background: #BECDB6;
 	border: solid 1px #BECDB6;
 	color: #cccccc;
-	font: bold 9px/ normal Tahoma, Verdana;
+	font: bold 9px/normal Tahoma, Verdana;
 }
+
 /* HEADINGS
 ------------------------------------------------ */
 .head,.head div {
@@ -199,7 +220,7 @@ color:#cccccc;
 ------------------------------------------------ */
 .panel {
 	min-height: 220px;
-	overflow:auto;
+	overflow: auto;
 	height: 492px;
 }
 
@@ -227,7 +248,7 @@ color:#cccccc;
 	padding: 0px 40px 8px 0;
 	margin: 0 0 8px 0px;
 	_width: 200px;
-	_height: 30px;	
+	_height: 30px;
 }
 
 #mod-classements ol em {
@@ -239,8 +260,8 @@ color:#cccccc;
 
 #mod-classements .var {
 	position: absolute;
-	right:0px;
-	_left:160px;
+	right: 0px;
+	_left: 160px;
 	top: 50%;
 	_top: 0px;
 	width: 37px;
@@ -272,7 +293,6 @@ color:#cccccc;
 	border-bottom: 1px solid #E6E7E9;
 }
 
-
 #mod-classements .avat {
 	border: 1px solid #E6E7E9;
 }
@@ -280,7 +300,7 @@ color:#cccccc;
 #mod-classements ol a {
 	display: block;
 	text-decoration: none;
-	white-space:nowrap;
+	white-space: nowrap;
 }
 
 #mod-classements ol span {
@@ -318,13 +338,12 @@ color:#cccccc;
 	background-repeat: no-repeat;
 	display: block;
 	text-decoration: none;
-	float:right;
-	left:270px;
-	position:absolute;
-	margin-top:-15px;
-	width:25px;
-	height:25px;
-	
+	float: right;
+	left: 270px;
+	position: absolute;
+	margin-top: -15px;
+	width: 25px;
+	height: 25px;
 }
 
 #PlayerRanking .eq {
@@ -339,11 +358,8 @@ color:#cccccc;
 	background-position: -14px -366px;
 }
 
-
-
-
 .node2 {
-	padding: 0px ;
+	padding: 0px;
 }
 
 .node2 .head div {
@@ -353,6 +369,7 @@ color:#cccccc;
 .node2 .head h4 {
 	/* background: url(<?php echo ROOT_SITE;?>/images/head2-txt.png) left 50px
 		no-repeat; */
+	
 }
 
 /* node2 */
@@ -371,29 +388,29 @@ color:#cccccc;
 }
 
 #rankspan {
-background-color:#1B3D1C;
-border:1px solid #FFFFFF;
-color:#FFFFFF;
-float:left;
-font-family:tahoma;
-font-size:10px;
-font-weight:bold;
-margin-left:2px;
-margin-right:5px;
-padding:2px 2px 4px 1px;
-text-align:center;
-width:18px;
+	background-color: #1B3D1C;
+	border: 1px solid #FFFFFF;
+	color: #FFFFFF;
+	float: left;
+	font-family: tahoma;
+	font-size: 10px;
+	font-weight: bold;
+	margin-left: 2px;
+	margin-right: 5px;
+	padding: 2px 2px 4px 1px;
+	text-align: center;
+	width: 18px;
 }
 
 #mod-classements p {
-padding :0 10px 0 10px
-}
-.mainBloc {
-	width:200px;
+	padding: 0 10px 0 10px
 }
 
-#tabsRanking a {
-	/*
+.mainBloc {
+	width: 200px;
+}
+
+#tabsRanking a { /*
 	text-decoration: none;
 	color: #000;
 	font-size:9px;
@@ -401,22 +418,23 @@ padding :0 10px 0 10px
 	background: #BECDB6;
 	border: solid 1px #BECDB6;
 	color: #FFFFFF;
-	font: bold 9px/ normal Tahoma, Verdana;
-	padding-top:4px;
-	padding-bottom:4px;
-	padding-right: 29px; padding-left: 29px;
+	font: bold 9px/normal Tahoma, Verdana;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 29px;
+	padding-left: 29px;
 	text-decoration: none;
-	text-align:center;
-	_line-height:18px;
+	text-align: center;
+	_line-height: 18px;
 }
 
-#tabsRanking{
-	width:200px;
+#tabsRanking {
+	width: 200px;
 	height: 16px;
 }
 
 #tabsRanking a:hover,#tabsRanking a.selected:hover {
-	font-weight:bold;
+	font-weight: bold;
 	background: #000;
 	border: solid 1px #fff;
 	color: #fff;
@@ -424,22 +442,48 @@ padding :0 10px 0 10px
 }
 
 #tabsRanking a.selected {
-	font-weight:bold;
+	font-weight: bold;
 	background: #1B3D1C;
 }
+
 .bsmList {
-	display:none;
-}
-.bsmContainer {
-padding-left:5px;
-padding-top:30px;
-_padding-top:0px;
-width:50px;
-}
-.bsmSelect {
-	width:80px;
+	display: none;
 }
 
-.ui-dropdownchecklist{
-z-index:999;
+.bsmContainer {
+	padding-left: 5px;
+	padding-top: 30px;
+	_padding-top: 0px;
+	width: 50px;
+}
+
+.bsmSelect {
+	width: 80px;
+}
+
+.ui-dropdownchecklist {
+	z-index: 999;
+}
+
+.resultRow {
+	background-color: #BECDB6;
+	color: #1B3D1C;
+}
+
+.resultRowOdd {
+	background-color: #465723;
+	color: #FFFFFF;
+}
+
+.liveStatusMatchDetail {
+	width: 79px;
+	height: 15px;
+	background: none repeat scroll 0 0 #1B3D1C;
+	border: 1px solid #BECDB6;
+	color: #FFFFFF;
+	font: bold 9px Tahoma, Verdana;
+	padding-top: 4px;
+	text-align: center;
+	text-decoration: none;
+	float: left;
 }

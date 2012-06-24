@@ -5,8 +5,10 @@ var themes = {
 		chart : {
 			backgroundColor : {
 				linearGradient : [ 0, 0, 0, 400 ],
-				stops : [ [ 0, 'rgb(54, 95, 137)' ],
-						[ 1, 'rgb(109, 138, 168)' ] ]
+				stops: [
+						[0, 'rgb(70,87,35)'],
+						[1, 'rgb(27, 61, 28)']
+					]
 			},
 			borderWidth : 0,
 			borderRadius : 15,

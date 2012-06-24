@@ -61,7 +61,7 @@ echo '<script type="text/javascript">
 				{display: "' . __encode("Points") . '", name : "Score", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Bonus") . '", name : "Bonus", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Total") . '", name : "Bonus", width : 60, sortable : true, align: "right"},
-				{display: "' . __encode("Joués") . '", name : "MatchPlayed", width : 60, sortable : true, align: "right"},
+				{display: "' . __encode("JouÃ©s") . '", name : "MatchPlayed", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Corrects") . '", name : "MatchGood", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Perfects") . '", name : "MatchPerfect", width : 60, sortable : true, align: "right"},
 				{display: "&nbsp;", name : "Detail", width : 50, sortable : false, align: "left"}
@@ -81,13 +81,13 @@ echo '<script type="text/javascript">
 			width: 940,
 			height: 415,
 			onSuccess:refreshScrollBar,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} joueurs") . '",
+			pagestat: "' . __encode("Affichage de {from} Ã  {to} sur {total} joueurs") . '",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "'. __encode("Pas de donnÃ©es") . '"
 			}
 		);
 		});
@@ -102,7 +102,7 @@ function refreshScrollBar() {
 		horizontalGutter: 10
 	});
 }
-var _groupKey = <?php echo $_groupKey; ?>;
+var _groupKey = '<?php echo $_groupKey; ?>';
 $(document).ready(function() {
 	$("#ValueChoice").dropdownchecklist({icon: {}, width: 180,maxDropHeight: 250, closeRadioOnClick:true,
 		onComplete: function(selector){

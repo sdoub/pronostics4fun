@@ -14,7 +14,7 @@ $_groupDescription=$rowSet["Description"];
 $_groupKey= $rowSet["GroupKey"];
 
 if (!$_groupKey) {
-  $query = "SELECT PrimaryKey GroupKey, Description FROM groups WHERE groups.CompetitionKey= " . COMPETITION . " AND DayKey=1";
+  $query = "SELECT MIN(PrimaryKey) GroupKey, Description FROM groups WHERE groups.CompetitionKey= " . COMPETITION ;
 
   $resultSet = $_databaseObject -> queryPerf ($query, "Get group info");
   $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
@@ -57,7 +57,7 @@ $groupList .= '</select></div>';
 echo $groupList;
 ?>
 <div style="text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;">
- <?php echo __encode("Résultat de la ". $_groupDescription);?>
+ <?php echo __encode("RÃ©sultat de la ". $_groupDescription);?>
 </div>
 <div class="altBloc" style="width:715px;margin:20px 0px 31px 0;">
 
@@ -121,9 +121,10 @@ ORDER BY matches.ScheduleDate ASC, matches.TeamHomeKey";
 
 $resultSet = $_databaseObject->queryPerf($query,"Get matches to be played by current day");
 $_isMatchInProgress =false;
+$nbrOfMatch = 0;
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-
+$nbrOfMatch++;
   $matchKey = $rowSet["MatchKey"];
   $groupName = $rowSet["GroupName"];
   $teamHomeKey = $rowSet["TeamHomeKey"];
@@ -144,9 +145,9 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
   echo "  				<li class='matcheslive$classBonus' match-key='$matchKey' rel='get.live.match.detail.php?MatchKey=$matchKey' >
 
-  <div class='liveteamHome' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png' width='20px' height='20px'></img></div>
+  <div class='liveteamHome' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png' ></img></div>
   <div class='liveteamsep' >-</div>
-  <div class='liveteamAway' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png' width='20px' height='20px'></img></div>
+  <div class='liveteamAway' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png' ></img></div>
   <div class='livescoreHome'>$teamHomeScore</div>
   <div class='livescoresep' >-</div>
   <div class='livescoreAway' >$teamAwayScore</div>
@@ -156,19 +157,19 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     case 2:
       $_isMatchInProgress = true;
     case 10:
-      echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . getStatus($rowSet["LiveStatus"]) . "</div>";
+      echo "<div class='livestatus' style='width: 100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . getStatus($rowSet["LiveStatus"]) . "</div>";
       break;
     case 0:
       if ($rowSet["Status"]==1) { //Postponed
-        echo "<div class='livestatus postponed' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . __encode("Reporté") . "</div>";
+        echo "<div class='livestatus postponed' style='width: 100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . __encode("ReportÃ©") . "</div>";
       } else {
-        echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;' >".$rowSet["ActualTime"]."'</div>";
+        echo "<div class='livestatus' style='width: 100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;' >".$rowSet["ActualTime"]."'</div>";
         $scheduleDate = $rowSet["ScheduleDate"];
         echo "<div style='display:none;'  countdown='true' year='". date("Y",$scheduleDate) ."' month='". date("n",$scheduleDate) ."' day='". date("j",$scheduleDate) ."' hour='". date("G",$scheduleDate) ."' minute='". date("i",$scheduleDate) ."'></div>";
       }
       break;
     default:
-      echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . $rowSet["ActualTime"] . "'</div>";
+      echo "<div class='livestatus' style='width: 100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . $rowSet["ActualTime"] . "'</div>";
       $_isMatchInProgress = true;
       break;
   }
@@ -176,14 +177,18 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 
 }
-
+if ($nbrOfMatch<5) {
+  $rowWidth = 85 * $nbrOfMatch;
+} else {
+  $rowWidth = 77 * $nbrOfMatch;
+}
 
 ?>
 
 </ul>
 </div>
 <script>
-var _groupKey = <?php echo $_groupKey; ?>;
+var _groupKey = '<?php echo $_groupKey; ?>';
 $(document).ready(function($) {
 
 	$("#ValueChoice").dropdownchecklist({icon: {}, width: 150,maxDropHeight: 250, closeRadioOnClick:true,
@@ -244,15 +249,15 @@ $(document).ready(function($) {
 						expiryHtml='<div class="over">Periode</div>';
 						$(this).css("dislay","none");
 						$(this).countdown({until: nextMatch,
-						layout: 'dans {hnn}{sep}{mnn}',
+						layout: '{hnn}{sep}{mnn}',
 						alwaysExpire : true,
 						onTick: function (periods) {
 							var htmlTimer= "";
 							if (periods[3]>0) {
 								if (periods[3]==1)
-									htmlTimer = "dans 1 jour";
+									htmlTimer = "1 jour";
 								else
-									htmlTimer = "dans "+periods[3]+" jours";
+									htmlTimer = periods[3]+" jours";
 							}
 							else {
 								htmlTimer = $(this).context.innerHTML;
@@ -271,7 +276,7 @@ $('div[countdown]').each(function (){
 	expiryHtml='<div class="over">Periode</div>';
 	$(this).css("dislay","none");
 	$(this).countdown({until: nextMatch,
-	layout: 'dans {hnn}{sep}{mnn}',
+	layout: '{hnn}{sep}{mnn}',
 	alwaysExpire : false,
 	onTick: everyMinute,
 	onExpiry: countDownHasExpired,
@@ -283,9 +288,9 @@ function everyMinute(periods) {
 	var htmlTimer= "";
 	if (periods[3]>0) {
 		if (periods[3]==1)
-			htmlTimer = "dans 1 jour";
+			htmlTimer = "1 jour";
 		else
-			htmlTimer = "dans "+periods[3]+" jours";
+			htmlTimer = periods[3]+" jours";
 	}
 	else {
 		htmlTimer = $(this).context.innerHTML;
@@ -324,13 +329,35 @@ function countDownHasExpired(){
 //	});
  }
 </script>
-<div id="playerDetail" class="flexcroll">
+<div id="playerDetail" class="flexcroll" style="width:<?php echo $rowWidth+20;?>;">
 
 <ul>
 
 <?php
-
+if ($_competitionType==3){
 $sql = "select @rownum:=@rownum+1 as rank, A.* from
+(SELECT
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      ),0)) Score,
+(SELECT CASE COUNT(*) WHEN 6 THEN 40 WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
+		 FROM playermatchresults
+        INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+        INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+        WHERE groups.PrimaryKey=$_groupKey
+          AND playermatchresults.Score>=5
+          AND playermatchresults.playerKey=players.PrimaryKey)
+      GroupScore
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY NickName) A, (SELECT @rownum:=0) r";
+} else {
+  $sql = "select @rownum:=@rownum+1 as rank, A.* from
 (SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
@@ -357,6 +384,8 @@ FROM playersenabled players
 GROUP BY NickName
 ORDER BY NickName) A, (SELECT @rownum:=0) r";
 
+}
+
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
 $rank=0;
@@ -364,6 +393,8 @@ $previousRank=0;
 $realRank=0;
 $previousScore=0;
 $livePlayerList="";
+
+
 
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
@@ -376,7 +407,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	  $stylePlayer="display:none;";
 	}
   }
-      echo '<li id="li_' . $playerKey . '" class="playerforecastrow" player-key="'. $playerKey .'" style="'.$stylePlayer.'" >
+      echo '<li id="li_' . $playerKey . '" class="playerforecastrow" style="width:'.$rowWidth.'px;" player-key="'. $playerKey .'" style="'.$stylePlayer.'" >
       <div style="width:100%" class="playerforecastrowcontent">';
 
 
@@ -513,8 +544,34 @@ $previousRank=$rank;
 <div id="ContainerRanking" class="panel flexcroll" >
 <ol id="groupranking" >
 <?php
-
+if ($_competitionType==3) {
 $sql = "SELECT
+(SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)
+      ),0) +
+      (SELECT
+CASE COUNT(*)
+WHEN 6 THEN 40
+WHEN 5 THEN 20
+WHEN 4 THEN IF (groups.Code='1/4',20,0)
+WHEN 3 THEN IF (groups.Code='1/4',10,0)
+ELSE 0 END
+FROM playermatchresults
+INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+WHERE groups.PrimaryKey=$_groupKey
+AND playermatchresults.Score>=5
+AND playermatchresults.playerKey=players.PrimaryKey
+)) Score
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY Score DESC, NickName";
+} else {
+  $sql = "SELECT
 (SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
 players.NickName FullNickName,
@@ -544,7 +601,7 @@ AND playermatchresults.playerKey=players.PrimaryKey
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
-
+}
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
 $rank=0;
@@ -610,11 +667,11 @@ $previousRank=$rank;
 function redrawPlayerList () {
 	$("#playerDetail li:visible").each(function (index) {
 		if ((index % 2) == 0) {
-			$(this).css("background-color", "#D7E1F6");
-			$(this).css("color","#365F89");
+			$(this).removeClass('resultRowOdd');
+			$(this).addClass('resultRow');
 		} else {
-			$(this).css("background-color", "#6D8AA8");
-			$(this).css("color","#FFFFFF");
+			$(this).removeClass('resultRow');
+			$(this).addClass('resultRowOdd');
 		}
 	});
 }

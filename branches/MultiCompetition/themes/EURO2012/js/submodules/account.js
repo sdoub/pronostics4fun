@@ -144,12 +144,14 @@ function callbackPost (data){
 					$('#OriginalAvatar').fadeOut();
 					$('#OriginalAvatar').css("width","");
 					$('#OriginalAvatar').css("height","");
-					$('#OriginalAvatar').attr("src",responseJSON.filePath).fadeIn('slow',function () {
+					$.log("responseJSON");
+					$.log(responseJSON);
+					$('#OriginalAvatar').attr("src",responseJSON.filePath+ "?"+(new Date().getTime())).fadeIn('slow',function () {
 						_orginalW = $(this).width();    // Current image width
 						_orginalH = $(this).height();  // Current image height
 						_fileExt = responseJSON.fileExt;
 						$('#file-uploader').find("ul li:not(:has(.qq-upload-fail))").fadeOut();
-						$('#avatar').attr("src",responseJSON.filePath).fadeIn();
+						$('#avatar').attr("src",responseJSON.filePath+ "?"+(new Date().getTime())).fadeIn();
 						initJcrop();
 					});
 					

@@ -3,6 +3,9 @@ require_once("begin.file.php");
 
 $_matchKey = $_GET["MatchKey"];
 
+$sql = "SET NAMES utf8";
+$_databaseObject->query($sql);
+
 $query= "SELECT
 matches.PrimaryKey MatchKey,
 matches.TeamHomeKey,
@@ -74,13 +77,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     case 3:
       $_isMatchInProgress = true;
     case 10:
-      echo "<div id='liveStatusMatchDetail' style='width:560px;_width:320px;text-align:center;font-size:9px;margin-left:240px;margin-bottom:15px;'><div style='width:79px;height:15px;background:none repeat scroll 0 0 #365F89;
-border:1px solid #D7E1F6;
-color:#FFFFFF;
-font:bold 9px Tahoma,Verdana;
-padding-top:4px;
-text-align:center;
-text-decoration:none;float:left;'>" . getStatus($rowSet["LiveStatus"]) . "</div></div>";
+      echo "<div id='liveStatusMatchDetail'  style='width:560px;_width:320px;text-align:center;font-size:9px;margin-left:240px;margin-bottom:15px;'>
+      <div class='liveStatusMatchDetail' >" . getStatus($rowSet["LiveStatus"]) . "</div></div>";
       break;
     default:
       echo "<div  id='liveStatusMatchDetail' style='width:560px;_width:320px;text-align:center;font-size:9px;'>" . $rowSet["ActualTime"] . "'</div>";
@@ -149,7 +147,7 @@ text-decoration:none;float:left;'>" . getStatus($rowSet["LiveStatus"]) . "</div>
         $styleEvent = "background: url(\"".ROOT_SITE."/images/goal2.png\") no-repeat scroll right top transparent;";
         break;
       case "2":
-        $goalType = __encode(" (pén)");
+        $goalType = __encode(" (pÃ©n)");
         $styleEvent = "background: url(\"".ROOT_SITE."/images/goal2.png\") no-repeat scroll right top transparent;";
         break;
       case "3":
@@ -207,7 +205,7 @@ text-decoration:none;float:left;'>" . getStatus($rowSet["LiveStatus"]) . "</div>
         $styleEvent = "background: url(\"".ROOT_SITE."/images/goal2.png\") no-repeat scroll left top transparent;";
         break;
       case "2":
-        $goalType = __encode(" (pén)");
+        $goalType = __encode(" (pÃ©n)");
         $styleEvent = "background: url(\"".ROOT_SITE."/images/goal2.png\") no-repeat scroll left top transparent;";
         break;
       case "3":

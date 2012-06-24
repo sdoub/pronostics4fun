@@ -446,3 +446,26 @@ width:50px;
 .ui-dropdownchecklist{
 z-index:999;
 }
+
+.resultRow {
+	background-color: #D7E1F6;
+	color: #365F89 :;
+}
+
+.resultRowOdd {
+	background-color: #6D8AA8;
+	color: #FFFFFF;
+}
+
+.liveStatusMatchDetail {
+	width: 79px;
+	height: 15px;
+	background: none repeat scroll 0 0 #365F89;
+	border: 1px solid #D7E1F6;
+	color: #FFFFFF;
+	font: bold 9px Tahoma, Verdana;
+	padding-top: 4px;
+	text-align: center;
+	text-decoration: none;
+	float: left;
+}

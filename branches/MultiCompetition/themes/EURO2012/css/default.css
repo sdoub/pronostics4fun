@@ -22,8 +22,8 @@ textarea::-webkit-scrollbar
 {
 	width:15px;
 	height:15px;
-	background:-webkit-gradient(linear,left top,right top,color-stop(0%,rgba(214,225,245,1)),color-stop(100%,rgba(214,225,245,1)));
-	background:-webkit-linear-gradient(left,rgba(214,225,245,1) 0%,rgba(214,225,245,1) 100%);
+	background:-webkit-gradient(linear,left top,right top,color-stop(0%,rgba(190,205,182,1)),color-stop(100%,rgba(190,205,182,1)));
+	background:-webkit-linear-gradient(left,rgba(190,205,182,1) 0%,rgba(190,205,182,1) 100%);
 	background-color:#465723;
 	border:solid 1px #465723;
 }
@@ -507,4 +507,35 @@ p {
 	border: solid 1px #fff;
 	color: #fff;
 	cursor: pointer;
+}
+
+#WaitingLayer {
+	display: none;
+	position: absolute;
+	top: 380px;
+	left: 500px;
+	width: 350px;
+	height: 40px;
+	text-align: center;
+	padding-top: 20px;
+	background: #1B3D1C;
+	border: solid 1px #BECDB6;
+	color: #FFFFFF;
+	font: bold 11px/normal Tahoma, Verdana;
+	z-Index: 99;
+}
+
+.menuGroup {
+	background-color: #1B3D1C;
+	color: white;
+	border: solid 1px white;
+}
+
+.tooltipTitle {
+	text-align: center;
+	background-color: #1B3D1C;
+	font-weight: bold;
+	width: 350px;
+	color: #FFFFFF;
+	margin-bottom: 10px;
 }

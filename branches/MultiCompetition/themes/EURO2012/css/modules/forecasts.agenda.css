@@ -45,7 +45,9 @@ table {
 
 .teamFlag img {
 	width: 30px;
-	height: 30px;
+	height: 20px;
+	padding-left:2px;
+	padding-right:2px;
 }
 .match.forecastStatus {
 	width:20px;
