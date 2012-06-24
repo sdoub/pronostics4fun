@@ -60,11 +60,11 @@ $arrTeams = GetTeamsRanking();
 </div>
 <div style="font-size:9px;color:#FFFFFF;">
 <?php
-echo __encode("Sous réserve d'homologation par la Commisssion d'Organisation des Compétitions de la LFP.
-<br/>En cas d'égalité de points, le classement des clubs ex-aequo est déterminé par la différence entre les buts marqués
-<br/>et les buts concédés par chacun d'eux au cours des matches joués pour l'ensemble de la division.
-<br/>En cas de nouvelle égalité, avantage sera donné au club ayant marqué le plus grand nombre de buts.
-<br/>En cas de nouvelle égalité, les clubs seront départagés à la différence de buts lors des rencontres disputées entre eux.");
+echo __encode("Sous rÃ©serve d'homologation par la Commisssion d'Organisation des CompÃ©titions de la LFP.
+<br/>En cas d'Ã©galitÃ© de points, le classement des clubs ex-aequo est dÃ©terminÃ© par la diffÃ©rence entre les buts marquÃ©s
+<br/>et les buts concÃ©dÃ©s par chacun d'eux au cours des matches jouÃ©s pour l'ensemble de la division.
+<br/>En cas de nouvelle Ã©galitÃ©, avantage sera donnÃ© au club ayant marquÃ© le plus grand nombre de buts.
+<br/>En cas de nouvelle Ã©galitÃ©, les clubs seront dÃ©partagÃ©s Ã  la diffÃ©rence de buts lors des rencontres disputÃ©es entre eux.");
 ?>
 </div>
 </center>

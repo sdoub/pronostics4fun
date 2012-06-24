@@ -1,4 +1,5 @@
 <?php
+
 if ($_isAuthenticated)
 {
   switch ($_currentPage) {
@@ -33,14 +34,24 @@ if ($_isAuthenticated)
       break;
     case "3":
       $submenu = '<ul id="navMenu2">';
-      $submenu .= '<li><span style="background-color: #365F89;color: white;padding: 2px 5px 2px 5px;border: solid 1px white;">' . __encode("p4f") . '</span></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Global" ><span>' . __encode("Général") . '</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Group" ><span>' . __encode("Journée") . '</span></a></li>';
+      $submenu .= '<li><span class="menuGroup" style="padding: 2px 5px 2px 5px;">' . __encode("p4f") . '</span></li>';
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Global" ><span>' . __encode("GÃ©nÃ©ral") . '</span></a></li>';
+      if ($_competitionType==1) {
+        $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Group" ><span>' . __encode("JournÃ©e") . '</span></a></li>';
+      } else {
+        $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Group" ><span>' . __encode("Phase") . '</span></a></li>';
+      }
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Wins" ><span>' . __encode("Podium") . '</span></a></li>';
-      $submenu .= '<li><span style="margin-left:100px;background-color: #365F89;color: white;padding: 2px 5px 2px 5px;border: solid 1px white;">' . __encode("Ligue 1 :") . '</span></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Teams" ><span>' . __encode("Championnat") . '</span></a></li>';
+      $submenu .= '<li><span class="menuGroup" style="margin-left:100px;padding: 2px 5px 2px 5px;">' . __encode($_competitionName ." :") . '</span></li>';
+      $competitionTitle = __encode("Championnat");
+      if ($_competitionType==3) {
+        $competitionTitle = __encode("Coupe");
+      }
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Teams" ><span>' . $competitionTitle . '</span></a></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Scorer" ><span>' . __encode("Buteur") . '</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Assist" ><span>' . __encode("Passeur") . '</span></a></li>';
+      if ($_competitionType==1) {
+        $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Assist" ><span>' . __encode("Passeur") . '</span></a></li>';
+      }
       $submenu .= '</ul>';
       echo $submenu;
 
@@ -78,11 +89,11 @@ if ($_isAuthenticated)
       break;
     case "6":
       $submenu = '<ul id="navMenu2">';
-      $submenu .= '<li><span style="background-color: #365F89;color: white;padding: 2px 5px 2px 5px;border: solid 1px white;">' . __encode("p4f") . '</span></li>';
+      $submenu .= '<li><span class="menuGroup" style="padding: 2px 5px 2px 5px;">' . __encode("p4f") . '</span></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Ranking" ><span>' . __encode("Position") . '</span></a></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Score" ><span>' . __encode("Point") . '</span></a></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Global" ><span>' . __encode("Globale") . '</span></a></li>';
-      $submenu .= '<li><span style="margin-left:100px;background-color: #365F89;color: white;padding: 2px 5px 2px 5px;border: solid 1px white;">' . __encode("Ligue 1 :") . '</span></li>';
+      $submenu .= '<li><span class="menuGroup" style="margin-left:100px;padding: 2px 5px 2px 5px;">' . __encode($_competitionName ." :") . '</span></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Goals" ><span>' . __encode("But") . '</span></a></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=ScoreLigue1" ><span>' . __encode("Score") . '</span></a></li>';
       $submenu .= '</ul>';

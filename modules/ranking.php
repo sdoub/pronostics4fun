@@ -80,9 +80,9 @@ echo '<script type="text/javascript">
 				{display: "' . __encode("Max.") . '", name : "ScoreMax", width : columnSize[5], sortable : true, align: "right"},
 				{display: "' . __encode("Min.") . '", name : "ScoreMin", width : columnSize[6], sortable : true, align: "right"},
 				{display: "' . __encode("1<sup>er</sup>") . '", name : "FirstRank", width : columnSize[7], sortable : true, align: "right"},
-				{display: "' . __encode("2<sup>ème</sup>") . '", name : "SecondRank", width : columnSize[8], sortable : true, align: "right"},
-				{display: "' . __encode("3<sup>ème</sup>") . '", name : "ThirdRank", width : columnSize[9], sortable : true, align: "right"},
-				{display: "' . __encode("Joués") . '", name : "MatchPlayed", width : columnSize[10], sortable : true, align: "right"},
+				{display: "' . __encode("2<sup>Ã¨me</sup>") . '", name : "SecondRank", width : columnSize[8], sortable : true, align: "right"},
+				{display: "' . __encode("3<sup>Ã¨me</sup>") . '", name : "ThirdRank", width : columnSize[9], sortable : true, align: "right"},
+				{display: "' . __encode("JouÃ©s") . '", name : "MatchPlayed", width : columnSize[10], sortable : true, align: "right"},
 				{display: "' . __encode("Corrects") . '", name : "MatchGood", width : columnSize[11], sortable : true, align: "right"},
 				{display: "' . __encode("Perfects") . '", name : "MatchPerfect", width : columnSize[12], sortable : true, align: "right"},
 				{display: "&nbsp;", name : "Detail", width : columnSize[13], sortable : false, align: "left"}
@@ -93,7 +93,7 @@ echo '<script type="text/javascript">
 			sortname: "Rank",
 			sortorder: "asc",
 			usepager: true,
-			title: "' . __encode('Classement Général') . '",
+			title: "' . __encode('Classement GÃ©nÃ©ral') . '",
 			useRp: true,
 			rp: 40,
 			striped:false,
@@ -102,13 +102,13 @@ echo '<script type="text/javascript">
 			width: 940,
 			height: 415,
 			onSuccess:refreshScrollBar,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} joueurs") . '",
+			pagestat: "' . __encode("Affichage de {from} Ã  {to} sur {total} joueurs") . '",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "'. __encode("Pas de donnÃ©es") . '"
 			}
 		);
 		});

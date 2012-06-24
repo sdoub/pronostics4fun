@@ -173,7 +173,7 @@
 	padding-left:20px;
 	padding-top:30px;
 	}
-#accountAvatarDiv div{	
+#accountAvatarDiv div.avatarDiv{	
 	height: 350px; 
 	margin-top: 20px; 
 	width: 300px;

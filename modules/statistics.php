@@ -136,17 +136,17 @@ echo "var _currentView = '" . $view . "';";
 ?>
 chartImagePath = "<?php echo ROOT_SITE;?>";
 
-words[0] = '<?php echo utf8_encode("ème");?>';
+words[0] = '<?php echo utf8_encode("Ã¨me");?>';
 
 words[1]= {
-	months: <?php echo utf8_encode("['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-		'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']");?>,
+	months: <?php echo utf8_encode("['Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin',
+		'Juillet', 'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre']");?>,
 	weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-	shortMonths : <?php echo utf8_encode("['Janv.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.']");?>,
+	shortMonths : <?php echo utf8_encode("['Janv.', 'FÃ©v.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'AoÃ»t', 'Sept.', 'Oct.', 'Nov.', 'DÃ©c.']");?>,
 	decimalPoint : ",",
 	thousandsSep : " ",
 	loading : "Chargement ...",
-	resetZoom : "<?php echo utf8_encode("RàZ zoom");?>"
+	resetZoom : "<?php echo utf8_encode("RÃ Z zoom");?>"
 };
 
 var _groups = [<?php echo $plotsBand;?>];
@@ -249,8 +249,8 @@ function callbackPost (data){
 <span
 	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
 <select id="ValueChoice" style="z-index: 999; display: none;">
-	<option selected="selected" value="Global"><?php echo __encode("général");?></option>
-	<option value="Group"><?php echo __encode("par journée");?></option>
+	<option selected="selected" value="Global"><?php echo __encode("gÃ©nÃ©ral");?></option>
+	<option value="Group"><?php echo __encode("par journÃ©e");?></option>
 </select>
 <span
 	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Joueur(s):</span>

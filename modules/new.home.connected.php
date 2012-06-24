@@ -60,7 +60,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	<div id="survey<?php echo $surveyKey;?>" class="flexcroll" style="background:#6D8AA8;height:<?php echo 100+$divHeight;?>px;overflow: auto;margin-top:15px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
 		<p style="padding-top:10px;color:#FFFFFF;">
 		<?php echo __encode($rowSet["Question"]);
-		//__encode("Comme vous le savez probablement, le championnat d'europe des nations commencera le 06 Juin 2012. Au mettre titre que le championnat de Ligue1, voulez-vous donner des pronostics sur cette compétition?");
+		//__encode("Comme vous le savez probablement, le championnat d'europe des nations commencera le 06 Juin 2012. Au mettre titre que le championnat de Ligue1, voulez-vous donner des pronostics sur cette compÃ©tition?");
 		?></p>
 		<ul>
 		<li>
@@ -209,7 +209,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   }
   else {
   	setlocale(LC_TIME, "fr_FR");
-	$newsFormattedDate = strftime("%A %d %B %Y à %H:%M",$rowSet['NewsDate']);
+	$newsFormattedDate = strftime("%A %d %B %Y Ã  %H:%M",$rowSet['NewsDate']);
     echo "<div class='newsDate' news-key='$playerKey'>";
     echo "Le " . __encode($newsFormattedDate);
     echo "</div>";
@@ -257,7 +257,7 @@ echo "</div>";
 <div >
 <div id="forecastsTitle">
 <div class="container" >
-	<div class="containerTitle"><?php echo __encode("Pronostics à venir ...");?></div>
+	<div class="containerTitle"><?php echo __encode("Pronostics Ã  venir ...");?></div>
 </div>
 <div class="container2 flexcroll" >
 <ul>
@@ -297,16 +297,16 @@ foreach ($rowsSet as $rowSet)
 
   $status = "";
   if ($rowSet["unixBeginDate"]==0) {
-    $status = __encode("Non programmé");
+    $status = __encode("Non programmÃ©");
   }
   else if ($rowSet["hasStarted"]==1) {
     $status = __encode("En cours ...");
   } else if ($rowSet["RemainingDays"]==0) {
-    $status = __encode("Début aujourd'hui");
+    $status = __encode("DÃ©but aujourd'hui");
   } else if ($rowSet["RemainingDays"]==1) {
-    $status = __encode("Début demain");
+    $status = __encode("DÃ©but demain");
   } else {
-    $status = __encode("Début dans ") . $rowSet["RemainingDays"] . " jours";
+    $status = __encode("DÃ©but dans ") . $rowSet["RemainingDays"] . " jours";
   }
 
   if ($rowSet["unixBeginDate"]==0) {
@@ -321,10 +321,10 @@ foreach ($rowsSet as $rowSet)
       $colorStatus = "#B3D207";
     }
   } else if ($rowSet["ClosedMatch"]>0 && $rowSet["ClosedMatch"]<10) {
-    $groupStatus = __encode("Partiellement fermé ");
+    $groupStatus = __encode("Partiellement fermÃ© ");
     $colorStatus = "#e09051";
   } else {
-    $groupStatus = __encode("Clôturé ");
+    $groupStatus = __encode("ClÃ´turÃ© ");
     $colorStatus = "#f54949";
   }
 
@@ -355,7 +355,7 @@ foreach ($rowsSet as $rowSet)
   echo '<span style="padding-left:10px;">' .  __encode("Pronostics : ") . '</span>
   <span style="color:'.$colorStatus.'">'.$groupStatus.'</span>';
   if ($rowSet["Status"]>0) {
-    echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
+    echo '<span title="'.__encode("Match pronostiquÃ© / Pronostics ouvert").'">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
   }
   if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2) {
     echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br/>';
@@ -364,7 +364,7 @@ foreach ($rowsSet as $rowSet)
 }
 echo "</ul>";
 } else {
-  echo __encode("<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminée !</div>");
+  echo __encode("<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminÃ©e !</div>");
 }
 ?>
 

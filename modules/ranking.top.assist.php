@@ -28,8 +28,8 @@ echo '<script type="text/javascript">
 				{display: "' . __encode("Rang") . '", name : "Rank", width : 60, sortable : true, align: "left"},
 				{display: "' . __encode("Passeur") . '", name : "FullName", width : 150, sortable : true, align: "left"},
 				{display: "' . __encode("Club") . '", name : "TeamName", width : 150, sortable : true, align: "left"},
-				{display: "' . __encode("Passes décisives") . '", name : "Assists", width : 120, sortable : true, align: "right"},
-				{display: "' . __encode("Journée") . '", name : "Days", width : 60, sortable : true, align: "right"},
+				{display: "' . __encode("Passes dÃ©cisives") . '", name : "Assists", width : 120, sortable : true, align: "right"},
+				{display: "' . __encode("JournÃ©e") . '", name : "Days", width : 60, sortable : true, align: "right"},
 				{display: "&nbsp;", name : "Detail", width : 50, sortable : false, align: "left"}
 				],
 			searchitems : [
@@ -48,13 +48,13 @@ echo '<script type="text/javascript">
 			width: 940,
 			height: 415,
 			onSuccess:refreshScrollBar,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} passeurs") . '",
+			pagestat: "' . __encode("Affichage de {from} Ã  {to} sur {total} passeurs") . '",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "'. __encode("Pas de donnÃ©es") . '"
 			}
 		);
 		});

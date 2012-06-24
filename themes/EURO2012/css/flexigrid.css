@@ -66,7 +66,7 @@
 
 .flexigrid div.nDiv tr:hover td, .flexigrid div.nDiv tr.ndcolover td
 	{
-	background: #9ba3b3 url(images/hl.png) repeat-x top;
+	background: #8fa086 url(images/hl.png) repeat-x top;
 	border: 1px solid #a8d8eb;
 	}
 	
@@ -592,7 +592,7 @@ div.colCopy {
 		.flexigrid div.bDiv tr.trOver td.sorted, 
 		.flexigrid div.bDiv tr.trOver td
 			{
-			background: #9ba3b3;
+			background: #8fa086;
 			}
 					
 		.flexigrid div.bDiv tr.trSelected:hover td, 
@@ -602,7 +602,7 @@ div.colCopy {
 		.flexigrid tr.trSelected td.sorted, 
 		.flexigrid tr.trSelected td
 			{
-			background: #9ba3b3;
+			background: #8fa086;
 			}
 
 	/* novstripe adjustments */
@@ -647,8 +647,8 @@ div.colCopy {
 
 	.flexigrid.novstripe div.bDiv tr.trOver td, .flexigrid.novstripe div.bDiv tr:hover td
 		{
-		border-left-color: #9ba3b3;
-		border-right-color: #9ba3b3;
+		border-left-color: #8fa086;
+		border-right-color: #8fa086;
 		}
 
 	/* end novstripe */

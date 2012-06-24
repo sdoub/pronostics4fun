@@ -10,6 +10,7 @@ AddScriptReference("ibutton");
 AddScriptReference("match.stats.detail");
 
 WriteScripts();
+if ($_competitionType==1) {
 ?>
 
 <center>
@@ -22,6 +23,8 @@ WriteScripts();
 <input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?>></input>
 <span class="autosave_saving" >Sauvegarde...</span>
 </div>
+
+<?php }?>
 <form id='frmForecast'><div class="forecastContent flexcroll">
 
 <table class="mainTable" >
@@ -70,13 +73,13 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
 
 	    $status ="";
 	    if ($rowSet["RemainingDays"]==0) {
-          $status = __encode("Début aujourd'hui");
+          $status = __encode("DÃ©but aujourd'hui");
         } else if ($rowSet["RemainingDays"]==1) {
-          $status = __encode("Début demain");
+          $status = __encode("DÃ©but demain");
         } else if ($rowSet["RemainingDays"]<0) {
-          $status = __encode("Reporté");
+          $status = __encode("ReportÃ©");
         } else {
-          $status = __encode("Début dans ") . $rowSet["RemainingDays"] . " jours";
+          $status = __encode("DÃ©but dans ") . $rowSet["RemainingDays"] . " jours";
         }
 
 	    echo '<tr class="day">
@@ -88,7 +91,7 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
 	  $matchTime = strftime("%H:%M",$rowSet['ScheduleDate']);
 	  if ($rowSet["Status"]==1) {
 	    $classPostponed = " postponed ";
-	    $matchTime = __encode("Reporté");
+	    $matchTime = __encode("ReportÃ©");
 	  }
 	  echo '<tr class="match " match-key="' . $rowSet['MatchKey'] . '" status="' . $rowSet["LiveStatus"] . '">
       	  <td class="forecastStatus"></td><td class="time' . $rowSet["IsBonusMatch"] . $classPostponed . '">' . $matchTime . '</td>
@@ -207,7 +210,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 				if (teamHomeScore!="" && teamAwayScore!="" &&  teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
 					$(tr).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
 				else if (teamHomeScore!="" || teamAwayScore!="")
-					$(tr).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 équipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+					$(tr).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 Ã©quipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
 				else
 					$(tr).find("td:eq(0)").html("");
 			}
@@ -288,7 +291,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 				if (teamHomeScore!="" && teamAwayScore!="" && teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
 					$(this).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
 				else if (teamHomeScore!="" || teamAwayScore!="")
-					$(this).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 équipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
+					$(this).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 Ã©quipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
 			}
 		}
 	})

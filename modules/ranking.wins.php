@@ -1,4 +1,4 @@
-<?php 
+<?php
 AddScriptReference("flexigrid");
 AddScriptReference("scrollpane");
 
@@ -18,16 +18,16 @@ echo '<script type="text/javascript">
 			url: "get.ranking.wins.php",
 			dataType: "json",
 			colGroupModel : [
-				{display: "&nbsp;", name : "Rank", width : 60, align: "center"},	
+				{display: "&nbsp;", name : "Rank", width : 60, align: "center"},
 				{display: "&nbsp;", name : "NickName", width : 200, align: "left"},
 				{display: "' . __encode("Podium") . '", name : "Podium", width : columnSize, align: "center"}
 				],
 			colModel : [
-				{display: "' . __encode("Rang") . '", name : "Rank", width : 60, sortable : false, align: "center"},	
+				{display: "' . __encode("Rang") . '", name : "Rank", width : 60, sortable : false, align: "center"},
 				{display: "' . __encode("Joueur") . '", name : "NickName", width : 200, sortable : false, align: "left"},
 				{display: "' . __encode("1er") . '", name : "FirstRank", width : 60, sortable : false, align: "right"},
-				{display: "' . __encode("2ème") . '", name : "SecondRank", width : 60, sortable : false, align: "right"},
-				{display: "' . __encode("3ème") . '", name : "ThirdRank", width : 60, sortable : false, align: "right"},
+				{display: "' . __encode("2Ã¨me") . '", name : "SecondRank", width : 60, sortable : false, align: "right"},
+				{display: "' . __encode("3Ã¨me") . '", name : "ThirdRank", width : 60, sortable : false, align: "right"},
 				{display: "' . __encode("Total") . '", name : "MatchPlayed", width : 60, sortable : false, align: "right"}
 				],
 			searchitems : [
@@ -40,18 +40,18 @@ echo '<script type="text/javascript">
 			useRp: true,
 			rp: 40,
 			striped:false,
-			resizable: false, 
+			resizable: false,
 			showTableToggleBtn: false,
 			width: 940,
 			height: 415,
 			onSuccess:refreshScrollBar,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} joueurs") . '",
+			pagestat: "' . __encode("Affichage de {from} Ã  {to} sur {total} joueurs") . '",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "'. __encode("Pas de donnÃ©es") . '"
 			}
 		);
 		});
@@ -77,7 +77,7 @@ function refreshScrollBar() {
 //
 //	});
 //
-//	
+//
 //});
 
 </script>
