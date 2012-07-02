@@ -66,11 +66,11 @@ echo "<div class='home'>
   <table class='TeamStats'>
   <tr class='title'>
   <td class='rank' rowspan='2'>" . $teamHomeInfo["TeamRank"] . "</td>
-  <td class='points' title='" . __encode("Points au classement général") . "'>Pts</td>
+  <td class='points' title='Points au classement gÃ©nÃ©ral'>Pts</td>
   <td class='goals' title='But pour'>Bp</td>
   <td class='goalsAgainst' title='But contre'>Bc</td>
-  <td class='goalsHome' title='" . __encode("But pour à domicile") . "'>Bpad</td>
-  <td class='goalsAgainstHome' title='" . __encode("But contre à domicile") . "'>Bcad</td>
+  <td class='goalsHome' title='But pour Ã  domicile'>Bpad</td>
+  <td class='goalsAgainstHome' title='But contre Ã  domicile'>Bcad</td>
   </tr>
   <tr class='content'>
   <td class='points'>" . $teamHomeInfo["Score"] . "</td>
@@ -85,11 +85,11 @@ echo "<div class='away'>
   <table class='TeamStats'>
   <tr class='title'>
   <td rowspan='2' class='rank'>" . $teamAwayInfo["TeamRank"] . "</td>
-  <td class='points' title='" . __encode("Points au classement général") . "'>Pts</td>
+  <td class='points' title='Points au classement gÃ©nÃ©ral'>Pts</td>
   <td class='goals' title='But pour'>Bp</td>
   <td class='goalsAgainst' title='But contre'>Bc</td>
-  <td class='goalsAway' title=\"" . __encode("But pour à l'extérieur") ."\">Bpae</td>
-  <td class='goalsAgainstAway' title=\"" . __encode("But contre à l'extérieur") ."\">Bcae</td>
+  <td class='goalsAway' title='But pour Ã  l'extÃ©rieur'>Bpae</td>
+  <td class='goalsAgainstAway' title='But contre Ã  l'extÃ©rieur'>Bcae</td>
   </tr>
   <tr class='content'>
   <td class='points'>" . $teamAwayInfo["Score"] . "</td>
@@ -132,13 +132,13 @@ if ($rowSetFirstLeg){
   echo "<div class='previousMatch'>";
   echo "<div class='content'>";
   if ($rowSetFirstLeg["TeamHomeScore"]>$rowSetFirstLeg["TeamAwayScore"]) {
-    $resultFirstLeg = __encode("Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamHomeName"] ." l'avait emporté sur le score de " . $rowSetFirstLeg["TeamHomeScore"] ."-" .$rowSetFirstLeg["TeamAwayScore"]);
+    $resultFirstLeg = "Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamHomeName"] ." l'avait emportÃ© sur le score de " . $rowSetFirstLeg["TeamHomeScore"] ."-" .$rowSetFirstLeg["TeamAwayScore"];
   }
   else if ($rowSetFirstLeg["TeamHomeScore"]<$rowSetFirstLeg["TeamAwayScore"]) {
-    $resultFirstLeg = __encode("Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamAwayName"] ." l'avait emporté sur le score de " . $rowSetFirstLeg["TeamAwayScore"] ."-" .$rowSetFirstLeg["TeamHomeScore"]);
+    $resultFirstLeg = "Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamAwayName"] ." l'avait emportÃ© sur le score de " . $rowSetFirstLeg["TeamAwayScore"] ."-" .$rowSetFirstLeg["TeamHomeScore"];
   }
   else {
-    $resultFirstLeg = __encode("Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamHomeName"] ." et " . $rowSetFirstLeg["TeamAwayName"] . " avaient fait match null : " . $rowSetFirstLeg["TeamAwayScore"] ."-" .$rowSetFirstLeg["TeamHomeScore"]);
+    $resultFirstLeg = "Lors de la ". $rowSetFirstLeg["GroupName"] . ", " . $rowSetFirstLeg["TeamHomeName"] ." et " . $rowSetFirstLeg["TeamAwayName"] . " avaient fait match null : " . $rowSetFirstLeg["TeamAwayScore"] ."-" .$rowSetFirstLeg["TeamHomeScore"];
   }
   echo $resultFirstLeg;
   echo"</div>";
@@ -148,7 +148,7 @@ if ($rowSetFirstLeg){
 
 echo "<div class='historyTitle'>";
 echo "<div class='title-trigger' id='matchesHistory'>";
-echo __encode("Historique des rencontres pour la saison en cours");
+echo "Historique des rencontres pour la saison en cours";
 echo"</div>";
 echo"</div>";
 
@@ -161,7 +161,7 @@ echo"<tr class='title'>";
 
 echo"<th class='homeAway' title='D=Domicile; E=Exterieur'>D/E</th>";
 echo"<th class='team' >Equipe</th>";
-echo"<th class='result' >Resultat</th>";
+echo"<th class='result' >RÃ©sultat</th>";
 echo"<th class='score' >Score</th>";
 echo"</tr>";
 echo"</thead>";
@@ -201,7 +201,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
       $color = "#B3D207";
     }
     if ($diff < 0) {
-      echo '<td>' . __encode("Défaite") . '</td>';
+      echo '<td>DÃ©faite</td>';
       $color = "#EF0000";
     }
     echo '<td style="color:' . $color . '">' . $rowSet["TeamHomeScore"] . ' - '.$rowSet["TeamAwayScore"] . '</td>';
@@ -219,7 +219,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
       $color = "#B3D207";
     }
     if ($diff > 0) {
-      echo '<td>' . __encode("Défaite") . '</td>';
+      echo '<td>DÃ©faite</td>';
       $color = "#EF0000";
     }
     echo '<td  style="color:' . $color . '">' . $rowSet["TeamHomeScore"] . ' - '.$rowSet["TeamAwayScore"] . '</td>';
@@ -237,7 +237,7 @@ echo"<tr class='title'>";
 
 echo"<th class='homeAway' title='D=Domicile; E=Exterieur' >D/E</th>";
 echo"<th class='team' >Equipe</th>";
-echo"<th class='result'>Resultat</th>";
+echo"<th class='result'>RÃ©sultat</th>";
 echo"<th class='score'>Score</th>";
 echo"</tr>";
 echo"</thead>";
@@ -275,7 +275,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
       $color = "#B3D207";
     }
     if ($diff < 0) {
-      echo '<td>' . __encode("Défaite") . '</td>';
+      echo '<td>DÃ©faite</td>';
       $color = "#EF0000";
 
     }
@@ -295,7 +295,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
       $color = "#B3D207";
     }
     if ($diff > 0) {
-      echo '<td>' . __encode("Défaite") . '</td>';
+      echo '<td>DÃ©faite</td>';
       $color = "#EF0000";
     }
     echo '<td style="color:' . $color . '">' . $rowSet["TeamHomeScore"] . ' - '.$rowSet["TeamAwayScore"] . '</td>';
@@ -312,7 +312,7 @@ echo"</div>";
 
 echo "<div class='title-trigger' style='margin-top:10px;width:560px;text-align:center;color:#FFFFFF;font-size:12px;'>";
 echo "<div id='sameMatchHistory' style='margin-left:20px;margin-right:25px;text-align:center;color:#FFFFFF;font-size:12px;font-weight: bold;'>";
-echo __encode("Les confrontations $teamHomeName - $teamAwayName en Ligue 1 depuis 2000/2001");
+echo "Les confrontations $teamHomeName - $teamAwayName en Ligue 1 depuis 2000/2001";
 echo"</div>";
 echo"</div>";
 
@@ -322,9 +322,9 @@ echo"<thead>";
 echo"<tr style='font-size: 12px;text-align: center;	background-color: #D7E1F6;	color: #365F89;	font-weight: bold;'>";
 
 echo"<th style='width:100px;'>Saison</th>";
-echo"<th style='width:120px;'>".__encode("Journée") . "</th>";
+echo"<th style='width:120px;'>JournÃ©e</th>";
 echo"<th style='width:120px;'>Date</th>";
-echo"<th style='width:170px;'>".__encode("Résultat")."</th>";
+echo"<th style='width:170px;'>RÃ©sultat</th>";
 echo"</tr>";
 echo"</thead>";
 echo "<tbody style='height:115px;_height:0px;overflow: hidden;' class='flexcroll'>";
@@ -367,7 +367,7 @@ TeamHome.PrimaryKey TeamHomeKey,
     $color = "#FFFFFF";
 
     setlocale(LC_TIME, "fr_FR");
-    $scheduleFormattedDate = __encode(strftime("%d %B %Y",$rowSet['ScheduleDate']));
+    $scheduleFormattedDate = strftime("%d %B %Y",$rowSet['ScheduleDate']);
 
 
     echo '<tr style="height:12px;font-size:11px;">';

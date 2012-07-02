@@ -256,7 +256,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
   $isToBeRefreshed = true;
   if ($isLive) {
     $isToBeRefreshed = false;
-    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2012/day=7/session=1/match=$_externalKey/feed/minute.json?t=".time();
+    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2012/day=10/session=1/match=$_externalKey/feed/minute.json?t=".time();
 
     $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
     $homeId="";
@@ -273,7 +273,15 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
       case 2:
         $liveStatus=3;
         break;
-
+      case 3:
+        $liveStatus=5;
+        break;
+      case 4:
+        $liveStatus=7;
+        break;
+      case 5:
+        $liveStatus=7;
+        break;
       default:
         $liveStatus=0;
         break;
@@ -294,6 +302,12 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
     } else {
       $actualTime=$infoMatch->Minute;
       $actualTime+=$infoMatch->MinuteExtra;
+    }
+
+    if ($liveStatus>=5) {
+      $actualTime=$infoMatch->Minute;
+      $actualTime+=$infoMatch->MinuteExtra;
+      $actualTime+=90;
     }
     switch ($infoMatch->Report) {
       case "H":
@@ -370,7 +384,12 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
         // phases de groupe
         //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15172/match=$_externalKey/index.html";
         // après phase de groupe
-        $urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15172/match=$_externalKey/index.html";
+        // 1/4 finale
+        //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15173/match=$_externalKey/index.html";
+        // 1/2 finale
+        //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15174/match=$_externalKey/index.html";
+        // finale
+        $urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15175/match=$_externalKey/index.html";
         break;
     }
     $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;

@@ -96,7 +96,7 @@ unset($rowSet,$resultSet,$sql);
 $content.='</table></div>';
 
 $arr["status"] = false;
-$arr["message"] =__encode($content);
+$arr["message"] =$content;
 
 WriteJsonResponse($arr);
 ?>

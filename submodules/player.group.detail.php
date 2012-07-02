@@ -95,7 +95,7 @@ ORDER BY matches.ScheduleDate ASC";
 	  }
 	  else
 	  {
-	    $content.=__encode("Pas de pronos.");
+	    $content.="Pas de pronos.";
 	  }
 
 	  $content.='</div></td>';
@@ -153,7 +153,7 @@ $content.= '<tr class="match"><td style="text-align:right;padding-right:15px;pad
 $content.='</table></div>';
 
 $arr["status"] = false;
-$arr["message"] =__encode($content);
+$arr["message"] =$content;
 
 WriteJsonResponse($arr);
 ?>

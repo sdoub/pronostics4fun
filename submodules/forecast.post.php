@@ -89,7 +89,7 @@ WHERE MatchKey=" . $_POST["matchKey"];
     if ($status){
 
       $arr["message"] = '<form id="frmForecastValidated">
-<label>Vos pronostics ont &eacute;t&eacute; sauvegard&eacute;.</label>
+<label>Vos pronostics ont été sauvegardé.</label>
 <div id="footerForecast" ><input type="submit"
 	value="Fermer" class="buttonfield" id="btnClose" name="btnClose"></div>
 </form>';
@@ -103,11 +103,11 @@ WHERE MatchKey=" . $_POST["matchKey"];
   else
   {
     $arr["status"] = false;
-    $arr["message"] = __encode('Vous avez d�pass� le d�lai imparti pour pronostiquer!');
+    $arr["message"] = 'Vous avez dépassé le délai imparti pour pronostiquer!';
   }
 }
 $arr["perfAndError"] = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
-echo json_encode($arr);
+writeJsonResponse($arr);
 
 //@ destroy instance
 unset($forecast);
