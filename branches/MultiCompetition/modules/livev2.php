@@ -247,10 +247,20 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 
 }
-if ($nbrOfMatch<5) {
-  $rowWidth = 88 * $nbrOfMatch;
-} else {
-  $rowWidth = 80 * $nbrOfMatch;
+switch ($nbrOfMatch) {
+  case 1:
+    $rowWidth = 170;
+    break;
+  case 2:
+    $rowWidth = 115 * $nbrOfMatch;
+    break;
+  case 3:
+  case 4:
+    $rowWidth = 88 * $nbrOfMatch;
+    break;
+  default;
+    $rowWidth = 80 * $nbrOfMatch;
+    break;
 }
 
 ?>

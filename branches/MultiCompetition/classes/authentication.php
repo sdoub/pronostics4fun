@@ -3,7 +3,7 @@
 if(!defined('VALID_ACCESS_AUTHENTICATION_')) exit(basename(__FILE__) . ' -> direct access is not allowed.');
 
 define('VALID_ACCESS_SENDEMAIL_', true);
-define('SESSION_DURATION', 45);
+define('SESSION_DURATION', 10);
 
 require_once("sendemail.php");
 require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
@@ -11,19 +11,31 @@ include_once (dirname(__FILE__)."/../lib/safeIO.php");
 
 class Authorization
 {
-private $_alreadyRefresh   = false;
+  private $_alreadyRefresh   = false;
   public function IsAuthenticated()
   {
     if (isset($_COOKIE["UserToken"]) && $_COOKIE["UserToken"] !="") {
       $this->refreshUserData();
+      setcookie("SessionHasBeenRefreshed", "true", time() + 90 * 24 * 60 * 60, "/");
+    } else {
+      setcookie("SessionHasBeenRefreshed", "false", time() + 90 * 24 * 60 * 60, "/");
     }
 
     if(empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time())
     {
+      setcookie("SessionIsEmpty", "true", time() + 90 * 24 * 60 * 60, "/");
+      if ($_SESSION['exp_user']['expires'] < time())
+      {   setcookie("SessionHasExpired", $_SESSION['exp_user']['expires'], time() + 90 * 24 * 60 * 60, "/");
+      setcookie("ServerTime", time(), time() + 90 * 24 * 60 * 60, "/");
+      }
+      else {
+      setcookie("SessionHasExpired", "false", time() + 90 * 24 * 60 * 60, "/");
+      }
       return false;
     }
     else
     {
+      setcookie("SessionIsEmpty", "false", time() + 90 * 24 * 60 * 60, "/");
       return true;
     }
   }
@@ -499,10 +511,10 @@ private $_alreadyRefresh   = false;
 
       unset($rowSet,$resultSet,$sql);
       if ($return) {
-        // D�finition du temps d'expiration des cookies
+        // Définition du temps d'expiration des cookies
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
-        //   Cr�ation des cookies
+        //   Création des cookies
         $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
@@ -548,7 +560,7 @@ private $_alreadyRefresh   = false;
         try {
           $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
           $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-          $mail->Subject    = "Pronostics4Fun - R�initialisation du mot de passe";
+          $mail->Subject    = "Pronostics4Fun - Réinitialisation du mot de passe";
 
           $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
@@ -596,21 +608,21 @@ private $_alreadyRefresh   = false;
 
         if(!$resultSet) return false;
         //TODO: Check if the account is enabled
-        while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-        {
-          $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
-          $return = true;
-        }
+        $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
+        $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
+        $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
+        $return = true;
 
 
-        // D�finition du temps d'expiration des cookies
+
+        // Définition du temps d'expiration des cookies
         if (isset($_COOKIE["keepConnection"])){
           $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
         }
         else {
           $expiration =  time() + (60*SESSION_DURATION);
         }
-        // Cr�ation des cookies
+        // Création des cookies
         $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
@@ -624,9 +636,11 @@ private $_alreadyRefresh   = false;
         unset($rowSet,$resultSet,$sql);
         $this->updateLastConnection($userToken);
         $this->_alreadyRefresh = true;
+        setcookie("refreshUserData", "true", time() + 90 * 24 * 60 * 60, "/");
         return $return;
       }
     } else {
+      setcookie("refreshUserData", "false", time() + 90 * 24 * 60 * 60, "/");
       $return =true;
     }
 
@@ -658,10 +672,10 @@ private $_alreadyRefresh   = false;
   public function renew_session()
   {
     if (isset($_COOKIE["keepConnection"]) && $_COOKIE["keepConnection"]=="true"){
-      setcookie("UserToken", $_COOKIE["UserToken"], time() + 90 * 24 * 60 * 60, "/");
+      setcookie("UserToken", $_SESSION['exp_user']['Token'], time() + 90 * 24 * 60 * 60, "/");
     }
     else {
-      setcookie("UserToken", $_COOKIE["UserToken"], time() + (60*SESSION_DURATION), "/");
+      setcookie("UserToken", $_SESSION['exp_user']['Token'], time() + (60*SESSION_DURATION), "/");
     }
 
     $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
@@ -671,7 +685,10 @@ private $_alreadyRefresh   = false;
   {
     if(!empty($a))
     {
+      setcookie("exp_user", "true", time() + 90 * 24 * 60 * 60, "/");
       $_SESSION['exp_user'] = $a;
+    } else {
+      setcookie("exp_user", "false", time() + 90 * 24 * 60 * 60, "/");
     }
   }
 }

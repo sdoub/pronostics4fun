@@ -1,6 +1,6 @@
 <?php
       $arr["status"] = false;
-      $arr["message"] = __encode("
+      $arr["message"] = "
 <div style='overflow: auto; width: 760px; height: 450px; margin: 58px 0px 0pt 0pt;'>
 <h5>Comptabilisation des points</h5>
 <br>
@@ -104,6 +104,7 @@ Les représentants de la Société Organisatrice se réservent la possibilité d
 <br/>
 Des modifications, substantielles ou non, peuvent éventuellement être apportées au présent règlement pendant le déroulement du Jeu ; elles seront alors portées à la connaissance des joueurs qui devront s'y soumettre en tant qu'annexes aux présentes.
 </p>
-</div>");
-echo json_encode($arr);
+</div>";
+
+writeJsonResponse($arr);
 ?>

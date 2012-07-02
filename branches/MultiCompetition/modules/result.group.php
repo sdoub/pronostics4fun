@@ -177,10 +177,21 @@ $nbrOfMatch++;
 
 
 }
-if ($nbrOfMatch<5) {
-  $rowWidth = 85 * $nbrOfMatch;
-} else {
-  $rowWidth = 77 * $nbrOfMatch;
+
+switch ($nbrOfMatch) {
+  case 1:
+    $rowWidth = 167;
+    break;
+  case 2:
+    $rowWidth = 112 * $nbrOfMatch;
+    break;
+  case 3:
+  case 4:
+    $rowWidth = 85 * $nbrOfMatch;
+    break;
+  default;
+    $rowWidth = 77 * $nbrOfMatch;
+    break;
 }
 
 ?>

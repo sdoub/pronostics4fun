@@ -177,7 +177,7 @@ $content.='</table></div>';
 $line.="18-len:".strlen($content).";";
 
 $arr["status"] = false;
-$arr["message"] =__encode($content);
+$arr["message"] =$content;
 //$arr["lines"] =$line;
 
 WriteJsonResponse($arr);

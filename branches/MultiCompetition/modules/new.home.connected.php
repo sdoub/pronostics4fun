@@ -364,7 +364,11 @@ foreach ($rowsSet as $rowSet)
 }
 echo "</ul>";
 } else {
-  echo __encode("<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminée !</div>");
+if ($_competitionType==3) {
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#1B3D1C;'>La competition est terminée !</div>";
+} else {
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminée !</div>";
+  }
 }
 ?>
 

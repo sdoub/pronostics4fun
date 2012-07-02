@@ -2,7 +2,7 @@
 if($_isAuthenticated)
 {
   // @ session already active
-  echo "{'status':true,'message':'" .__encode("Vous êtes déjà connecté"). "','url':'index.php'}";
+  echo "{'status':true,'message':'Vous Ãªtes dÃ©jÃ  connectÃ©','url':'index.php'}";
 }
 else
 {
@@ -24,11 +24,11 @@ else
       if ($is_reset) {
         //@ success
         $arr["status"] = true;
-        $arr["message"] = __encode("Un email vous a été envoyé avec la procédure à suivre.");
+        $arr["message"] = "Un email vous a Ã©tÃ© envoyÃ© avec la procÃ©dure Ã  suivre.";
       }
       else {
         $arr["status"] = false;
-        $arr["message"] = __encode("Une erreur s'est produite, veuillez contacter l'administrateur : <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>.");
+        $arr["message"] = "Une erreur s'est produite, veuillez contacter l'administrateur : <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>.";
       }
     } else {
       $p = (!empty($_POST['p']))?trim($_POST['p']):false;	// retrive password var
@@ -40,18 +40,19 @@ else
       {
         //@ success
         $arr["status"] = true;
-        $arr["message"] = __encode("Connexion autorisée");
+        $arr["message"] = "Connexion autorisÃ©e";
         $arr["url"] = "index.php";
       }
       else
       {
         //@ failed
         $arr["status"] = false;
-        $arr["message"] = __encode("Echec de connexion : veuillez vérifier vos informations de connexion.");
+        $arr["message"] = "Echec de connexion : veuillez vÃ©rifier vos informations de connexion.";
       }
     }
   }
-  echo json_encode($arr);
+  //echo json_encode($arr);
+  writeJsonResponse($arr);
 
 }
 

@@ -69,5 +69,7 @@ $_themePath = "/themes/EURO2012";
 $_competitionType =3;
 $_competitionName="Euro 2012";
 
-
+//echo $_SESSION['exp_user']['expires'];
+//echo "<br/>";
+//echo time();
 ?>

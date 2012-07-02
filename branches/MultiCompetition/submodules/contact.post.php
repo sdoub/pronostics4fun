@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=='GET')
   //$forecast->getMatchInfo($_GET["matchKey"],$_authorisation->getConnectedUserKey());
   //@ first load
   $arr["status"] = false;
-  $arr["message"] = __encode('<form id="frmContact">
+  $arr["message"] = '<form id="frmContact">
 <div>
 <label >De : ' . $_authorisation->getConnectedUser() . '</label>
 <label style="padding-top:15px;padding-bottom:15px">A : contact@pronostics4fun.com</label>
@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD']=='GET')
 <textarea rows="10" name="body" id="body" class="textfield" type="text"></textarea>
 <input name="btn" id="btn" class="buttonfield" value="Envoyer" type="submit">
 </div>
-</form>');
+</form>';
   //$arr["timeExpired"] = $forecast->_matchinfo['ScheduleDate']<time();
   //echo json_encode() '{"status":false,"message":"'.str_replace('"',"'",$acl->form()).'"}';
 }
@@ -58,11 +58,11 @@ else
 
   $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
-  $mail->MsgHTML(__encode('<html><body><div>
+  $mail->MsgHTML('<html><body><div>
   <img src="'. ROOT_SITE.'/images/Logo.png" /><p>' . htmlspecialchars($_POST['body'], ENT_QUOTES) . '</p>
   </div>
   </body>
-  </html>'));
+  </html>');
 
   $mail->AddAddress('contact@pronostics4fun.com', 'Pronostics4Fun - Contact');
 
@@ -95,11 +95,11 @@ else
 //  $arr["emailLog"] =$emailResponse;
   $arr["status"] = false;
 
-  $arr["message"] = __encode('<form id="frmContactValidated">
-<label>Votre email a été envoyé.</label>
+  $arr["message"] = '<form id="frmContactValidated">
+<label>Votre email a Ã©tÃ© envoyÃ©.</label>
 <div id="footerContact" ><input type="submit"
 	value="Fermer" class="buttonfield" id="btnClose" name="btnClose"></div>
-</form>');
+</form>';
   //  }
   //  else
   //  {
@@ -112,8 +112,7 @@ else
 
 }
 $arr["perfAndError"] = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
-echo json_encode($arr);
-
+writeJsonResponse($arr);
 //@ destroy instance
 
 ?>

@@ -21,7 +21,7 @@ $div.='<script type="text/javascript">
 			url: "get.live.match.ranking.php?MatchKey=' . $matchKey . '",
 			dataType: "json",
 			colGroupModel : [
-				{display: "' . __encode($_authorisation->getConnectedUser()) . '", name : "NickName", width : 100, align: "left"},
+				{display: "' . $_authorisation->getConnectedUser() . '", name : "NickName", width : 100, align: "left"},
 				{display: " ", name : "Forecasts", width : 40, align: "center"},
 				{display: " ", name : "Score", width : 45, align: "right"},
 				{display: " ", name : "GroupRank", width : 53, align: "right"},
@@ -29,11 +29,11 @@ $div.='<script type="text/javascript">
 				],
 
 			colModel : [
-				{display: "' . __encode("Joueur") . '", name : "NickName", width : 100, sortable : true, align: "left"},
-				{display: "' . __encode("Pronos.") . '", name : "Forecasts", width : 40, sortable : true, align: "center"},
-				{display: "' . __encode("Points") . '", name : "Score", width : 45, sortable : true, align: "right"},
-				{display: "' . __encode("Clas. grp.") . '", name : "GroupRank", width : 53, sortable : true, align: "right"},
-				{display: "' . __encode("Clas. gén.") . '", name : "GlobalRank", width : 53, sortable : true, align: "right"}
+				{display: "Joueur", name : "NickName", width : 100, sortable : true, align: "left"},
+				{display: "Pronos.", name : "Forecasts", width : 40, sortable : true, align: "center"},
+				{display: "Points", name : "Score", width : 45, sortable : true, align: "right"},
+				{display: "Clas. grp.", name : "GroupRank", width : 53, sortable : true, align: "right"},
+				{display: "Clas. gÃ©n.", name : "GlobalRank", width : 53, sortable : true, align: "right"}
 				],
 			searchitems : [
 				{display: "Joueur", name : "NickName"}
@@ -48,13 +48,13 @@ $div.='<script type="text/javascript">
 			showTableToggleBtn: false,
 			width: 355,
 			height: 400,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} joueurs") . '",
+			pagestat: "Affichage de {from} Ã  {to} sur {total} joueurs",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "Pas de donnÃ©es"
 			}
 		);
 
