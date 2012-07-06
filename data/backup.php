@@ -1,6 +1,7 @@
-#!/usr/local/bin/php
+﻿#!/usr/local/bin/php
 <?
-
+ini_set ("display_errors", "1");
+error_reporting(E_ALL);
 require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
 
 $currentDate = strftime("%d %b %Y",time());
@@ -8,30 +9,56 @@ $filename= strftime("pronostilxp4f-%Y%m%d",time()). ".sql";
 system("mysqldump --host=mysql51-39.perso --user=pronostilxp4f --password=jQjspq2q pronostilxp4f > " . $filename );
 system("gzip " . $filename);
 
-$mail = new P4FMailer();
-try {
+$currentFileSize = filesize($filename . ".gz");
 
-  $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
-  $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
-  $mail->Subject    = "Pronostics4Fun - Sauvegarde de la base du ". $currentDate;
-
-  $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-
-  $mail->MsgHTML(file_get_contents('http://pronostics4fun.com/database.stats.php'));
-
-  $mail->AddAddress("sebastien.dubuc@gmail.com", "S�bastien Dubuc");
-
-  $mail->AddAttachment($filename . ".gz");
-
-  $mail->Send();
-} catch (phpmailerException $e) {
-  echo $e->errorMessage(); //Pretty error messages from PHPMailer
-} catch (Exception $e) {
-  echo $e->getMessage(); //Boring error messages from anything else!
+$yesterdayDate = strftime("%d %b %Y",time() - (60*60*24));
+$yesterdayFilename= strftime("pronostilxp4f-%Y%m%d",time()- (60*60*24)). ".sql.gz";
+$yesterdayFilesize= 0;
+if (file_exists($yesterdayFilename)) {
+  $yesterdayFilesize = filesize($yesterdayFilename);
 }
 
-unset($mail);
+if ($yesterdayFilesize!=$currentFileSize) {
+
+  $mail = new P4FMailer();
+  try {
+
+    $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+
+    $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+
+    $mail->Subject    = "Pronostics4Fun - Sauvegarde de la base du ". $currentDate;
+
+    $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+
+    $mail->MsgHTML(file_get_contents('http://pronostics4fun.com/database.stats.php'));
+
+    $mail->AddAddress("sebastien.dubuc@gmail.com", "Sébastien Dubuc");
+
+    $mail->AddAttachment($filename . ".gz");
+
+    $mail->Send();
+  } catch (phpmailerException $e) {
+    echo $e->errorMessage(); //Pretty error messages from PHPMailer
+  } catch (Exception $e) {
+    echo $e->getMessage(); //Boring error messages from anything else!
+  }
+
+  unset($mail);
+  echo "Email has been sent!";
+} else {
+  echo "No email has been sent, because there is no changes compare to yesterday!";
+  echo "<br/>";
+  echo "$filename : $currentFileSize";
+  echo "<br/>";
+  echo "$yesterdayFilename : $yesterdayFilesize";
+}
+
+if (file_exists($yesterdayFilename)) {
+  if (@unlink($yesterdayFilename) === true) {
+    echo "<br/>";
+    echo "the file $yesterdayFilename was successfully deleted!";
+  }
+}
 
 ?>
