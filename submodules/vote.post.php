@@ -96,7 +96,7 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
 
   $html = "<form id='frmVote'> <table>";
   $html .= "<tr id='TooLateVoted' style='display:none;color:#f54949;background:#D7E1F6;font-size:11px;font-weight:bold;height:25px;'><td colspan='7' style='text-align:center;'>" . __encode("Il est trop tard! le vote est clos, vous ne pouvez plus voter!") . "</td></tr>";
-  $html .= "<tr id='Voted' style='display:none;color:#f54949;background:#D7E1F6;font-size:11px;font-weight:bold;height:25px;'><td colspan='7' style='text-align:center;'>" . __encode("Vous avez déjà voté pour cette journée, vous ne pouvez pas le modifier!") . "</td></tr>";
+  $html .= "<tr id='Voted' style='display:none;color:#f54949;background:#D7E1F6;font-size:11px;font-weight:bold;height:25px;'><td colspan='7' style='text-align:center;'>" . __encode("Vous avez dï¿½jï¿½ votï¿½ pour cette journï¿½e, vous ne pouvez pas le modifier!") . "</td></tr>";
   $html .= "<tr id='ToBeVoted' style='padding-bottom:20px;height:30px;'><td colspan='7' style='text-align:center;'><div id='voteRemaining' >";
   $html .= '<input type="radio" name="voteRemaining" value="1" checked="true" />
         <input type="radio" name="voteRemaining" value="2" checked="true" />
@@ -109,7 +109,7 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
         <input type="radio" name="voteRemaining" value="9" checked="true"/>
         <input type="radio" name="voteRemaining" value="10" checked="true"/>
                 ';
-  $html .= __encode("</div><span id='messageStars' style='color:#ffffff;padding-left:20px;font-size:11px;'> il vous reste <span id='remainingStars'>10</span> étoiles à attribuer</span></td></tr>");
+  $html .= "</div><span id='messageStars' style='color:#ffffff;padding-left:20px;font-size:11px;'> il vous reste <span id='remainingStars'>10</span> Ã©toiles Ã  attribuer</span></td></tr>";
   $displayGroup = false;
   $teamExcluded2 = "";
   $teamExcluded10 = "";
@@ -215,10 +215,10 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
   </form>';
 
   if ($teamExcluded2!="") {
-    $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>" . __encode("Il n'est pas possible de voter pour le match de ".$teamExcluded2.", <br/>car ".$teamExcluded2." a particpé au 2 précédents match Bonus"). "</div>";
+    $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>" . __encode("Il n'est pas possible de voter pour le match de ".$teamExcluded2.", <br/>car ".$teamExcluded2." a particpï¿½ au 2 prï¿½cï¿½dents match Bonus"). "</div>";
   }
   if ($teamExcluded10!="") {
-    $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>" . __encode("Il n'est plus possible de voter pour un match de ".$teamExcluded10.", car ".$teamExcluded10." a/ont déjà particpé à 10 matchs Bonus"). "</div>";
+    $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>" . __encode("Il n'est plus possible de voter pour un match de ".$teamExcluded10.", car ".$teamExcluded10." a/ont dï¿½jï¿½ particpï¿½ ï¿½ 10 matchs Bonus"). "</div>";
   }
 
   $arr["status"] = false;
@@ -249,21 +249,21 @@ else
   if ($return) {
     $arr["status"] = true;
     $arr["message"] = '<form id="frmVoteValidated">
-<label style="color:#FFFFFF;text-align:center;">'  . __encode('Merci pour votre vote! <br/>2pts de bonus vous seront accordé lorsque la journée sera clôturée.'). '</label>
+<label style="color:#FFFFFF;text-align:center;">Merci pour votre vote! <br/>2pts de bonus vous seront accordÃ© lorsque la journÃ©e sera clÃ´turÃ©e.</label>
 <div id="footerVote" ><input type="submit"
 	value="Fermer" class="buttonfield" id="btnClose" name="btnClose"></div>
 </form>';
   } else {
     $arr["status"] = false;
-    $arr["message"] = 'Une erreur est survenue durant la sauvegarde!Veuillez r&eacute;&eacute;ssayer';
+    $arr["message"] = 'Une erreur est survenue durant la sauvegarde!Veuillez rÃ©essayer';
 
   }
 
 }
 
 $arr["perfAndError"] = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
-echo json_encode($arr);
 
+writeJsonResponse($arr);
 //@ destroy instance
 unset($forecast);
 ?>

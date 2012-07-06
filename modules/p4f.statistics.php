@@ -154,17 +154,17 @@ function callbackPost (data){
 
 	$.each(data.series, function(i,serie) {
 		chart.addSeries(serie);
-//		var chartSubTitle=' <?php echo utf8_encode("%1 buts marqués dont %2 penalty (soit %3 buts/match)") ?>';
+//		var chartSubTitle=' <?php echo utf8_encode("%1 buts marquÃ©s dont %2 penalty (soit %3 buts/match)") ?>';
 //		chartSubTitle = chartSubTitle.replace("%1",serie.total);
 //		chartSubTitle = chartSubTitle.replace("%2",data.penalty);
 //		chartSubTitle = chartSubTitle.replace("%3",Math.round(data.total/data.totalMatches*100)/100);
 		chart.setTitle({text:data.chartTitle},null);
-//		chart.renderer.text('<?php echo utf8_encode("1ère période"); ?>', 240, 490, {
+//		chart.renderer.text('<?php echo utf8_encode("1Ã¨re pÃ©riode"); ?>', 240, 490, {
 //	        font: '14px Arial, Verdana, sans-serif'
 //	    }, 0, 'center').attr({
 //	        zIndex: 20
 //	    }).css({color:'#FFFFFF'}).add();
-//		chart.renderer.text('<?php echo utf8_encode("2ème période"); ?>', 650, 490, {
+//		chart.renderer.text('<?php echo utf8_encode("2Ã¨me pÃ©riode"); ?>', 650, 490, {
 //	        font: '14px Arial, Verdana, sans-serif'
 //	    }, 0, 'center').attr({
 //	        zIndex: 20
@@ -179,11 +179,11 @@ function callbackPost (data){
 	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
 <select id="ViewChoice" style="z-index: 999; display: none;">
 	<option selected="selected" value="Forecasts"><?php echo __encode("Pronostics");?></option>
-	<option value="Results"><?php echo __encode("Résultats");?></option>
+	<option value="Results"><?php echo __encode("RÃ©sultats");?></option>
 	<option value="Points"><?php echo __encode("Points");?></option>
 </select>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;"><?php echo __encode("Journées : ");?></span>
+	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;"><?php echo __encode("JournÃ©es : ");?></span>
 <?php
 $sql = "SELECT PrimaryKey GroupKey, Description FROM groups WHERE CompetitionKey=" . COMPETITION . " AND IsCompleted=1 ORDER BY groups.DayKey";
 $resultSet = $_databaseObject->queryPerf($sql,"Get groups");

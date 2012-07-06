@@ -1,21 +1,23 @@
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/fullcalendar.css' />
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/jquery-ui.custom.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/fullcalendar.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/custom-theme/jquery-ui.custom.css' />
 <script type='text/javascript' src='<?php echo ROOT_SITE;?>/js/fullcalendar.js'></script>
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/jquery.cluetip.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/jquery.cluetip.css' />
 <script type='text/javascript' src='<?php echo ROOT_SITE;?>/js/jquery.cluetip.min.js'></script>
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/modules/forecasts.calendar.css' />
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/modules/forecasts.calendar.css' />
 
+<?php if ($_competitionType==1) {?>
 <center>
 <input type="submit"
 	value="Voter pour le match bonus" class="buttonfield" id="btnVote" name="btnVote">
 </center>
+<?php }?>
 <div id='loading' style='display:none'><label style="text-align: :center;vertical-align: middle;">chargement...</label></div>
 <div id='calendarLegend' style="float:right; ">
   <div style="width:80px;height: 16px;float:right; text-align:center;margin-top:20px;margin-right:130px;font-size:10px;margin-left:5px;" class="fc-event fc-event-hori fc-corner-left fc-corner-right ToBeDone0">
-    <a><span class="fc-event-title"><?php echo __encode("Non Validé");?></span></a>
+    <a><span class="fc-event-title"><?php echo __encode("Non ValidÃ©");?></span></a>
   </div>
   <div style="width:80px;height: 16px;float:right; margin-top:20px;text-align:center;font-size:10px;" class="fc-event fc-event-hori fc-corner-left fc-corner-right AlreadyDone0">
-    <a><span class="fc-event-title"><?php echo __encode("Validé");?></span></a>
+    <a><span class="fc-event-title"><?php echo __encode("ValidÃ©");?></span></a>
   </div>
 </div>
 <div id='calendar'></div>

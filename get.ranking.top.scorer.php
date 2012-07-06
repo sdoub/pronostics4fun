@@ -59,6 +59,9 @@ $arr["page"] = $page;
 $arr["total"] = $total;
 $arr["rows"] = array();
 
+$sql = "SET NAMES utf8";
+$_databaseObject->query($sql);
+
 $sql = "SELECT
     TeamPlayerName,
     TeamPlayerKey,

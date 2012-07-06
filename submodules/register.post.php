@@ -17,14 +17,14 @@ else
   if (!$_authorisation->isNickNameAvailable($nickName)) {
 
     $arr["status"] = false;
-    $arr["message"] = __encode("Le pseudo " . $nickName . " est déjà utilisé, veuillez en choisir un autre.");
+    $arr["message"] = "Le pseudo " . $nickName . " est dÃ©jÃ  utilisÃ©, veuillez en choisir un autre.";
 
   }
   else
   {
     if ($_authorisation->isEmailAlreadyUsed($email)) {
       $arr["status"] = false;
-      $arr["message"] = __encode("Cet adresse email est déjà liée à un autre compte, veuillez en saisir une autre.");
+      $arr["message"] = "Cet adresse email est dÃ©jÃ  liÃ©e Ã  un autre compte, veuillez en saisir une autre.";
     }
     else {
       $isRegistered = $_authorisation->register($nickName,$password,$firstName,$lastName,$email);
@@ -32,18 +32,18 @@ else
       if($isRegistered)
       {
         $arr["status"] = true;
-        $arr["message"] = __encode("Compte créé.");
+        $arr["message"] = "Compte crÃ©Ã©.";
         $arr["url"] = "index.php";
       }
       else
       {
         //@ failed
         $arr["status"] = false;
-        $arr["message"] = __encode("Erreur durant la création du compte.");
+        $arr["message"] = "Erreur durant la crÃ©ation du compte.";
       }
     }
   }
 }
 $arr["perfAndError"] = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
-echo json_encode($arr);
+writeJsonResponse($arr);
 ?>

@@ -18,7 +18,7 @@ if (isset($_GET["ToBeDeleted"])){
   $newsKey = $newsId[1];
 
   //$newsInfo = mysql_real_escape_string(__encode(utf8_decode($_POST["update_value"])));
-  $newsInfo = utf8_decode($_POST["update_value"]);
+  $newsInfo = $_POST["update_value"];
   if ($newsKey=="newKey") {
     $query = "INSERT INTO news (CompetitionKey, Information, InfoType) VALUE (".COMPETITION.",'".$newsInfo."', 4)";
   }
@@ -32,7 +32,7 @@ if (isset($_GET["ToBeDeleted"])){
     $newsKey = $_databaseObject -> insert_id();
   }
 
-  print(stripcslashes (utf8_encode($newsInfo)));
+  print(stripcslashes ($newsInfo));
 }
 require_once("end.file.php");
 

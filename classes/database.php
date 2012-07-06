@@ -572,6 +572,7 @@ class mysql extends database {
     $this -> config['PWD'])) {
       return false;
     } else {
+      @mysql_query ("SET NAMES utf8", $this -> link);
       return true;
 
 

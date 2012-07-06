@@ -29,14 +29,14 @@ else
   if($isUpdated)
   {
     $arr["status"] = true;
-    $arr["message"] = __encode("Compte mis à jour.");
+    $arr["message"] = "Compte mis Ã  jour.";
     $arr["url"] = "index.php";
   }
   else
   {
     //@ failed
     $arr["status"] = false;
-    $arr["message"] = __encode("Erreur durant la mise à jour du compte.");
+    $arr["message"] = "Erreur durant la mise Ã  jour du compte.";
   }
 }
 

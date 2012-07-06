@@ -148,7 +148,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if (!empty($rowSet["AvatarName"])) {
     $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["AvatarName"];
   }
-  $tempArray["cell"][1]= "<img class='avat' border='0' src='" . $avatarPath . "'>".addslashes($rowSet["NickName"]);
+  $tempArray["cell"][1]= "<img class='avat' border='0' src='" . $avatarPath . "'>".addslashes(utf8_encode($rowSet["NickName"]));
   $tempArray["cell"][2]= "<strong>".$rowSet["Score"]."</strong>";
   $tempArray["cell"][3]= $rowSet["ScoreWithoutBonus"];
   $tempArray["cell"][4]= $rowSet["BonusScore"];

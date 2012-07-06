@@ -31,7 +31,7 @@ echo '<script type="text/javascript">
 				{display: "' . __encode("Buts") . '", name : "Goals", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Penalty") . '", name : "Penalty", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Passes") . '", name : "Assists", width : 60, sortable : true, align: "right"},
-				{display: "' . __encode("Journée") . '", name : "Days", width : 60, sortable : true, align: "right"},
+				{display: "' . __encode("JournÃ©e") . '", name : "Days", width : 60, sortable : true, align: "right"},
 				{display: "' . __encode("Points") . '", name : "Score", width : 60, sortable : false, align: "right"},
 				{display: "&nbsp;", name : "Detail", width : 50, sortable : false, align: "left"}
 				],
@@ -51,13 +51,13 @@ echo '<script type="text/javascript">
 			width: 940,
 			height: 415,
 			onSuccess:refreshScrollBar,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} buteurs") . '",
+			pagestat: "' . __encode("Affichage de {from} Ã  {to} sur {total} buteurs") . '",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "'. __encode("Pas de donnÃ©es") . '"
 			}
 		);
 		});

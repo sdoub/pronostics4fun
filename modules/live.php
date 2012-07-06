@@ -118,7 +118,7 @@ echo '<script type="text/javascript">
 				{display: "' . __encode("Pronos.") . '", name : "Forecasts", width : 40, sortable : true, align: "center"},
 				{display: "' . __encode("Points") . '", name : "Score", width : 45, sortable : true, align: "right"},
 				{display: "' . __encode("Clas. grp.") . '", name : "GroupRank", width : 53, sortable : true, align: "right"},
-				{display: "' . __encode("Clas. gén.") . '", name : "GlobalRank", width : 53, sortable : true, align: "right"}
+				{display: "' . __encode("Clas. gÃ©n.") . '", name : "GlobalRank", width : 53, sortable : true, align: "right"}
 				],
 			searchitems : [
 				{display: "Joueur", name : "NickName"}
@@ -133,13 +133,13 @@ echo '<script type="text/javascript">
 			showTableToggleBtn: false,
 			width: 365,
 			height: 380,
-			pagestat: "' . __encode("Affichage de {from} à {to} sur {total} joueurs") . '",
+			pagestat: "' . __encode("Affichage de {from} Ã  {to} sur {total} joueurs") . '",
 			singleSelect:true,
 			 pagetext: "Page",
 			 outof: "sur",
 			 findtext: "Rechercher",
 			 procmsg: "Traitement, patientez ...",
-			 nomsg: "'. __encode("Pas de données") . '"
+			 nomsg: "'. __encode("Pas de donnÃ©es") . '"
 			}
 		);
 		});
@@ -325,7 +325,7 @@ $(document).ready(function(){
 <div id="mod-classements" class="node2">
 <div class="head">
 <div>
-<h4><?php echo __encode("Classement Général - Live"); ?></h4>
+<h4><?php echo __encode("Classement GÃ©nÃ©ral - Live"); ?></h4>
 </div>
 </div>
 <div class="node-in">

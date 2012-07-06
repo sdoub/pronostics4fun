@@ -47,7 +47,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
       $_groupDescription = $rowSetGroup['Description'];
       unset($rowSetGroup,$resultSetGroup,$sqlGroup);
 
-      $mail->Subject    = "Pronostics4Fun - Résultats des pronostics de la ".__decode($_groupDescription);
+      $mail->Subject    = "Pronostics4Fun - Résultats des pronostics - ".__decode($_groupDescription);
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 

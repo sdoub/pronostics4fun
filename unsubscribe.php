@@ -24,33 +24,12 @@ Des classements et des statistiques sont établis à la fin de chaque journée de c
 <meta name="keywords" content="pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
 <link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
-<link href="<?php echo ROOT_SITE; ?>/css/default.css" type="text/css" rel="stylesheet"/>
-<link type="text/css" href="<?php echo ROOT_SITE; ?>/css/jixedbar.themes/rave/jx.stylesheet.css" rel="stylesheet" />
+<link href="<?php echo ROOT_SITE.$_themePath ; ?>/css/default.css" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jmpopups.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.log.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.text-overflow.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.cookies.js"></script>
-<style>
-.buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
-	font: bold 11px/ normal Tahoma, Verdana;
-	margin-top: 10px;
-	margin-left: 15px;
-	width:50px;
-	padding: 4px;
-	float:right;
-
-}
-.buttonfield:hover, .buttonfield:focus {
-	background: #000;
-	border: solid 1px #fff;
-	color: #fff;
-	cursor: pointer;
-}
-</style>
 
 </head>
 <body>

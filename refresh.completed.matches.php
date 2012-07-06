@@ -120,41 +120,41 @@ echo '<p>Queries ('.sizeOf($_queries).') were executed in ' . Timer::end() . ' s
 
 
 $previousGroupKey = 0;
-foreach ($rowsSet as $rowSet)
-{
-  if ($previousGroupKey != $rowSet["GroupKey"]) {
-    $mail = new P4FMailer();
-
-    try {
-
-      $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
-      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
-      $_groupDescription = $rowSet['Description'];
-      $mail->Subject    = "Pronostics4Fun - Mise à jour des stats de la ".__decode($_groupDescription);
-
-      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-
-      $mail->MsgHTML(file_get_contents(ROOT_SITE.'/result.group.sumup.php?GroupKey='.$rowSet["GroupKey"]));
-
-      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-
-      $mail->AddAttachment("images/Logo.png");      // attachment
-
-      //    $mail->Send();
-
-    } catch (phpmailerException $e) {
-      echo $e->errorMessage(); //Pretty error messages from PHPMailer
-    } catch (Exception $e) {
-      echo $e->getMessage(); //Boring error messages from anything else!
-    }
-
-    unset($mail);
-  }
-  $previousGroupKey = $rowSet["GroupKey"];
-
-}
+//foreach ($rowsSet as $rowSet)
+//{
+//  if ($previousGroupKey != $rowSet["GroupKey"]) {
+//    $mail = new P4FMailer();
+//
+//    try {
+//
+//      $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+//
+//      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+//
+//      $_groupDescription = $rowSet['Description'];
+//      $mail->Subject    = "Pronostics4Fun - Mise à jour des stats de la ".__decode($_groupDescription);
+//
+//      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+//
+//      $mail->MsgHTML(file_get_contents(ROOT_SITE.'/result.group.sumup.php?GroupKey='.$rowSet["GroupKey"]));
+//
+//      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+//
+//      $mail->AddAttachment("images/Logo.png");      // attachment
+//
+//      //    $mail->Send();
+//
+//    } catch (phpmailerException $e) {
+//      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+//    } catch (Exception $e) {
+//      echo $e->getMessage(); //Boring error messages from anything else!
+//    }
+//
+//    unset($mail);
+//  }
+//  $previousGroupKey = $rowSet["GroupKey"];
+//
+//}
 
 
 $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
