@@ -13,6 +13,7 @@ public $Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
 public $Port       = 587;                   // set the SMTP port for the GMAIL server
 public $Username   = "pronostics4fun@gmail.com";  // GMAIL username
 public $Password   = "p4fligue1";            // GMAIL password
+public $CharSet = 'UTF-8';
 
 }
 
