@@ -48,7 +48,7 @@ WriteScripts();
 
 <div id="mainCol">
 <div style="text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;">
-La <?php echo $_groupDescription;?> en direct
+<?php echo $_groupDescription;?> en direct
 </div>
 <div style="text-align:left;font-size:11px;font-family:Arial,Helvetica,sans-serif;">
 <?php
@@ -62,12 +62,12 @@ $resultSetLastRefresh = $_databaseObject -> queryPerf ($queryLastRefresh, "Get l
 $rowSetLastRefresh = $_databaseObject -> fetch_assoc ($resultSetLastRefresh);
 
   setlocale(LC_TIME, "fr_FR");
-  $lastRefreshFormattedDate = strftime("%A %d %B %Y à %H:%M:%S",$rowSetLastRefresh['LastRefreshDate']);
+  $lastRefreshFormattedDate = strftime("%A %d %B %Y Ã  %H:%M:%S",$rowSetLastRefresh['LastRefreshDate']);
   $nextRefreshFormattedDate = strftime("%H:%M:%S",$rowSetLastRefresh['NextRefreshDate']);
   if (!$rowSetLastRefresh['LastRefreshDate']) {
     $lastRefreshFormattedDate = " - - ";
   }
-  echo __encode("Dernière mise à jour : ") . "<span style='font-weight:bold;' id='lastRefresh'>" .  __encode($lastRefreshFormattedDate) . "</span><br/>";
+  echo __encode("DerniÃ¨re mise Ã  jour : ") . "<span style='font-weight:bold;' id='lastRefresh'>" .  __encode($lastRefreshFormattedDate) . "</span><br/>";
 
 	function timeBetween($start_date,$end_date)
 	{
@@ -125,7 +125,7 @@ else {
     $style="display:none;";
       $diffTime["minutes"]=0;
   }
-  echo "<span id='NextRefreshSpan' style='$style'>". __encode("Prochaine mise à jour dans ") . "<span style='font-weight:bold;' id='nextRefresh'>" . $diffTime["minutes"] . ":" . $diffTime["seconds"] . "'</span></span>";
+  echo "<span id='NextRefreshSpan' style='$style'>". __encode("Prochaine mise Ã  jour dans ") . "<span style='font-weight:bold;' id='nextRefresh'>" . $diffTime["minutes"] . ":" . $diffTime["seconds"] . "'</span></span>";
 ?>
 </div>
 
@@ -191,9 +191,10 @@ ORDER BY matches.ScheduleDate ASC, matches.TeamHomeKey";
 
 $resultSet = $_databaseObject->queryPerf($query,"Get matches to be played by current day");
 $_isMatchInProgress =false;
+$nbrOfMatch = 0;
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-
+  $nbrOfMatch++;
   $matchKey = $rowSet["MatchKey"];
   $groupName = $rowSet["GroupName"];
   $teamHomeKey = $rowSet["TeamHomeKey"];
@@ -226,19 +227,19 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     case 2:
       $_isMatchInProgress = true;
     case 10:
-      echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . getStatus($rowSet["LiveStatus"]) . "</div>";
+      echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . getStatus($rowSet["LiveStatus"]) . "</div>";
       break;
     case 0:
       if ($rowSet["Status"]==1) { //Postponed
-        echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . __encode("Reporté") . "</div>";
+        echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . __encode("ReportÃ©") . "</div>";
       } else {
-        echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;' >".$rowSet["ActualTime"]."'</div>";
+        echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;' >".$rowSet["ActualTime"]."'</div>";
         $scheduleDate = $rowSet["ScheduleDate"];
         echo "<div style='display:none;'  countdown='true' year='". date("Y",$scheduleDate) ."' month='". date("n",$scheduleDate) ."' day='". date("j",$scheduleDate) ."' hour='". date("G",$scheduleDate) ."' minute='". date("i",$scheduleDate) ."'></div>";
       }
       break;
     default:
-      echo "<div class='livestatus' style='width:55px;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;'>" . $rowSet["ActualTime"] . "'</div>";
+      echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . $rowSet["ActualTime"] . "'</div>";
       $_isMatchInProgress = true;
       break;
   }
@@ -246,7 +247,21 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 
 }
-
+switch ($nbrOfMatch) {
+  case 1:
+    $rowWidth = 170;
+    break;
+  case 2:
+    $rowWidth = 115 * $nbrOfMatch;
+    break;
+  case 3:
+  case 4:
+    $rowWidth = 88 * $nbrOfMatch;
+    break;
+  default;
+    $rowWidth = 80 * $nbrOfMatch;
+    break;
+}
 
 ?>
 
@@ -304,15 +319,15 @@ $(document).ready(function($) {
 						expiryHtml='<div class="over">Periode</div>';
 						$(this).css("dislay","none");
 						$(this).countdown({until: nextMatch,
-						layout: 'dans {hnn}{sep}{mnn}',
+						layout: '{hnn}{sep}{mnn}',
 						alwaysExpire : true,
 						onTick: function (periods) {
 							var htmlTimer= "";
 							if (periods[3]>0) {
 								if (periods[3]==1)
-									htmlTimer = "dans 1 jour";
+									htmlTimer = "1 jour";
 								else
-									htmlTimer = "dans "+periods[3]+" jours";
+									htmlTimer = periods[3]+" jours";
 							}
 							else {
 								htmlTimer = $(this).context.innerHTML;
@@ -331,7 +346,7 @@ $('div[countdown]').each(function (){
 	expiryHtml='<div class="over">Periode</div>';
 	$(this).css("dislay","none");
 	$(this).countdown({until: nextMatch,
-	layout: 'dans {hnn}{sep}{mnn}',
+	layout: '{hnn}{sep}{mnn}',
 	alwaysExpire : false,
 	onTick: everyMinute,
 	onExpiry: countDownHasExpired,
@@ -344,13 +359,13 @@ function everyMinute(periods) {
 	$.log(periods);
 	if (periods[3]>0) {
 		if (periods[3]==1)
-			htmlTimer = "dans 1 jour";
+			htmlTimer = "1 jour";
 		else
-			htmlTimer = "dans "+periods[3]+" jours";
+			htmlTimer = periods[3]+" jours";
 	}
 	else {
 		if (periods[4]==0) {
-			htmlTimer = "dans "+ pad(periods[5],2)+ ":" + pad(periods[6],2)+"'";
+			htmlTimer = pad(periods[5],2)+ ":" + pad(periods[6],2)+"'";
 		}
 		else {
 			htmlTimer = $(this).context.innerHTML;
@@ -373,12 +388,35 @@ function countDownHasExpired(){
 	}
  }
 </script>
-<div id="playerDetail" class="flexcroll">
+<div id="playerDetail" class="flexcroll" style="width:<?php echo $rowWidth+20;?>;">
 
 <ul>
 
 <?php
+if ($_competitionType==3) {
+  $sql = "select @rownum:=@rownum+1 as rank, A.* from
+(SELECT
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      ),0)) Score,
+(SELECT CASE COUNT(*) WHEN 6 THEN 40 WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
+		 FROM playermatchresults
+        INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+        INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+        WHERE groups.PrimaryKey=$_groupKey
+          AND playermatchresults.Score>=5
+          AND playermatchresults.playerKey=players.PrimaryKey)
+      GroupScore
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY NickName) A, (SELECT @rownum:=0) r";
 
+} else {
 $sql = "select @rownum:=@rownum+1 as rank, A.* from
 (SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
@@ -405,7 +443,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY NickName) A, (SELECT @rownum:=0) r";
-
+}
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
 $rank=0;
@@ -425,8 +463,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	  $stylePlayer="display:none;";
 	}
   }
-      echo '<li id="li_' . $playerKey . '" class="playerforecastrow" player-key="'. $playerKey .'" style="'.$stylePlayer.'" >
-      <div class="playerforecastrowcontent">';
+      echo '<li id="li_' . $playerKey . '" class="playerforecastrow" player-key="'. $playerKey .'" style="width:'.$rowWidth.'px;'.$stylePlayer.'" >
+      <div style="width:100%" class="playerforecastrowcontent">';
 
 
 
@@ -559,13 +597,37 @@ $previousRank=$rank;
 </div>
 </div>
 <div class="node-in">
-<div id="tabsRanking"><a id="globalrankinglink" class="selected" ><?php echo __encode("Général"); ?></a><a id="grouprankinglink"><?php echo __encode("Journée"); ?></a></div>
+<div id="tabsRanking"><a id="globalrankinglink" class="selected" ><?php echo __encode("GÃ©nÃ©ral"); ?></a><a id="grouprankinglink"><?php  if ($_competitionType==1) {echo __encode("JournÃ©e");} else {echo __encode("Groupe");} ?></a></div>
 <div id="ContainerRanking" class="panel flexcroll" >
 <ol id="globalranking">
 
 
 <?php
-
+if ($_competitionType==3) {
+$sql = "SELECT
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.CompetitionKey=" . COMPETITION . " ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+    ),0)
+    + IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
+      AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")
+    ),0)
+    + (SELECT CASE COUNT(*) WHEN 6 THEN 40 WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
+		 FROM playermatchresults
+        INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+        INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+        WHERE groups.PrimaryKey=$_groupKey
+          AND groups.IsCompleted = '0'
+          AND playermatchresults.Score>=5
+          AND playermatchresults.playerKey=players.PrimaryKey)
+      ) Score
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY Score DESC, NickName";
+} else {
 $sql = "SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.CompetitionKey=" . COMPETITION . " ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
@@ -594,6 +656,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
+}
 
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
@@ -655,7 +718,33 @@ $previousRank=$rank;
 
 
 <?php
-
+if ($_competitionType==3) {
+$sql = "SELECT
+(SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.GroupKey=$_groupKey ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)
+      ),0) +
+      (SELECT
+CASE COUNT(*)
+WHEN 6 THEN 40
+WHEN 5 THEN 20
+WHEN 4 THEN IF (groups.Code='1/4',20,0)
+WHEN 3 THEN IF (groups.Code='1/4',10,0)
+ELSE 0 END
+FROM playermatchresults
+INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+WHERE groups.PrimaryKey=$_groupKey
+AND playermatchresults.Score>=5
+AND playermatchresults.playerKey=players.PrimaryKey
+)) Score
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY Score DESC, NickName";
+} else {
 $sql = "SELECT
 (SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.GroupKey=$_groupKey ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
@@ -686,7 +775,7 @@ AND playermatchresults.playerKey=players.PrimaryKey
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
-
+}
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
 $rank=0;
@@ -752,11 +841,11 @@ $previousRank=$rank;
 function redrawPlayerList () {
 	$("#playerDetail li:visible").each(function (index) {
 		if ((index % 2) == 0) {
-			$(this).css("background-color", "#D7E1F6");
-			$(this).css("color","#365F89");
+			$(this).removeClass('resultRowOdd');
+			$(this).addClass('resultRow');
 		} else {
-			$(this).css("background-color", "#6D8AA8");
-			$(this).css("color","#FFFFFF");
+			$(this).removeClass('resultRow');
+			$(this).addClass('resultRowOdd');
 		}
 	});
 }
@@ -1150,26 +1239,26 @@ it will format the source code for output in a textarea.
 */
 function replaceExtChars(text,output) {
   text = text.replace(eval('/&/g'), '&amp;');
-  text = text.replace(eval('/é/g'), '&eacute;');
+  text = text.replace(eval('/Ã©/g'), '&eacute;');
 //  fromTo = new
-//  Array('&AElig;','Æ','&Aacute;','Á','&Acirc;','Â',' &Agrave;','À','&Aring;','Å','&Atilde;',
-//  'Ã','&Auml; ','Ä','&Ccedil;','Ç','&ETH;','Ð','&Eacute;','É','& Ecirc;','Ê',
-//  '&Egrave;','È','&Euml;','Ë','&Iacute;' ,'Í','&Icirc;','Î','&Igrave;','Ì',
-//  '&Iuml;','Ï','&N tilde;','Ñ','&Oacute;','Ó','&Ocirc;','Ô','&Ograve; ','Ò',
-//  '&Oslash;','Ø','&Otilde;','Õ','&Ouml;','Ö',' &THORN;','Þ','&Uacute;','Ú',
-//  '&Ucirc;','Û','&Ugrave ;','Ù','&Uuml;','Ü','&Yacute;','Ý','&aacute;','á',
-//  '&acirc;','â','&aelig;','æ','&agrave;','à','&aring ;','å','&atilde;','ã',
-//  '&auml;','ä','&brvbar;','¦', '&ccedil;','ç','&cent;','¢','&copy;','©',
-//  '&deg;',' °','&eacute;','é','&ecirc;','ê','&egrave;','è','&e th;','ð','&euml;',
-//  'ë','&frac12;','½','&frac14;','¼ ','&frac34;','¾','&gt;','>','&gt','>','&iacute;',
-//  ' í','&icirc;','î','&iexcl;','¡','&igrave;','ì','&iq uest;','¿','&iuml;','ï','&laquo;',
-//  '«','&lt;','<',' &lt','<','&mdash;','—','&micro;','µ','&middot;','· ','&ndash;',
-//  '–','&not;','¬','&ntilde;','ñ','&oacut e;','ó','&ocirc;','ô','&ograve;','ò',
-//  '&oslash;','ø','&otilde;','õ','&ouml;','ö','&para;', '¶','&plusmn;','±',
-//  '&pound;','£','&quot;','\"','&r aquo;','»','&reg;','®','&sect;','§','­','*',
-//  '&sup1 ;','¹','&sup2;','²','&sup3;','³','&szlig;','ß','&t horn;','þ',
-//  '&tilde;','˜','&trade;','™','&uacute;', 'ú','&ucirc;','û','&ugrave;','ù',
-//  '&uuml;','ü','&ya cute;','ý','&yen;','¥','&yuml;','ÿ');
+//  Array('&AElig;','Ã†','&Aacute;','Ã','&Acirc;','Ã‚',' &Agrave;','Ã€','&Aring;','Ã…','&Atilde;',
+//  'Ãƒ','&Auml; ','Ã„','&Ccedil;','Ã‡','&ETH;','Ã','&Eacute;','Ã‰','& Ecirc;','ÃŠ',
+//  '&Egrave;','Ãˆ','&Euml;','Ã‹','&Iacute;' ,'Ã','&Icirc;','ÃŽ','&Igrave;','ÃŒ',
+//  '&Iuml;','Ã','&N tilde;','Ã‘','&Oacute;','Ã“','&Ocirc;','Ã”','&Ograve; ','Ã’',
+//  '&Oslash;','Ã˜','&Otilde;','Ã•','&Ouml;','Ã–',' &THORN;','Ãž','&Uacute;','Ãš',
+//  '&Ucirc;','Ã›','&Ugrave ;','Ã™','&Uuml;','Ãœ','&Yacute;','Ã','&aacute;','Ã¡',
+//  '&acirc;','Ã¢','&aelig;','Ã¦','&agrave;','Ã ','&aring ;','Ã¥','&atilde;','Ã£',
+//  '&auml;','Ã¤','&brvbar;','Â¦', '&ccedil;','Ã§','&cent;','Â¢','&copy;','Â©',
+//  '&deg;',' Â°','&eacute;','Ã©','&ecirc;','Ãª','&egrave;','Ã¨','&e th;','Ã°','&euml;',
+//  'Ã«','&frac12;','Â½','&frac14;','Â¼ ','&frac34;','Â¾','&gt;','>','&gt','>','&iacute;',
+//  ' Ã­','&icirc;','Ã®','&iexcl;','Â¡','&igrave;','Ã¬','&iq uest;','Â¿','&iuml;','Ã¯','&laquo;',
+//  'Â«','&lt;','<',' &lt','<','&mdash;','Â—','&micro;','Âµ','&middot;','Â· ','&ndash;',
+//  'Â–','&not;','Â¬','&ntilde;','Ã±','&oacut e;','Ã³','&ocirc;','Ã´','&ograve;','Ã²',
+//  '&oslash;','Ã¸','&otilde;','Ãµ','&ouml;','Ã¶','&para;', 'Â¶','&plusmn;','Â±',
+//  '&pound;','Â£','&quot;','\"','&r aquo;','Â»','&reg;','Â®','&sect;','Â§','Â­','*',
+//  '&sup1 ;','Â¹','&sup2;','Â²','&sup3;','Â³','&szlig;','ÃŸ','&t horn;','Ã¾',
+//  '&tilde;','Â˜','&trade;','Â™','&uacute;', 'Ãº','&ucirc;','Ã»','&ugrave;','Ã¹',
+//  '&uuml;','Ã¼','&ya cute;','Ã½','&yen;','Â¥','&yuml;','Ã¿');
 //
 //  if (output) {
 //    fromTo[fromTo.length] = '&amp;';

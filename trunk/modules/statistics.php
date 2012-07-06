@@ -51,13 +51,13 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
   $endDate = ((int)$rowSet['EndDate']*1000+((is_est((int)$rowSet['EndDate'])?2:1)*3600*1000));
 
   $plotsBand = "{ from: " . $beginDate.", to: " . $endDate.",color: 'rgba(228, 228, 225, 0.1)',";
-  $plotsBand .= "label: {y:65,text: '". utf8_encode(__decode($rowSet['Description']))."',rotation:270,align:'center',verticalAlign:'bottom',style: {color: 'rgba(255, 255, 255, 0.5)'}}}";
+  $plotsBand .= "label: {y:65,text: '". $rowSet['Description']."',rotation:270,align:'center',verticalAlign:'bottom',style: {color: 'rgba(255, 255, 255, 0.5)'}}}";
 
   if ($previousGroup == $rowSet['Description'])
   {
     $beginDate = $previousBeginDate;
     $plotsBand = "{ from: " . $beginDate.", to: " . $endDate.",color: 'rgba(228, 228, 225, 0.1)',";
-      $plotsBand .= "label: {y:65,text: '". utf8_encode(__decode($rowSet['Description']))."',rotation:270,align:'center',verticalAlign:'bottom',style: {color: 'rgba(255, 255, 255, 0.5)'}}}";
+      $plotsBand .= "label: {y:65,text: '". $rowSet['Description']."',rotation:270,align:'center',verticalAlign:'bottom',style: {color: 'rgba(255, 255, 255, 0.5)'}}}";
   }
   else {
     $previousBeginDate = $beginDate;
@@ -125,7 +125,7 @@ switch ($view)
     $chartTitle = "Suivi des points";
     break;
 }
-echo "chartTitle='" . utf8_encode($chartTitle) . "'";
+echo "chartTitle='" . $chartTitle . "'";
 ?>
 </script>
 
@@ -135,19 +135,6 @@ echo "chartTitle='" . utf8_encode($chartTitle) . "'";
 echo "var _currentView = '" . $view . "';";
 ?>
 chartImagePath = "<?php echo ROOT_SITE;?>";
-
-words[0] = '<?php echo utf8_encode("ème");?>';
-
-words[1]= {
-	months: <?php echo utf8_encode("['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-		'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']");?>,
-	weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-	shortMonths : <?php echo utf8_encode("['Janv.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.']");?>,
-	decimalPoint : ",",
-	thousandsSep : " ",
-	loading : "Chargement ...",
-	resetZoom : "<?php echo utf8_encode("RàZ zoom");?>"
-};
 
 var _groups = [<?php echo $plotsBand;?>];
 
@@ -249,8 +236,8 @@ function callbackPost (data){
 <span
 	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
 <select id="ValueChoice" style="z-index: 999; display: none;">
-	<option selected="selected" value="Global"><?php echo __encode("général");?></option>
-	<option value="Group"><?php echo __encode("par journée");?></option>
+	<option selected="selected" value="Global"><?php echo "gÃ©nÃ©ral";?></option>
+	<option value="Group"><?php echo "par journÃ©e";?></option>
 </select>
 <span
 	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Joueur(s):</span>

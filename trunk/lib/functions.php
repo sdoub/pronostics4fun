@@ -30,83 +30,83 @@ function getElapsedTime ()
  */
 function is_est($time)
 {
-    // get year
-    $Y = gmdate("Y", $time);
+  // get year
+  $Y = gmdate("Y", $time);
 
-    // calc start / end dates and time for that year
-    $begin_date = (31 - (5*$Y/4 + 4) % 7);
-    $end_date = (31 - (5*$Y/4 + 1) % 7);
-    $begin_time = gmmktime(0,0,0,  3,$begin_date,$Y);
-    $end_time = gmmktime(0,0,0,  10,$end_date,$Y);
+  // calc start / end dates and time for that year
+  $begin_date = (31 - (5*$Y/4 + 4) % 7);
+  $end_date = (31 - (5*$Y/4 + 1) % 7);
+  $begin_time = gmmktime(0,0,0,  3,$begin_date,$Y);
+  $end_time = gmmktime(0,0,0,  10,$end_date,$Y);
 
-    // if it's in that period
-    $is_dst = $time >= $begin_time && $time < $end_time;
-    return $is_dst;
+  // if it's in that period
+  $is_dst = $time >= $begin_time && $time < $end_time;
+  return $is_dst;
 }
 
 $html_entities = array (
-			"À" =>  "&Agrave;",	#capital a, grave accent
-			"Á" =>  "&Aacute;", 	#capital a, acute accent
-			"Â" =>  "&Acirc;", 	#capital a, circumflex accent
-			"Ã" =>  "&Atilde;", 	#capital a, tilde
-			"Ä" => "&Auml;",	#capital a, umlaut mark
-			"Å" => "&Aring;", 	#capital a, ring
-			"Æ" => "&AElig;", 	#capital ae
-			"Ç" => "&Ccedil;", 	#capital c, cedilla
-			"È" => "&Egrave;", 	#capital e, grave accent
-			"É" => "&Eacute;", 	#capital e, acute accent
-			"Ê" => "&Ecirc;", 	#capital e, circumflex accent
-			"Ë" => "&Euml;", 	#capital e, umlaut mark
-			"Ì" => "&Igrave;", 	#capital i, grave accent
-			"Í" => "&Iacute;", 	#capital i, acute accent
-			"Î" => "&Icirc;", 	#capital i, circumflex accent
-			"Ï" => "&Iuml;", 	#capital i, umlaut mark
-			"Ð" => "&ETH;",		#capital eth, Icelandic
-			"Ñ" => "&Ntilde;", 	#capital n, tilde
-			"Ò" => "&Ograve;", 	#capital o, grave accent
-			"Ó" => "&Oacute;", 	#capital o, acute accent
-			"Ô" => "&Ocirc;", 	#capital o, circumflex accent
-			"Õ" => "&Otilde;", 	#capital o, tilde
-			"Ö" => "&Ouml;", 	#capital o, umlaut mark
-			"Ø" => "&Oslash;", 	#capital o, slash
-			"Ù" => "&Ugrave;", 	#capital u, grave accent
-			"Ú" => "&Uacute;", 	#capital u, acute accent
-			"Û" => "&Ucirc;", 	#capital u, circumflex accent
-			"Ü" => "&Uuml;", 	#capital u, umlaut mark
-			"Ý" => "&Yacute;", 	#capital y, acute accent
-			"Þ" => "&THORN;", 	#capital THORN, Icelandic
-			"ß" => "&szlig;", 	#small sharp s, German
-			"à" => "&agrave;", 	#small a, grave accent
-			"á" => "&aacute;", 	#small a, acute accent
-			"â" => "&acirc;", 	#small a, circumflex accent
-			"ã" => "&atilde;", 	#small a, tilde
-			"ä" => "&auml;", 	#small a, umlaut mark
-			"å" => "&aring;", 	#small a, ring
-			"æ" => "&aelig;", 	#small ae
-			"ç" => "&ccedil;", 	#small c, cedilla
-			"è" => "&egrave;", 	#small e, grave accent
-			"é" => "&eacute;", 	#small e, acute accent
-			"ê" => "&ecirc;", 	#small e, circumflex accent
-			"ë" => "&euml;", 	#small e, umlaut mark
-			"ì" => "&igrave;", 	#small i, grave accent
-			"í" => "&iacute;", 	#small i, acute accent
-			"î" => "&icirc;", 	#small i, circumflex accent
-			"ï" => "&iuml;", 	#small i, umlaut mark
-			"ð" => "&eth;",		#small eth, Icelandic
-			"ñ" => "&ntilde;", 	#small n, tilde
-			"ò" => "&ograve;", 	#small o, grave accent
-			"ó" => "&oacute;", 	#small o, acute accent
-			"ô" => "&ocirc;", 	#small o, circumflex accent
-			"õ" => "&otilde;", 	#small o, tilde
-			"ö" => "&ouml;", 	#small o, umlaut mark
-			"ø" => "&oslash;", 	#small o, slash
-			"ù" => "&ugrave;", 	#small u, grave accent
-			"ú" => "&uacute;", 	#small u, acute accent
-			"û" => "&ucirc;", 	#small u, circumflex accent
-			"ü" => "&uuml;", 	#small u, umlaut mark
-			"ý" => "&yacute;", 	#small y, acute accent
-			"þ" => "&thorn;", 	#small thorn, Icelandic
-			"ÿ" => "&yuml;"		#small y, umlaut mark
+			"Ã€" =>  "&Agrave;",	#capital a, grave accent
+			"Ã" =>  "&Aacute;", 	#capital a, acute accent
+			"Ã‚" =>  "&Acirc;", 	#capital a, circumflex accent
+			"Ãƒ" =>  "&Atilde;", 	#capital a, tilde
+			"Ã„" => "&Auml;",	#capital a, umlaut mark
+			"Ã…" => "&Aring;", 	#capital a, ring
+			"Ã†" => "&AElig;", 	#capital ae
+			"Ã‡" => "&Ccedil;", 	#capital c, cedilla
+			"Ãˆ" => "&Egrave;", 	#capital e, grave accent
+			"Ã‰" => "&Eacute;", 	#capital e, acute accent
+			"ÃŠ" => "&Ecirc;", 	#capital e, circumflex accent
+			"Ã‹" => "&Euml;", 	#capital e, umlaut mark
+			"ÃŒ" => "&Igrave;", 	#capital i, grave accent
+			"Ã" => "&Iacute;", 	#capital i, acute accent
+			"ÃŽ" => "&Icirc;", 	#capital i, circumflex accent
+			"Ã" => "&Iuml;", 	#capital i, umlaut mark
+			"Ã" => "&ETH;",		#capital eth, Icelandic
+			"Ã‘" => "&Ntilde;", 	#capital n, tilde
+			"Ã’" => "&Ograve;", 	#capital o, grave accent
+			"Ã“" => "&Oacute;", 	#capital o, acute accent
+			"Ã”" => "&Ocirc;", 	#capital o, circumflex accent
+			"Ã•" => "&Otilde;", 	#capital o, tilde
+			"Ã–" => "&Ouml;", 	#capital o, umlaut mark
+			"Ã˜" => "&Oslash;", 	#capital o, slash
+			"Ã™" => "&Ugrave;", 	#capital u, grave accent
+			"Ãš" => "&Uacute;", 	#capital u, acute accent
+			"Ã›" => "&Ucirc;", 	#capital u, circumflex accent
+			"Ãœ" => "&Uuml;", 	#capital u, umlaut mark
+			"Ã" => "&Yacute;", 	#capital y, acute accent
+			"Ãž" => "&THORN;", 	#capital THORN, Icelandic
+			"ÃŸ" => "&szlig;", 	#small sharp s, German
+			"Ã " => "&agrave;", 	#small a, grave accent
+			"Ã¡" => "&aacute;", 	#small a, acute accent
+			"Ã¢" => "&acirc;", 	#small a, circumflex accent
+			"Ã£" => "&atilde;", 	#small a, tilde
+			"Ã¤" => "&auml;", 	#small a, umlaut mark
+			"Ã¥" => "&aring;", 	#small a, ring
+			"Ã¦" => "&aelig;", 	#small ae
+			"Ã§" => "&ccedil;", 	#small c, cedilla
+			"Ã¨" => "&egrave;", 	#small e, grave accent
+			"Ã©" => "&eacute;", 	#small e, acute accent
+			"Ãª" => "&ecirc;", 	#small e, circumflex accent
+			"Ã«" => "&euml;", 	#small e, umlaut mark
+			"Ã¬" => "&igrave;", 	#small i, grave accent
+			"Ã­" => "&iacute;", 	#small i, acute accent
+			"Ã®" => "&icirc;", 	#small i, circumflex accent
+			"Ã¯" => "&iuml;", 	#small i, umlaut mark
+			"Ã°" => "&eth;",		#small eth, Icelandic
+			"Ã±" => "&ntilde;", 	#small n, tilde
+			"Ã²" => "&ograve;", 	#small o, grave accent
+			"Ã³" => "&oacute;", 	#small o, acute accent
+			"Ã´" => "&ocirc;", 	#small o, circumflex accent
+			"Ãµ" => "&otilde;", 	#small o, tilde
+			"Ã¶" => "&ouml;", 	#small o, umlaut mark
+			"Ã¸" => "&oslash;", 	#small o, slash
+			"Ã¹" => "&ugrave;", 	#small u, grave accent
+			"Ãº" => "&uacute;", 	#small u, acute accent
+			"Ã»" => "&ucirc;", 	#small u, circumflex accent
+			"Ã¼" => "&uuml;", 	#small u, umlaut mark
+			"Ã½" => "&yacute;", 	#small y, acute accent
+			"Ã¾" => "&thorn;", 	#small thorn, Icelandic
+			"Ã¿" => "&yuml;"		#small y, umlaut mark
 );
 
 function __encode($var){
@@ -178,16 +178,16 @@ function convertStatus ($status) {
 function getStatus ($statusKey) {
 
   $arrStatus = array(0=>__encode("A venir"),
-  1=>__encode("1ère mi-temps"),
+  1=>__encode("1Ã¨re mi-temps"),
   2=>__encode("Mi-temps"),
-  3=>__encode("2ème période"),
+  3=>__encode("2Ã¨me pÃ©riode"),
   4=>__encode("Mi-temps avant prolongation"),
-  5=>__encode("1ère prolongation"),
+  5=>__encode("1Ã¨re prolongation"),
   6=>__encode("Mi-temps prolongation"),
-  7=>__encode("2ème prolongation"),
+  7=>__encode("2Ã¨me prolongation"),
   8=>__encode("Mi-temps avant tir au but"),
   9=>__encode("Tir au but"),
-  10=>__encode("Terminé"));
+  10=>__encode("TerminÃ©"));
 
 
   if (array_key_exists($statusKey,$arrStatus))
@@ -247,12 +247,12 @@ function ConvertLfpKeyToP4F($lfpKey) {
    Paris Saint-Germain -> 500247 -> 48
    AS Saint-Etienne -> 500225 -> 41
    Stade Rennais FC -> 500015 -> 42
-   LOSC Lille Métropole -> 500054 -> 43
-   FC Sochaux-Montbéliard -> 500303 -> 46
+   LOSC Lille MÃ©tropole -> 500054 -> 43
+   FC Sochaux-MontbÃ©liard -> 500303 -> 46
    AC Arles Avignon -> 500116 -> 53
    Toulouse FC -> 524391 -> 47
    Stade Brestois 29 -> 500024 -> 55
-   Montpellier Hérault SC -> 500099 -> 40
+   Montpellier HÃ©rault SC -> 500099 -> 40
    Girondins de Bordeaux -> 500211 -> 44
    AC Ajaccio -> 500765 -> 56
    Dijon FCO -> 547450 -> 57
@@ -315,6 +315,51 @@ function ConvertLfpKeyToP4F($lfpKey) {
   }
 }
 
+function ConvertUefaKeyToP4F($uefaKey) {
+  /*
+   *      Pologne -> 109 -> 59
+   GrÃ¨ce -> 49 -> 8
+   Russie -> 57451 -> 60
+   RÃ©piblique TchÃ¨que -> 58837 -> 61
+   Pays-Bas -> 95 -> 17
+   Danemark -> 35 -> 18
+   Allemagne -> 47-> 13
+   Portugal -> 110 -> 28
+   Espagne -> 122 -> 29
+   Italie -> 66 -> 21
+   RÃ©publique d'irlande -> 64 -> 62
+   Croatie -> 56370 -> 63
+   Ukraine -> 57166 -> 64
+   SuÃ¨de -> 127 -> 65
+   France -> 43 -> 1
+   Angleterre -> 39 -> 9
+   */
+
+  $arrUefaKeys = array(109 => 59,
+  49 => 8,
+  57451 => 60,
+  58837 => 61,
+  95 => 17,
+  35 => 18,
+  47 => 13,
+  110 => 28,
+  122 => 29,
+  66 => 21,
+  64 => 62,
+  56370 => 63,
+  57166 => 64,
+  127 => 65,
+  43 => 1,
+  39 => 9);
+
+  if (array_key_exists($uefaKey,$arrUefaKeys)) {
+    return $arrUefaKeys[$uefaKey];
+  }
+  else {
+    return 0;
+  }
+}
+
 function ConvertFrenchDateToUniversalDate ($strDate) {
 
   $findValues = array('Lundi ',
@@ -325,17 +370,17 @@ function ConvertFrenchDateToUniversalDate ($strDate) {
                       'Samedi ',
                       'Dimanche ',
                       ' janvier ',
-                      ' février ',
+                      ' fÃ©vrier ',
                       ' mars ',
                       ' avril ',
                       ' mai ',
                       ' juin ',
                       ' juillet ',
-                      ' août ',
+                      ' aoÃ»t ',
                       ' septembre ',
                       ' octobre ',
                       ' novembre ',
-                      ' décembre ');
+                      ' dÃ©cembre ');
   $replaceValues = array('','','','','','','',
                          '/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/','/10/','/11/','/12/');
 
@@ -400,7 +445,7 @@ function writeJsonResponse ($arr){
   header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
   header("Cache-Control: no-cache, must-revalidate" );
   header("Pragma: no-cache" );
-  header("Content-type: text/x-json");
+  header("Content-type: application/json; charset=utf8");
   if (WITH_PERF_AND_ERROR) {
     $arr["perfAndError"] = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
   }
@@ -459,8 +504,10 @@ function writePerfInfo () {
 $_arrScripts = array();
 function AddScriptReference ($name) {
   global $_arrScripts;
+  global $_themePath;
   $jsScriptTemplate = '<script type="text/javascript" src="' . ROOT_SITE . '/js/%s.js"></script>';
-  $cssScriptTemplate = '<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/%s.css" />';
+  $jsScriptTemplateWithTheme = '<script type="text/javascript" src="' . ROOT_SITE .$_themePath . '/js/%s.js"></script>';
+  $cssScriptTemplate = '<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/%s.css" media="all"/>';
 
   if (!array_key_exists($name,$_arrScripts)) {
     switch ($name) {
@@ -474,18 +521,26 @@ function AddScriptReference ($name) {
         $_arrScripts[$name]=$tempScript;
         break;
       case "statistics":
-        $tempScript=sprintf($jsScriptTemplate,"modules/statistics");
+        $tempScript=sprintf($jsScriptTemplateWithTheme,"modules/statistics");
         $tempScript.=sprintf($cssScriptTemplate,"modules/statistics");
         $_arrScripts[$name]=$tempScript;
         break;
       case "ligue1.statistics":
-        $tempScript=sprintf($jsScriptTemplate,"modules/ligue1.statistics");
+        $tempScript=sprintf($jsScriptTemplateWithTheme,"modules/ligue1.statistics");
         $tempScript.=sprintf($cssScriptTemplate,"modules/statistics");
         $_arrScripts[$name]=$tempScript;
         break;
       case "p4f.statistics":
-        $tempScript=sprintf($jsScriptTemplate,"modules/p4f.statistics");
+        $tempScript=sprintf($jsScriptTemplateWithTheme,"modules/p4f.statistics");
         $tempScript.=sprintf($cssScriptTemplate,"modules/statistics");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "account.change.password":
+        $tempScript=sprintf($cssScriptTemplate,"modules/account.change.password");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "home":
+        $tempScript=sprintf($cssScriptTemplate,"modules/home");
         $_arrScripts[$name]=$tempScript;
         break;
       case "forecasts.agenda":
@@ -502,9 +557,23 @@ function AddScriptReference ($name) {
         $_arrScripts[$name]=$tempScript;
         break;
       case "new.home.connected":
-        $tempScript=sprintf($cssScriptTemplate,"ranking");
+        $tempScript=sprintf($cssScriptTemplate,"modules/home.connected");
+        $tempScript.=sprintf($cssScriptTemplate,"ranking");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "ranking.group":
+        $tempScript=sprintf($cssScriptTemplate,"modules/ranking.group");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "ranking.teams.competition":
+        $tempScript=sprintf($cssScriptTemplate,"modules/ranking.teams.competition");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "match.stats.detail":
+        $tempScript=sprintf($cssScriptTemplate,"match.stats.detail");
+        $_arrScripts[$name]=$tempScript;
+        break;
+
         //Components
       case "flexigrid":
         $tempScript=sprintf($jsScriptTemplate,"flexigrid");
@@ -578,6 +647,11 @@ function AddScriptReference ($name) {
         break;
       case "color":
         $tempScript=sprintf($jsScriptTemplate,"jquery.colorBlend.pack");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "ibutton":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.ibutton");
+        $tempScript.=sprintf($cssScriptTemplate,"jquery.ibutton.p4f");
         $_arrScripts[$name]=$tempScript;
         break;
     }
@@ -683,5 +757,11 @@ function getBrowser()
 //$yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
 //print_r($yourbrowser);
 
+function startswith($hay, $needle) {
+  return substr($hay, 0, strlen($needle)) === $needle;
+}
 
+function endswith($hay, $needle) {
+  return substr($hay, -strlen($needle)) === $needle;
+}
 ?>

@@ -33,25 +33,22 @@ if ($_SERVER['SERVER_NAME']=="localhost") {
 ?>
 Dev -
 <?php }?>
-Pronostics4fun - Ligue 1</title>
+Pronostics4fun</title>
 
-<meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnés de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journées de la ligue 1.
-Des classements et des statistiques sont établis à la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
+<meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnï¿½s de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journï¿½es de la ligue 1.
+Des classements et des statistiques sont ï¿½tablis ï¿½ la fin de chaque journï¿½e de championnat. (Classement gï¿½nï¿½ral, Classement par journï¿½e, ...).">
 <meta name="keywords" content="p4f, pronostics 4 fun, pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
 <link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
-<link href="<?php echo ROOT_SITE; ?>/css/default.css" type="text/css" rel="stylesheet"/>
-<link type="text/css" href="<?php echo ROOT_SITE; ?>/css/jixedbar.themes/rave/jx.stylesheet.css" rel="stylesheet" />
+<link href="<?php echo ROOT_SITE.$_themePath; ?>/css/default.css" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jmpopups.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.log.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.text-overflow.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.cookies.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.requireScript.js"></script>
-<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-ui-1.8.16.custom.min.js"></script>
-<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE;?>/css/custom-theme/jquery-ui-1.8.16.custom.css' />
-
-
+<script type="text/javascript" src="<?php echo ROOT_SITE.$_themePath ; ?>/js/jquery-ui.custom.min.js"></script>
+<link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/custom-theme/jquery-ui.custom.css' />
 
 <?php
 if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
@@ -84,7 +81,7 @@ if ($_SERVER['SERVER_NAME']=="localhost") {
 
 if ($_isAuthenticated)
 {
-  echo '<h2><span style="font-size:14px;padding-right: 30px;">Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> ' . __encode("Déconnexion") . '</a></span></h2>';
+  echo '<h2><span style="font-size:14px;padding-right: 30px;">Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> DÃ©connexion</a></span></h2>';
 }
 else
 {
@@ -115,14 +112,14 @@ else
   if ($_databaseObject -> num_rows()>0) {
 
 ?>
-              	<li id="Results"><a href="index.php?Page=2" ><?php echo __encode("Résultats"); ?></a></li>
+              	<li id="Results"><a href="index.php?Page=2" >RÃ©sultats</a></li>
               	<li id="Ranking"><a href="index.php?Page=3" >Classements</a></li>
               	<li id="Statistics"><a href="index.php?Page=6" >Statistiques</a></li>
 
 <?php
   } else {
 ?>
-              	<li id="Results" class="disabled" title="Non disponible!"><a href="javascript:void()" ><?php echo __encode("Résultats"); ?></a></li>
+              	<li id="Results" class="disabled" title="Non disponible!"><a href="javascript:void()" >RÃ©sultats</a></li>
               	<li id="Ranking" class="disabled" title="Non disponible!"> <a href="javascript:void()" >Classements</a></li>
               	<li id="Statistics" class="disabled" title="Non disponible!"><a href="javascript:void()" >Statistiques</a></li>
 
@@ -160,7 +157,7 @@ else
           echo '</li>';
         }
 ?>
-              	<li class="navRight" id="Rules"><a href="javascript:void(0);" ><?php echo __encode("Règlements"); ?></a></li>
+              	<li class="navRight" id="Rules"><a href="javascript:void(0);" ><?php echo __encode("RÃ¨glements"); ?></a></li>
               	<li class="navRight" id="MyAccount"><a href="javascript:void(0);" >Mon compte</a></li>
 
     		    <?php
@@ -215,16 +212,12 @@ else
 	</div>
 </div>
 
-<div id="WaitingLayer" style="display:none;position: absolute; top: 380px; left: 500px; width: 350px; height: 40px; text-align:center;padding-top:20px;	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
-	font: bold 11px/ normal Tahoma, Verdana;z-Index: 99;
-	"><img style="padding-right:10px;" src="<?php echo ROOT_SITE;?>/images/wait.gif"></img>Veuillez patienter pendant le chargement...</div>
+<div id="WaitingLayer" style="	"><img style="padding-right:10px;" src="<?php echo ROOT_SITE;?>/images/wait.gif"></img>Veuillez patienter pendant le chargement...</div>
 </body>
 <script>
 $(function() {
 	$.setupJMPopups({
-		screenLockerBackground: "#D7E1F6",
+		screenLockerBackground: "#CCCCCC",
 		screenLockerOpacity: "0.7"
 	});
 
@@ -267,7 +260,7 @@ $(function() {
 			url: "submodule.loader.php?SubModule=2"
 		});
 		<?php } else { ?>
-			alert('Les inscriptions sont momentanement fermées.');
+			alert('Les inscriptions sont momentanement fermï¿½es.');
 		 <?php }?>
 
 	});
@@ -384,13 +377,13 @@ switch ($_currentPage)
   if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
     echo(envapi_get_html_for_reg_user('44429-vgUMa3nty16XWIxxSJmZlcu3sErngC2o', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
   } else {
-    echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', utf8_encode(__decode($_authorisation->getConnectedUser())), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
+    echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', __decode($_authorisation->getConnectedUser()), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
   }
 ?>
 <!-- Envolve Chat -->
 <script type="text/javascript">
 var envoOptions={enableSharing : false,enableTranslation : false,enableNewChatButton : false,
-		strings : {Everyone: "Tout le monde", TypeAStatusMessageHere: "<?php echo utf8_encode("Message personnalisé"); ?>",NoOneIsHere: "<?php echo utf8_encode("Aucun membre connecté");?>", Everyone: "Membres", PeopleListHeaderText: "Tchatter avec les autres membres",PeopleListTitlePlural : " <?php echo utf8_encode("membres connectés")?>", PeopleListTitleSingular : " <?php echo utf8_encode("membre connecté");?>"}};
+		strings : {Everyone: "Tout le monde", TypeAStatusMessageHere: "<?php echo "Message personnalisÃ©"; ?>",NoOneIsHere: "<?php echo "Aucun membre connectÃ©";?>", Everyone: "Membres", PeopleListHeaderText: "Tchatter avec les autres membres",PeopleListTitlePlural : " <?php echo "membres connectÃ©s";?>", PeopleListTitleSingular : " <?php echo "membre connectÃ©";?>"}};
 </script>
 <?php } ?>
 

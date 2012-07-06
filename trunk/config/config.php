@@ -13,7 +13,6 @@ if ($_SERVER['SERVER_NAME']=="localhost" || ($posLocalAddress!="" && $posLocalAd
   DEFINE ('SQL_HOST','127.0.0.1');
   DEFINE ('ROOT_SITE', "http://".$_SERVER['SERVER_NAME']."/".$pathUrl[1]);
   DEFINE ('REFRESH_LIVE_FROM_SERVER','0');
-  DEFINE ('COMPETITION','3');
   DEFINE ('SHIFTED_HOUR','0');
   DEFINE ('WITH_PERF_AND_ERROR',true);
   DEFINE ('EXTERNAL_WEB_SITE','www.lfp.fr');
@@ -28,7 +27,6 @@ if ($_SERVER['SERVER_NAME']=="localhost" || ($posLocalAddress!="" && $posLocalAd
   DEFINE ('SQL_HOST','mysql51-39.perso');
   DEFINE ('ROOT_SITE', "http://".$_SERVER['SERVER_NAME']);
   DEFINE ('REFRESH_LIVE_FROM_SERVER','0');
-  DEFINE ('COMPETITION','3');
   DEFINE ('SHIFTED_HOUR','0');
   DEFINE ('WITH_PERF_AND_ERROR',false);
   DEFINE ('EXTERNAL_WEB_SITE','www.lfp.fr');

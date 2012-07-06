@@ -45,8 +45,16 @@ if ($_isAuthenticated)
           include("modules/ranking.wins.php");
           break;
         case "Teams":
-          require_once("lib/ranking.php");
-          include("modules/ranking.teams.competition.php");
+          switch ($_competitionType) {
+            case 1:
+              require_once("lib/ranking.php");
+              include("modules/ranking.teams.competition.php");
+              break;
+            case 2:
+            case 3:
+              include("modules/ranking.competition.php");
+              break;
+          }
           break;
         case "Scorer":
           include("modules/ranking.top.scorer.php");
@@ -149,7 +157,7 @@ SELECT 1
           $mode=$_GET['Mode'];
         }
         else {
-          $mode="Reminder";
+          $mode="Matches";
         }
 
         switch ($mode) {

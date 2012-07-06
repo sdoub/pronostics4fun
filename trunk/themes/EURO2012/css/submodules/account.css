@@ -1,0 +1,181 @@
+@charset "utf-8";
+
+#wrapper {
+	background: url('../../images/accountbg.png') no-repeat scroll center
+		top #465723;
+	border: solid 1px #fff;
+	margin: 0 auto;
+	width: 455px;
+	_width: 505px;
+	height: 450px;
+	text-align: left;
+	padding: 25px;
+}
+
+#wrapper li {
+	list-style: none outside none;
+}
+
+#wrapper a { /*
+	text-decoration: none;
+	color: #000;
+	font-size:9px;
+	font-weight:normal;*/
+	background: #1B3D1C;
+	border: solid 1px #BECDB6;
+	color: #FFFFFF;
+	font: bold 9px/normal Tahoma, Verdana;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 19px;
+	padding-left: 19px;
+	text-decoration: none;
+	text-align: center;
+}
+
+#wrapper a:hover { /*color: #000;
+	font-weight:bold;*/
+	color: #000;
+	font-weight: bold;
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+#wrapper a.apply {
+	background: #1B3D1C;
+	border: solid 1px #BECDB6;
+	color: #FFFFFF;
+	font: bold 9px/normal Tahoma, Verdana;
+	padding: 4px;
+	text-decoration: none;
+}
+
+#wrapper a.apply:hover {
+	color: #000;
+	font-weight: bold;
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+#wrapper form {
+	/* background: url('../../images/accountbg.png') no-repeat scroll center top #465723; */
+	padding: 15px;
+	margin: 0;
+	height: 30px;
+}
+
+#msg {
+	text-align: center;
+	color: #FFFFFF;
+	padding: 0px 0 3px 0;
+}
+
+#wrapper label.title {
+	color: #FFFFFF;
+	font-weight: bold;
+	display: block;
+	font-size: 11px;
+}
+
+#wrapper label.titleCheckbox {
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+#wrapper label.read { /* background: #b3a58f; */
+	border: solid 1px #BECDB6;
+	padding: 3px;
+	margin: 4px 0px 4px 0px;
+	width: 87%;
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	font-weight: normal;
+}
+
+#frmAccount .textfield {
+	background: #b3a58f;
+	border: solid 1px #BECDB6;
+	padding: 3px;
+	margin: 4px 0px 4px 0px;
+	width: 90%;
+	text-align: left;
+}
+
+#frmAccount .textfield:hover,#frmAccount .textfield:focus {
+	background: #1B3D1C;
+	border: solid 1px #1B3D1C;
+	color: #fff;
+}
+
+#frmAccount .buttonfield {
+	background: #1B3D1C;
+	border: solid 1px #BECDB6;
+	color: #FFFFFF;
+	font: bold 11px/normal Tahoma, Verdana;
+	margin-top: 10px;
+	padding: 4px;
+	float: right;
+}
+
+#frmAccount .buttonfield:hover,#frmAccount .buttonfield:focus {
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+#wait {
+	text-align: center;
+	font-size: 10px;
+	background: #465723;
+	color: #fff;
+	padding: 3px 25px 3px 25px;
+	width: 455px;
+	_width: 505px;
+	background: #465723;
+}
+
+#footer {
+	padding: 10px 0px;
+	width: 100%;
+	text-align: center;
+	font: normal 10px/normal arial;
+	color: #666;
+}
+
+.avatarContainer {
+	float:right;
+	width:100px;
+	padding-top:44px;
+}
+.avatarContainer div {
+	width: 82px;
+	height: 82px;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+#accountDiv {
+	float: left;
+	width:300px;
+	padding-left:20px;
+	padding-top:0px;
+}
+
+#accountAvatarDiv {
+	display:none;
+	float: left;
+	width:300px;
+	padding-left:20px;
+	padding-top:30px;
+	}
+#accountAvatarDiv div.avatarDiv{	
+	height: 350px; 
+	margin-top: 20px; 
+	width: 300px;
+	overflow:scroll;
+}

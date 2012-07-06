@@ -1,99 +1,8 @@
-<style>
-.day {
-	font-size: 14px;
-	text-align: center;
-	background-color: #6D8AA8;
-	color: #FFFFFF;
-	font-weight: bold;
-}
+<?php
+AddScriptReference("ranking.teams.competition");
+WriteScripts();
 
-.match {
-	font-size: 12px;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-.teamRank
-{
-background: #D7E1F6; 
-color: #FFF; 
-text-align: center
-}
-
-.equipeRankUp {
-	font-size: 12px;
-	color: #365F89;
-	
-	font-weight: bold;
-}
-.equipeRankUp .teamRank
-{
-background: #9AC100; 
-color: #FFF; 
-text-align: center
-}
-
-.equipeRank {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-.equipeRank .teamRank
-{
-background: #52758E; 
-color: #FFF; 
-text-align: center
-}
-
-.equipeRankDown {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-.equipeRankDown .teamRank
-{
-background: #DE0000; 
-color: #FFF; 
-text-align: center
-}
-
-
-.teamAway {
-	text-align: left;
-	width: 150px;
-}
-
-.teamFlag {
-	width: 30px;
-}
-
-.teamFlag img {
-	width: 30px;
-	height: 30px;
-}
-
-.score {
-	width: 80px;
-	text-align: center;
-}
-
-.teamHome {
-	width: 150px;
-	text-align: right;
-}
-
-.time {
-	width: 60px;
-	padding-left: 20px;
-}
-
-
-</style>
+?>
 <div id="mainCol">
 
 <center>
@@ -127,7 +36,7 @@ $arrTeams = GetTeamsRanking();
 	  }
 	  else if ($head<=4) {
 	    $htmlGrid .='<tr class="equipeRankUp">';
-	  } 
+	  }
 	  else {
 	    $htmlGrid .='<tr class="equipeRank">';
 	  }
@@ -150,12 +59,12 @@ $arrTeams = GetTeamsRanking();
 </table>
 </div>
 <div style="font-size:9px;color:#FFFFFF;">
-<?php 
-echo __encode("Sous réserve d'homologation par la Commisssion d'Organisation des Compétitions de la LFP. 
-<br/>En cas d'égalité de points, le classement des clubs ex-aequo est déterminé par la différence entre les buts marqués 
-<br/>et les buts concédés par chacun d'eux au cours des matches joués pour l'ensemble de la division.
-<br/>En cas de nouvelle égalité, avantage sera donné au club ayant marqué le plus grand nombre de buts.
-<br/>En cas de nouvelle égalité, les clubs seront départagés à la différence de buts lors des rencontres disputées entre eux.");
+<?php
+echo __encode("Sous rÃ©serve d'homologation par la Commisssion d'Organisation des CompÃ©titions de la LFP.
+<br/>En cas d'Ã©galitÃ© de points, le classement des clubs ex-aequo est dÃ©terminÃ© par la diffÃ©rence entre les buts marquÃ©s
+<br/>et les buts concÃ©dÃ©s par chacun d'eux au cours des matches jouÃ©s pour l'ensemble de la division.
+<br/>En cas de nouvelle Ã©galitÃ©, avantage sera donnÃ© au club ayant marquÃ© le plus grand nombre de buts.
+<br/>En cas de nouvelle Ã©galitÃ©, les clubs seront dÃ©partagÃ©s Ã  la diffÃ©rence de buts lors des rencontres disputÃ©es entre eux.");
 ?>
 </div>
 </center>
@@ -167,7 +76,7 @@ $(document).ready(function() {
 
 	//$("#playerDetail li:even").css("background-color", "#D7E1F6");
 	//$("#playerDetail li:even").css("color","#365F89");
-		
+
 
 });
 

@@ -7,7 +7,7 @@ switch ($_GET['SubModule'])
     $submoduleName = "login";
     $additionalJSorCssScript  = '<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validate.js"></script>
     							<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validation.functions.js"></script>
-            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.validate.css?ver=1.0" />';
+            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.validate.css?ver=1.0" />';
 
     $additionalScripts = '<script>
 	$(document).ready(function() {
@@ -20,7 +20,7 @@ switch ($_GET['SubModule'])
     $submoduleName = "register";
     $additionalJSorCssScript = '<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validate.js"></script>
     							<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validation.functions.js"></script>
-            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.validate.css?ver=1.0" />';
+            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.validate.css?ver=1.0" />';
 
     $additionalScripts = '<script>
 	$(function() {
@@ -57,7 +57,7 @@ switch ($_GET['SubModule'])
     $submoduleName = "contact";
     $additionalJSorCssScript = '<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validate.js"></script>
     							<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validation.functions.js"></script>
-            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.validate.css" />';
+            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.validate.css" />';
     $additionalScripts = '<script>
 	$(function() {
 		window.setTimeout("getContact()",500);
@@ -80,13 +80,13 @@ switch ($_GET['SubModule'])
     $submoduleName = "account";
     $additionalJSorCssScript = '<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validate.js"></script>
     							<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validation.functions.js"></script>
-            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.validate.css" />
-            					<link href="' . ROOT_SITE . '/css/fileuploader.css" rel="stylesheet" type="text/css">
+            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.validate.css" />
+            					<link href="' . ROOT_SITE .$_themePath . '/css/fileuploader.css" rel="stylesheet" type="text/css">
     							<script src="' . ROOT_SITE . '/js/fileuploader.js" type="text/javascript"></script>
             					<script src="' . ROOT_SITE . '/js/jquery.Jcrop.js"></script>
-								<link rel="stylesheet" href="' . ROOT_SITE . '/css/jquery.Jcrop.css" type="text/css" />
+								<link rel="stylesheet" href="' . ROOT_SITE .$_themePath . '/css/jquery.Jcrop.css" type="text/css" />
 								<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.ibutton.js"></script>
-								<link type="text/css" href="' . ROOT_SITE . '/css/jquery.ibutton.p4f.css" rel="stylesheet" media="all" />
+								<link type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.ibutton.p4f.css" rel="stylesheet" media="all" />
 								';
 
     $additionalScripts = '<script>
@@ -129,7 +129,7 @@ $(function() {
     $submoduleName = "manual.forecast";
     $additionalJSorCssScript = '<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validate.js"></script>
     							<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.validation.functions.js"></script>
-            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.validate.css" />
+            					<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.validate.css" />
 							    <script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.numberinput.js"></script>';
 
 
@@ -189,7 +189,7 @@ $(function() {
 //    if ($_browserInfo['name']==IEBROWSER) {
 //      $submoduleName = "vote";
 //      $additionalJSorCssScript = '<script type="text/javascript" src="' . ROOT_SITE . '/js/jquery.ui.stars.js"></script>
-//    <link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.ui.stars.css" />';
+//    <link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.ui.stars.css" />';
 //
 //      $additionalScripts = '<script>
 //    $(function() {
@@ -199,7 +199,7 @@ $(function() {
 //	';
 //    } else {
       $submoduleName = "vote";
-      $additionalJSorCssScript = '<link rel="stylesheet" type="text/css" href="' . ROOT_SITE . '/css/jquery.ui.stars.css" />
+      $additionalJSorCssScript = '<link rel="stylesheet" type="text/css" href="' . ROOT_SITE .$_themePath . '/css/jquery.ui.stars.css" />
       ';
 
       $additionalScripts = '<script>
@@ -222,9 +222,9 @@ $(function() {
 
 <script
 	type="text/javascript"
-	src="<?php echo ROOT_SITE; ?>/js/submodules/<?php echo $submoduleName; ?>.js?ver=1.6"></script>
+	src="<?php echo ROOT_SITE.$_themePath ; ?>/js/submodules/<?php echo $submoduleName; ?>.js?ver=1.6"></script>
 <link
-	href="<?php echo ROOT_SITE; ?>/css/submodules/<?php echo $submoduleName; ?>.css?ver=1.4"
+	href="<?php echo ROOT_SITE.$_themePath ; ?>/css/submodules/<?php echo $submoduleName; ?>.css?ver=1.4"
 	type="text/css" rel="stylesheet" />
 
 <?php print($additionalJSorCssScript); ?>

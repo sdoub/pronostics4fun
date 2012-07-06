@@ -1,4 +1,3 @@
-#!/usr/local/bin/php
 <?php
 include_once(dirname(__FILE__)."/begin.file.php");
 include_once(dirname(__FILE__). "/lib/match.php");
@@ -22,6 +21,10 @@ if ($rowSet["LastStatus"]!=1 || $rowSet["LastExecution"]>60) {
     $days="- INTERVAL ".$_GET["Days"]." DAY";
   }
 
+  $getData=true;
+  if (isset($_GET["DontGetData"])) {
+    $getData=false;
+  }
   $currentTime = time();
 
   if ($days){
@@ -56,48 +59,62 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   $_databaseObject->close();
 
   $_queries = array();
-  $totaltime = getElapsedTime();
-  $http = Http::connect("pronostics4fun.com", 80);
-  $http->silentMode();
-  foreach ($rowsSet as $rowSet)
-  {
-    $parameter = array();
-    $parameter["TeamHomeKey"] = $rowSet["TeamHomeKey"];
-    $parameter["TeamAwayKey"] = $rowSet["TeamAwayKey"];
-    $parameter["ExternalKey"] = $rowSet["ExternalKey"];
-    $parameter["MatchKey"] = $rowSet["MatchKey"];
-    $parameter["Live"] = 1;
-    $http->post('refresh.match.php', $parameter);
-  }
-
-  $results = $http ->run();
-  //print_r($results);
-
-  $_queries = array();
-  foreach ($results as $result) {
-
-    $queries = json_decode(trim($result));
-    foreach ($queries->Queries as $query)
+  if ($getData) {
+    $totaltime = getElapsedTime();
+    $http = Http::connect("pronostics4fun.com", 80);
+    $http->silentMode();
+    foreach ($rowsSet as $rowSet)
     {
-      $_queries[] = $query;
+      $parameter = array();
+      $parameter["TeamHomeKey"] = $rowSet["TeamHomeKey"];
+      $parameter["TeamAwayKey"] = $rowSet["TeamAwayKey"];
+      $parameter["ExternalKey"] = $rowSet["ExternalKey"];
+      $parameter["MatchKey"] = $rowSet["MatchKey"];
+      $parameter["Live"] = 1;
+      $http->post('refresh.match.php', $parameter);
     }
+
+    $results = $http ->run();
+    //print_r($results);
+
+    $_queries = array();
+    foreach ($results as $result) {
+      $queries = json_decode(trim($result));
+      foreach ($queries->Queries as $query)
+      {
+        $_queries[] = $query;
+      }
+    }
+
+
+
+    $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
+    $_databaseObject->query( "SET NAMES utf8");
+    foreach ($_queries as $query) {
+      //print($query);
+      $_databaseObject -> queryPerf ($query , "Execute query");
+    }
+    //$_databaseObject->close();
+  } else {
+    $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
+    $_databaseObject->query( "SET NAMES utf8");
   }
-
-
-  $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
-  foreach ($_queries as $query) {
-    //print($query);
-    $_databaseObject -> queryPerf ($query , "Execute query");
-  }
-  //$_databaseObject->close();
-
   foreach ($rowsSet as $rowSet)
   {
-    $_logInfo .= "Refresh match with key ".$rowSet["MatchKey"] ;
+    $_logInfo .= "<br/>Refresh match with key ".$rowSet["MatchKey"] ;
     try {
 
-      ComputeScore($rowSet["MatchKey"]);
-      ComputeGroupScore($rowSet["GroupKey"]);
+      switch ($_competitionType) {
+        case 3:
+          ComputeScore($rowSet["MatchKey"]);
+          ComputeCoupeGroupScore($rowSet["GroupKey"]);
+          break;
+        default:
+          ComputeScore($rowSet["MatchKey"]);
+          ComputeGroupScore($rowSet["GroupKey"]);
+          break;
+      }
+
       CalculateRanking($rowSet["ScheduleDate"]);
       CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
 
@@ -118,7 +135,15 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       $resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
 
       while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
-        ComputeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
+        switch ($_competitionType) {
+          case 3:
+            ComputeCoupeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
+            break;
+          default:
+            ComputeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
+            break;
+        }
+
         CalculateGroupRankingState($_groupKey,$rowSetState["StateDate"]);
       }
 
@@ -152,7 +177,15 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
                  AND EXISTS (SELECT 1 FROM groups WHERE IsCompleted=1 AND groups.PrimaryKey=" . $rowSet["GroupKey"] . ")";
         $_databaseObject->queryPerf($query,"update group");
 
-        ComputeGroupScore($rowSet["GroupKey"]);
+        switch ($_competitionType) {
+          case 3:
+            ComputeCoupeGroupScore($rowSet["GroupKey"]);
+            break;
+          default:
+            ComputeGroupScore($rowSet["GroupKey"]);
+            break;
+        }
+
         CalculateRanking($rowSet["ScheduleDate"]);
         CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
 
@@ -167,10 +200,10 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   }
 
   $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
-
+$arr["Queries"]=$_queries;
   $totaltime = getElapsedTime();
   //$_logInfo .= implode(',',$arr["errorLog"]);
-  echo json_encode($arr);
+  writeJsonResponse($arr);
   $_logInfo .= "This page loaded in $totaltime seconds.";
   if (count($arr["errorLog"])>0) {
     if ($arr["errorLog"]!="") {
@@ -190,12 +223,12 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   //      $_logInfo .= $script_tz;
   //    }
 
-  echo $_logInfo;
+  //echo $_logInfo;
 
   $updateQuery = "UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='" .str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($_logInfo))))."' WHERE JobName='$_jobName'";
   $_databaseObject -> queryPerf ($updateQuery , "Update cronjob information");
 } else {
-  echo __encode("Un refresh est déjà en cours!");
+  echo __encode("Un refresh est dÃ©jÃ  en cours!");
 }
 require_once(dirname(__FILE__)."/end.file.php");
 ?>

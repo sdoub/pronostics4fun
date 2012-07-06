@@ -2,90 +2,7 @@
 
 $playerKey = $_GET["playerKey"];
 $line ="1-;";
-$content ='<style>
-.day {
-	font-size: 14px;
-	text-align: center;
-	background-color: #6D8AA8;
-	color: #FFF;
-	font-weight: bold;
-	height: 25px;
-}
-
-.match {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: bold;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-.equipeRankUp {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: bold;
-}
-
-.equipeRankDown {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-
-.teamAway {
-	text-align: left;
-	width: 150px;
-}
-
-.teamFlag {
-	width: 30px;
-}
-
-.teamFlag img {
-	width: 30px;
-	height: 30px;
-}
-
-.score {
-	width: 80px;
-	text-align: center;
-}
-
-.teamHome {
-	width: 150px;
-	text-align: right;
-}
-
-.time {
-	width: 60px;
-	padding-left: 20px;
-}
-
-#FixedContent {
-	overflow:auto;
-		width:480px;
-		height:450px;
-}
-
-#FixedContent .var{
-	background-image: url('. ROOT_SITE . '/images/sprite.png);
-	background-repeat: no-repeat;
-	height:25px;
-	width:37px;
-	padding:0px 25px 15px 15px;
-
-}
-
-#FixedContent .eq  { background-position: -13px -263px; }
-#FixedContent .up  { background-position: -15px -315px; }
-#FixedContent .down{ background-position: -14px -366px; }
-
-
-
-</style>';
+$content ='';
 $line.="2-len:".strlen($content).";";
 
 
@@ -260,7 +177,7 @@ $content.='</table></div>';
 $line.="18-len:".strlen($content).";";
 
 $arr["status"] = false;
-$arr["message"] =__encode($content);
+$arr["message"] =$content;
 //$arr["lines"] =$line;
 
 WriteJsonResponse($arr);

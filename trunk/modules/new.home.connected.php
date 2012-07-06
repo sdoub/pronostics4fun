@@ -8,44 +8,7 @@ WriteScripts();
 
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.editinplace.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jHtmlArea-0.7.0.min.js"></script>
-<link rel="Stylesheet" type="text/css" href="<?php echo ROOT_SITE; ?>/css/jHtmlArea.css" />
-
-<style>
-
-#tendancyHidden {
-	background: transparent;
-	/* background-color: #B3D207; */
-	color:#FFFFFF;
-	font-size:10px;
-	font-weight:bold;
-	text-align: center;
-}
-
-#tendancyYes {
-	background: url('<?php echo ROOT_SITE;?>/images/green1px.gif') repeat-x scroll left center transparent;
-	/* background-color: #B3D207; */
-	color:#FFFFFF;
-	font-size:10px;
-	font-weight:bold;
-	text-align: center;
-}
-#tendancyMultiple {
-	background: url('<?php echo ROOT_SITE;?>/images/yellow1px.gif') repeat-x scroll left center transparent;
-	/* background-color: #2B9BC0; */
-	color:#FFFFFF;
-	font-size:10px;
-	font-weight:bold;
-	text-align: center;
-}
-#tendancyNo {
-	background: url('<?php echo ROOT_SITE;?>/images/red1px.gif') repeat-x scroll left center transparent;
-	/* background-color: #EF0000; */
-	color:#FFFFFF;
-	font-size:10px;
-	font-weight:bold;
-	text-align: center;
-}
-</style>
+<link rel="Stylesheet" type="text/css" href="<?php echo ROOT_SITE.$_themePath ; ?>/css/jHtmlArea.css" />
 
 <?php
 $query = "SELECT *, UNIX_TIMESTAMP(surveys.StartDate) UnixStartDate,UNIX_TIMESTAMP(surveys.EndDate) UnixEndDate FROM surveys
@@ -97,7 +60,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	<div id="survey<?php echo $surveyKey;?>" class="flexcroll" style="background:#6D8AA8;height:<?php echo 100+$divHeight;?>px;overflow: auto;margin-top:15px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
 		<p style="padding-top:10px;color:#FFFFFF;">
 		<?php echo __encode($rowSet["Question"]);
-		//__encode("Comme vous le savez probablement, le championnat d'europe des nations commencera le 06 Juin 2012. Au mettre titre que le championnat de Ligue1, voulez-vous donner des pronostics sur cette compÈtition?");
+		//__encode("Comme vous le savez probablement, le championnat d'europe des nations commencera le 06 Juin 2012. Au mettre titre que le championnat de Ligue1, voulez-vous donner des pronostics sur cette comp√©tition?");
 		?></p>
 		<ul>
 		<li>
@@ -197,9 +160,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	</div>
 </div>
 <?php } ?>
-<div id="newsTitle" style="background:url('<?php echo ROOT_SITE; ?>/images/actu.png') no-repeat scroll left top
-		#D7E1F6;height:360px;margin-bottom:30px;_width:920px;">
-<!--  h3 style="text-align:left;color:#365F89;padding-left:25px;padding-top:10px;"><?php echo __encode("ActualitÈ ...");?></h3> -->
+<div id="newsTitle">
 <div>
 <?php if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
 {
@@ -207,76 +168,10 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 <button class="buttonfield" id='AddNews'>Ajouter une news</button>
 <?php } ?>
 &nbsp;</div>
-<div style="font-size:16px;color:#365F89;font-weight:bold;margin-left:140px;margin-top:5px;"><?php echo __encode("Tout ce qui se passe sur Pronostics4Fun ...");?></div>
-<div id="news" class="flexcroll" style="background:#6D8AA8;height:300px;overflow: auto;margin-top:15px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
-<style>
-#newsTitle .buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
-	font: bold 11px/ normal Tahoma, Verdana;
-	margin-top: 10px;
-	padding: 4px;
-	position: absolute;
-	right:46px;
-}
-
-#newsTitle .buttonfield:hover, #newsTitle .buttonfield:focus {
-	background: #000;
-	border: solid 1px #fff;
-	color: #fff;
-	cursor: pointer;
-}
-
-#news ul li.news {
-	border-bottom:1px solid #cccccc;
-	padding-left:10px;
-	padding-bottom:5px;
-	color:#FFFFFF;
-	min-height:50px;
-	_height:50px;
-}
-
-#news ul li.news div.news{
-	padding-top:5px;
-}
-
-#news .newsDate {
-	float:right;
-	border-left:1px solid #D7E1F6;
-	border-bottom:1px solid #D7E1F6;
-    background: #365F89;
-    color: #FFFFFF;
-    font: bold 11px/ normal Tahoma, Verdana;
-}
-
-img.news {
-	width:50px;
-	height:50px;
-	padding-right:10px;
-	float:left;
-}
-
-#news img.avat {
-	width:50px;
-	height:50px;
-	padding-right:10px;
-	float:left;
-}
-
-#forecastsTitle ul li {
-	height:62px;
-	color:#FFFFFF;
-	padding-left:15px;
-	padding-top:8px;
-	background:url('<?php echo ROOT_SITE; ?>/images/forecasts.row.home.png') no-repeat scroll left top transparent;
-
-}
-</style>
+<div id="newsContainer"><?php echo __encode("Tout ce qui se passe sur Pronostics4Fun ...");?></div>
+<div id="news" class="flexcroll">
 <ul id="newsList">
-
 <?php
-
 $query = "SELECT NewsKey, NewsInfos,InfoType, NewsPicture,NewsDate FROM (
 SELECT news.PrimaryKey NewsKey, news.Information NewsInfos,InfoType, '' NewsPicture,UNIX_TIMESTAMP(news.InfoDate) NewsDate
 FROM news
@@ -314,7 +209,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   }
   else {
   	setlocale(LC_TIME, "fr_FR");
-	$newsFormattedDate = strftime("%A %d %B %Y ‡ %H:%M",$rowSet['NewsDate']);
+	$newsFormattedDate = strftime("%A %d %B %Y √† %H:%M",$rowSet['NewsDate']);
     echo "<div class='newsDate' news-key='$playerKey'>";
     echo "Le " . __encode($newsFormattedDate);
     echo "</div>";
@@ -360,12 +255,11 @@ echo "</div>";
 
 </div>
 <div >
-<div id="forecastsTitle" style="float:left;background:url('<?php echo ROOT_SITE; ?>/images/forecasts.home2.png') no-repeat scroll left top
-		#D7E1F6;height:250px;width:450px;margin-bottom:30px;">
-<div style="text-align:left;color:#365F89;top-margin:5px;left-margin:10px;">
-<div style="font-size:16px;text-transform: uppercase;font-weight:bold;margin-left:180px;margin-top:15px;"><?php echo __encode("Pronostics ‡ venir ...");?></div>
+<div id="forecastsTitle">
+<div class="container" >
+	<div class="containerTitle"><?php echo __encode("Pronostics √† venir ...");?></div>
 </div>
-<div class="flexcroll" style="height:180px;width:420px;overflow: auto; margin-top:25px;margin-left:15px;margin-right:15px;margin-bottom:15px;">
+<div class="container2 flexcroll" >
 <ul>
 <?php
 
@@ -396,22 +290,23 @@ ORDER BY groups.DayKey, groups.BeginDate";
 
 
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
-
+if (count($rowsSet)>0) {
+echo "<ul>";
 foreach ($rowsSet as $rowSet)
 {
 
   $status = "";
   if ($rowSet["unixBeginDate"]==0) {
-    $status = __encode("Non programmÈ");
+    $status = __encode("Non programm√©");
   }
   else if ($rowSet["hasStarted"]==1) {
     $status = __encode("En cours ...");
   } else if ($rowSet["RemainingDays"]==0) {
-    $status = __encode("DÈbut aujourd'hui");
+    $status = __encode("D√©but aujourd'hui");
   } else if ($rowSet["RemainingDays"]==1) {
-    $status = __encode("DÈbut demain");
+    $status = __encode("D√©but demain");
   } else {
-    $status = __encode("DÈbut dans ") . $rowSet["RemainingDays"] . " jours";
+    $status = __encode("D√©but dans ") . $rowSet["RemainingDays"] . " jours";
   }
 
   if ($rowSet["unixBeginDate"]==0) {
@@ -426,17 +321,16 @@ foreach ($rowsSet as $rowSet)
       $colorStatus = "#B3D207";
     }
   } else if ($rowSet["ClosedMatch"]>0 && $rowSet["ClosedMatch"]<10) {
-    $groupStatus = __encode("Partiellement fermÈ ");
+    $groupStatus = __encode("Partiellement ferm√© ");
     $colorStatus = "#e09051";
   } else {
-    $groupStatus = __encode("ClÙturÈ ");
+    $groupStatus = __encode("Cl√¥tur√© ");
     $colorStatus = "#f54949";
   }
 
 
   echo '<li style="cursor:pointer;">';
-  echo "<div style='float:right;margin-right:12px;padding-left:3px;padding-right:3px;border-left:1px solid #D7E1F6;border-bottom:1px solid #D7E1F6;
-      	background: #365F89;color: #FFFFFF;font: bold 11px/ normal Tahoma, Verdana;'>";
+  echo "<div class='status'>";
   echo $status;
   echo "</div>";
 
@@ -461,35 +355,29 @@ foreach ($rowsSet as $rowSet)
   echo '<span style="padding-left:10px;">' .  __encode("Pronostics : ") . '</span>
   <span style="color:'.$colorStatus.'">'.$groupStatus.'</span>';
   if ($rowSet["Status"]>0) {
-    echo '<span title="'.__encode("Match pronostiquÈ / Pronostics ouvert").'">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
+    echo '<span title="'.__encode("Match pronostiqu√© / Pronostics ouvert").'">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
   }
   if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2) {
     echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br/>';
   }
   echo '</li>';
 }
-
+echo "</ul>";
+} else {
+if ($_competitionType==3) {
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#1B3D1C;'>La competition est termin√©e !</div>";
+} else {
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est termin√©e !</div>";
+  }
+}
 ?>
 
 </ul>
 </div>
 
 </div>
-<style>
-
-#globalRankingTitle table td {
-width:38px;
-font-size:16px;
-font-weight:bold;
-color:#FFFFFF;
-}
-
-#globalRankingTitle table tr {
-height:38px;
-}
-</style>
 <div id="mod-classements" style="margin-left:0px;float:right;">
-<div id="globalRankingTitle" style="text-align:left;color:#365F89;background:url('<?php echo ROOT_SITE; ?>/images/top5.png') no-repeat scroll left top #D7E1F6;height:250px;width:430px;margin-bottom:30px;">
+<div id="globalRankingTitle">
 <div>&nbsp;</div>
 <div style="font-size:16px;text-transform: uppercase;font-weight:bold;margin-left:110px;margin-top:0px;"><?php echo __encode("Top 5");?></div>
 <div class="node-in" >
@@ -619,7 +507,7 @@ $(document).ready(function() {
 
 								$("textarea.inplace_field").htmlarea(
 									{
-								        css: '<?php echo ROOT_SITE;?>/css/jHtmlArea.Editor.css',
+								        css: '<?php echo ROOT_SITE.$_themePath ;?>/css/jHtmlArea.Editor.css',
 								        toolbar :  [["html"], ["bold", "italic", "underline", "strikethrough", "|", "subscript", "superscript"],
 								        ["increasefontsize", "decreasefontsize"],
 								        ["orderedlist", "unorderedlist"],

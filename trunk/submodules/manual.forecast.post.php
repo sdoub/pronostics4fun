@@ -32,8 +32,8 @@ if($_SERVER['REQUEST_METHOD']=='GET')
               $match["DayKey"] =$day;
               $match["TeamHomeKey"] =$teamHomeKey;
               $match["TeamAwayKey"] =$teamAwayKey;
-              $match["TeamHomeName"] =__encode(utf8_decode($teamHomeName));
-              $match["TeamAwayName"] =__encode(utf8_decode($teamAwayName));
+              $match["TeamHomeName"] =$teamHomeName;
+              $match["TeamAwayName"] =$teamAwayName;
               $match["ScheduleDate"] = $scheduleDate;
               $matches[] =$match;
             }
@@ -60,73 +60,8 @@ if($_SERVER['REQUEST_METHOD']=='GET')
 
 
   $divHeight = 80 + (sizeof($matches)*50);
-  $htmlContent = "<div style='height:" . $divHeight . "px;'> <img src='" .ROOT_SITE ."/images/warning.png' style='height:50px;width:50px;float:left;padding-right:5px;'/> <div style='color:red;font-size:10px;'>Malheureusement le site est actuellement indisponible, néanmoins, afin que vous ne perdiez pas de précieux points, vous pouvez utiliser le formulaire ci-dessous pour donner vos pronostics sur les matchs à venir!<br/>Bon pronostics et désolé pour le désagrément occasioné.</div><div style='text-align: right;color:#000;font-weight:normal;padding-top:10px;font-size:10px;'>L'administrateur de Pronostics4Fun.</div><hr/><form id='frmForecast'><style>
-.day {
-	font-size: 14px;
-	text-align: center;
-	background-color: #6D8AA8;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-.match {
-	font-size: 12px;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-.equipeRankUp {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: bold;
-}
-
-.equipeRankDown {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-
-.teamAway {
-	text-align: left;
-	width: 150px;
-}
-
-.teamFlag {
-	width: 30px;
-}
-
-.teamFlag img {
-	width: 30px;
-	height: 30px;
-}
-
-.score {
-	width: 80px;
-	text-align: center;
-}
-
-.teamHome {
-	width: 150px;
-	text-align: right;
-}
-
-.time0 {
-	width: 60px;
-	padding-left: 20px;
-}
-.time1 {
-	width: 60px;
-	padding-left: 20px;
-	background: url('" . ROOT_SITE . "/images/star_25.png') no-repeat scroll left center transparent;
-
-}
-</style>		<div><label>Veuillez indiquer votre adresse email utilisé sur Pronostics4Fun</label><input
+  $htmlContent = "<div style='height:" . $divHeight . "px;'> <img src='" .ROOT_SITE ."/images/warning.png' style='height:50px;width:50px;float:left;padding-right:5px;'/> <div style='color:red;font-size:10px;'>Malheureusement le site est actuellement indisponible, nï¿½anmoins, afin que vous ne perdiez pas de prï¿½cieux points, vous pouvez utiliser le formulaire ci-dessous pour donner vos pronostics sur les matchs ï¿½ venir!<br/>Bon pronostics et dï¿½solï¿½ pour le dï¿½sagrï¿½ment occasionï¿½.</div><div style='text-align: right;color:#000;font-weight:normal;padding-top:10px;font-size:10px;'>L'administrateur de Pronostics4Fun.</div><hr/><form id='frmForecast'>
+<div><label>Veuillez indiquer votre adresse email utilisï¿½ sur Pronostics4Fun</label><input
 			type='text' class='textfield' id='Email'
 			name='EmailAddress' /></div><table>
 ";
@@ -139,10 +74,10 @@ table {
     if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
     {
       setlocale(LC_TIME, "fr_FR");
-      $scheduleFormattedDate = __encode(strftime("%A %d %B %Y",$value['ScheduleDate']));
+      $scheduleFormattedDate = strftime("%A %d %B %Y",$value['ScheduleDate']);
       $htmlContent.= '<tr class="day"
       	    style="">
-      	  <td colspan="6">' . __encode("Journée") . '&nbsp;' . $value["DayKey"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '</td>';
+      	  <td colspan="6">JournÃ©e&nbsp;' . $value["DayKey"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '</td>';
       $htmlContent.=  '<td colspan="2">&nbsp;</td>
       	</tr>';
     }
@@ -177,7 +112,7 @@ table {
 	value="Envoyer" class="buttonfield" id="btn" name="btn"></div>
   </form></div>';
   $arr["status"] = false;
-  $arr["message"] = __encode($htmlContent);
+  $arr["message"] = $htmlContent;
   $arr["matches"] = $matches;
 }
 else {
@@ -197,72 +132,10 @@ else {
   $htmlbody ='<html><body><div>
   <img src="'. ROOT_SITE.'/images/Logo.png" /><p>';
   $emailAddress = $_POST["EmailAddress"];
-  $emailAddress = strtolower(__encode($emailAddress));
+  $emailAddress = strtolower($emailAddress);
   $queries = array();
 
-  $htmlContent = "<style>
-.day {
-	font-size: 14px;
-	text-align: center;
-	background-color: #6D8AA8;
-	color: #FFFFFF;
-	font-weight: bold;
-}
-
-.match {
-	font-size: 12px;
-	color: #000000;
-	font-weight: bold;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-.equipeRankUp {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: bold;
-}
-
-.equipeRankDown {
-	font-size: 12px;
-	color: #365F89;
-	font-weight: normal;
-}
-
-.teamAway {
-	text-align: left;
-	width: 150px;
-}
-
-.teamFlag {
-	width: 30px;
-}
-
-.teamFlag img {
-	width: 30px;
-	height: 30px;
-}
-
-.score {
-	width: 80px;
-	text-align: center;
-}
-
-.teamHome {
-	width: 150px;
-	text-align: right;
-}
-
-.time0 {
-	width: 60px;
-	padding-left: 20px;
-}
-
-</style><table>
-";
+  $htmlContent = "<table>";
   $scheduleMonth = "00";
   $scheduleDay = "00";
   while (list ($key, $value) = each ($_POST["matches"])) {
@@ -283,24 +156,24 @@ table {
     if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
     {
       setlocale(LC_TIME, "fr_FR");
-      $scheduleFormattedDate = __encode(strftime("%A %d %B %Y",$value['ScheduleDate']));
+      $scheduleFormattedDate = strftime("%A %d %B %Y",$value['ScheduleDate']);
       $htmlContent.= '<tr class="day"
       	    style="">
-      	  <td colspan="6">' . __encode("Journée") . '&nbsp;' . $value["DayKey"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '</td>';
+      	  <td colspan="6">JournÃ©e&nbsp;' . $value["DayKey"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '</td>';
       $htmlContent.=  '<td colspan="2">&nbsp;</td>
       	</tr>';
     }
 
     $htmlContent.= '<tr class="match" day-key="'. $value['DayKey'] .'" team-home-key="' . $value['TeamHomeKey'] . '">
       	  <td class="time0">' . strftime("%H:%M",$value['ScheduleDate']) . '</td>
-      	  <td class="teamHome">' . __encode(utf8_decode($value['TeamHomeName'])) . '</td>
+      	  <td class="teamHome">' . $value['TeamHomeName'] . '</td>
       	  <td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $value['TeamHomeKey'] . '.png" width="30px" height="30px"></img></td>';
     $htmlContent.= '<td ><label class="textfield">' . $value['TeamHomeScore'] . '</label></td>
 		<td ><label class="textfield">' . $value['TeamAwayScore'] . '</label></td>
 			';
 
     $htmlContent.= '<td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $value['TeamAwayKey'] . '.png"></img></td>
-      	  <td class="teamAway">' . __encode(utf8_decode($value['TeamAwayName'])) . '</td>';
+      	  <td class="teamAway">' . $value['TeamAwayName'] . '</td>';
 
     $htmlContent.= '<td nowrap><div style="text-align:center;">';
 
@@ -323,9 +196,9 @@ table {
   </body>
   </html>';
 
-  $cMail->SetBodyHTML(__encode($htmlbody));
+  $cMail->SetBodyHTML($htmlbody);
 
-  $cMail->SetCharset('windows-1252');
+  $cMail->SetCharset('utf8');
   $cMail->SetEncodingBit("8bit");
 
   //$to      = 'contact@pronostics4fun.com';
@@ -342,17 +215,17 @@ table {
     $arr["emailLog"] =$emailResponse;
     $arr["status"] = true;
 
-    $arr["message"] = __encode('<form id="frmForecastValidated">
-<label>Vos pronostics ont été envoyé à contact@pronostics4fun.neti.net, un email vous confirmera qu\'ils ont été mis à jour sur le site.</label>
+    $arr["message"] = '<form id="frmForecastValidated">
+<label>Vos pronostics ont Ã©tÃ© envoyÃ© Ã  contact@pronostics4fun.neti.net, un email vous confirmera qu\'ils ont Ã©tÃ© mis Ã  jour sur le site.</label>
 <div id="footerForecast" ><input type="submit"
 	value="Fermer" class="buttonfield" id="btnClose" name="btnClose"></div>
-</form>');
+</form>';
   }
   else
   {
     $arr["emailLog"] =$emailResponse;
     $arr["status"] = false;
-    $arr["message"] = __encode("Une erreur est survenue durant l'envoi!");
+    $arr["message"] = "Une erreur est survenue durant l'envoi!";
 
   }
   /*  $arr["status"] = false;
@@ -366,12 +239,12 @@ table {
   else {
     $arr["status"] = false;
     $arr["queries"]=$queries;
-    $arr["message"] = __encode("Veuillez vérifier votre adresse email, elle est incorrecte!");
+    $arr["message"] = "Veuillez vÃ©rifier votre adresse email, elle est incorrecte!";
 
   }
 
 }
 
-echo json_encode($arr);
+writeJsonResponse($arr);
 
 ?>
