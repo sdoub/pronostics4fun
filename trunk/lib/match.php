@@ -12,6 +12,7 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
       break;
     case 2:
     case 3:
+    case 5:
       if ($isLive) {
         $urlToGetMatchInfo = "http://" .EXTERNAL_WEB_SITE . "/ligue1/feuille_match/$_externalKey?live=1";
       } else {
@@ -85,7 +86,7 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
       foreach($htmlMatch->find('div.score p.periode') as $item) {
         $matchState=$item->innertext;
         $matchState= trim(substr($matchState,0,strpos($matchState,"<br")));
-        if ($matchState==utf8_encode("Match terminé")) {
+        if ($matchState=="Match terminé") {
           $liveStatus=10;
           $actualTime=90;
         }
@@ -117,7 +118,9 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
     $queries[]=$updateQuery;
 
     foreach($htmlMatch->find('div.#buts ul') as $ulitems) {
-      $isHome=$ulitems->getAttribute('class') == 'club_dom';
+      $class = $ulitems->getAttribute('class');
+      $isHome =stripos($class, 'club_dom') !== false ;
+
       foreach($ulitems->find('li') as $items) {
 
         $liItem = $items->find('span.icon') ;
@@ -145,7 +148,7 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
           $teamPlayer = $items->find('a',0)->plaintext;
 
           switch ($eventType) {
-            case utf8_encode("(Pén)"):
+            case "(Pén)":
               $eventType="2";
               break;
             case "(csc)":
@@ -181,7 +184,9 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
       }
 
       foreach($htmlMatch->find('div.#cartons ul') as $ulitems) {
-        $isHome = $ulitems->getAttribute('class') == 'club_dom';
+
+        $class = $ulitems->getAttribute('class');
+        $isHome =stripos($class, 'club_dom') !== false ;
         foreach($ulitems->find('li') as $items) {
 
           $eventTime = $items->innertext;

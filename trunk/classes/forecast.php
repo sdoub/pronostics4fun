@@ -76,8 +76,7 @@ WHERE MatchKey=$matchKey
         }
         unset($rowSet,$resultSet,$sql);
 
-        setlocale(LC_TIME, "fr_FR");
-        $scheduleFormattedDate = __encode(strftime("%A %d %B %Y - %Hh%M",$this->_matchinfo['ScheduleDate']));
+        $scheduleFormattedDate = utf8_encode(strftime("%A %d %B %Y - %Hh%M",$this->_matchinfo['ScheduleDate']));
 
         $forecastsHomeWidth = $forecastsHome;
         $forecastsDrawWidth = $forecastsDraw;

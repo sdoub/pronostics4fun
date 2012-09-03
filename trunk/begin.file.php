@@ -62,12 +62,14 @@ else
    //header("location:index.php");	//@ redirect
 }
 
+setlocale (LC_TIME, 'fr_FR.utf8','fra');
+
 //TODO: Créer une session pour stocker la session courante
-DEFINE ('COMPETITION','4');
+DEFINE ('COMPETITION','5');
 //TODO: Récupérer l'information de la base de données
-$_themePath = "/themes/EURO2012";
-$_competitionType =3;
-$_competitionName="Euro 2012";
+$_themePath = "/themes/LIGUE1";
+$_competitionType =1;
+$_competitionName="Ligue 1";
 
 //echo $_SESSION['exp_user']['expires'];
 //echo "<br/>";

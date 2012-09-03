@@ -573,7 +573,6 @@ class Authorization
 
           $mail->Send();
           //echo "Message sent to $nickName!<br/>";
-          setlocale(LC_TIME, "fr_FR");
           $currentFormattedDate = strftime("%A %d %B %Y, %H:%M",time());
 
         } catch (phpmailerException $e) {

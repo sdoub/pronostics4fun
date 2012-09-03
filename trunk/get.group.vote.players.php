@@ -18,9 +18,8 @@ echo "<div style='color:#FFFFFF; font-size:11px;'>";
 echo "<ul>";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  setlocale(LC_TIME, "fr_FR");
-  $voteFormattedDate = __encode(strftime("%A %d %B %Y à %H:%M",$rowSet['VoteDate']));
-  echo "<li style='height:16px;padding-left:5px;'><strong>". $rowSet["NickName"] ."</strong>". __encode(" -> validé le ") . $voteFormattedDate . "<br/></li>";
+  $voteFormattedDate = strftime("%A %d %B %Y Ã  %H:%M",$rowSet['VoteDate']);
+  echo "<li style='height:16px;padding-left:5px;'><strong>". $rowSet["NickName"] ."</strong>". " -> validÃ© le " . $voteFormattedDate . "<br/></li>";
 }
 echo "</ul>";
 echo "</div>";

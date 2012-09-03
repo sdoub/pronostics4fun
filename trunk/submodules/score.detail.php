@@ -65,7 +65,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
   {
 
-    setlocale(LC_TIME, "fr_FR");
     $scheduleFormattedDate = strftime("%A %d %B %Y",$rowSet['ScheduleDate']);
 
     $content.= '<tr class="day"

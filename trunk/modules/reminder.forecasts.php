@@ -56,7 +56,6 @@ echo "<input type='text' style='width:700px;' value='" . $emailAddress . "'/>";
 <span
 	style="width:30px;margin-left: 15px; color: FFF; font-weight: bold; vertical-align: top; _vertical-align: middle; padding-top: 10px; padding-right: 3px;">Sujet : </span>
 <input type="text" id="Subject" style="width:700px;" value="<?php
-setlocale(LC_TIME, "fr_FR");
 
 $tomorrowDate = strftime("%A %d %B %Y",time()+86400);
 echo __encode("Pronostics4Fun - Alerte pronostics pour les matchs du ".$tomorrowDate); ?>" />
@@ -67,7 +66,7 @@ echo __encode("Pronostics4Fun - Alerte pronostics pour les matchs du ".$tomorrow
   $emailBody = '<div ><img src="images/Logo.png" ></div><br>';
   $emailBody .= "<p>" . __encode('Bonjour <b>' . $rowSet["NickName"] . '</b>,') . "</p>";
   $emailBody .= "</br>";
-  $emailBody .= "<p>" . __encode('Vous recevez cet email, car le/les match(s) suivant se dérouleront demain, et vous n\'avez pas validé vos pronostics:') . "<br/>";
+  $emailBody .= "<p>" . __encode('Vous recevez cet email, car le/les match(s) suivant se dï¿½rouleront demain, et vous n\'avez pas validï¿½ vos pronostics:') . "<br/>";
   $emailBody .= "<ul>";
   $query2= "SELECT TeamHome.Name TeamHomeName,
 TeamAway.Name TeamAwayName,
@@ -82,15 +81,13 @@ WHERE DATE(matches.ScheduleDate)=(CURDATE()+ INTERVAL 1 DAY)
   $tomorrowDate ="";
   while ($rowSetMF = $_databaseObject -> fetch_assoc ($resultSetMissingForecasts)) {
 
-    setlocale(LC_TIME, "fr_FR");
     $scheduleFormattedDate = strftime("%A %d %B %Y, %H:%M",$rowSetMF['ScheduleDate']);
-    setlocale(LC_TIME, "fr_FR");
     $tomorrowDate = strftime("%A %d %B %Y",$rowSetMF['ScheduleDate']);
 
     $emailBody .= "<li>" . __encode($rowSetMF["TeamHomeName"] . "-" . $rowSetMF["TeamAwayName"] . " -> " . $scheduleFormattedDate . "</li>");
   }
   $emailBody .= "</ul></p>";
-  $emailBody .= __encode("<p>Dépêchez-vous de vous rendre sur <a href='" . ROOT_SITE . "/'>" . ROOT_SITE . "</a> pour saisir vos pronostics!");
+  $emailBody .= __encode("<p>Dï¿½pï¿½chez-vous de vous rendre sur <a href='" . ROOT_SITE . "/'>" . ROOT_SITE . "</a> pour saisir vos pronostics!");
   $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
   $emailBody .= "</body>";
 

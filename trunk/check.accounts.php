@@ -8,7 +8,7 @@ $resultSet = $_databaseObject -> queryPerf ($query, "Check number of account ena
 $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
 $activeAccounts = $rowSet["NbrOfAccount"];
 
-$query= "UPDATE players SET IsEnabled=0 WHERE LastConnection <= CURDATE()-INTERVAL 120 DAY";
+$query= "UPDATE players SET IsEnabled=0 WHERE LastConnection <= CURDATE()-INTERVAL 30 DAY";
 
 if ($_databaseObject -> queryPerf ($query, "Disabled the exipred accounts")) {
   $query= "SELECT COUNT(*) NbrOfAccount FROM players WHERE IsEnabled=1";

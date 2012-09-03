@@ -47,7 +47,6 @@ LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
 	  $tempScheduleDay=strftime("%d",$rowSet['ScheduleDate']);
 	  if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay && $rowSet["GroupName"]==$cuurentGroup))
 	  {
-	    setlocale(LC_TIME, "fr_FR");
 	    $scheduleFormattedDate = __encode(strftime("%A %d %B %Y",$rowSet['ScheduleDate']));
 	    echo '<tr class="day"
       	    style="">

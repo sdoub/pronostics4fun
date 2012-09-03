@@ -53,7 +53,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   {
     $line.="6-len:".strlen($content).";";
 
-    setlocale(LC_TIME, "fr_FR");
     $scheduleFormattedDate = strftime("%A %d %B %Y",$rowSet['ScheduleDate']);
 
     if ($rowSet["GlobalPreviousRank"]) {

@@ -46,40 +46,9 @@ WHERE PrimaryKey IN (" . $_playerKeys . ")";
   $mail->Username   = "sebastien.dubuc@gmail.com";  // GMAIL username
   $mail->Password   = "aurelie040697";            // GMAIL password
 
-  $mail->AltBody    = "Pour visualiser le contenu de cet email, vous messagerie doit être permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+  $mail->AltBody    = "Pour visualiser le contenu de cet email, vous messagerie doit ï¿½tre permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
-//  $emailBody = "<body style='margin: 10px;'>";
-//  $emailBody = '<div ><img src="images/Logo.png" ></div><br>';
-//  $emailBody .= "<p>" . __encode('Bonjour,') . "</p>";
-//  $emailBody .= "</br>";
-//  $emailBody .= "<p>" . __encode('Vous recevez cet email, car le/les match(s) suivant se dérouleront demain, et vous n\'avez pas validé vos pronostics:') . "<br/>";
-//  $emailBody .= "<ul>";
-//  $query2= "SELECT TeamHome.Name TeamHomeName,
-//TeamAway.Name TeamAwayName,
-//UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate
-//FROM matches
-//INNER JOIN teams TeamHome ON TeamHome.PrimaryKey=matches.TeamHomeKey
-//INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
-//WHERE DATE(matches.ScheduleDate)=(CURDATE()+ INTERVAL 1 DAY)
-// ORDER BY  matches.ScheduleDate";
-//
-//  $resultSetMissingForecasts = $_databaseObject->queryPerf($query2,"Get missing forecasts");
-//  $tomorrowDate ="";
-//  while ($rowSetMF = $_databaseObject -> fetch_assoc ($resultSetMissingForecasts)) {
-//
-//    setlocale(LC_TIME, "fr_FR");
-//    $scheduleFormattedDate = strftime("%A %d %B %Y, %H:%M",$rowSetMF['ScheduleDate']);
-//    setlocale(LC_TIME, "fr_FR");
-//    $tomorrowDate = strftime("%A %d %B %Y",$rowSetMF['ScheduleDate']);
-//
-//    $emailBody .= "<li>" . __encode($rowSetMF["TeamHomeName"] . "-" . $rowSetMF["TeamAwayName"] . " -> " . $scheduleFormattedDate . "</li>");
-//  }
-//  $emailBody .= "</ul></p>";
-//  $emailBody .= __encode("<p>Dépêchez-vous de vous rendre sur <a href='" . ROOT_SITE . "/'>" . ROOT_SITE . "</a> pour saisir vos pronostics!");
-//  $emailBody .= "<p>" . __encode("L'administrateur de Pronostics4Fun.") . "</p>";
-//  $emailBody .= "</body>";
-//
-//  $emailBody= eregi_replace("[\]",'',$emailBody);
+
 
   $mail->MsgHTML($_emailBody);
 

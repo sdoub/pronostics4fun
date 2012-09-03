@@ -10,7 +10,7 @@ $_logInfo = "";
 $selectQuery = "SELECT LastStatus,TIME_TO_SEC(TIMEDIFF(NOW(),LastExecution)) LastExecution FROM cronjobs WHERE JobName='$_jobName'";
 $resultSet = $_databaseObject -> queryPerf ($selectQuery , "Check cronjob status");
 $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
-if ($rowSet["LastStatus"]!=1 || $rowSet["LastExecution"]>60) {
+if ($rowSet["LastStatus"]!=1 || $rowSet["LastExecution"]>10) {
 
   $updateQuery = "UPDATE cronjobs SET LastStatus='1', LastExecutionInformation='" .str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($_logInfo))))."' WHERE JobName='$_jobName'";
   $_databaseObject -> queryPerf ($updateQuery , "Update cronjob information");
@@ -34,7 +34,8 @@ matches.GroupKey,
 UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
 matches.TeamHomeKey,
 matches.TeamAwayKey,
-matches.ExternalKey
+matches.ExternalKey,
+10 LiveStatus
  FROM matches
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
 WHERE DATE(matches.ScheduleDate)=(CURDATE()$days)";
@@ -47,10 +48,12 @@ matches.GroupKey,
 UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
 matches.TeamHomeKey,
 matches.TeamAwayKey,
-matches.ExternalKey
+matches.ExternalKey,
+results.LiveStatus
  FROM matches
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
-WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <= (UNIX_TIMESTAMP(matches.ScheduleDate)+11400)";
+LEFT JOIN results ON results.MatchKey=matches.PrimaryKey
+WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <= (UNIX_TIMESTAMP(matches.ScheduleDate)+11400) ORDER BY ResultDate ASC LIMIT 0,2";
   }
   $resultSetGroup = $_databaseObject->queryPerf($query,"Get matches to be refreshed");
   $_databaseObject -> fetch_assoc ($resultSetGroup);
@@ -61,30 +64,62 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   $_queries = array();
   if ($getData) {
     $totaltime = getElapsedTime();
-    $http = Http::connect("pronostics4fun.com", 80);
-    $http->silentMode();
     foreach ($rowsSet as $rowSet)
     {
-      $parameter = array();
-      $parameter["TeamHomeKey"] = $rowSet["TeamHomeKey"];
-      $parameter["TeamAwayKey"] = $rowSet["TeamAwayKey"];
-      $parameter["ExternalKey"] = $rowSet["ExternalKey"];
-      $parameter["MatchKey"] = $rowSet["MatchKey"];
-      $parameter["Live"] = 1;
-      $http->post('refresh.match.php', $parameter);
-    }
+      $teamHomeKey = $rowSet["TeamHomeKey"];
+      $teamAwayKey = $rowSet["TeamAwayKey"];
+      $externalKey = $rowSet["ExternalKey"];
+      $matchKey = $rowSet["MatchKey"];
+      if ($rowSet["LiveStatus"]==10) {
+        $isLive = 0;
+      } else {
+        $isLive = 1;
+      }
 
-    $results = $http ->run();
-    //print_r($results);
+      switch ($_competitionType) {
+        case 3:
+          $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+          foreach ($matchInfo["Queries"] as $query) {
+            $_queries[] =$query;
+          }
+          break;
+        default:
+          $matchInfo = GetMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+          foreach ($matchInfo["Queries"] as $query) {
+            $_queries[] =$query;
+          }
+          $matchInfo = GetMatchsLineupsInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1",$matchInfo["HomeId"],$matchInfo["AwayId"]);
+          foreach ($matchInfo["Queries"] as $query) {
+            $_queries[] =$query;
+          }
 
-    $_queries = array();
-    foreach ($results as $result) {
-      $queries = json_decode(trim($result));
-      foreach ($queries->Queries as $query)
-      {
-        $_queries[] = $query;
+          break;
       }
     }
+    //    $http = Http::connect("pronostics4fun.com", 80);
+    //    $http->silentMode();
+    //    foreach ($rowsSet as $rowSet)
+    //    {
+    //      $parameter = array();
+    //      $parameter["TeamHomeKey"] = $rowSet["TeamHomeKey"];
+    //      $parameter["TeamAwayKey"] = $rowSet["TeamAwayKey"];
+    //      $parameter["ExternalKey"] = $rowSet["ExternalKey"];
+    //      $parameter["MatchKey"] = $rowSet["MatchKey"];
+    //      $parameter["Live"] = 1;
+    //      $http->post('refresh.match.php', $parameter);
+    //    }
+    //
+    //    $results = $http ->run();
+    //    //print_r($results);
+    //
+    //    $_queries = array();
+    //    foreach ($results as $result) {
+    //      $queries = json_decode(trim($result));
+    //      foreach ($queries->Queries as $query)
+    //      {
+    //        $_queries[] = $query;
+    //      }
+    //    }
 
 
 
@@ -200,7 +235,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   }
 
   $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
-$arr["Queries"]=$_queries;
+  $arr["Queries"]=$_queries;
   $totaltime = getElapsedTime();
   //$_logInfo .= implode(',',$arr["errorLog"]);
   writeJsonResponse($arr);
@@ -228,7 +263,7 @@ $arr["Queries"]=$_queries;
   $updateQuery = "UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='" .str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($_logInfo))))."' WHERE JobName='$_jobName'";
   $_databaseObject -> queryPerf ($updateQuery , "Update cronjob information");
 } else {
-  echo __encode("Un refresh est déjà en cours!");
+  echo "Un refresh est déjà en cours!";
 }
 require_once(dirname(__FILE__)."/end.file.php");
 ?>

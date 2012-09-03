@@ -385,7 +385,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
         WHERE groups.PrimaryKey=$_groupKey
           AND playermatchresults.Score>=5
           AND playermatchresults.playerKey=players.PrimaryKey)+
-          (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 2 END FROM votes
+          (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 0 END FROM votes
         INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey
@@ -604,7 +604,7 @@ WHERE groups.PrimaryKey=$_groupKey
 AND playermatchresults.Score>=5
 AND playermatchresults.playerKey=players.PrimaryKey
 )+
-(SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 2 END FROM votes
+(SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 0 END FROM votes
         INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey

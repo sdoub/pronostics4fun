@@ -16,7 +16,6 @@ echo "<div style='color:#FFFFFF; font-size:11px;'>";
 echo "<ul>";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  setlocale(LC_TIME, "fr_FR");
   $forecastFormattedDate = __encode(strftime("%A %d %B %Y à %H:%M",$rowSet['ForecastDate']));
   echo "<li style='height:16px;padding-left:5px;'><strong>". $rowSet["NickName"] ."</strong> -> validé le " . $forecastFormattedDate . "<br/></li>";
 }

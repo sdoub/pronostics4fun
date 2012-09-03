@@ -28,8 +28,8 @@ unset($rowSet,$resultSet,$sql);
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>' . __encode("Pronostics4Fun - Résulat de la ") . $_groupDescription .'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Pronostics4Fun - RÃ©sulat de la ' . $_groupDescription .'</title>
 <link rel="icon" href="http://pronostics4fun.com/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="http://pronostics4fun.com/favico.ico" type="image/x-icon" />
 </head>
@@ -54,7 +54,7 @@ echo '<p>Bonjour <strong>' . $rowSet["NickName"] . '</strong>,</p>';
 
 echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collapse:collapse">
 <tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
-<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="' . ROOT_SITE . '/images/TropheeGold.png" style="height:20px;width:20px;padding-right:15px;"/>Vos résultats - '.$_groupDescription.'</td>
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="' . ROOT_SITE . '/images/TropheeGold.png" style="height:20px;width:20px;padding-right:15px;"/>Vos rÃ©sultats - '.$_groupDescription.'</td>
 </tr>';
 
 
@@ -276,7 +276,7 @@ echo '<tr>
 </tr>
 ';
 echo '<tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
-<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/podium.png" style="height:20px;width:20px;padding-right:15px;"/>Classement général</td>
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/podium.png" style="height:20px;width:20px;padding-right:15px;"/>Classement gÃ©nÃ©ral</td>
 </tr>
 ';
 
@@ -351,10 +351,10 @@ width:30px;float:left;
 }
 
 echo "</table>";
-echo "<p>Rendez-vous sur <a href='".ROOT_SITE."'>".ROOT_SITE."</a> pour consulter plus de détail!</p>
+echo "<p>Rendez-vous sur <a href='".ROOT_SITE."'>".ROOT_SITE."</a> pour consulter plus de dÃ©tail!</p>
 <p>L'administrateur de Pronostics4Fun.</p>
 
-<p style='font-size:12px;'>p.s. : Si vous ne souhaitez plus recevoir les résultats par emails, <a href='".ROOT_SITE."/unsubscribe.php?type=2&key=".$activationKey."'>cliquez ici</a></p>
+<p style='font-size:12px;'>p.s. : Si vous ne souhaitez plus recevoir les rÃ©sultats par emails, <a href='".ROOT_SITE."/unsubscribe.php?type=2&key=".$activationKey."'>cliquez ici</a></p>
 </body>
 </html>";
 

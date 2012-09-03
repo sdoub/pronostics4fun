@@ -238,13 +238,13 @@ function ComputeGroupScore ($groupKey){
       $_databaseObject -> queryPerf ($query, "Compute group score Bonus 0 points");
 
 
-      $query= "UPDATE playergroupresults SET Score=Score+2 WHERE EXISTS
-          (SELECT 1 FROM votes INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
-            WHERE votes.PlayerKey=playergroupresults.PlayerKey
-    		  AND matches.GroupKey=playergroupresults.GroupKey)
-         AND playergroupresults.GroupKey=$groupKey";
-
-      $_databaseObject -> queryPerf ($query, "Add 2 points for person who has voted");
+//      $query= "UPDATE playergroupresults SET Score=Score+2 WHERE EXISTS
+//          (SELECT 1 FROM votes INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
+//            WHERE votes.PlayerKey=playergroupresults.PlayerKey
+//    		  AND matches.GroupKey=playergroupresults.GroupKey)
+//         AND playergroupresults.GroupKey=$groupKey";
+//
+//      $_databaseObject -> queryPerf ($query, "Add 2 points for person who has voted");
 
 
   }
@@ -510,7 +510,7 @@ function ComputeGroupScoreState ($groupKey,$stateDate){
         WHEN 9 THEN 60
         WHEN 10 THEN 100
         ELSE 0 END  +
-		(SELECT COUNT(1)*2
+		(SELECT COUNT(1)*0
 		   FROM votes
 		  WHERE votes.MatchKey=TMP.MatchKey AND votes.PlayerKey=playermatchstates.PlayerKey) Bonus
          FROM (
@@ -518,7 +518,8 @@ function ComputeGroupScoreState ($groupKey,$stateDate){
 				  MatchKey
       		 FROM matchstates
       		WHERE UNIX_TIMESTAMP(matchstates.StateDate) <= $stateDate
-      		AND EXISTS (SELECT 1 FROM matches WHERE matches.GroupKey = $groupKey AND matches.PrimaryKey=matchstates.MatchKey)
+      		AND EXISTS (SELECT 1 FROM matches WHERE matches.GroupKey = $groupKey AND matches.PrimaryKey=matchstates.MatchKey
+      		)
       		GROUP BY MatchKey
       		ORDER BY matchstates.StateDate DESC
       	) TMP INNER JOIN playermatchstates ON playermatchstates.MatchStateKey=TMP.MatchStateKey
@@ -539,7 +540,7 @@ function ComputeCoupeGroupScoreState ($groupKey,$stateDate){
         WHEN 5 THEN 20
         WHEN 6 THEN 40
         ELSE 0 END  +
-		(SELECT COUNT(1)*2
+		(SELECT COUNT(1)*0
 		   FROM votes
 		  WHERE votes.MatchKey=TMP.MatchKey AND votes.PlayerKey=playermatchstates.PlayerKey) Bonus
          FROM (
