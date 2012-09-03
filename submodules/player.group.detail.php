@@ -47,7 +47,6 @@ ORDER BY matches.ScheduleDate ASC";
 	  $tempScheduleDay=strftime("%d",$rowSet['ScheduleDate']);
 	  if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
 	  {
-	    setlocale(LC_TIME, "fr_FR");
 	    $scheduleFormattedDate = strftime("%A %d %B %Y",$rowSet['ScheduleDate']);
 
 	    if ($rowSet["GlobalPreviousRank"]) {

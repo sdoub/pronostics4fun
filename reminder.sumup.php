@@ -13,8 +13,8 @@ else
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>' . __encode("Pronostics4Fun - Rappel") .'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Pronostics4Fun - Rappel</title>
 <link rel="icon" href="http://pronostics4fun.com/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="http://pronostics4fun.com/favico.ico" type="image/x-icon" />
 </head>
@@ -33,13 +33,12 @@ echo "<div ><a style='border:0;' href='".ROOT_SITE."'><img style='border:0;' src
 
 echo '<p>Bonjour <strong>' . $rowSet["NickName"] . '</strong>,</p>';
 
-echo "<p>" . __encode('Vous recevez cet email, car le/les match(s) suivant se dérouleront demain, et vous n\'avez pas validé vos pronostics.') . "<br/>";
-setlocale(LC_TIME, "fr_FR");
-$tomorrowFormattedDate = __encode(strftime("%A %d %B %Y",$rowSet['tomorrowDate']));
+echo "<p>Vous recevez cet email, car le/les match(s) suivant se dÃ©rouleront demain, et vous n'avez pas validÃ© vos pronostics.<br/>";
+$tomorrowFormattedDate = strftime("%A %d %B %Y",$rowSet['tomorrowDate']);
 
 echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collapse:collapse">
 <tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
-<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="4"><img src="' . ROOT_SITE . '/images/stadium.png" style="height:20px;width:20px;padding-right:15px;"/>'. __encode("Pronostics non validés pour le ") . $tomorrowFormattedDate . '</td>
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="4"><img src="' . ROOT_SITE . '/images/stadium.png" style="height:20px;width:20px;padding-right:15px;"/>Pronostics non validÃ©s pour le ' . $tomorrowFormattedDate . '</td>
 </tr>';
 
 $query2= "SELECT TeamHome.Name TeamHomeName,
@@ -74,7 +73,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   echo '<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:right;'.$styleBonus.'">'.$rowSet["TeamHomeName"].'<img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamHomeKey"].'.png" width="25px" height="25px"/></td>
 <td style="border-bottom:1px solid #CCCCCC;font-size:16px;vertical-align:bottom;width:50px;text-align:center;">&nbsp;-&nbsp;</td>
 <td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:left;"><img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamAwayKey"].'.png" width="25px" height="25px"/>'.$rowSet["TeamAwayName"].'</td>';
-  setlocale(LC_TIME, "fr_FR");
   $scheduleFormattedDate = strftime("%H:%M",$rowSet['ScheduleDate']);
 
   echo '<td style="border-bottom:1px solid #CCCCCC;">'.$scheduleFormattedDate.'</td>';
@@ -118,7 +116,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   $today .= '<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:right;'.$styleBonus.'">'.$rowSet["TeamHomeName"].'<img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamHomeKey"].'.png" width="25px" height="25px"/></td>
 <td style="border-bottom:1px solid #CCCCCC;font-size:16px;vertical-align:bottom;width:50px;text-align:center;">&nbsp;-&nbsp;</td>
 <td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:left;"><img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamAwayKey"].'.png" width="25px" height="25px"/>'.$rowSet["TeamAwayName"].'</td>';
-  setlocale(LC_TIME, "fr_FR");
   $scheduleFormattedDate = strftime("%H:%M",$rowSet['ScheduleDate']);
 
   $today .= '<td style="border-bottom:1px solid #CCCCCC;">'.$scheduleFormattedDate.'</td>';
@@ -128,7 +125,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 }
 if ($today) {
   echo '<tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
-<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/warning.png" style="height:20px;width:20px;padding-right:15px;"/>Attention! Pronostics non validés pour aujourd\'hui</td>
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/warning.png" style="height:20px;width:20px;padding-right:15px;"/>Attention! Pronostics non validÃ©s pour aujourd\'hui</td>
 </tr>
 ';
   echo $today;
@@ -139,10 +136,10 @@ if ($today) {
 }
 echo "</table>";
 
-echo __encode("<p>Dépêchez-vous de vous rendre sur <a href='http://pronostics4fun.com/index.php?Page=1'>pronostics4fun.com</a> pour saisir vos pronostics!");
+echo "<p>DÃ©pÃªchez-vous de vous rendre sur <a href='http://pronostics4fun.com/index.php?Page=1'>pronostics4fun.com</a> pour saisir vos pronostics!";
 echo "<p>L'administrateur de Pronostics4Fun.</p>
 
-<p style='font-size:12px;'>p.s. : Si vous ne souhaitez plus recevoir les résultats par emails, <a href='".ROOT_SITE."/unsubscribe.php?type=1&key=".$activationKey."'>cliquez ici</a></p>
+<p style='font-size:12px;'>p.s. : Si vous ne souhaitez plus recevoir les rÃ©sultats par emails, <a href='".ROOT_SITE."/unsubscribe.php?type=1&key=".$activationKey."'>cliquez ici</a></p>
 </body>
 </html>";
 

@@ -35,6 +35,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
     $mail             = new PHPMailer(true);
 
     try {
+      $mail->CharSet = 'UTF-8';
 
       $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 
@@ -47,7 +48,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
       $_groupDescription = $rowSetGroup['Description'];
       unset($rowSetGroup,$resultSetGroup,$sqlGroup);
 
-      $mail->Subject    = "Pronostics4Fun - Résultats des pronostics - ".__decode($_groupDescription);
+      $mail->Subject    = "Pronostics4Fun - RÃ©sultats des pronostics - ".$_groupDescription;
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
@@ -68,7 +69,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
 
       $mail->Send();
       echo "Message sent to $nickName!<br/>";
-      setlocale(LC_TIME, "fr_FR");
       $currentFormattedDate = strftime("%A %d %B %Y, %H:%M",time());
 
 
@@ -87,8 +87,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
 }
 //else
 //{
-//  echo "Pas d'email a envoyé!";
-//  $stringData = "Pas d'email a envoyé!";
+//  echo "Pas d'email a envoyï¿½!";
+//  $stringData = "Pas d'email a envoyï¿½!";
 //  $myFile ="/home/a3174115/public_html/Ligue12010/log/emails.log";
 //  chmod($myFile,0666);
 //  $sio = new safeIO;

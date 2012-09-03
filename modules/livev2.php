@@ -61,13 +61,12 @@ WHERE results.LiveStatus > 0";
 $resultSetLastRefresh = $_databaseObject -> queryPerf ($queryLastRefresh, "Get last refresh date");
 $rowSetLastRefresh = $_databaseObject -> fetch_assoc ($resultSetLastRefresh);
 
-  setlocale(LC_TIME, "fr_FR");
   $lastRefreshFormattedDate = strftime("%A %d %B %Y à %H:%M:%S",$rowSetLastRefresh['LastRefreshDate']);
   $nextRefreshFormattedDate = strftime("%H:%M:%S",$rowSetLastRefresh['NextRefreshDate']);
   if (!$rowSetLastRefresh['LastRefreshDate']) {
     $lastRefreshFormattedDate = " - - ";
   }
-  echo __encode("Dernière mise à jour : ") . "<span style='font-weight:bold;' id='lastRefresh'>" .  __encode($lastRefreshFormattedDate) . "</span><br/>";
+  echo "Dernière mise à jour : <span style='font-weight:bold;' id='lastRefresh'>$lastRefreshFormattedDate</span><br/>";
 
 	function timeBetween($start_date,$end_date)
 	{
@@ -125,7 +124,7 @@ else {
     $style="display:none;";
       $diffTime["minutes"]=0;
   }
-  echo "<span id='NextRefreshSpan' style='$style'>". __encode("Prochaine mise à jour dans ") . "<span style='font-weight:bold;' id='nextRefresh'>" . $diffTime["minutes"] . ":" . $diffTime["seconds"] . "'</span></span>";
+  echo "<span id='NextRefreshSpan' style='$style'>Prochaine mise à jour dans <span style='font-weight:bold;' id='nextRefresh'>" . $diffTime["minutes"] . ":" . $diffTime["seconds"] . "'</span></span>";
 ?>
 </div>
 
@@ -159,7 +158,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 
 
-  echo '<option value="'. $rowSet["PlayerKey"] . '" '.$stylePlayer . ' >'. __encode($rowSet["NickName"]) . '</option>';
+  echo '<option value="'. $rowSet["PlayerKey"] . '" '.$stylePlayer . ' >'. $rowSet["NickName"] . '</option>';
 }
 ?>
     </select>
@@ -231,7 +230,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
       break;
     case 0:
       if ($rowSet["Status"]==1) { //Postponed
-        echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>" . __encode("Reporté") . "</div>";
+        echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;'>Reporté</div>";
       } else {
         echo "<div class='livestatus' style='width:100%;text-align:center;font-size:9px;padding-top:25px;_padding-top:0px;position: absolute;bottom: 0;' >".$rowSet["ActualTime"]."'</div>";
         $scheduleDate = $rowSet["ScheduleDate"];
@@ -259,7 +258,7 @@ switch ($nbrOfMatch) {
     $rowWidth = 88 * $nbrOfMatch;
     break;
   default;
-    $rowWidth = 80 * $nbrOfMatch;
+    $rowWidth = 72 * $nbrOfMatch;
     break;
 }
 
@@ -434,7 +433,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
         WHERE groups.PrimaryKey=$_groupKey
           AND playermatchresults.Score>=5
           AND playermatchresults.playerKey=players.PrimaryKey)+
-          (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 2 END FROM votes
+          (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 0 END FROM votes
         INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey
@@ -593,11 +592,11 @@ $previousRank=$rank;
 <div id="mod-classements" class="node2">
 <div class="head">
 <div>
-<h4><?php echo __encode("Classement en direct"); ?></h4>
+<h4>Classement en direct</h4>
 </div>
 </div>
 <div class="node-in">
-<div id="tabsRanking"><a id="globalrankinglink" class="selected" ><?php echo __encode("Général"); ?></a><a id="grouprankinglink"><?php  if ($_competitionType==1) {echo __encode("Journée");} else {echo __encode("Groupe");} ?></a></div>
+<div id="tabsRanking"><a id="globalrankinglink" class="selected" >Général</a><a id="grouprankinglink"><?php  if ($_competitionType==1) {echo "Journée";} else {echo "Groupe";} ?></a></div>
 <div id="ContainerRanking" class="panel flexcroll" >
 <ol id="globalranking">
 
@@ -647,7 +646,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
           AND groups.IsCompleted = '0'
           AND playermatchresults.Score>=5
           AND playermatchresults.playerKey=players.PrimaryKey)
-     + (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 2 END FROM votes
+     + (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 0 END FROM votes
         INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey
@@ -767,7 +766,7 @@ WHERE groups.PrimaryKey=$_groupKey
 AND playermatchresults.Score>=5
 AND playermatchresults.playerKey=players.PrimaryKey
 )
-+ (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 2 END FROM votes
++ (SELECT CASE COUNT(*) WHEN 0 THEN 0 ELSE 0 END FROM votes
         INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey
@@ -782,6 +781,7 @@ $rank=0;
 $previousRank=0;
 $realRank=0;
 $previousScore=0;
+
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   echo '<li id="GRP_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'">';

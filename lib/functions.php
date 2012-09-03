@@ -268,7 +268,8 @@ function ConvertLfpKeyToP4F($lfpKey) {
    Le Mans FC -> 537103 -> 67
    FC Istres -> 501523 -> 68
    Grenoble GF38 -> 546946 -> 69
-   US Boulogne CO -> 500077 -> 70
+   US Boulogne CO -> 500077 -> 70,
+   Stade de reims -> 542397 -> 67
    */
 
   $arrlfpKeys = array(500220 => 37,
@@ -296,16 +297,23 @@ function ConvertLfpKeyToP4F($lfpKey) {
   553251 => 58,
   500266 => 59,
   501904 => 60,
-  508009 => 61,
+  508009 => 66,
   500126 => 62,
   500154 => 63,
   500191 => 64,
-  500073 => 65,
+  500073 => 68,
   500052 => 66,
   537103 => 67,
   501523 => 68,
   546946 => 69,
-  500077 => 70);
+  500077 => 70,
+  "logo_lille_12_13" =>43,
+  "ajaccio_oeil" => 56,
+  "553251_new" => 58,
+  542397 => 67,
+  "Reims_Pantone" => 67,
+  "estac_2012" => 68
+  );
 
   if (array_key_exists($lfpKey,$arrlfpKeys)) {
     return $arrlfpKeys[$lfpKey];
@@ -445,7 +453,7 @@ function writeJsonResponse ($arr){
   header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
   header("Cache-Control: no-cache, must-revalidate" );
   header("Pragma: no-cache" );
-  header("Content-type: application/json; charset=utf8");
+  header("Content-type: application/json; charset=utf-8");
   if (WITH_PERF_AND_ERROR) {
     $arr["perfAndError"] = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
   }
@@ -763,5 +771,16 @@ function startswith($hay, $needle) {
 
 function endswith($hay, $needle) {
   return substr($hay, -strlen($needle)) === $needle;
+}
+
+function mysql_escape_mimic($inp) {
+    if(is_array($inp))
+        return array_map(__METHOD__, $inp);
+
+    if(!empty($inp) && is_string($inp)) {
+        return str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $inp);
+    }
+
+    return $inp;
 }
 ?>

@@ -6,7 +6,7 @@ require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
 
 $currentDate = strftime("%d %b %Y",time());
 $filename= strftime("pronostilxp4f-%Y%m%d",time()). ".sql";
-system("mysqldump --host=mysql51-39.perso --user=pronostilxp4f --password=jQjspq2q pronostilxp4f > " . $filename );
+system("mysqldump --host=mysql51-39.perso --user=pronostilxp4f --password=jQjspq2q --ignore-table=pronostilxp4f.connectedusers --ignore-table=pronostilxp4f.cronjobs pronostilxp4f > " . $filename );
 system("gzip " . $filename);
 
 $currentFileSize = filesize($filename . ".gz");
@@ -18,7 +18,7 @@ if (file_exists($yesterdayFilename)) {
   $yesterdayFilesize = filesize($yesterdayFilename);
 }
 
-if ($yesterdayFilesize!=$currentFileSize) {
+if (abs($yesterdayFilesize-$currentFileSize)>5) {
 
   $mail = new P4FMailer();
   try {
@@ -29,7 +29,9 @@ if ($yesterdayFilesize!=$currentFileSize) {
 
     $mail->Subject    = "Pronostics4Fun - Sauvegarde de la base du ". $currentDate;
 
-    $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+    $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!
+    Base d'hier: $yesterdayFilesize
+    Base d'aujourd'hui: $currentFileSize";
 
     $mail->MsgHTML(file_get_contents('http://pronostics4fun.com/database.stats.php'));
 

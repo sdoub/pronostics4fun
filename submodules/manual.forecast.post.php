@@ -73,7 +73,6 @@ if($_SERVER['REQUEST_METHOD']=='GET')
     $tempScheduleDay=strftime("%d",$value['ScheduleDate']);
     if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
     {
-      setlocale(LC_TIME, "fr_FR");
       $scheduleFormattedDate = strftime("%A %d %B %Y",$value['ScheduleDate']);
       $htmlContent.= '<tr class="day"
       	    style="">
@@ -155,7 +154,6 @@ else {
     $tempScheduleDay=strftime("%d",$value['ScheduleDate']);
     if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
     {
-      setlocale(LC_TIME, "fr_FR");
       $scheduleFormattedDate = strftime("%A %d %B %Y",$value['ScheduleDate']);
       $htmlContent.= '<tr class="day"
       	    style="">

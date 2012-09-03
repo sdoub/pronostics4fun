@@ -68,7 +68,6 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
 	  $tempScheduleDay=strftime("%d",$rowSet['ScheduleDate']);
 	  if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay && $rowSet["GroupName"]==$cuurentGroup))
 	  {
-	    setlocale(LC_TIME, "fr_FR");
 	    $scheduleFormattedDate = __encode(strftime("%A %d %B %Y",$rowSet['ScheduleDate']));
 
 	    $status ="";
@@ -83,7 +82,7 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
         }
 
 	    echo '<tr class="day">
-      	  <td colspan="10">' . $rowSet["GroupName"] . '&nbsp;->&nbsp;' . $scheduleFormattedDate . '<span class="dayStatus">'.$status.'</span></td>
+      	  <td colspan="10">' . $rowSet["GroupName"] . '&nbsp;->&nbsp;' . utf8_encode($scheduleFormattedDate) . '<span class="dayStatus">'.$status.'</span></td>
       	</tr>';
 	  }
 

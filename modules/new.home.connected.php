@@ -34,7 +34,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     $score4Percentage = 0;
   }
 
-  setlocale(LC_TIME, "fr_FR");
   $startFormattedDate = strftime("%d %B %Y",$rowSet['UnixStartDate']);
   $endFormattedDate = strftime("%d %B %Y",$rowSet['UnixEndDate']);
 
@@ -168,7 +167,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 <button class="buttonfield" id='AddNews'>Ajouter une news</button>
 <?php } ?>
 &nbsp;</div>
-<div id="newsContainer"><?php echo __encode("Tout ce qui se passe sur Pronostics4Fun ...");?></div>
+<div id="newsContainer">Tout ce qui se passe sur Pronostics4Fun ...</div>
 <div id="news" class="flexcroll">
 <ul id="newsList">
 <?php
@@ -202,13 +201,11 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
       $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["NewsPicture"];
     }
     echo '<img class="avat" src="' . $avatarPath . '" ></img>';
-  	setlocale(LC_TIME, "fr_FR");
 	$creationFormattedDate = strftime("%A %d %B %Y",$rowSet['NewsDate']);
     echo "<strong>" . __encode($rowSet['NewsInfos'] ."</strong>". __encode(" est inscrit depuis le ") . $creationFormattedDate);
     echo "</div>";
   }
   else {
-  	setlocale(LC_TIME, "fr_FR");
 	$newsFormattedDate = strftime("%A %d %B %Y à %H:%M",$rowSet['NewsDate']);
     echo "<div class='newsDate' news-key='$playerKey'>";
     echo "Le " . __encode($newsFormattedDate);
@@ -334,15 +331,14 @@ foreach ($rowsSet as $rowSet)
   echo $status;
   echo "</div>";
 
-  setlocale(LC_TIME, "fr_FR");
   if (strftime("%d",$rowSet['unixBeginDate']) == strftime("%d",$rowSet['unixEndDate'])){
     $groupDateFormatted = strftime("%d %B %Y",$rowSet['unixEndDate']);
-    $groupDateFormatted = __encode(" (".$groupDateFormatted.")");
+    $groupDateFormatted = " (".$groupDateFormatted.")";
   }
   else {
     $groupDateFormatted = strftime("%d-",$rowSet['unixBeginDate']);
     $groupDateFormatted .= strftime("%d %B %Y",$rowSet['unixEndDate']);
-    $groupDateFormatted = __encode(" (".$groupDateFormatted.")");
+    $groupDateFormatted = " (".$groupDateFormatted.")";
   }
 
   if ($rowSet["unixBeginDate"]==0){
@@ -357,7 +353,7 @@ foreach ($rowsSet as $rowSet)
   if ($rowSet["Status"]>0) {
     echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
   }
-  if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2) {
+  if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2 && $rowSet["unixBeginDate"]!=0) {
     echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br/>';
   }
   echo '</li>';

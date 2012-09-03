@@ -32,6 +32,7 @@ foreach ($rowsSet as $rowSet)
       break;
     case 2:
     case 3:
+    case 5:
       $url = "http://" . EXTERNAL_WEB_SITE . "/competitionPluginCalendrierResultat/changeCalendrierHomeJournee?c=ligue1&js=" . $dayKey . "&id=0";
       break;
   }
@@ -42,7 +43,7 @@ foreach ($rowsSet as $rowSet)
     {
       $scheduleDates = array();
       foreach($html->find('h4') as $h4) {
-        $scheduleDates[]=ConvertFrenchDateToUniversalDate(utf8_decode($h4->plaintext));
+        $scheduleDates[]=ConvertFrenchDateToUniversalDate($h4->plaintext);
       }
 
       $currentTable = 0;
@@ -59,8 +60,8 @@ foreach ($rowsSet as $rowSet)
             if (strpos($rows->find('td',0)->plaintext,":")!==false ) {
               $hourMatchArray = split(':',$rows->find('td',0)->plaintext);
             } else {
-              echo "<br/>". utf8_decode($rows->find('td',0)->plaintext);
-              if (strpos(utf8_decode($rows->find('td',0)->plaintext),"Reporté")!==false ) {
+              echo "<br/>". $rows->find('td',0)->plaintext;
+              if (strpos($rows->find('td',0)->plaintext,"ReportÃ©")!==false ) {
                 $isMatchReported = true;
               } else {
                 $hourMatchArray = array();
@@ -90,24 +91,28 @@ foreach ($rowsSet as $rowSet)
 
             $teamAwayKey = ConvertLfpKeyToP4F ($lfpTeamAwayKey);
 
+            if ($teamAwayKey != 0 && $teamHomeKey!=0) {
+              $insertQuery = "INSERT IGNORE INTO matches (GroupKey, TeamHomeKey, TeamAwayKey, ExternalKey, ScheduleDate) VALUES ";
+              $insertQuery .= "($groupKey,";
+              $insertQuery .= "$teamHomeKey,";
+              $insertQuery .= "$teamAwayKey,";
+              $insertQuery .= "$lfpMatchKey,";
+              $insertQuery .= "FROM_UNIXTIME($scheduleDate)) ";
 
-            $insertQuery = "INSERT IGNORE INTO matches (GroupKey, TeamHomeKey, TeamAwayKey, ExternalKey, ScheduleDate) VALUES ";
-            $insertQuery .= "($groupKey,";
-            $insertQuery .= "$teamHomeKey,";
-            $insertQuery .= "$teamAwayKey,";
-            $insertQuery .= "$lfpMatchKey,";
-            $insertQuery .= "FROM_UNIXTIME($scheduleDate)) ";
+              $queries[]=$insertQuery;
 
-            $queries[]=$insertQuery;
-
-            $matchStatus=0;
-            if ($isMatchReported) {
-              $matchStatus=1;
+              $matchStatus=0;
+              if ($isMatchReported) {
+                $matchStatus=1;
+              }
+              $updateQuery = "UPDATE matches SET ExternalKey=$lfpMatchKey, ScheduleDate=FROM_UNIXTIME($scheduleDate), Status=$matchStatus WHERE GroupKey=";
+              $updateQuery .= "$groupKey AND TeamHomeKey=$teamHomeKey AND TeamAwayKey=$teamAwayKey";
+              $queries[]=$updateQuery;
+            } else {
+              echo "<br/>Impossible d'insÃ©rer le match car une des Ã©quipes n'a pas de correspondance sur p4fey";
+              echo "<br/>lfpTeamHomeKey -> $lfpTeamHomeKey";
+              echo "<br/>lfpTeamAwayKey -> $lfpTeamAwayKey";
             }
-            $updateQuery = "UPDATE matches SET ExternalKey=$lfpMatchKey, ScheduleDate=FROM_UNIXTIME($scheduleDate), Status=$matchStatus WHERE GroupKey=";
-            $updateQuery .= "$groupKey AND TeamHomeKey=$teamHomeKey AND TeamAwayKey=$teamAwayKey";
-            $queries[]=$updateQuery;
-
 
           }
         }
@@ -193,14 +198,14 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
 
       $resultSet = $_databaseObject->queryPerf($queryVotes,"Get matches to be played by current day");
 
-      $infonews = '<span><img class="news" src="images/star_48.png"></span><div>Résultat du vote pour le match bonus de la '.$rowSetAfter["Description"].':</div>';
+      $infonews = '<span><img class="news" src="images/star_48.png"></span><div>RÃ©sultat du vote pour le match bonus de la '.$rowSetAfter["Description"].':</div>';
 
       $rank = 0;
       $realRank = 0;
       $oldRank = -1;
       while ($rowSetVotes = $_databaseObject -> fetch_assoc ($resultSet)) {
         $rank++;
-        $infonews .= '<div>'.$rank.'- <u>'.$rowSetVotes["TeamHomeName"].' - '.$rowSetVotes["TeamAwayName"].'</u> : '.$rowSetVotes["stars"].' étoile(s)</div>';
+        $infonews .= '<div>'.$rank.'- <u>'.$rowSetVotes["TeamHomeName"].' - '.$rowSetVotes["TeamAwayName"].'</u> : '.$rowSetVotes["stars"].' Ã©toile(s)</div>';
       }
 
       $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
@@ -209,7 +214,7 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
     // If a group is opened for giving pronostics
     if ($rowSetAfter["GroupKey"]==$rowSet["GroupKey"] && $rowSetAfter["Status"]==1 && $rowSet["Status"]==0) {
 
-      $infonews = '<img class="news" src="images/calendar.png">La programmation des matchs de la '.$rowSetAfter["Description"].' est définitive, par conséquent les pronostics sont ouverts !';
+      $infonews = '<img class="news" src="images/calendar.png">La programmation des matchs de la '.$rowSetAfter["Description"].' est dÃ©finitive, par consÃ©quent les pronostics sont ouverts !';
 
       $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
     }

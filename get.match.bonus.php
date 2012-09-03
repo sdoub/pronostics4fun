@@ -39,9 +39,8 @@ echo "<div style='color:#FFFFFF; font-size:11px;'>";
 echo "<ul>";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  setlocale(LC_TIME, "fr_FR");
-  $scheduleFormattedDate = __encode(strftime("%A %d %B %Y à %H:%M",$rowSet['ScheduleDate']));
-  echo "<li style='height:16px;padding-left:5px;'><u>".$rowSet["Description"]." :</u> ". $rowSet["TeamHomeName"] ." <strong>(".$rowSet["TeamHomeScore"]." - ".$rowSet["TeamAwayScore"].")</strong> " . $rowSet["TeamAwayName"] . "". __encode(" -> joué le ") . $scheduleFormattedDate . "<br/></li>";
+  $scheduleFormattedDate = strftime("%A %d %B %Y Ã  %H:%M",$rowSet['ScheduleDate']);
+  echo "<li style='height:16px;padding-left:5px;'><u>".$rowSet["Description"]." :</u> ". $rowSet["TeamHomeName"] ." <strong>(".$rowSet["TeamHomeScore"]." - ".$rowSet["TeamAwayScore"].")</strong> " . $rowSet["TeamAwayName"] . "". __encode(" -> jouÃ© le ") . $scheduleFormattedDate . "<br/></li>";
 }
 echo "</ul>";
 echo "</div>";

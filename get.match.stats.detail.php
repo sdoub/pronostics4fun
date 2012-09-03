@@ -366,10 +366,7 @@ TeamHome.PrimaryKey TeamHomeKey,
     $diff = $rowSet["TeamHomeScore"]-$rowSet["TeamAwayScore"];
     $color = "#FFFFFF";
 
-    setlocale(LC_TIME, "fr_FR");
     $scheduleFormattedDate = strftime("%d %B %Y",$rowSet['ScheduleDate']);
-
-
     echo '<tr style="height:12px;font-size:11px;">';
     echo '<td>'.$rowSet["CompetitionName"].'</td>';
     echo '<td>' . $rowSet["GroupDescription"] . '</td>';
