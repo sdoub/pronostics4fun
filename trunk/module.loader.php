@@ -24,7 +24,16 @@ if ($_isAuthenticated)
       }
       break;
     case "2":
-      include("modules/result.group.php");
+      if (isset($_GET['Mode'])){
+        if ($_GET['Mode']=="1") {
+          include("modules/result.group.php");
+        } else {
+          include("modules/result.group2.php");
+        }
+      }
+      else {
+        include("modules/result.group.php");
+      }
       break;
     case "3":
       if (isset($_GET['View'])){

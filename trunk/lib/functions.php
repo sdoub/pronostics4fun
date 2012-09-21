@@ -177,17 +177,17 @@ function convertStatus ($status) {
 
 function getStatus ($statusKey) {
 
-  $arrStatus = array(0=>__encode("A venir"),
-  1=>__encode("1ère mi-temps"),
-  2=>__encode("Mi-temps"),
-  3=>__encode("2ème période"),
-  4=>__encode("Mi-temps avant prolongation"),
-  5=>__encode("1ère prolongation"),
-  6=>__encode("Mi-temps prolongation"),
-  7=>__encode("2ème prolongation"),
-  8=>__encode("Mi-temps avant tir au but"),
-  9=>__encode("Tir au but"),
-  10=>__encode("Terminé"));
+  $arrStatus = array(0=>"A venir",
+  1=>"1ère mi-temps",
+  2=>"Mi-temps",
+  3=>"2ème période",
+  4=>"Mi-temps avant prolongation",
+  5=>"1ère prolongation",
+  6=>"Mi-temps prolongation",
+  7=>"2ème prolongation",
+  8=>"Mi-temps avant tir au but",
+  9=>"Tir au but",
+  10=>"Terminé");
 
 
   if (array_key_exists($statusKey,$arrStatus))
@@ -488,7 +488,7 @@ function write000WebHostStats () {
 function writePerfInfo () {
   global $_databaseObject;
 
-  if (WITH_PERF_AND_ERROR) {
+  if (WITH_PERF_AND_ERROR || 1==1) {
     $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
 
     $totaltime = getElapsedTime();
@@ -526,6 +526,11 @@ function AddScriptReference ($name) {
         break;
       case "result.group":
         $tempScript=sprintf($cssScriptTemplate,"modules/result.group");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "result.group2":
+        $tempScript=sprintf($cssScriptTemplate,"modules/result.group2");
+        //$tempScript.=sprintf($cssScriptTemplate,"ranking");
         $_arrScripts[$name]=$tempScript;
         break;
       case "statistics":

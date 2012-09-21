@@ -112,12 +112,19 @@ $(function() {
 ';
     break;
   case "9":
-    $submoduleName = "player.group";
+$submoduleName = "player.group";
     $additionalJSorCssScript = '';
-
+    $groupKey="";
+    if (isset($_GET['groupKey'] )){
+      $groupKey =$_GET['groupKey'] ;
+    }
+    $dayKey="";
+    if (isset($_GET['dayKey'] )){
+      $dayKey =$_GET['dayKey'] ;
+    }
     $additionalScripts = '<script>
 	function localGetPlayerGroupDetail () {
-		getPlayerGroupDetail("' . $_GET['playerKey'] . '","' . $_GET['groupKey'] . '");
+		getPlayerGroupDetail("' . $_GET['playerKey'] . '","' . $groupKey . '","' . $dayKey . '");
 	}
     $(function() {
 		window.setTimeout("localGetPlayerGroupDetail()",'.$delay.');

@@ -35,8 +35,8 @@ Dev -
 <?php }?>
 Pronostics4fun</title>
 
-<meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionn�s de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journ�es de la ligue 1.
-Des classements et des statistiques sont �tablis � la fin de chaque journ�e de championnat. (Classement g�n�ral, Classement par journ�e, ...).">
+<meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnés de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journ�es de la ligue 1.
+Des classements et des statistiques sont �tablis � la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
 <meta name="keywords" content="p4f, pronostics 4 fun, pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
 <link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
@@ -49,6 +49,7 @@ Des classements et des statistiques sont �tablis � la fin de chaque journ�
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.requireScript.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE.$_themePath ; ?>/js/jquery-ui.custom.min.js"></script>
 <link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/custom-theme/jquery-ui.custom.css' />
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.youtubepopup.min.js"></script>
 
 <?php
 if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
@@ -319,6 +320,7 @@ if ($.browser.msie)
 
 $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.center.js', function() {
 	$("#mainwrapper").center();
+	$("a.youtube").YouTubePopup({ idAttribute: 'youtube' });
 });
 
 var waitingLayerWidth = $("#WaitingLayer").width();

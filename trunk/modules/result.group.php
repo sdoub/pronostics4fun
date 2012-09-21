@@ -190,7 +190,7 @@ switch ($nbrOfMatch) {
     $rowWidth = 85 * $nbrOfMatch;
     break;
   default;
-    $rowWidth = 77 * $nbrOfMatch;
+    $rowWidth = 70 * $nbrOfMatch;
     break;
 }
 
@@ -608,10 +608,26 @@ AND playermatchresults.playerKey=players.PrimaryKey
         INNER JOIN matches ON matches.PrimaryKey=votes.MatchKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey
-          AND votes.playerKey=players.PrimaryKey)) Score
+          AND votes.playerKey=players.PrimaryKey)) Score,
+(SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+  WHERE players.PrimaryKey=playermatchresults.PlayerKey
+    AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
+    									FROM matches
+    									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+    									       AND groups.PrimaryKey=$_groupKey)
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
+      AND playermatchresults.Score>=5) ScoreCorrect,
+(SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+  WHERE players.PrimaryKey=playermatchresults.PlayerKey
+    AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
+    									FROM matches
+    									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+    									       AND groups.PrimaryKey=$_groupKey)
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
+      AND playermatchresults.Score>=15) ScorePerfect
 FROM playersenabled players
-GROUP BY NickName
-ORDER BY Score DESC, NickName";
+GROUP BY players.PrimaryKey
+ORDER BY Score DESC, ScoreCorrect DESC, ScorePerfect DESC";
 }
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
@@ -619,13 +635,20 @@ $rank=0;
 $previousRank=0;
 $realRank=0;
 $previousScore=0;
+$previousMatchGood = 0;
+$previousMatchPerfect = 0;
+
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   echo '<li id="GRP_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'">';
 
 
   $realRank++;
-  if ($previousScore>$rowSet["Score"]||$previousScore==0) {
+  if ($rowSet["Score"]!=$previousScore || $rowSet["Score"]>0) {
+    $rank=$realRank;
+  } elseif ($rowSet["ScoreCorrect"]!=$previousMatchGood){
+    $rank=$realRank;
+  } elseif ($rowSet["ScorePerfect"]!=$previousMatchPerfect){
     $rank=$realRank;
   }
 
@@ -641,6 +664,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   echo '<a class="popupscroll" href="#"><img class="avat" src="' . $avatarPath .'"></img></a>';
 
   $previousScore=$rowSet["Score"];
+  $previousMatchGood=$rowSet["ScoreCorrect"];
+  $previousMatchPerfect=$rowSet["ScorePerfect"];
   if ($rowSet["PreviousRank"]) {
     if ($rowSet["PreviousRank"]>$rank) {
       $variation = "up";

@@ -15,6 +15,13 @@ if ($_isAuthenticated)
       break;
 
     case "2":
+      $submenu = '<ul id="navMenu2">';
+
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Mode=1" ><span>Vue 1</span></a></li>';
+
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Mode=2" ><span>Vue 2</span></a></li>';
+      $submenu .= '</ul>';
+      echo $submenu;
 //      $submenu = '<ul id="navMenu2">';
 //
 //      $sql = "SELECT PrimaryKey GroupKey, Description, Code FROM groups WHERE CompetitionKey=" . COMPETITION;
