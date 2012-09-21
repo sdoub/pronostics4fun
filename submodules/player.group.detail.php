@@ -1,7 +1,24 @@
 <?php
 
 $playerKey = $_GET["playerKey"];
-$groupKey = $_GET["groupKey"];
+if (isset($_GET['dayKey']) && $_GET['dayKey']!="") {
+
+  	$query= "SELECT
+	groups.PrimaryKey GroupKey,
+	groups.Description GroupDescription
+	FROM groups
+	WHERE groups.DayKey=" . $_GET['dayKey'] . "
+	 AND groups.CompetitionKey=" . COMPETITION;
+$resultSet = $_databaseObject->queryPerf($query,"Get group information");
+$rowSet = $_databaseObject -> fetch_assoc ($resultSet);
+$groupKey =$rowSet["GroupKey"];
+
+}
+else {
+
+  $groupKey = $_GET["groupKey"];
+}
+
 
 $content ='';
 

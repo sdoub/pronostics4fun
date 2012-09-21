@@ -699,7 +699,7 @@ function CreateMinMaxAvgRankingChart(ptitle, pcategories) {
 				dataLabels: {
 					enabled:true,
 	                formatter: function() {
-						return Math.abs(this.y) + (Math.abs(this.y)==1? ' er' : ' eme') ;            
+						return Math.abs(this.y) + (Math.abs(this.y)==1? ' er' : ' ème') ;            
 				    },
 					style: {
 						fontWeight:'bold',

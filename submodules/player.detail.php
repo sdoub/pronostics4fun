@@ -1,9 +1,10 @@
 <?php
 
 $playerKey = $_GET["playerKey"];
-$line ="1-;";
+$line= array();
+$line[] ="1-;";
 $content ='';
-$line.="2-len:".strlen($content).";";
+$line[]="2-len:".strlen($content).";";
 
 
 $content.='<div id="FixedContent"><table>
@@ -14,7 +15,7 @@ $content.='<div id="FixedContent"><table>
 		<td
 			style="width: 100px; text-align: center; font-family: georgia; font-size: 12px; font-weight: bold; color: #365F89">Points</td>
 	</tr>';
-$line.="3-len:".strlen($content).";";
+$line[]="3-len:".strlen($content).";";
 
 $sql = "SELECT matches.PrimaryKey MatchKey,TeamHome.PrimaryKey TeamHomeKey,
        TeamHome.Name TeamHomeName,
@@ -39,19 +40,19 @@ INNER JOIN playermatchresults ON playermatchresults.PlayerKey=" . $playerKey . "
 WHERE matches.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")
 ORDER BY matches.ScheduleDate DESC";
 $resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
-$line.="4-len:".strlen($content).";";
+$line[]="4-len:".strlen($content).";";
 
 $scheduleMonth = "00";
 $scheduleDay = "00";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  $line.="5-len:".strlen($content).";";
+  $line[]="5-len:".strlen($content).";";
 
   $tempScheduleMonth=strftime("%m",$rowSet['ScheduleDate']);
   $tempScheduleDay=strftime("%d",$rowSet['ScheduleDate']);
   if (!($scheduleMonth==$tempScheduleMonth && $scheduleDay==$tempScheduleDay))
   {
-    $line.="6-len:".strlen($content).";";
+    $line[]="6-len:".strlen($content).";";
 
     $scheduleFormattedDate = strftime("%A %d %B %Y",$rowSet['ScheduleDate']);
 
@@ -73,7 +74,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
       $variation="up";
       $diff = 0;
     }
-$line.="7-len:".strlen($content).";";
+$line[]="7-len:".strlen($content).";";
 
     $content.= '<tr class="day"
       	    style="">
@@ -81,62 +82,62 @@ $line.="7-len:".strlen($content).";";
       	  <td colspan="2"><span class="var ' . $variation . '"></span>'. $rowSet["GlobalRank"] . ' (' . $diff . ')</td>
       	</tr>';
   }
-$line.="8-len:".strlen($content).";";
+$line[]="8-len:".strlen($content).";";
 
   $content.='<tr class="match" match-key="' . $rowSet['MatchKey'] . '" status="' . $rowSet["LiveStatus"] . '">
       	  <td class="time">' . strftime("%H:%M",$rowSet['ScheduleDate']) . '</td>
       	  <td class="teamHome">' . $rowSet['TeamHomeName'] . '</td>
       	  <td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamHomeKey'] . '.png" width="30px" height="30px"></img></td>';
-   $line.="9-len:".strlen($content).";";
+   $line[]="9-len:".strlen($content).";";
 
   if ($rowSet["LiveStatus"]==10) {
-$line.="10-len:".strlen($content).";";
+$line[]="10-len:".strlen($content).";";
 
     $content.='<td class="score">' . $rowSet["TeamHomeScore"] . "-" . $rowSet["TeamAwayScore"] .'</td>';
   }
   else {
-$line.="11-len:".strlen($content).";";
+$line[]="11-len:".strlen($content).";";
 
     $content.='<td class="score">' . getStatus($rowSet["LiveStatus"]) .  '</td>';
   }
-  $line.="12-len:".strlen($content).";";
+  $line[]="12-len:".strlen($content).";";
 
   $content.='<td class="teamFlag"><img src="' . ROOT_SITE . '/images/teamFlags/' . $rowSet['TeamAwayKey'] . '.png"></img></td>
       	  <td class="teamAway">' . $rowSet['TeamAwayName'] . '</td>
       	  <td nowrap><div style="text-align:center;">';
   if (!($rowSet['ForecastTeamHomeScore']=="")) {
-    $line.="13-len:".strlen($content).";";
+    $line[]="13-len:".strlen($content).";";
 
     $content.=$rowSet['ForecastTeamHomeScore'] . "-" . $rowSet['ForecastTeamAwayScore'];
   }
   else
   {
-    $line.="14-len:".strlen($content).";";
+    $line[]="14-len:".strlen($content).";";
 
-    $content.=__encode("Pas de pronos.");
+    $content.="Pas de pronos.";
   }
 
   $content.='</div></td>';
-  $line.="15-len:".strlen($content).";";
+  $line[]="15-len:".strlen($content).";";
 
   if ($rowSet["LiveStatus"]==10) {
     $content.='<td style="text-align:right;padding-right:15px;">' . $rowSet["Score"]. '</td>';
   }
   else
   {
-    $line.="16-len:".strlen($content).";";
+    $line[]="16-len:".strlen($content).";";
 
     $content.='<td>&nbsp;</td>';
   }
 
   $content.='</tr>';
-$line.="17-len:".strlen($content).";";
+$line[]="17-len:".strlen($content).";";
 
   $scheduleMonth = strftime("%m",$rowSet['ScheduleDate']);
   $scheduleDay = strftime("%d",$rowSet['ScheduleDate']);
 
 }
-unset($rowSet,$resultSet,$sql);
+//unset($rowSet,$resultSet,$sql);
 /*
  $sql = "SELECT
  SUM(playermatchresults.Score) Score,
@@ -173,11 +174,12 @@ unset($rowSet,$resultSet,$sql);
  $content.= '<tr class="match"><td style="text-align:right;padding-right:15px;padding-top:10px;" colspan="7">Total : </td><td style="text-align:right;padding-right:15px;border-top: 1px solid #FFF;padding-top:10px;">' . $playerScore . '</td></tr>';
  */
 $content.='</table></div>';
-$line.="18-len:".strlen($content).";";
-
+$line[]="18-len:".strlen($content).";";
+//echo $content;
 $arr["status"] = false;
-$arr["message"] =$content;
-//$arr["lines"] =$line;
+$arr["message"] =utf8_encode($content);
+//$arr["message"] =$content;
+$arr["lines"] =$line;
 
 WriteJsonResponse($arr);
 ?>

@@ -29,7 +29,7 @@ class Authorization
       setcookie("ServerTime", time(), time() + 90 * 24 * 60 * 60, "/");
       }
       else {
-      setcookie("SessionHasExpired", "false", time() + 90 * 24 * 60 * 60, "/");
+        setcookie("SessionHasExpired", "false", time() + 90 * 24 * 60 * 60, "/");
       }
       return false;
     }
@@ -519,6 +519,7 @@ class Authorization
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
         setcookie("keepConnection", $keepConnection, time() + 90 * 24 * 60 * 60, "/");
+        $_SESSION['exp_user']['Token'] = $userToken;
       }
       $this->updateLastConnection($userToken);
       return $return;
@@ -605,41 +606,44 @@ class Authorization
         $sql .= "Token='".$_COOKIE["UserToken"] ."'";
         $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
 
-        if(!$resultSet) return false;
         //TODO: Check if the account is enabled
-        $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
-        $this->set_session(array_merge($rowSet,array('expires'=>time()+(60*SESSION_DURATION))));
-        $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
-        $return = true;
+        while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
 
+          $this->set_session($rowSet);
+          $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
+          // Définition du temps d'expiration des cookies
+          if (isset($_COOKIE["keepConnection"])){
+            $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
+          }
+          else {
+            $expiration =  time() + (60*SESSION_DURATION);
+          }
+          // Création des cookies
+          $userToken = generatePassword(50,7);
+          setcookie("UserToken", $userToken, $expiration, "/");
+          setcookie("UserToken2", $userToken, $expiration, "/");
+          setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
+          if (isset($_COOKIE["keepConnection"])){
+            setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
+          }
+          else {
+            setcookie("keepConnection", "false", time() + 90 * 24 * 60 * 60, "/");
+          }
 
+          unset($rowSet,$resultSet,$sql);
+          $this->updateLastConnection($userToken);
+          $_SESSION['exp_user']['Token'] = $userToken;
+          $this->_alreadyRefresh = true;
+          setcookie("refreshUserData", "true", time() + 90 * 24 * 60 * 60, "/");
+          $return = true;
+        }
+      } else {
+        setcookie("refreshUserData", "false", time() + 60 * 60, "/");
+        $return =true;
 
-        // Définition du temps d'expiration des cookies
-        if (isset($_COOKIE["keepConnection"])){
-          $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
-        }
-        else {
-          $expiration =  time() + (60*SESSION_DURATION);
-        }
-        // Création des cookies
-        $userToken = generatePassword(50,7);
-        setcookie("UserToken", $userToken, $expiration, "/");
-        setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
-        if (isset($_COOKIE["keepConnection"])){
-          setcookie("keepConnection", $_COOKIE["keepConnection"], time() + 90 * 24 * 60 * 60, "/");
-        }
-        else {
-          setcookie("keepConnection", "false", time() + 90 * 24 * 60 * 60, "/");
-        }
-
-        unset($rowSet,$resultSet,$sql);
-        $this->updateLastConnection($userToken);
-        $this->_alreadyRefresh = true;
-        setcookie("refreshUserData", "true", time() + 90 * 24 * 60 * 60, "/");
-        return $return;
       }
     } else {
-      setcookie("refreshUserData", "false", time() + 90 * 24 * 60 * 60, "/");
+      setcookie("refreshUserData", "false * in same session", time() + 90 * 24 * 60 * 60, "/");
       $return =true;
     }
 
@@ -680,14 +684,14 @@ class Authorization
     $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
   }
 
-  private function set_session($a=false)
+  private function set_session($a)
   {
     if(!empty($a))
     {
       setcookie("exp_user", "true", time() + 90 * 24 * 60 * 60, "/");
       $_SESSION['exp_user'] = $a;
     } else {
-      setcookie("exp_user", "false", time() + 90 * 24 * 60 * 60, "/");
+      setcookie("exp_user", "false because array is empty", time() + 60 * 60, "/");
     }
   }
 }

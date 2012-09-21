@@ -71,7 +71,11 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       $externalKey = $rowSet["ExternalKey"];
       $matchKey = $rowSet["MatchKey"];
       if ($rowSet["LiveStatus"]==10) {
-        $isLive = 0;
+        if ($rowSet["ScheduleDate"]+10400<$currentTime) {
+          $isLive = 0;
+        } else {
+          $isLive = 1;
+        }
       } else {
         $isLive = 1;
       }
