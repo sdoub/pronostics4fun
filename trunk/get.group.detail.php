@@ -44,7 +44,7 @@ $sql = "SELECT * FROM (SELECT
         (SELECT COUNT(*) FROM playermatchresults WHERE playermatchresults.Score<5 AND playermatchresults.PlayerKey= players.PrimaryKey AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)) BadScore
             FROM playersenabled players
             GROUP BY NickName) TMP
-            ORDER BY  Score DESC, CorrectScore DESC, PerfectScore DESC";
+            ORDER BY  Score+BonusScore DESC, CorrectScore DESC, PerfectScore DESC";
 
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
