@@ -234,5 +234,9 @@ if (sizeOf($arrDatabaseInfo["errorLog"])>0) {
   }
 }
 
+$sqlUpdateCronJobLog =" UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='$_errorMessage' WHERE JobName='GetMatches'";
+$_databaseObject->queryPerf($sqlUpdateCronJobLog,"Update Cron job information");
+
+
 require_once(dirname(__FILE__)."/end.file.php");
 ?>

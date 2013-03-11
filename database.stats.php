@@ -5,7 +5,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>' . __encode("Pronostics4Fun - Statistiques de la base de données") . '</title>
+<title>' . __encode("Pronostics4Fun - Statistiques de la base de donnï¿½es") . '</title>
 <link rel="icon" href="http://pronostics4fun.com/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="http://pronostics4fun.com/favico.ico" type="image/x-icon" />
 </head>
@@ -26,12 +26,12 @@ echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collaps
 
 
 /**
- * Retourne la taille plus l'unité arrondie
+ * Retourne la taille plus l'unitÃ© arrondie
  *
  * @param mixed $bytes taille en octets
  * @param string $format formatage (http://www.php.net/manual/fr/function.sprintf.php)
- * @param string $lang indique la langue des unités de taille
- * @return string chaine de caractères formatées
+ * @param string $lang indique la langue des unitï¿½s de taille
+ * @return string chaine de caractï¿½res formatï¿½es
  */
 function formatSize($bytes,$format = '%.2f',$lang = 'en')
 {
@@ -56,11 +56,11 @@ function formatSize($bytes,$format = '%.2f',$lang = 'en')
 		$translatedUnits = &$units['en'];
 	}
 	$b = (double)$bytes;
-	/*On gére le cas des tailles de fichier négatives*/
+	/*On gï¿½re le cas des tailles de fichier nï¿½gatives*/
 	if($b > 0)
 	{
 		$e = (int)(log($b,1024));
-		/**Si on a pas l'unité on retourne en To*/
+		/**Si on a pas l'unitï¿½ on retourne en To*/
 		if(isset($translatedUnits[$e]) === false)
 		{
 			$e = 4;
@@ -109,17 +109,38 @@ echo '
 <td colspan="1">&nbsp;</td>
 <td >Total</td>
 <td style="text-align:right;padding-right:5px;font-weight:bold;font-style:italic;">'.$formattedTotalFreeSize.'</td>
-</tr>';
+</tr></table>';
 
 echo "</table>";
 if ($totalFreeSize) {
-  echo __encode("<p style='font-size:12px;color:red;'><sup>*</sup> Le chiffre en rouge signifie une perte d'espace, la table devrait être optimisée</p>");
+  echo __encode("<p style='font-size:12px;color:red;'><sup>*</sup> Le chiffre en rouge signifie une perte d'espace, la table devrait Ãªtre optimisÃ©e</p>");
 }
-echo "<p>L'administrateur de Pronostics4Fun.</p>
+
+$sql = "SELECT LastExecutionInformation,LastStatus,LastExecution,JobName FROM `cronjobs`";
+echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collapse:collapse">
+<tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
+<td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="3"><img src="' . ROOT_SITE . '/images/stats.gif" style="height:20px;width:20px;padding-right:15px;"/>Cron Jobs</td>
+</tr>';
+
+$resultSet = $_databaseObject->queryPerf($sql,"Get Cron jobs status");
+while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+{
+    echo '
+<tr style="border-bottom:1px solid #CCCCCC;">';
+    echo '<td style="overflow:hidden;border-bottom:1px solid #CCCCCC;vertical-align:top;width:50px;text-align:left;">'.$rowSet["JobName"].'</td>
+<td style="border-bottom:1px solid #CCCCCC;vertical-align:bottom;width:120px;text-align:right;">'.$rowSet["LastExecutionInformation"].'</td>
+<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:80px;text-align:right;">'.$rowSet["LastExecution"].'</td></tr>';
+}
+
+echo "</table><p>L'administrateur de Pronostics4Fun.</p>
 </body>
 </html>";
 
 //writePerfInfo();
+
+$sqlUpdateCronJobLog =" UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='Backuped' WHERE JobName='Backup'";
+$_databaseObject->queryPerf($sqlUpdateCronJobLog,"Update Cron job information");
+
 
 require_once("end.file.php");
 ?>

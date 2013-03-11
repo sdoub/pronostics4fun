@@ -7,7 +7,6 @@ include_once(dirname(__FILE__). "/lib/score.php");
 include_once(dirname(__FILE__). "/lib/p4fmailer.php");
 require_once(dirname(__FILE__). "/lib/http.php");
 
-
 class Timer
 {
   private static $_start = null;
@@ -29,7 +28,6 @@ class Timer
     return ($endtime - self::$_start);
   }
 }
-
 
 $dayKey="";
 if (isset($_GET["DayKey"])) {
@@ -120,48 +118,10 @@ echo '<p>Queries ('.sizeOf($_queries).') were executed in ' . Timer::end() . ' s
 
 
 $previousGroupKey = 0;
-//foreach ($rowsSet as $rowSet)
-//{
-//  if ($previousGroupKey != $rowSet["GroupKey"]) {
-//    $mail = new P4FMailer();
-//
-//    try {
-//
-//      $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-//
-//      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-//
-//      $_groupDescription = $rowSet['Description'];
-//      $mail->Subject    = "Pronostics4Fun - Mise à jour des stats de la ".__decode($_groupDescription);
-//
-//      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-//
-//      $mail->MsgHTML(file_get_contents(ROOT_SITE.'/result.group.sumup.php?GroupKey='.$rowSet["GroupKey"]));
-//
-//      $mail->AddAddress('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-//
-//      $mail->AddAttachment("images/Logo.png");      // attachment
-//
-//      //    $mail->Send();
-//
-//    } catch (phpmailerException $e) {
-//      echo $e->errorMessage(); //Pretty error messages from PHPMailer
-//    } catch (Exception $e) {
-//      echo $e->getMessage(); //Boring error messages from anything else!
-//    }
-//
-//    unset($mail);
-//  }
-//  $previousGroupKey = $rowSet["GroupKey"];
-//
-//}
-
 
 $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
 
 $totaltime = getElapsedTime();
-//$_logInfo .= implode(',',$arr["errorLog"]);
-//echo json_encode($arr);
 echo "<p>This page loaded in $totaltime seconds.</p>";
 if (count($arr["errorLog"])>0) {
   if ($arr["errorLog"]!="") {
@@ -171,16 +131,9 @@ if (count($arr["errorLog"])>0) {
   }
 }
 
-//    $script_tz = date_default_timezone_get();
-//
-//    if (strcmp($script_tz, ini_get('date.timezone'))){
-//      $_logInfo .= 'Script timezone differs from ini-set timezone.';
-//      $_logInfo .= $script_tz;
-//    } else {
-//      $_logInfo .= 'Script timezone and ini-set timezone match.';
-//      $_logInfo .= $script_tz;
-//    }
+$sqlUpdateCronJobLog =" UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='$_errorMessage' WHERE JobName='RefreshCompletedMatches'";
+$_databaseObject->queryPerf($sqlUpdateCronJobLog,"Update Cron job information");
 
-//echo $_logInfo;
+
 require_once(dirname(__FILE__)."/end.file.php");
 ?>
