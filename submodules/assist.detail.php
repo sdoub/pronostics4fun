@@ -47,7 +47,7 @@ ScheduleDate FROM
     from events
     INNER JOIN results ON results.PrimaryKey=events.ResultKey
      INNER JOIN matches ON matches.PrimaryKey=results.MatchKey
-     INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=2
+     INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
      WHERE events.TeamKey=matches.TeamHomeKey
      AND events.EventType IN (1,2,3)
     UNION ALL
@@ -55,7 +55,7 @@ ScheduleDate FROM
     from events
     INNER JOIN results ON results.PrimaryKey=events.ResultKey
      INNER JOIN matches ON matches.PrimaryKey=results.MatchKey
-     INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=2
+     INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
      WHERE events.TeamKey=matches.TeamAwayKey
      AND events.EventType IN (1,2,3)) TMP
      INNER JOIN teams TeamHome ON TeamHome.PrimaryKey=TeamHomeKey
@@ -66,7 +66,7 @@ ScheduleDate FROM
    FROM results
   INNER JOIN events ON results.PrimaryKey=events.ResultKey AND events.TeamPlayerKey=$teamPlayerKey AND events.EventType IN (4)
   INNER JOIN matches ON matches.PrimaryKey=results.MatchKey
-  INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=2)
+  INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
  GROUP BY MatchKey, TeamHomeKey, TeamAwayKey
  ) TMP2
  INNER JOIN results ON results.MatchKey=TMP2.MatchKey
@@ -132,6 +132,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   $scheduleDay = strftime("%d",$rowSet['ScheduleDate']);
 
 }
+$arr["query"] = $sql;
 unset($rowSet,$resultSet,$sql);
 $content.='</table></div>';
 
