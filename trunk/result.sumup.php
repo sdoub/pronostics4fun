@@ -215,17 +215,22 @@ FROM playersenabled players
 WHERE (EXISTS (SELECT 1 FROM forecasts INNER JOIN matches ON matches.PrimaryKey=forecasts.MatchKey AND matches.GroupKey=$_groupKey WHERE forecasts.PlayerKey=players.PrimaryKey)
 OR players.ReceiveResult=1)
 GROUP BY NickName
-ORDER BY Score desc, NickName";
+ORDER BY Rank, NickName";
 
-$resultSet = $_databaseObject->queryPerf($sql,"Get group table ranking");
-$currentRecord=0;
+$rowsSet = $_databaseObject -> queryGetFullArray($sql,"Get global table ranking");
 $currentPlayerHasBeenDisplayed = false;
-$nbrOfPlayers = $_databaseObject->num_rows();
+$nbrOfPlayers = count($rowsSet);
 $nbrOfPlayers--; // due to 0 base
 $displayThreePoint = false;
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+for ($currentRecord = 0 ; $currentRecord < count($rowsSet) ; $currentRecord++)
 {
+  $forceToDisplay4 = false;
+  $rowSet = $rowsSet[$currentRecord];
   $playerStyle="";
+  if ($rowsSet[4]["PlayerKey"]==$_playerKey) {
+    $forceToDisplay4 = true;
+  }
+
   if ($rowSet["PlayerKey"]==$_playerKey) {
     $playerStyle="font-weight:bold;";
     $currentPlayerHasBeenDisplayed = true;
@@ -234,7 +239,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if ($rowSet["Score"]>1) {
     $score =$rowSet["Score"]."pts";
   }
-  if ($currentRecord<3 || ($currentRecord<5 && $currentPlayerHasBeenDisplayed) || $currentRecord==$nbrOfPlayers || $rowSet["PlayerKey"]==$_playerKey) {
+  if ($currentRecord<3 || ($currentRecord<5 && $currentPlayerHasBeenDisplayed) || $currentRecord==$nbrOfPlayers || $rowSet["PlayerKey"]==$_playerKey || ($currentRecord==3 && $forceToDisplay4) ) {
     echo '<tr style="border-bottom:1px solid #CCCCCC;'.$playerStyle.'">
 <td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;padding-left:15px;" colspan="4">
 <span style="background-color:#365F89;
@@ -258,7 +263,7 @@ width:30px;float:left;
   }
   else {
 
-    if ($currentRecord==4 || $displayThreePoint)
+    if ($currentRecord==3 || $displayThreePoint)
     echo '<tr style="border-bottom:1px solid #CCCCCC;">
 <td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;padding-left:15px;" colspan="4">.....</td>
 <td style="border-bottom:1px solid #CCCCCC;text-align:right;padding-right:5px;">....</td>
@@ -268,7 +273,6 @@ width:30px;float:left;
 
   }
 
-  $currentRecord++;
 }
 
 echo '<tr>
@@ -293,18 +297,24 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
 FROM playersenabled players
 GROUP BY NickName
 HAVING Score>0
-ORDER BY Score desc, NickName";
+ORDER BY Rank, NickName";
 
 
-$resultSet = $_databaseObject->queryPerf($sql,"Get global table ranking");
-$currentRecord=0;
+//$resultSet = $_databaseObject->queryPerf($sql,"Get global table ranking");
+$rowsSet = $_databaseObject -> queryGetFullArray($sql,"Get global table ranking");
 $currentPlayerHasBeenDisplayed = false;
-$nbrOfPlayers = $_databaseObject->num_rows();
+$nbrOfPlayers = count($rowsSet);
 $nbrOfPlayers--; // due to 0 base
 $displayThreePoint = false;
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+for ($currentRecord = 0 ; $currentRecord < count($rowsSet) ; $currentRecord++)
 {
+  $forceToDisplay4 = false;
+  $rowSet = $rowsSet[$currentRecord];
   $playerStyle="";
+  if ($rowsSet[4]["PlayerKey"]==$_playerKey) {
+    $forceToDisplay4 = true;
+  }
+
   if ($rowSet["PlayerKey"]==$_playerKey) {
     $playerStyle="font-weight:bold;";
     $currentPlayerHasBeenDisplayed = true;
@@ -313,7 +323,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if ($rowSet["Score"]>1) {
     $score =$rowSet["Score"]."pts";
   }
-  if ($currentRecord<3 || ($currentRecord<5 && $currentPlayerHasBeenDisplayed) || $currentRecord==$nbrOfPlayers || $rowSet["PlayerKey"]==$_playerKey) {
+  if ($currentRecord<3 || ($currentRecord<5 && $currentPlayerHasBeenDisplayed) || $currentRecord==$nbrOfPlayers || $rowSet["PlayerKey"]==$_playerKey || ($currentRecord==3 && $forceToDisplay4) ) {
     echo '<tr style="border-bottom:1px solid #CCCCCC;'.$playerStyle.'">
 <td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;padding-left:15px;" colspan="4">
 <span style="background-color:#365F89;
@@ -337,7 +347,7 @@ width:30px;float:left;
   }
   else {
 
-    if ($currentRecord==4 || $displayThreePoint)
+    if ($currentRecord==3 || $displayThreePoint)
     echo '<tr style="border-bottom:1px solid #CCCCCC;">
 <td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;padding-left:15px;" colspan="4">.....</td>
 <td style="border-bottom:1px solid #CCCCCC;text-align:right;padding-right:5px;">....</td>
@@ -347,7 +357,7 @@ width:30px;float:left;
 
   }
 
-  $currentRecord++;
+  //$currentRecord++;
 }
 
 echo "</table>";
