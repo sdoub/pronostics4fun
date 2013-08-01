@@ -33,6 +33,7 @@ foreach ($rowsSet as $rowSet)
     case 2:
     case 3:
     case 5:
+    case 6:
       $url = "http://" . EXTERNAL_WEB_SITE . "/competitionPluginCalendrierResultat/changeCalendrierHomeJournee?c=ligue1&js=" . $dayKey . "&id=0";
       break;
   }

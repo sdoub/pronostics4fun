@@ -48,7 +48,7 @@ AND players.IsReminderEmailSent=0
 
       $emailSent = true;
       echo "email to : ". $rowSet["NickName"]."<br/>";
-      $mail             = new PHPMailer(true);
+      $mail             = new P4FMailer();
 
       try {
 

@@ -258,9 +258,9 @@ function ConvertLfpKeyToP4F($lfpKey) {
    Dijon FCO -> 547450 -> 57
    Evian TG FC -> 553251 -> 58
    CS Sedan      -> 500266 -> 59
-   FC Nantes  -> 501904 -> 60
+   FC Nantes  -> 501904 -> 69
    SC Bastia -> 508009 -> 61
-   EA Guingamp -> 500126 -> 62
+   EA Guingamp -> 500126 -> 70
    FC Metz -> 500154 -> 63
    RC Strasbourg -> 500191 -> 64
    ESTAC -> 500073 -> 65
@@ -296,9 +296,9 @@ function ConvertLfpKeyToP4F($lfpKey) {
   547450 => 57,
   553251 => 58,
   500266 => 59,
-  501904 => 60,
+  501904 => 69,
   508009 => 66,
-  500126 => 62,
+  500126 => 70,
   500154 => 63,
   500191 => 64,
   500073 => 68,
@@ -312,7 +312,11 @@ function ConvertLfpKeyToP4F($lfpKey) {
   "553251_new" => 58,
   542397 => 67,
   "Reims_Pantone" => 67,
-  "estac_2012" => 68
+  "estac_2012" => 68,
+  "PSG_logo" => 48,
+  "Monaco_AS"=>38,
+  "Stade_reims"=>67,
+  "logo_nice_100" => 49
   );
 
   if (array_key_exists($lfpKey,$arrlfpKeys)) {
