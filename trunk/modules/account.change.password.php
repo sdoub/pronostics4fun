@@ -20,7 +20,7 @@ if ($_activationKey) {
   //echo $sql;
   $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
 
-  if(!$resultSet) return exit (__encode("La clé est non valide!"));
+  if(!$resultSet) return exit (__encode("La clï¿½ est non valide!"));
 
   $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
   $rootSite = ROOT_SITE;
@@ -46,7 +46,7 @@ if ($_activationKey) {
 </div>
 
 <div class="content">
-<?php echo __encode("Pour une raison inconnue, votre mot de passe n'a pas pu être changé, par conséquent, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>, pour qu'il règle ce problème.")?>
+<?php echo __encode("Pour une raison inconnue, votre mot de passe n'a pas pu ï¿½tre changï¿½, par consï¿½quent, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>, pour qu'il rï¿½gle ce problï¿½me.")?>
 </div>
 </div>
 <div id="containerSuccess">
@@ -57,7 +57,7 @@ if ($_activationKey) {
 </div>
 
 <div class="content">
-<?php echo __encode("Votre mot de passe a été changé, vous pouvez maintenant vous rendre sur la page d'accueil en cliquant <a href='".ROOT_SITE."'>ici</a>")?>
+<?php echo __encode("Votre mot de passe a Ã©tÃ© changÃ©, vous pouvez maintenant vous rendre sur la page d'accueil en cliquant <a href='".ROOT_SITE."'>ici</a>")?>
 </div>
 
 </div>
@@ -170,7 +170,7 @@ else {
 </div>
 
 <div class="content">
-<?php echo __encode("Ce lien n'est plus valide, veuillez recommencer la procédure depuis le début en cliquant sur le lien <u>'Mot de passe oublié?'</u>, de la fenêtre de connexion, ou bien, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>.")?>
+<?php echo __encode("Ce lien n'est plus valide, veuillez recommencer la procï¿½dure depuis le dï¿½but en cliquant sur le lien <u>'Mot de passe oubliï¿½?'</u>, de la fenï¿½tre de connexion, ou bien, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>.")?>
 </div>
 </div>
 

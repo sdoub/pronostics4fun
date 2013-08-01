@@ -65,7 +65,7 @@ else
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
 //TODO: Créer une session pour stocker la session courante
-DEFINE ('COMPETITION','5');
+DEFINE ('COMPETITION','6');
 //TODO: Récupérer l'information de la base de données
 $_themePath = "/themes/LIGUE1";
 $_competitionType =1;

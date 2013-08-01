@@ -13,6 +13,7 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
     case 2:
     case 3:
     case 5:
+    case 6:
       if ($isLive) {
         $urlToGetMatchInfo = "http://" .EXTERNAL_WEB_SITE . "/ligue1/feuille_match/$_externalKey?live=1";
       } else {
