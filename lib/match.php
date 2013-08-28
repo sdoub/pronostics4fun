@@ -118,6 +118,8 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
 
     $queries[]=$updateQuery;
 
+    $nbrHomeGoals=0;
+    $nbrAwayGoals=0;
     foreach($htmlMatch->find('div.#buts ul') as $ulitems) {
       $class = $ulitems->getAttribute('class');
       $isHome =stripos($class, 'club_dom') !== false ;
@@ -174,8 +176,10 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
         $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
         if ($isHome) {
           $teamKey = $_teamHomeKey;
+          $nbrHomeGoals ++;
         } else {
           $teamKey = $_teamAwayKey;
+          $nbrAwayGoals ++;
         }
         $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
         VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
@@ -240,7 +244,24 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
         }
       }
     }
+    if ($homeGoals>$nbrHomeGoals){
+        for ($goal=1; $goal<=$homeGoals-$nbrHomeGoals;$goal++){
+          $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+            VALUES ($resultKey, $_teamHomeKey, 1,$goal, 1, 1132)
+            ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=1132";
+          $queries[]=$updateQuery;
 
+        }
+      }
+      if ($awayGoals>$nbrAwayGoals) {
+        for ($goal=1; $goal<=$awayGoals-$nbrAwayGoals;$goal++){
+          $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+            VALUES ($resultKey, $_teamAwayKey, 1,$goal, 1, 1132)
+            ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=1132";
+          $queries[]=$updateQuery;
+
+        }
+      }
 
     $htmlMatch->clear();
     unset($htmlMatch);

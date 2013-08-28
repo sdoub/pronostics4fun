@@ -195,6 +195,46 @@ Le meilleur pronostiqueur d'une journée est le participant qui aura cumulé le 
 Le meilleur pronostiqueur de la saison 2012-2013, est le participant qui aura cumulé le plus de points sur les 38 journées qui se déroulent pendant cette saison 2012/2013
 </p>
 <br/>
+<p style='font-weight:bold;'>Le championnat P4F</p>
+<p>Le championnat P4F est une compétition sous forme de championnat entre les pronostiqueurs. On distinguera plusieurs divisions comportant chacune 10 joueurs et se déroulant sur 9 journées (il n'y aura donc qu'une phase aller, pas de retour car on considérera qu'il n'y a pas d'avantage à jouer à domicile).</p>
+</br>
+<p>Ce championnat sera associé aux journées de Ligue 1.</p>
+<p>
+&nbsp;&nbsp;&nbsp;- Saison 1 : Journée 2 à Journée 10<br>
+&nbsp;&nbsp;&nbsp;- Saison 2 : Journée 11 à Journée 19<br>
+&nbsp;&nbsp;&nbsp;- Saison 3 : Journée 20 à Journée 28<br>
+&nbsp;&nbsp;&nbsp;- Saison 4 : Journée 29 à Journée 37<br>
+</p>
+</br>
+<p>Le score de la rencontre entre les 2 joueurs sera déterminé suivant le nombre de points obtenus au concours de pronostics (sans les points bonus de 20, 40, 60 et 100 points) par les joueurs lors de la journée correspondante (Si pour des raisons de report de match ou bien de calendrier de Ligue 1, une journée sera considérer comme complèté à la date précédent le début de la journée suivante).
+Le gagnant de la rencontre aura 3 points ou 1 point en cas de match nul et zéro en cas de défaite.</p>
+
+<p>Le classement se fait d'abord sur le meilleur nombre de points, puis pour départager les ex-aequos la meilleure différences de points, et enfin le meilleur de 'Points pour'.</p>
+
+<p>A la fin de chaque saison/édition les 2 premiers montent et les 2 derniers descendent de division.</p>
+<p>Si par exemple un joueur est en Division 4 et fini dans les 2 premiers alors il montera en Division 3.</p>
+
+<p>Avant chaque saison/édition du championnat P4F, le calendrier de chaque division est formé avec les joueurs qui appartiennent à une division donnée.</p>
+
+<p>Entre chaque saison/édition les joueurs n'appartenant pas à une division et inscrit récemment feront leur entrée dans ce championnat par la plus petite division</p>
+</br>
+<br/>
+<p style='font-weight:bold;'>La coupe P4F</p>
+<p>La coupe P4F est une compétition sous forme de compétition à élimination directe entre les pronostiqueurs. En fonction du nombre de participants la coupe comportera plus ou moins de tour et se déroulera sur 9 journées de Ligue1 maximum.</p>
+</br>
+<p>Cette coupe sera associé aux journées de Ligue 1.</p>
+<p>
+&nbsp;&nbsp;&nbsp;- Saison 1 : Journée 2 à Journée 10<br>
+&nbsp;&nbsp;&nbsp;- Saison 2 : Journée 11 à Journée 19<br>
+&nbsp;&nbsp;&nbsp;- Saison 3 : Journée 20 à Journée 28<br>
+&nbsp;&nbsp;&nbsp;- Saison 4 : Journée 29 à Journée 37<br>
+</p>
+</br>
+<p>Le score de la rencontre entre les 2 joueurs sera déterminé suivant le nombre de points obtenus au concours de pronostics (sans les points bonus de 20, 40, 60 et 100 points) par les joueurs lors de la journée correspondante (Si pour des raisons de report de match ou bien de calendrier de Ligue 1, une journée sera considérer comme complèté à la date précédent le début de la journée suivante).
+Le gagnant de la rencontre sera qualifié pour le tour suivant, en cas de match nul, les règles suivantes seront appliqué pour désigner le vainqueur, le joueur ayant le plus de match correct, si cela ne suffit pas, le joueur ayant le plus de perfect, et pour finir en cas d'extême égalité c'est le premier joueur ayant validé ses pronostics qui sera désigné vainqueur.</p>
+
+<p>Avant chaque saison/édition de la coupe P4F, un tirage au sort du premier tour sera effectué avec l'ensemble des joueurs concourant pour le classement général de P4F.</p>
+</br>
 <h3>Article 3 - Acceptation du règlement</h3>
 <p>
 La participation à ce jeu implique l'acceptation entière et sans réserve du présent règlement.

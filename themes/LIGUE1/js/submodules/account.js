@@ -160,12 +160,18 @@ function callbackPost (data){
 					if (!$(this).hasClass("apply")){
 						$('#accountDiv').fadeOut('slow', function (){
 							var originalPath = $('#avatar').attr('src');
-							var fileName = originalPath.split('_');
-							var filePath = fileName[0]; 
-							var fileExt = fileName[1].split('.');
-							filePath+="original.";
-							_fileExt = fileExt[1].substring(0,3);
-							filePath+=fileExt[1];
+							var filePath="";
+							if (originalPath.indexOf("DefaultAvatar.jpg") == -1) {
+  							var fileName = originalPath.split('_');
+  							var filePath = fileName[0]; 
+  							var fileExt = fileName[1].split('.');
+  							filePath+="original.";
+  							_fileExt = fileExt[1].substring(0,3);
+  							filePath+=fileExt[1];
+							} else {
+							  filePath=originalPath;
+							}
+							$.log(filePath);
 							$('#accountAvatarDiv img').attr('src',filePath);
 							$('#avatar').attr("src",filePath).fadeIn();
 							$('#accountAvatarDiv').fadeIn('slow',function (){

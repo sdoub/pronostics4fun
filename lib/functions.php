@@ -652,11 +652,18 @@ function AddScriptReference ($name) {
         $tempScript=sprintf($jsScriptTemplate,"jquery.spin");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "allipsis":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.ellipsis");
+        $_arrScripts[$name]=$tempScript;
+        break;
       case "overflow":
         $tempScript=sprintf($jsScriptTemplate,"jquery.text-overflow");
         $_arrScripts[$name]=$tempScript;
         break;
-
+      case "threedots":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.ThreeDots.min");
+        $_arrScripts[$name]=$tempScript;
+        break;
       case "ckeditor":
         $tempScript = '<script type="text/javascript" src="' . ROOT_SITE . '/ckeditor/ckeditor.js"></script>';
         $tempScript .= '<script type="text/javascript" src="' . ROOT_SITE . '/ckeditor/adapters/jquery.js"></script>';
@@ -669,6 +676,16 @@ function AddScriptReference ($name) {
       case "ibutton":
         $tempScript=sprintf($jsScriptTemplate,"jquery.ibutton");
         $tempScript.=sprintf($cssScriptTemplate,"jquery.ibutton.p4f");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "tokeninput":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.tokeninput");
+        $tempScript.=sprintf($cssScriptTemplate,"token-input");
+        $tempScript.=sprintf($cssScriptTemplate,"token-input-p4f");
+        $_arrScripts[$name]=$tempScript;
+        break;
+      case "gracket":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.gracket");
         $_arrScripts[$name]=$tempScript;
         break;
     }

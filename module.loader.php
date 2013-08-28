@@ -186,6 +186,16 @@ SELECT 1
     case "8":
       include("modules/account.change.password.php");
       break;
+    case "9":
+      if (isset($_GET['Competition'])) {
+        if ($_GET['Competition']=="Cup")
+          include("modules/p4f.cup.draw.php");
+        else
+          include("modules/p4f.ranking.division.php");
+      } else {
+        include("modules/p4f.ranking.division.php");
+      }
+      break;
     default:
       include("modules/new.home.connected.php");
   }

@@ -93,11 +93,19 @@ class Authorization
     $defaultView = $_SESSION['exp_user']['IsCalendarDefaultView'];
     $receiveAlert = $_SESSION['exp_user']['ReceiveAlert'];
     $receiveResult = $_SESSION['exp_user']['ReceiveResult'];
-    $fileExt = substr($_SESSION['exp_user']['AvatarName'],-3);
+    $originalAvatarPath = "DefaultAvatar.jpg";
+    $fileExt = "";
+    if (!empty($_SESSION['exp_user']['AvatarName']))
+    {
+      $fileExt = substr($_SESSION['exp_user']['AvatarName'],-3);
+      $originalAvatarPath  = 'avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt;
+    }
+
+
     $htmlForm =	'
 <div id="accountAvatarDiv" >
 <div class="avatarDiv">
-<img src="images/avatars/' . $this->getConnectedUserKey() . 'original.'.$fileExt.'" id="OriginalAvatar" />
+<img src="images/'.$originalAvatarPath.'" id="OriginalAvatar" />
 
 </div>
 <div  id="file-uploader">
@@ -114,7 +122,7 @@ class Authorization
 <label class="read title">' . $_SESSION['exp_user']['NickName'] . '</label>
 <label class="title">Nom: </label>
 <input name="lastName" id="lastName" class="textfield" type="text" value="'. $_SESSION['exp_user']['LastName'] .'">
-<label class="title">Pr�nom: </label>
+<label class="title">Prénom: </label>
 <input name="firstName" id="firstName" class="textfield" type="text" value="'. $_SESSION['exp_user']['FirstName'] .'">
 <label class="title">Email: </label>
 <input name="email" id="email" class="textfield" type="text" value="'. $_SESSION['exp_user']['EmailAddress'] .'">
@@ -122,7 +130,7 @@ class Authorization
 <input name="password" id="password" class="textfield"	type="password">
 <label class="title">Confirmer votre mot de passe : </label>
 <input name="pbis" id="pbis" class="textfield" type="password">
-<div><label class="titleCheckbox" for="DefaultForecastView">Vue par d�faut des pronostics : </label>
+<div><label class="titleCheckbox" for="DefaultForecastView">Vue par défaut des pronostics : </label>
 <input type="checkbox" name="DefaultForecastView" id="DefaultForecastView" ';
     if ($defaultView=="1")
     $htmlForm .=	' checked';
@@ -132,7 +140,7 @@ class Authorization
     if ($receiveAlert=="1")
     $htmlForm .=	' checked';
 
-    $htmlForm .= '/></div><div><label class="titleCheckbox" for="ReceiveResult">Recevoir les R�sultats par email : </label>
+    $htmlForm .= '/></div><div><label class="titleCheckbox" for="ReceiveResult">Recevoir les Résultats par email : </label>
 <input type="checkbox" name="ReceiveResult" id="ReceiveResult" ';
     if ($receiveResult=="1")
     $htmlForm .=	' checked';
@@ -228,7 +236,7 @@ class Authorization
 
     if($email)
     {
-      $email = utf8_decode($email);
+      $email = $email;
       $email = strtolower($email);
       $sql = "SELECT * FROM players WHERE ";
       $sql .= "lower(EmailAddress)='".mysql_real_escape_string(__encode($email))."'";
@@ -254,11 +262,6 @@ class Authorization
     $return = false;
     if($nickName&&$password&&$firstName&&$lastName&&$email)
     {
-      $firstName = utf8_decode($firstName);
-      $lastName = utf8_decode($lastName);
-      $nickName = utf8_decode($nickName);
-      $email = utf8_decode($email);
-
       $activationKey = generatePassword(15,4);
       //INSERT INTO `pronostics4fun`.`players` (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`) VALUES (NULL, 'sdoub', 'S?bastien', 'Dubuc', 'sebastien.dubuc@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '0');
       $sql = "INSERT INTO players (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`, AvatarName, ActivationKey, CreationDate)";
@@ -332,10 +335,6 @@ class Authorization
     $return = false;
     if($firstName&&$lastName&&$email)
     {
-      $firstName = utf8_decode($firstName);
-      $lastName = utf8_decode($lastName);
-      $email = utf8_decode($email);
-
       $activationKey = generatePassword(15,4);
       //INSERT INTO `pronostics4fun`.`players` (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`) VALUES (NULL, 'sdoub', 'S?bastien', 'Dubuc', 'sebastien.dubuc@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '0');
       $sql = "UPDATE players SET `FirstName`='".mysql_real_escape_string($firstName)."',
@@ -387,7 +386,7 @@ class Authorization
       $mail->Subject    = "Pronostics4Fun - $pseudo vient de s'inscrire!";
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-      $emailBody = "<h3>" . $pseudo . " a créé un nouveau compte</h3>";
+      $emailBody = "<h3>" . $pseudo . " a cr�� un nouveau compte</h3>";
       $emailBody .= "</br>";
       $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
 
@@ -492,7 +491,6 @@ class Authorization
 
     if($u&&$p)
     {
-      $u = utf8_decode($u);
       $sql = "SELECT * FROM players WHERE ";
       $sql .= "(NickName='".mysql_real_escape_string(__encode($u))."' OR EmailAddress='".mysql_real_escape_string(__encode($u))."')";
       $sql .= " AND Password = '".md5($p)."'";
@@ -511,10 +509,10 @@ class Authorization
 
       unset($rowSet,$resultSet,$sql);
       if ($return) {
-        // Définition du temps d'expiration des cookies
+        // D�finition du temps d'expiration des cookies
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
-        //   Création des cookies
+        //   Cr�ation des cookies
         $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
@@ -537,7 +535,6 @@ class Authorization
 
     if($u)
     {
-      $u = utf8_decode($u);
       $sql = "SELECT * FROM players WHERE ";
       $sql .= "(NickName='".mysql_real_escape_string(__encode($u))."' OR EmailAddress='".mysql_real_escape_string(__encode($u))."')";
 
@@ -611,14 +608,14 @@ class Authorization
 
           $this->set_session($rowSet);
           $_SESSION['exp_user']['expires'] = time()+(60*SESSION_DURATION);	//@ renew 45 minutes
-          // Définition du temps d'expiration des cookies
+          // D�finition du temps d'expiration des cookies
           if (isset($_COOKIE["keepConnection"])){
             $expiration = $_COOKIE["keepConnection"]=="false" ? time() + (60*SESSION_DURATION) : time() + 90 * 24 * 60 * 60;
           }
           else {
             $expiration =  time() + (60*SESSION_DURATION);
           }
-          // Création des cookies
+          // Cr�ation des cookies
           $userToken = generatePassword(50,7);
           setcookie("UserToken", $userToken, $expiration, "/");
           setcookie("UserToken2", $userToken, $expiration, "/");

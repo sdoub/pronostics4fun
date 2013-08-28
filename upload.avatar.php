@@ -174,7 +174,7 @@ class qqFileUploader {
     }
 
     if ($this->file->save($uploadDirectory . $filename . '.' . $ext)){
-      return array('success'=>true, 'filePath'=>ROOT_SITE . '/' . $uploadDirectory . $filename . '.' . $ext, 'fileExt'=>$ext);
+      return array('success'=>true, 'filePath'=>ROOT_SITE . '/' . $uploadDirectory . $filename . '.' . $ext .'?_='.time(), 'fileExt'=>$ext);
     } else {
       return array('error'=> 'Server error. Could not save uploaded file.');
     }

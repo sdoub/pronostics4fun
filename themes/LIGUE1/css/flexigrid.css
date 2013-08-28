@@ -508,7 +508,17 @@ div.colCopy {
   height: 27px;
 	margin-right:5px;
 	}	
-	
+.flexigrid .avatarSmallLeft{
+  width:15px;
+  height: 15px;
+  margin-left:5px;
+  } 
+.flexigrid .avatarSmallRight{
+    width:15px;
+  height: 15px;
+  margin-right:5px;
+  } 
+
 .flexigrid .var{
 	background-image: url(../images/sprite.png);
 	background-repeat: no-repeat;
