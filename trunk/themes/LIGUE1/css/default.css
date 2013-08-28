@@ -153,6 +153,21 @@ a,a:active,a:visited {
 	text-decoration: underline;
 }
 
+#top { /* background-color: #1F0E1E; 
+  border-color: #2F1E2E #1F0E1E #1F0E1E;
+  border-right: 1px solid #1F0E1E;
+  border-style: solid;
+  border-width: 1px;
+  */
+  margin: 0 auto;
+  /*_margin: 0px;*/
+  max-width: 1000px;
+  /*_max-width: 900px;*/
+  min-width: 970px;
+  /*_min-width: 870px;*/
+  /*_width:1003px;*/
+}
+
 #container { /* background-color: #1F0E1E; 
 	border-color: #2F1E2E #1F0E1E #1F0E1E;
 	border-right: 1px solid #1F0E1E;
@@ -164,7 +179,8 @@ a,a:active,a:visited {
 	max-width: 1000px;
 	/*_max-width: 900px;*/
 	min-width: 970px;
-	/*_min-width: 870px;*/ /*_width:1003px;*/
+	/*_min-width: 870px;*/
+	/*_width:1003px;*/
 }
 
 #header {

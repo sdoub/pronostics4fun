@@ -116,6 +116,15 @@ if ($_isAuthenticated)
       echo $submenu;
 
       break;
+    case "9":
+      $submenu = '<ul id="navMenu2">';
+
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Championship" ><span>Championnat</span></a></li>';
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup" ><span>Coupe</span></a></li>';
+      $submenu .= '</ul>';
+      echo $submenu;
+
+      break;
   }
 }
 ?>

@@ -36,17 +36,20 @@ Dev -
 Pronostics4fun</title>
 
 <meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnés de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journ�es de la ligue 1.
-Des classements et des statistiques sont �tablis � la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
+Des classements et des statistiques sont établis à la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
 <meta name="keywords" content="p4f, pronostics 4 fun, pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
 <link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
-<link href="<?php echo ROOT_SITE.$_themePath; ?>/css/default.css" type="text/css" rel="stylesheet"/>
+<link href="<?php echo ROOT_SITE.$_themePath; ?>/css/default.css?ver=1.3" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.7.min.js"></script>
+<!--  <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-migrate-1.2.1.min.js"></script> -->
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jmpopups.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.log.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.text-overflow.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.cookies.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.requireScript.js"></script>
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.json-2.4.min.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE.$_themePath ; ?>/js/jquery-ui.custom.min.js"></script>
 <link rel='stylesheet' type='text/css' href='<?php echo ROOT_SITE.$_themePath ;?>/css/custom-theme/jquery-ui.custom.css' />
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.youtubepopup.min.js"></script>
@@ -73,7 +76,53 @@ if ($_SERVER['SERVER_NAME']=="localhost") {
 </head>
 <body>
 <div id="mainwrapper">
-	<div id="top"><span>&nbsp;</span></div>
+	<div id="top">
+<?php
+
+if ($_isAuthenticated )
+{
+  $queryRanking = "SELECT Rank FROM playerranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " ORDER BY RankDate DESC LIMIT 0,1";
+  $playerRanking = $_databaseObject -> queryGetFullArray($queryRanking, "Get Ranking");
+  $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " ORDER BY RankDate DESC LIMIT 0,1";
+  $playerDivisionRanking = $_databaseObject -> queryGetFullArray($queryDivisionRanking, "Get DivisionRanking");
+
+  $playerRank = $playerRanking[0]["Rank"];
+  if ($playerRank==1)
+    $playerRank.="<sup>er</sup>";
+  else
+    $playerRank.="<sup>ème</sup>";
+
+  $playerDivisionRank = $playerDivisionRanking[0]["Rank"];
+  if ($playerDivisionRank==0)
+    $playerDivisionRank="-";
+  elseif ($playerDivisionRank==1)
+    $playerDivisionRank.="<sup>er</sup>";
+  else
+    $playerDivisionRank.="<sup>ème</sup>";
+
+  $queryCupRounds = "SELECT cuprounds.Description FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey WHERE (PlayerHomeKey=" . $_authorisation->getConnectedUserKey() . " OR PlayerAwayKey=" . $_authorisation->getConnectedUserKey() . ") ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+  $playerCupRounds = $_databaseObject -> queryGetFullArray($queryCupRounds, "Get DivisionRanking");
+  $playerCupRound = $playerCupRounds[0]["Description"];
+
+  echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
+  echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;"/>';
+  echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
+  if (count($queryDivisionRanking)>0){
+    echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" />';
+    echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
+  }
+  echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.png" style=""/>';
+  echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$playerCupRound.'</span>';
+  echo '</span>';
+}
+else
+{
+  echo '  <span>&nbsp;</span>';
+}
+
+        ?>
+
+</div>
 	<div id="container">
     	<div id="header">
     		<h1><a id="linkHome"><span>&nbsp;</span></a></h1>
@@ -116,6 +165,7 @@ else
               	<li id="Results"><a href="index.php?Page=2" >Résultats</a></li>
               	<li id="Ranking"><a href="index.php?Page=3" >Classements</a></li>
               	<li id="Statistics"><a href="index.php?Page=6" >Statistiques</a></li>
+                <li id="P4FCompetitions"><a href="index.php?Page=9" >P4F - Compétitions</a></li>
 
 <?php
   } else {
@@ -123,7 +173,7 @@ else
               	<li id="Results" class="disabled" title="Non disponible!"><a href="javascript:void()" >Résultats</a></li>
               	<li id="Ranking" class="disabled" title="Non disponible!"> <a href="javascript:void()" >Classements</a></li>
               	<li id="Statistics" class="disabled" title="Non disponible!"><a href="javascript:void()" >Statistiques</a></li>
-
+                <li id="P4FCompetitions" class="disabled" title="Non disponible!"><a href="javascript:void()" >P4F - Compétitions</a></li>
 <?php
   }
     $scheduleDate = time();
@@ -222,14 +272,14 @@ $(function() {
 		screenLockerOpacity: "0.7"
 	});
 
-	$("#top").click(function() {
-			$.openPopupLayer({
-				name: "ManualForecatsPopup",
-				width: "450",
-				height: "500",
-				url: "submodule.loader.php?SubModule=10"
-			});
-	});
+//	$("#top").click(function() {
+//			$.openPopupLayer({
+//				name: "ManualForecatsPopup",
+//				width: "450",
+//				height: "500",
+//				url: "submodule.loader.php?SubModule=10"
+//			});
+//	});
 
 	// initialize scrollable
 	$("#Connection").click(function() {
@@ -340,6 +390,7 @@ if (!$_isAuthenticated)
   print ('$("#Ranking").css("display","none");');
   print ('$("#Live").css("display","none");');
   print ('$("#Statistics").css("display","none");');
+  print ('$("#P4FCompetitions").css("display","none");');
 }
 
 switch ($_currentPage)
