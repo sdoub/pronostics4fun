@@ -75,6 +75,7 @@ if ($_SERVER['SERVER_NAME']=="localhost") {
 
 </head>
 <body>
+
 <div id="mainwrapper">
 	<div id="top">
 <?php
@@ -104,6 +105,14 @@ if ($_isAuthenticated )
   $playerCupRounds = $_databaseObject -> queryGetFullArray($queryCupRounds, "Get DivisionRanking");
   $playerCupRound = $playerCupRounds[0]["Description"];
 
+
+  $queryCurrentCupRounds = "SELECT cuprounds.Description FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+  $playerCurrentCupRounds = $_databaseObject -> queryGetFullArray($queryCurrentCupRounds, "Get DivisionRanking");
+  $playerCurrentCupRound = $playerCurrentCupRounds[0]["Description"];
+
+  $cupStatus = $playerCupRound;
+  if ($playerCupRound!=$playerCurrentCupRound)
+    $cupStatus = "éliminé";
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
   echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;"/>';
   echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
@@ -112,7 +121,7 @@ if ($_isAuthenticated )
     echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
   }
   echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.png" style=""/>';
-  echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$playerCupRound.'</span>';
+  echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$cupStatus.'</span>';
   echo '</span>';
 }
 else
@@ -419,6 +428,7 @@ switch ($_currentPage)
 ?>
 });
 </script>
+
 <?php if ($_isAuthenticated && !IS_LOCAL)
 {
   $rootSite = "http://pronostics4fun.com"; //ROOT_SITE;

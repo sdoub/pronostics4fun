@@ -232,7 +232,7 @@ Le gagnant de la rencontre aura 3 points ou 1 point en cas de match nul et zéro
 </br>
 <p>Le score de la rencontre entre les 2 joueurs sera déterminé suivant le nombre de points obtenus au concours de pronostics (sans les points bonus de 20, 40, 60 et 100 points) par les joueurs lors de la journée correspondante (Si pour des raisons de report de match ou bien de calendrier de Ligue 1, une journée sera considérer comme complèté à la date précédent le début de la journée suivante).
 Le gagnant de la rencontre sera qualifié pour le tour suivant, en cas de match nul, les règles suivantes seront appliqué pour désigner le vainqueur, le joueur ayant le plus de match correct, si cela ne suffit pas, le joueur ayant le plus de perfect, et pour finir en cas d'extême égalité c'est le premier joueur ayant validé ses pronostics qui sera désigné vainqueur.</p>
-
+<p>Attention: Lors du premier tour si un joueur grâce au tirage au sort se retrouve sans adversaire et qu'il ne pronostique pas, il sera disqualifié, et le perdant du premier tour ayant réalisé le meilleur score prendra sa place</p>
 <p>Avant chaque saison/édition de la coupe P4F, un tirage au sort du premier tour sera effectué avec l'ensemble des joueurs concourant pour le classement général de P4F.</p>
 </br>
 <h3>Article 3 - Acceptation du règlement</h3>

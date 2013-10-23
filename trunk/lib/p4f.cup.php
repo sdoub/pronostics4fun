@@ -110,20 +110,20 @@ ORDER BY PrimaryKey";
       }elseif ($rowSet["HomeScore"]>$rowSet["AwayScore"]) {
         // Home Player is qualified
         $qualifiedPlayers[]=$rowSet["PlayerHomeKey"];
-      } elseif ($rowSet["HomeScore"]>$rowSet["AwayScore"]) {
+      } elseif ($rowSet["HomeScore"]<$rowSet["AwayScore"]) {
         // Away player is qualified
         $qualifiedPlayers[]=$rowSet["PlayerAwayKey"];
       } elseif ($rowSet["HomeScore"]==$rowSet["AwayScore"]) {
         // apply specific rules when players did same score
         // best correct score, then perfect, then first pronostics
-        $qualifiedPlayers[]=$rowSet["PlayerHomeKey"];
+        $qualifiedPlayers[]=$rowSet["PlayerAwayKey"];
       } else {
         // match is not played
         $qualifiedPlayers[]=-1;
       }
       $queries[] = $rowSet["HomeScore"];
     }
-$queries[] = $qualifiedPlayers;
+    $queries[] = $qualifiedPlayers;
     $count = 1;
     $homePlayer=0;
     foreach ($qualifiedPlayers as $player) {

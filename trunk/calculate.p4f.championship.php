@@ -14,7 +14,7 @@ $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get last completed gr
 
 $arr = array();
 $arr[] = GetP4FMatchScores($rowsSet[0]["GroupKey"]);
-$arr[] = CalculateP4FDivisionsRanking(1);
+$arr[] = CalculateP4FDivisionsRanking(2);
 writeJsonResponse($arr);
 
 require_once("end.file.php");

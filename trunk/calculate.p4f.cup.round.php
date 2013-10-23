@@ -13,8 +13,8 @@ $query= "SELECT groups.PrimaryKey GroupKey
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get last completed group");
 
 $arr = array();
-//$arr[] = GetP4FCupMatchScores($rowsSet[0]["GroupKey"]);
-$arr[] = CreateNextRound (1, 1);
+$arr[] = GetP4FCupMatchScores($rowsSet[0]["GroupKey"]);
+$arr[] = CreateNextRound (6, 1);
 writeJsonResponse($arr);
 
 require_once("end.file.php");
