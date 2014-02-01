@@ -118,9 +118,10 @@ if ($_isAuthenticated)
       break;
     case "9":
       $submenu = '<ul id="navMenu2">';
-
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Championship" ><span>Championnat</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup" ><span>Coupe</span></a></li>';
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup" ><span>Coupe S1</span></a></li>';
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=2" ><span>Coupe S2</span></a></li>';
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=3" ><span>Coupe S3</span></a></li>';
       $submenu .= '</ul>';
       echo $submenu;
 

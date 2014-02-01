@@ -181,7 +181,9 @@ define('DISQUS_PUBLIC_KEY', 'ARMGGfPUgm9cEPlk4RxTMTd5IsvVSxPW7eu3PfJDVUSOOTH2IGl
 $data = array(
         "id" => 19,
         "username" => "sdoub",
-        "email" => "sebastien.dubuc@gmail.com"
+        "email" => "sebastien.dubuc@gmail.com",
+        "avatar" => $_authorisation->getAvatarPath()
+
     );
 
 function dsq_hmacsha1($data, $key) {

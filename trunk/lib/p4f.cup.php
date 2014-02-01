@@ -30,10 +30,10 @@ function CreateCup () {
 //  $cup2->setBracket($bracket);
 //  $matches[]=$cup2->ToArray();
 
-  $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 4 AND 10 ORDER BY DayKey ASC";
+  $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 22 AND 30 ORDER BY DayKey ASC";
   $rowSetGroups = $_databaseObject->queryGetFullArray($queryGroups,"Get Groups");
 
-  $queryCupRounds= "SELECT PrimaryKey FROM cuprounds ORDER BY PrimaryKey DESC";
+  $queryCupRounds= "SELECT PrimaryKey FROM cuprounds ORDER BY PrimaryKey";
   $rowSetCupRounds = $_databaseObject->queryGetFullArray($queryCupRounds,"Get Cup Rounds");
 
   $rounds = $cup->getBracket();
@@ -101,7 +101,7 @@ ORDER BY PrimaryKey";
     $qualifiedPlayers = array();
     while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     {
-      $groupKey = $rowSet["GroupKey"];
+      $groupKey = $rowSet["GroupKey"] + 1;
       if ($rowSet["PlayerAwayKey"]==-1) {
         // home player is automatically qualified
         $qualifiedPlayers[]=$rowSet["PlayerHomeKey"];

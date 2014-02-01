@@ -4,7 +4,7 @@ $query = "SELECT PDR.SeasonKey, PDR.DivisionKey, seasons.Description SeasonName,
             FROM playerdivisionranking PDR
            INNER JOIN divisions ON divisions.PrimaryKey=PDR.DivisionKey
            INNER JOIN seasons ON seasons.PrimaryKey=PDR.SeasonKey
-           WHERE PlayerKey=".$_authorisation->getConnectedUserKey();
+           WHERE PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY 1 DESC";
 
 $resultSet = $_databaseObject -> queryPerf ($query, "Get group info");
 $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
@@ -163,7 +163,7 @@ echo '<script type="text/javascript">
   $("#flexGridMatches").flexigrid
     (
       {
-      url: "get.p4f.matches.php",
+      url: "get.p4f.matches.php?SpecialFilter=100'.$_authorisation->getConnectedUserKey().',300'.$_divisionKey.',200'.$_seasonKey.'",
       dataType: "json",
       colGroupModel : [
         {display: "&nbsp;", name : "Context", width : 82, align: "left"},
