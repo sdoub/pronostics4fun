@@ -106,21 +106,22 @@ if ($_isAuthenticated )
   $playerCupRound = $playerCupRounds[0]["Description"];
 
 
-  $queryCurrentCupRounds = "SELECT cuprounds.Description FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+  $queryCurrentCupRounds = "SELECT cuprounds.Description,playercupmatches.SeasonKey FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
   $playerCurrentCupRounds = $_databaseObject -> queryGetFullArray($queryCurrentCupRounds, "Get DivisionRanking");
   $playerCurrentCupRound = $playerCurrentCupRounds[0]["Description"];
+  $playerCurrentSeason = $playerCurrentCupRounds[0]["SeasonKey"];
 
   $cupStatus = $playerCupRound;
   if ($playerCupRound!=$playerCurrentCupRound)
     $cupStatus = "éliminé";
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
-  echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;"/>';
+  echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;" title="Classement général"/>';
   echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
   if (count($queryDivisionRanking)>0){
-    echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" />';
+    echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" title="Division '.$playerDivisionRanking[0]["DivisionKey"].'"/>';
     echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
   }
-  echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.png" style=""/>';
+  echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.s'.$playerCurrentSeason.'.png" style="" title="Coupe Saison '.$playerCurrentSeason.'"/>';
   echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$cupStatus.'</span>';
   echo '</span>';
 }

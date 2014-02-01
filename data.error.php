@@ -16,8 +16,8 @@ $query= " SELECT matches.PrimaryKey MatchKey,
             FROM matches
            INNER JOIN teams teamHome ON matches.TeamHomeKey=teamHome.PrimaryKey
            INNER JOIN teams teamAway ON matches.TeamAwayKey=teamAway.PrimaryKey
-           INNER JOIN results ON results.MatchKey = matches.PrimaryKey
-           WHERE results.LiveStatus < 10
+           INNER JOIN results ON results.MatchKey = matches.PrimaryKey AND results.LiveStatus < 10
+           WHERE matches.Status=0
              AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(matches.ScheduleDate))>11400";
 
 $resultSet = $_databaseObject->queryPerf($query,"Data error");

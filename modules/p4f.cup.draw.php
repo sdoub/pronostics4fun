@@ -3,14 +3,16 @@
 AddScriptReference("gracket");
 
 WriteScripts();
-
+$_seasonKey=1;
+if (isset($_GET["SeasonKey"]))
+  $_seasonKey = $_GET["SeasonKey"];
 
 $query = "SELECT playercupmatches.PlayerHomeKey, HomePlayer.NickName HomeNickName, playercupmatches.PlayerAwayKey, AwayPlayer.NickName AwayNickName,
           CupRoundKey, playercupmatches.HomeScore, playercupmatches.AwayScore
             FROM playercupmatches
            LEFT JOIN players HomePlayer ON HomePlayer.PrimaryKey =playercupmatches.PlayerHomeKey
            LEFT JOIN players AwayPlayer ON AwayPlayer.PrimaryKey =playercupmatches.PlayerAwayKey
-           WHERE SeasonKey=1
+           WHERE SeasonKey=$_seasonKey
              AND CupRoundKey NOT IN (6,8)
            ORDER BY playercupmatches.PrimaryKey";
 $resultSet = $_databaseObject->queryPerf($query,"Get round");
@@ -41,7 +43,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
   if ($rowSet["PlayerAwayKey"] == -1) {
     $match[0]["displaySeed"] = "<img src='images/trophy.gold.png' style='width:10px;height:10px;'/>";
-    if ($rowSet["HomeScore"]==0)
+    if ($rowSet["HomeScore"]==0 && $_seasonKey==1)
       $match[0]["displaySeed"] = "<span title='disqualifié pour non participation'>*</span>";
     $match[1]["name"] = "-";
     $match[1]["id"] = $rowSet["PlayerAwayKey"];
@@ -92,7 +94,7 @@ $query = "SELECT playercupmatches.PlayerHomeKey, HomePlayer.NickName HomeNickNam
             FROM playercupmatches
            LEFT JOIN players HomePlayer ON HomePlayer.PrimaryKey =playercupmatches.PlayerHomeKey
            LEFT JOIN players AwayPlayer ON AwayPlayer.PrimaryKey =playercupmatches.PlayerAwayKey
-           WHERE SeasonKey=1
+           WHERE SeasonKey=$_seasonKey
              AND CupRoundKey = 7
              AND playercupmatches.HomeScore IS NOT NULL
            ORDER BY playercupmatches.PrimaryKey";
@@ -136,7 +138,7 @@ $query = "SELECT playercupmatches.PlayerHomeKey, HomePlayer.NickName HomeNickNam
             FROM playercupmatches
            LEFT JOIN players HomePlayer ON HomePlayer.PrimaryKey =playercupmatches.PlayerHomeKey
            LEFT JOIN players AwayPlayer ON AwayPlayer.PrimaryKey =playercupmatches.PlayerAwayKey
-           WHERE SeasonKey=1
+           WHERE SeasonKey=$_seasonKey
              AND CupRoundKey IN (6,8)
            ORDER BY playercupmatches.PrimaryKey";
 $resultSet = $_databaseObject->queryPerf($query,"Get round");
@@ -219,7 +221,7 @@ $query = "SELECT playercupmatches.PlayerHomeKey, HomePlayer.NickName HomeNickNam
             FROM playercupmatches
            LEFT JOIN players HomePlayer ON HomePlayer.PrimaryKey =playercupmatches.PlayerHomeKey
            LEFT JOIN players AwayPlayer ON AwayPlayer.PrimaryKey =playercupmatches.PlayerAwayKey
-           WHERE SeasonKey=1
+           WHERE SeasonKey=$_seasonKey
              AND CupRoundKey = 6
              AND playercupmatches.HomeScore IS NOT NULL
            ORDER BY playercupmatches.PrimaryKey";
@@ -290,8 +292,14 @@ echo '<div id="" style="width:940px;overflow:hidden;"><div id="cupDraw" ></div><
         cornerRadius : 3,         // adjusts edges of line
         canvasLineCap : "round",  // or "square"
         canvasLineColor : "white",
-        roundLabels :["1er tour<br/><small> Journée 4</small>","2ème tour<br/><small> Journée 5</small>","1/8 finale<br/><small> Journée 6</small>", "1/4 finale<br/><small> Journée 7</small>", "1/2 finale<br/><small> Journée 8</small>", "Finale<br/><small> Journée 9</small>", "Vainqueur"]
-    });
+<?php if($_seasonKey==2) {?>
+        roundLabels :["1er tour<br/><small> Journée 13</small>","2ème tour<br/><small> Journée 14</small>","1/8 finale<br/><small> Journée 15</small>", "1/4 finale<br/><small> Journée 16</small>", "1/2 finale<br/><small> Journée 17</small>", "Finale<br/><small> Journée 18</small>", "Vainqueur"]
+<?php } else if ($_seasonKey==3) {?>
+roundLabels :["1er tour<br/><small> Journée 22</small>","2ème tour<br/><small> Journée 23</small>","1/8 finale<br/><small> Journée 24</small>", "1/4 finale<br/><small> Journée 25</small>", "1/2 finale<br/><small> Journée 26</small>", "Finale<br/><small> Journée 27</small>", "Vainqueur"]
+<?php } else {?>
+roundLabels :["1er tour<br/><small> Journée 4</small>","2ème tour<br/><small> Journée 5</small>","1/8 finale<br/><small> Journée 6</small>", "1/4 finale<br/><small> Journée 7</small>", "1/2 finale<br/><small> Journée 8</small>", "Finale<br/><small> Journée 9</small>", "Vainqueur"]
+<?php }?>
+});
 
 var thirdPlaceData = <?php echo json_encode($rounds3rdPlace);?>;
       // initializer
@@ -302,24 +310,16 @@ var thirdPlaceData = <?php echo json_encode($rounds3rdPlace);?>;
         cornerRadius : 3,         // adjusts edges of line
         canvasLineCap : "round",  // or "square"
         canvasLineColor : "white",
-        roundLabels :["3ème place<br/><small> Journée 9</small>", "3ème"]
+        <?php if($_seasonKey==2) {?>
+        roundLabels :["3ème place<br/><small> Journée 18</small>", "3ème"]
+<?php } else if ($_seasonKey==3) {?>
+roundLabels :["3ème place<br/><small> Journée 27</small>", "3ème"]
+<?php } else {?>
+roundLabels :["3ème place<br/><small> Journée 9</small>", "3ème"]
+<?php }?>
+
     });
-      // add some labels
-//    $("#cupDraw .secondary-bracket .g_winner")
-//      .parent()
-//      .css("position", "relative")
-//      .prepend("<h4>3rd Place</h4>");
 
-      // add some labels
-//    $("#cupDraw .secondary-bracket .g_winner")
-//      .parent()
-//      .css("position", "relative")
-//      .prepend("<h4>3rd Place</h4>");
-
-//    $("#cupDraw > div").eq(0).find(".g_winner")
-//      .parent()
-//      .css("position", "relative")
-//      .prepend("<h4>Vainqueur</h4>");
 })(window, document, jQuery);
 
 </script>
