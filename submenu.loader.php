@@ -21,7 +21,9 @@ if ($_isAuthenticated)
 
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Mode=2" ><span>Vue 2</span></a></li>';
       $submenu .= '</ul>';
-      echo $submenu;
+	  if ($_competitionType==1) {
+        echo $submenu;
+	  }
 //      $submenu = '<ul id="navMenu2">';
 //
 //      $sql = "SELECT PrimaryKey GroupKey, Description, Code FROM groups WHERE CompetitionKey=" . COMPETITION;
@@ -51,7 +53,7 @@ if ($_isAuthenticated)
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Wins" ><span>Podium</span></a></li>';
       $submenu .= '<li><span class="menuGroup" style="margin-left:100px;padding: 2px 5px 2px 5px;">' . $_competitionName .' :</span></li>';
       $competitionTitle = "Championnat";
-      if ($_competitionType==3) {
+      if ($_competitionType!=1) {
         $competitionTitle = "Tournoi";
       }
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&View=Teams" ><span>' . $competitionTitle . '</span></a></li>';
@@ -122,6 +124,7 @@ if ($_isAuthenticated)
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup" ><span>Coupe S1</span></a></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=2" ><span>Coupe S2</span></a></li>';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=3" ><span>Coupe S3</span></a></li>';
+      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=4" ><span>Coupe S4</span></a></li>';
       $submenu .= '</ul>';
       echo $submenu;
 

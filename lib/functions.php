@@ -372,6 +372,83 @@ function ConvertUefaKeyToP4F($uefaKey) {
   }
 }
 
+function ConvertFifaCodeToP4F($fifaCode) {
+  /*
+   *      Brésil -> BRA->25
+   Croatie -> CRO -> 63
+   Mexique -> MEX -> 3
+   Cameroun -> CMR -> 20
+   Pays-Bas -> NED -> 17
+   Espagne -> ESP -> 29
+   Australie -> AUS -> 14
+   Chilie -> CHI -> 32
+   Grèce -> GRE -> 8
+   Colombie -> COL -> 71
+   Uruguay -> URU -> 4
+   Costa Rica -> CRC -> 72
+   Angleterre -> ENG -> 9
+   Italie -> ITA -> 21
+   Japon -> JPN -> 19
+   Code d'ivoire -> CIV -> 27
+   Suisse -> SUI -> 30
+   Equateur -> ECU -> 73
+   France -> FRA -> 1
+   Honduras -> HON -> 31
+   Argentine -> ARG -> 5
+   Bosnie et herzegovine -> BIH -> 74
+   Allemagne -> GER -> 13
+   Portugal -> POR0 -> 28
+   Iran -> IRN -> 75
+   Nigeria -> NGA -> 6
+   Etat-unis -> USA -> 10
+   Ghana -> GHA -> 16
+   Algérie -> ALG -> 11
+   Belgique -> BEL -> 76
+   Russie -> RUS -> 60
+   République de corée -> KOR -> 7
+   */
+
+  $arrFifaCodes = array("BRA" => 25,
+  "CRO" => 63,
+  "MEX" => 3,
+  "CMR" => 20,
+  "NED" => 17,
+  "ESP" => 29,
+  "AUS" => 14,
+  "CHI" => 32,
+  "GRE" => 8,
+  "COL" => 71,
+  "URU" => 4,
+  "CRC" => 72,
+  "ENG" => 9,
+  "ITA" => 21,
+  "JPN" => 19,
+  "CIV" => 27,
+  "SUI" => 30,
+  "ECU" => 73,
+  "ARG" => 5,
+  "BIH" => 74,
+  "GER" => 13,
+  "POR" => 28,
+  "IRN" => 75,
+  "NGA" => 6,
+  "USA" => 10,
+  "GHA" => 16,
+  "ALG" => 11,
+  "BEL" => 76,
+  "RUS" => 60,
+  "KOR" => 7,
+  "FRA" => 1,
+  "HON" => 31);
+
+  if (array_key_exists($fifaCode,$arrFifaCodes)) {
+    return $arrFifaCodes[$fifaCode];
+  }
+  else {
+    return 0;
+  }
+}
+
 function ConvertFrenchDateToUniversalDate ($strDate) {
 
   $findValues = array('Lundi ',

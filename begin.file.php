@@ -64,12 +64,23 @@ else
 
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
-//TODO: Créer une session pour stocker la session courante
-DEFINE ('COMPETITION','6');
+DEFINE ('COMPETITION','7');
+$_themePath = "/themes/CDM2014";
+$_competitionType =2;
+$_competitionName="Coupe du monde";
 //TODO: Récupérer l'information de la base de données
+//TODO: Créer une session pour stocker la session courante
+/* if (isset($_GET["BetaCDM"])) {
+DEFINE ('COMPETITION','7');
+$_themePath = "/themes/CDM2014";
+$_competitionType =2;
+$_competitionName="Coupe du monde";
+} else {
+DEFINE ('COMPETITION','6');
 $_themePath = "/themes/LIGUE1";
 $_competitionType =1;
 $_competitionName="Ligue 1";
+} */
 
 //echo $_SESSION['exp_user']['expires'];
 //echo "<br/>";

@@ -25,14 +25,22 @@ if ($_isAuthenticated)
       break;
     case "2":
       if (isset($_GET['Mode'])){
-        if ($_GET['Mode']=="1") {
-          include("modules/result.group.php");
-        } else {
-          include("modules/result.group2.php");
-        }
+        if (isset($_GET['GroupKey']) || $_competition==1) {
+			if ($_GET['Mode']=="1") {
+			  include("modules/result.group.php");
+			} else {
+			  include("modules/result.group2.php");
+			}
+
+		}
+		else
+		  include("modules/resultsHome.php");
       }
       else {
-        include("modules/result.group.php");
+        if (isset($_GET['GroupKey']) || $_competition==1) 
+		  include("modules/result.group.php");
+		else
+		  include("modules/resultsHome.php");
       }
       break;
     case "3":

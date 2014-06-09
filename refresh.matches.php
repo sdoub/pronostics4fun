@@ -81,6 +81,12 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       }
 
       switch ($_competitionType) {
+        case 2:
+          $matchInfo = GetFifaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+          foreach ($matchInfo["Queries"] as $query) {
+            $_queries[] =$query;
+          }
+          break;
         case 3:
           $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
           foreach ($matchInfo["Queries"] as $query) {
@@ -143,20 +149,19 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
     $_logInfo .= "<br/>Refresh match with key ".$rowSet["MatchKey"] ;
     try {
 
+      ComputeScore($rowSet["MatchKey"]);
       switch ($_competitionType) {
+        case 2:
         case 3:
-          ComputeScore($rowSet["MatchKey"]);
           ComputeCoupeGroupScore($rowSet["GroupKey"]);
           break;
         default:
-          ComputeScore($rowSet["MatchKey"]);
           ComputeGroupScore($rowSet["GroupKey"]);
           break;
       }
 
       CalculateRanking($rowSet["ScheduleDate"]);
       CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
-
 
       $_groupKey = $rowSet["GroupKey"];
       GenerateMatchStates($_groupKey);
@@ -175,6 +180,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
 
       while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
         switch ($_competitionType) {
+          case 2:
           case 3:
             ComputeCoupeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
             break;
@@ -217,6 +223,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
         $_databaseObject->queryPerf($query,"update group");
 
         switch ($_competitionType) {
+          case 2:
           case 3:
             ComputeCoupeGroupScore($rowSet["GroupKey"]);
             break;

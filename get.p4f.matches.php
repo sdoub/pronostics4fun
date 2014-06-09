@@ -109,7 +109,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   $winner = "<img src='images/trophy.gold.png' style='width:10px;height:10px;'/>";
   $homeWinner = "";
   $awayWinner = "";
-  if ($rowSet["HomeScore"])
+  if ($rowSet["HomeScore"] || $rowSet["AwayScore"])
     if ($rowSet["HomeScore"]>$rowSet["AwayScore"])
       $homeWinner = $winner;
     elseif ($rowSet["HomeScore"]<$rowSet["AwayScore"])

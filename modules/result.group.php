@@ -189,6 +189,9 @@ switch ($nbrOfMatch) {
   case 4:
     $rowWidth = 85 * $nbrOfMatch;
     break;
+  case 6:
+    $rowWidth = 76 * $nbrOfMatch;
+    break;
   default;
     $rowWidth = 70 * $nbrOfMatch;
     break;

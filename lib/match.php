@@ -734,6 +734,304 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
 
 }
 
+function GetFifaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLive) {
+
+  $queries = array();
+  $objectReturn = array();
+  $_error="";
+  $isToBeRefreshed = true;
+  if ($isLive && 1==0) {
+    $isToBeRefreshed = false;
+    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2012/day=10/session=1/match=$_externalKey/feed/minute.json?t=".time();
+
+    $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
+    $homeId="";
+    $awayId="";
+//    $jsonMatch = file_get_contents($urlToGetMatchInfo);
+//    $infoMatch = json_decode($jsonMatch);
+
+
+    // TODO: Get information from live information
+//    switch ($infoMatch->Phase) {
+//      case 1:
+//        $liveStatus=1;
+//        break;
+//      case 2:
+//        $liveStatus=3;
+//        break;
+//      case 3:
+//        $liveStatus=5;
+//        break;
+//      case 4:
+//        $liveStatus=7;
+//        break;
+//      case 5:
+//        $liveStatus=7;
+//        break;
+//      default:
+//        $liveStatus=0;
+//        break;
+//    }
+//    switch ($infoMatch->Report) {
+//      case "H":
+//        $liveStatus=2;
+//        break;
+//      case "F":
+//        $liveStatus=10;
+//        $isToBeRefreshed= true;
+//        break;
+//
+//    }
+//    if ($infoMatch->Minute==0 && $infoMatch->MinuteFrom>0) {
+//      $actualTime=$infoMatch->MinuteFrom;
+//
+//    } else {
+//      $actualTime=$infoMatch->Minute;
+//      $actualTime+=$infoMatch->MinuteExtra;
+//    }
+//
+//    if ($liveStatus>=5) {
+//      $actualTime=$infoMatch->Minute;
+//      $actualTime+=$infoMatch->MinuteExtra;
+//      $actualTime+=90;
+//    }
+//    switch ($infoMatch->Report) {
+//      case "H":
+//        $liveStatus=2;
+//        break;
+//      case "F":
+//        $actualTime=90;
+//        $liveStatus=10;
+//        break;
+//
+//    }
+    $liveStatus=1;
+    $actualTime=1;
+    $updateQuery = "INSERT IGNORE INTO results (MatchKey, LiveStatus, ActualTime) VALUES ($matchKey, $liveStatus, $actualTime) ON DUPLICATE KEY UPDATE LiveStatus=$liveStatus, ActualTime=$actualTime";
+    $queries[]=$updateQuery;
+
+    $updateQuery = "DELETE FROM events WHERE ResultKey=(SELECT PrimaryKey ResultKey
+                FROM results
+               WHERE results.MatchKey=$matchKey)";
+
+    $resultKey="(SELECT PrimaryKey ResultKey
+                FROM results
+               WHERE results.MatchKey=$matchKey)";
+
+    $queries[]=$updateQuery;
+
+//    for ($goal=1; $goal<=$infoMatch->ScoreH;$goal++){
+//      $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+//        VALUES ($resultKey, $_teamHomeKey, 1,$goal, 1, 1132)
+//        ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=1132";
+//      $queries[]=$updateQuery;
+//
+//    }
+//
+//    for ($goal=1; $goal<=$infoMatch->ScoreA;$goal++){
+//      $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+//        VALUES ($resultKey, $_teamAwayKey, 1, $goal, 1, 1132)
+//        ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=1132";
+//      $queries[]=$updateQuery;
+//
+//    }
+
+    //    $urlToGetMatchInfo = "http://fr.uefa.com/live/match-centre/cup=3/season=2012/day=1/session=1/match=$_externalKey/feed/people.json?v=".time();
+    //
+    //    $jsonLineUp = file_get_contents($urlToGetMatchInfo);
+    //    $infoLineUp = json_decode($jsonLineUp);
+    //
+    //    $homeLineUp = $infoLineUp["LineupHome"];
+    //    $awayLineUp = $infoLineUp["LineupAway"];
+    //
+    //
+    //    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2012/day=1/session=1/match=$_externalKey/feed/players.match.json?v=".time();
+    //
+    //    $jsonStats = file_get_contents($urlToGetMatchInfo);
+    //    $infoStats = json_decode($jsonStats);
+    //
+    //    $matchStats = $infoStats["MatchStat"];
+    //
+    //    for ($i=0;$i<count($matchStats);$i++)
+    //    {
+    //
+    //
+    //
+    //    }
+
+
+  }
+
+  if ($isToBeRefreshed) {
+    // phases de groupe
+    $urlToGetMatchInfo = "http://fr.fifa.com/worldcup/matches/round=255931/match=$_externalKey/index.html";
+    // après phase de groupe
+    // 1/4 finale
+    //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15173/match=$_externalKey/index.html";
+    // 1/2 finale
+    //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15174/match=$_externalKey/index.html";
+    // finale
+    //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15175/match=$_externalKey/index.html";
+    $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
+    $homeId="";
+    $awayId="";
+    if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
+      if ($htmlMatch->find('div.lineup')!=null) {
+        $peopleCount = 1;
+        $isSubstitute = 0;
+        // TODO: Get information from live information
+        $liveStatus=10;
+        $actualTime=90;
+
+        $updateQuery = "INSERT IGNORE INTO results (MatchKey, LiveStatus, ActualTime) VALUES ($matchKey, $liveStatus, $actualTime) ON DUPLICATE KEY UPDATE LiveStatus=$liveStatus, ActualTime=$actualTime";
+        $queries[]=$updateQuery;
+
+        $updateQuery = "DELETE FROM events WHERE ResultKey=(SELECT PrimaryKey ResultKey
+                FROM results
+               WHERE results.MatchKey=$matchKey)";
+
+        $resultKey="(SELECT PrimaryKey ResultKey
+                FROM results
+               WHERE results.MatchKey=$matchKey)";
+
+        $queries[]=$updateQuery;
+
+        foreach($htmlMatch->find('div.lineup')->find('tr') as $peoples) {
+          if (count_chars($peoples->find('span.p-n-webname',0)->innertext)>0){
+            // Team Home Player
+            $teamPlayerDetail = $peoples->find('td.home',0);
+            if ($teamPlayerDetail!=null){
+              $teamPlayerDetail2 = $teamPlayerDetail->find('span.p-n-webname',0);
+              if ($teamPlayerDetail2!=null){
+                $teamPlayer = $teamPlayerDetail2->innertext;
+                $timeIn = "NULL";
+                $playerDetailReplaced='';
+
+                foreach($teamPlayerDetail->find('span.event') as $events) {
+                  if ($events->getAttribute("class")!=null){
+                    $eventClasses = explode(" ", $events->getAttribute("class"));
+                    if (in_array("goal-own", $eventClasses) || in_array("goal-penalty", $eventClasses) || in_array("goal", $eventClasses)) {
+                      $goalTimeText = $events->getAttribute("title");
+                      $goalTimeText = substr($goalTimeText, strpos("-", $goalTimeText));
+                      $eventTime = str_replace(" ","",str_replace("'","",$goalTimeText));
+                      $eventType = $eventClasses[1];
+
+                      if ((int)$eventTime>105) {
+                        $half = 7;
+                      } else if ((int)$eventTime>90) {
+                        $half = 5;
+                      } else if ((int)$eventTime>45) {
+                        $half = 3;
+                      } else {
+                        $half = 1;
+                      }
+
+                      switch ($eventType) {
+                        case "goal-penalty":
+                          $eventType="2";
+                          break;
+                        case "goal-own":
+                          $eventType="3";
+                          break;
+                        default: // goals
+                          $eventType="1";
+                          break;
+                      }
+
+                      $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+                      $queries[]=$updateQuery;
+                      $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+                      if ($eventType=="3") {
+                        $teamKey = $_teamAwayKey;
+                      } else {
+                        $teamKey = $_teamHomeKey;
+                      }
+
+                      $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+                                      VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+                                      ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+                      $queries[]=$updateQuery;
+                    }
+                  }
+                }
+              }
+            }
+            // Team Away Player
+            $teamPlayerDetail = $peoples->find('td.away',0);
+            if ($teamPlayerDetail!=null){
+              $teamPlayerDetail2 = $teamPlayerDetail->find('span.p-n-webname',0);
+              if ($teamPlayerDetail2!=null){
+                $teamPlayer = $teamPlayerDetail2->innertext;
+                $timeIn = "NULL";
+                $playerDetailReplaced='';
+
+                foreach($teamPlayerDetail->find('span.event') as $events) {
+                  if ($events->getAttribute("class")!=null){
+                    $eventClasses = explode(" ", $events->getAttribute("class"));
+                    if (in_array("goal-own", $eventClasses) || in_array("goal-penalty", $eventClasses) || in_array("goal", $eventClasses)) {
+                      $goalTimeText = $events->getAttribute("title");
+                      $goalTimeText = substr($goalTimeText, strpos("-", $goalTimeText));
+                      $eventTime = str_replace(" ","",str_replace("'","",$goalTimeText));
+                      $eventType = $eventClasses[1];
+
+                      if ((int)$eventTime>105) {
+                        $half = 7;
+                      } else if ((int)$eventTime>90) {
+                        $half = 5;
+                      } else if ((int)$eventTime>45) {
+                        $half = 3;
+                      } else {
+                        $half = 1;
+                      }
+
+                      switch ($eventType) {
+                        case "goal-penalty":
+                          $eventType="2";
+                          break;
+                        case "goal-own":
+                          $eventType="3";
+                          break;
+                        default: // goals
+                          $eventType="1";
+                          break;
+                      }
+
+                      $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+                      $queries[]=$updateQuery;
+                      $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+                      if ($eventType=="3") {
+                        $teamKey = $_teamHomeKey;
+                      } else {
+                        $teamKey = $_teamAwayKey;
+                      }
+                      $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+                                      VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+                                      ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+                      $queries[]=$updateQuery;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          $peopleCount++;
+          if ($peopleCount==12) {
+            $isSubstitute = 1;
+          }
+        }
+      }
+
+      $htmlMatch->clear();
+      unset($htmlMatch);
+
+    }
+  }
+  $objectReturn["Queries"] = $queries;
+  return $objectReturn;
+
+}
+
 function GetMatchCompleteInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey) {
   global $_queries;
   $_error="";

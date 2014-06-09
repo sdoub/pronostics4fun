@@ -18,6 +18,12 @@ if (isset($_POST["TeamHomeKey"])) {
   $isLive = $_POST["Live"];
 
   switch ($_competitionType) {
+    case 2:
+      $matchInfo = GetFifaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+      foreach ($matchInfo["Queries"] as $query) {
+        $_queries[] =$query;
+      }
+      break;
     case 3:
       $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
       foreach ($matchInfo["Queries"] as $query) {

@@ -296,6 +296,8 @@ echo '<div id="" style="width:940px;overflow:hidden;"><div id="cupDraw" ></div><
         roundLabels :["1er tour<br/><small> Journée 13</small>","2ème tour<br/><small> Journée 14</small>","1/8 finale<br/><small> Journée 15</small>", "1/4 finale<br/><small> Journée 16</small>", "1/2 finale<br/><small> Journée 17</small>", "Finale<br/><small> Journée 18</small>", "Vainqueur"]
 <?php } else if ($_seasonKey==3) {?>
 roundLabels :["1er tour<br/><small> Journée 22</small>","2ème tour<br/><small> Journée 23</small>","1/8 finale<br/><small> Journée 24</small>", "1/4 finale<br/><small> Journée 25</small>", "1/2 finale<br/><small> Journée 26</small>", "Finale<br/><small> Journée 27</small>", "Vainqueur"]
+<?php } else if ($_seasonKey==4) {?>
+roundLabels :["1er tour<br/><small> Journée 31</small>","2ème tour<br/><small> Journée 32</small>","1/8 finale<br/><small> Journée 33</small>", "1/4 finale<br/><small> Journée 34</small>", "1/2 finale<br/><small> Journée 35</small>", "Finale<br/><small> Journée 36</small>", "Vainqueur"]
 <?php } else {?>
 roundLabels :["1er tour<br/><small> Journée 4</small>","2ème tour<br/><small> Journée 5</small>","1/8 finale<br/><small> Journée 6</small>", "1/4 finale<br/><small> Journée 7</small>", "1/2 finale<br/><small> Journée 8</small>", "Finale<br/><small> Journée 9</small>", "Vainqueur"]
 <?php }?>
@@ -314,6 +316,8 @@ var thirdPlaceData = <?php echo json_encode($rounds3rdPlace);?>;
         roundLabels :["3ème place<br/><small> Journée 18</small>", "3ème"]
 <?php } else if ($_seasonKey==3) {?>
 roundLabels :["3ème place<br/><small> Journée 27</small>", "3ème"]
+<?php } else if ($_seasonKey==4) {?>
+roundLabels :["3ème place<br/><small> Journée 36</small>", "3ème"]
 <?php } else {?>
 roundLabels :["3ème place<br/><small> Journée 9</small>", "3ème"]
 <?php }?>

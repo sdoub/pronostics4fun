@@ -2,7 +2,41 @@
 AddScriptReference("home");
 WriteScripts();
 
-if ($_competitionType == 3) {
+switch ($_competitionType) {
+case 2:
+echo __encode("
+<div id='mainCol'>
+<div class='altBloc' style='width:380px;'>
+<h3 class='homeTitle'>Bienvenue sur </h3>
+<h3 class='homeTitle'>Pronostics4Fun</h3>
+<h4 class='homeSubTitle'>Spécial - Coupe du monde 2014</h3>
+<br/>
+<br/>
+<br/>
+<p>
+A chaque grand événement footballistique, Pronostics4Fun ouvre ses portes pour une compétition dédié à cet événement. C'est donc à l'occasion de la coupe du monde 2014, que vous allez vous affronter, cette compétition compte 64 matchs et qui se déroulera du 12 juin au 13 juillet.
+</p>
+<br/>
+<p>
+Vous pouvez consulter le règlement de ce jeu-concours, en cliquant sur le lien 'règlement' se situant dans la partie droite du menu.
+</p>
+<br/>
+<p>
+Si vous êtes convaincu, alors rejoignez-nous en vous inscrivant, en un simple clique sur Inscription (en haut à droite), et tout de suite après vous pourrez pronostisquer vos premiers matchs.
+</p>
+<br/>
+<p class='homeSignature' >
+<strong>A très bientôt sur Pronostics4Fun !</strong>
+</p>
+</div>
+	<div class='mainBloc' style='width:520px;'>
+<img src='" . ROOT_SITE . $_themePath . "/images/logo-home.png' />
+</div>
+	</div>
+
+");
+break;
+	case 3:
 echo __encode("
 <div id='mainCol'>
 <div class='altBloc' style='width:380px;'>
@@ -34,7 +68,8 @@ Si vous êtes convaincu, alors rejoignez-nous en vous inscrivant, en un simple c
 	</div>
 
 ");
-} else {
+break;
+default:
 echo __encode("
 <div id='mainCol'>
 <style>

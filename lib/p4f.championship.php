@@ -167,7 +167,7 @@ function CalculateP4FDivisionsRanking ($seasonKey) {
     FROM playerdivisionmatches PDM
    WHERE PDM.DivisionKey=".$rowSetDivision["PrimaryKey"]."
      AND PDM.SeasonKey=$seasonKey
-     UNION
+     UNION ALL
     SELECT PlayerAwayKey AS PlayerKey,
                   CASE WHEN HomeScore<AwayScore THEN 1 ELSE 0 END AS Won,
                   CASE WHEN HomeScore=AwayScore THEN 1 ELSE 0 END AS Drawn,
