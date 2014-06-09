@@ -82,13 +82,15 @@ if ($_SERVER['SERVER_NAME']=="localhost") {
 
 if ($_isAuthenticated )
 {
-  $queryRanking = "SELECT Rank FROM playerranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " ORDER BY RankDate DESC LIMIT 0,1";
+  $queryRanking = "SELECT Rank FROM playerranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " AND CompetitionKey=". COMPETITION . " ORDER BY RankDate DESC LIMIT 0,1";
   $playerRanking = $_databaseObject -> queryGetFullArray($queryRanking, "Get Ranking");
   $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " ORDER BY RankDate DESC LIMIT 0,1";
   $playerDivisionRanking = $_databaseObject -> queryGetFullArray($queryDivisionRanking, "Get DivisionRanking");
 
   $playerRank = $playerRanking[0]["Rank"];
-  if ($playerRank==1)
+  if ($playerRank=="")
+  	$playerRank.="<sup>-</sup>";
+  elseif ($playerRank==1)
     $playerRank.="<sup>er</sup>";
   else
     $playerRank.="<sup>ème</sup>";
@@ -117,6 +119,7 @@ if ($_isAuthenticated )
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
   echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;" title="Classement général"/>';
   echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
+  if ($_competitionType==1) {
   if (count($queryDivisionRanking)>0){
     echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" title="Division '.$playerDivisionRanking[0]["DivisionKey"].'"/>';
     echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
@@ -124,6 +127,7 @@ if ($_isAuthenticated )
   echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.s'.$playerCurrentSeason.'.png" style="" title="Coupe Saison '.$playerCurrentSeason.'"/>';
   echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$cupStatus.'</span>';
   echo '</span>';
+}
 }
 else
 {
@@ -175,17 +179,19 @@ else
               	<li id="Results"><a href="index.php?Page=2" >Résultats</a></li>
               	<li id="Ranking"><a href="index.php?Page=3" >Classements</a></li>
               	<li id="Statistics"><a href="index.php?Page=6" >Statistiques</a></li>
+<?php if ($_competitionType==1) {?>
                 <li id="P4FCompetitions"><a href="index.php?Page=9" >P4F - Compétitions</a></li>
 
 <?php
-  } else {
+  }} else {
 ?>
               	<li id="Results" class="disabled" title="Non disponible!"><a href="javascript:void()" >Résultats</a></li>
               	<li id="Ranking" class="disabled" title="Non disponible!"> <a href="javascript:void()" >Classements</a></li>
               	<li id="Statistics" class="disabled" title="Non disponible!"><a href="javascript:void()" >Statistiques</a></li>
+<?php if ($_competitionType==1) {?>
                 <li id="P4FCompetitions" class="disabled" title="Non disponible!"><a href="javascript:void()" >P4F - Compétitions</a></li>
 <?php
-  }
+  }}
     $scheduleDate = time();
 
         $query= "SELECT
@@ -461,4 +467,4 @@ $ua=getBrowser();
 $yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
 //print_r($yourbrowser);
 require_once("end.file.php");
-?>
+?>	

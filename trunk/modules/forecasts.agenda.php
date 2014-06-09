@@ -47,7 +47,7 @@ matches.IsBonusMatch,
 (SELECT COUNT(1) FROM forecasts WHERE forecasts.MatchKey=matches.PrimaryKey) NbrOfPlayers,
 DATEDIFF(matches.ScheduleDate,NOW()) RemainingDays
 FROM matches
-INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.Status IN (1,2)
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.Status IN (1,2) AND groups.CompetitionKey= ". COMPETITION ."
 INNER JOIN teams TeamHome ON TeamHome.PrimaryKey = matches.TeamHomeKey
 INNER JOIN teams TeamAway ON TeamAway.PrimaryKey = matches.TeamAwayKey
 LEFT JOIN forecasts ON matches.PrimaryKey = forecasts.MatchKey AND forecasts.PlayerKey=" . $_authorisation->getConnectedUserKey() . "
