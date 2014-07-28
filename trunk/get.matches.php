@@ -2,6 +2,9 @@
 <?php
 require_once(dirname(__FILE__)."/begin.file.php");
 switch ($_competitionType) {
+  case 2:
+    header("location:get.matches.cdm.php");
+    break;
   case 3:
     header("location:get.matches.euro.php");
     break;

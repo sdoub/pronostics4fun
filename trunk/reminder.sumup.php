@@ -29,7 +29,7 @@ $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
 $activationKey = $rowSet["ActivationKey"];
 echo "<p align='center'>Si ce message ne s'affiche pas correctement, visualisez-le <a href='".ROOT_SITE."/reminder.sumup.php?PlayerKey=$_playerKey'>ici</a></p><hr/>";
 
-echo "<div ><a style='border:0;' href='".ROOT_SITE."'><img style='border:0;' src='".ROOT_SITE."/images/Logo.png' ></a></div><br>";
+echo "<div ><a style='border:0;' href='".ROOT_SITE."'><img style='border:0;' src='".ROOT_SITE . $_themePath ."/images/Logo.png' ></a></div><br>";
 
 echo '<p>Bonjour <strong>' . $rowSet["NickName"] . '</strong>,</p>';
 

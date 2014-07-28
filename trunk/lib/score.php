@@ -373,7 +373,77 @@ function ComputeCoupeGroupScore ($groupKey){
       $_databaseObject -> queryPerf ($query, "Compute group score Bonus 0 points");
 
   }
+  if (startswith($rowSetGroup["Description"],"1/8") && $rowSetGroup["NbrMatchCompleted"]==8) {
+    //Compute group score Bonus 10 points
+    $query= "INSERT IGNORE INTO playergroupresults (PlayerKey, GroupKey, Score)
+      (SELECT
+      playermatchresults.PlayerKey,
+      $groupKey,
+      10
+      FROM playermatchresults
+      INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+      INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+      WHERE groups.PrimaryKey=$groupKey
+      AND playermatchresults.Score>=5
+      GROUP BY playermatchresults.PlayerKey
+      HAVING COUNT(1)=6
+      ) ON DUPLICATE KEY UPDATE Score=10";
 
+      $_databaseObject -> queryPerf ($query, "Compute group score Bonus 10 points");
+
+
+      //Compute group score Bonus 40 points
+      $query= "INSERT IGNORE INTO playergroupresults (PlayerKey, GroupKey, Score)
+      (SELECT
+      playermatchresults.PlayerKey,
+      $groupKey,
+      40
+      FROM playermatchresults
+      INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+      INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+      WHERE groups.PrimaryKey=$groupKey
+      AND playermatchresults.Score>=5
+      GROUP BY playermatchresults.PlayerKey
+      HAVING COUNT(1)=7
+      ) ON DUPLICATE KEY UPDATE Score=40";
+
+      $_databaseObject -> queryPerf ($query, "Compute group score Bonus 40 points");
+
+      //Compute group score Bonus 40 points
+      $query= "INSERT IGNORE INTO playergroupresults (PlayerKey, GroupKey, Score)
+      (SELECT
+      playermatchresults.PlayerKey,
+      $groupKey,
+      60
+      FROM playermatchresults
+      INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+      INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+      WHERE groups.PrimaryKey=$groupKey
+      AND playermatchresults.Score>=5
+      GROUP BY playermatchresults.PlayerKey
+      HAVING COUNT(1)=8
+      ) ON DUPLICATE KEY UPDATE Score=60";
+
+      $_databaseObject -> queryPerf ($query, "Compute group score Bonus 60 points");
+
+      //Compute group score Bonus 0 points
+      $query= "INSERT IGNORE INTO playergroupresults (PlayerKey, GroupKey, Score)
+      (SELECT
+      playermatchresults.PlayerKey,
+      $groupKey,
+      0
+      FROM playermatchresults
+      INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+      INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+      WHERE groups.PrimaryKey=$groupKey
+      AND playermatchresults.Score>=5
+      GROUP BY playermatchresults.PlayerKey
+      HAVING COUNT(1)<6
+      ) ON DUPLICATE KEY UPDATE Score=0";
+
+      $_databaseObject -> queryPerf ($query, "Compute group score Bonus 0 points");
+
+  }
 
 }
 
