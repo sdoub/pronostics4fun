@@ -300,7 +300,7 @@ groups.Status,
     AND forecasts.PlayerKey=".$_authorisation->getConnectedUserKey().") forecasts
  FROM groups
 WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=0
-ORDER BY groups.DayKey, groups.BeginDate";
+ORDER BY groups.PrimaryKey";
 
 
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");

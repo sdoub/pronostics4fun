@@ -16,17 +16,14 @@ else {
 
 	$scheduleDate = time();
 
-	$query= "SELECT
-	groups.PrimaryKey GroupKey,
-	groups.Description GroupDescription
-	FROM groups
-	WHERE EXISTS (
-	SELECT 1
-	  FROM matches
-	 WHERE matches.GroupKey=groups.primaryKey
-	   AND DATE(matches.ScheduleDate)=DATE(FROM_UNIXTIME($scheduleDate)))
-	 AND groups.CompetitionKey=" . COMPETITION . "
-	 ORDER BY groups.PrimaryKey";
+	$query= "   SELECT   groups.PrimaryKey GroupKey,
+  groups.Description GroupDescription,
+  ABS(UNIX_TIMESTAMP(matches.ScheduleDate)-$scheduleDate)
+    FROM matches
+    INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+   WHERE DATE(matches.ScheduleDate)=DATE(FROM_UNIXTIME($scheduleDate))
+     ORDER BY 3
+     ";
 }
 
 $resultSet = $_databaseObject->queryPerf($query,"Get players");
@@ -257,6 +254,12 @@ switch ($nbrOfMatch) {
   case 4:
     $rowWidth = 88 * $nbrOfMatch;
     break;
+  case 6:
+    $rowWidth = 80 * $nbrOfMatch;
+    break;
+  case 8:
+    $rowWidth = 75 * $nbrOfMatch;
+    break;
   default;
     $rowWidth = 72 * $nbrOfMatch;
     break;
@@ -392,7 +395,32 @@ function countDownHasExpired(){
 <ul>
 
 <?php
-if ($_competitionType==3) {
+switch ($_competitionType) {
+  case 2:
+  $sql = "select @rownum:=@rownum+1 as rank, A.* from
+(SELECT
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      ),0)) Score,
+(SELECT CASE COUNT(*) WHEN 8 THEN 60 WHEN 7 THEN 40 WHEN 6 THEN IF (groups.Code='1/8',10,40) WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
+     FROM playermatchresults
+        INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+        INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+        WHERE groups.PrimaryKey=$_groupKey
+          AND playermatchresults.Score>=5
+          AND playermatchresults.playerKey=players.PrimaryKey)
+      GroupScore
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY NickName) A, (SELECT @rownum:=0) r";
+
+break;
+  case 3:
   $sql = "select @rownum:=@rownum+1 as rank, A.* from
 (SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
@@ -415,7 +443,8 @@ FROM playersenabled players
 GROUP BY NickName
 ORDER BY NickName) A, (SELECT @rownum:=0) r";
 
-} else {
+break;
+default:
 $sql = "select @rownum:=@rownum+1 as rank, A.* from
 (SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey  ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
@@ -442,6 +471,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY NickName) A, (SELECT @rownum:=0) r";
+break;
 }
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
 $cnt = 0;
@@ -602,7 +632,33 @@ $previousRank=$rank;
 
 
 <?php
-if ($_competitionType==3) {
+switch ($_competitionType) {
+  case 2:
+$sql = "SELECT
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.CompetitionKey=" . COMPETITION . " ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+    ),0)
+    + IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
+      AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")
+    ),0)
+    + (SELECT CASE COUNT(*) WHEN 8 THEN 60 WHEN 7 THEN 40 WHEN 6 THEN IF (groups.Code='1/8',10,40) WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
+     FROM playermatchresults
+        INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+        INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+        WHERE groups.PrimaryKey=$_groupKey
+          AND groups.IsCompleted = '0'
+          AND playermatchresults.Score>=5
+          AND playermatchresults.playerKey=players.PrimaryKey)
+      ) Score
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY Score DESC, NickName";
+break;
+  case 3:
 $sql = "SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.CompetitionKey=" . COMPETITION . " ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
@@ -626,7 +682,8 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
-} else {
+break;
+  default:
 $sql = "SELECT
 (SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.CompetitionKey=" . COMPETITION . " ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
@@ -655,6 +712,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
+break;
 }
 
 $resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
@@ -717,7 +775,37 @@ $previousRank=$rank;
 
 
 <?php
-if ($_competitionType==3) {
+switch ($_competitionType) {
+  case 2 :
+$sql = "SELECT
+(SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.GroupKey=$_groupKey ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)
+      ),0) +
+      (SELECT
+CASE COUNT(*)
+WHEN 8 THEN 60
+WHEN 7 THEN 40
+WHEN 6 THEN IF (groups.Code='1/8',10,40)
+WHEN 5 THEN 20
+WHEN 4 THEN IF (groups.Code='1/4',20,0)
+WHEN 3 THEN IF (groups.Code='1/4',10,0)
+ELSE 0 END
+FROM playermatchresults
+INNER JOIN matches ON playermatchresults.MatchKey=matches.PrimaryKey
+INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+WHERE groups.PrimaryKey=$_groupKey
+AND playermatchresults.Score>=5
+AND playermatchresults.playerKey=players.PrimaryKey
+)) Score
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY Score DESC, NickName";
+break;
+  case 3 :
 $sql = "SELECT
 (SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.GroupKey=$_groupKey ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,
@@ -743,7 +831,8 @@ AND playermatchresults.playerKey=players.PrimaryKey
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
-} else {
+break;
+  default:
 $sql = "SELECT
 (SELECT PRK.Rank FROM playergroupranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND RankDate<CURDATE() AND PRK.GroupKey=$_groupKey ORDER BY RankDate desc LIMIT 0,1) PreviousRank,
 players.PrimaryKey PlayerKey,

@@ -76,6 +76,13 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
       $isLive = 0;
 
       switch ($_competitionType) {
+        case 2:
+          $matchInfo = GetFifaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
+          $arr["GetFifaMatchInfo"] = $matchInfo;
+          foreach ($matchInfo["Queries"] as $query) {
+            $_queries[] =$query;
+          }
+          break;
         case 3:
 
           $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
@@ -116,7 +123,15 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if (!isset($_GET["DontComputeScore"])) {
 
     ComputeScore($rowSet["MatchKey"]);
-    ComputeGroupScore($rowSet["GroupKey"]);
+  switch ($_competitionType) {
+          case 2:
+          case 3:
+            ComputeCoupeGroupScore($rowSet["GroupKey"]);
+            break;
+          default:
+            ComputeGroupScore($rowSet["GroupKey"]);
+            break;
+        }
     CalculateRanking($rowSet["ScheduleDate"]);
     CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
     // If all matches have been played the group should be completed

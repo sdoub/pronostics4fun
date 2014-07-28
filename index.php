@@ -84,6 +84,21 @@ if ($_isAuthenticated )
 {
   $queryRanking = "SELECT Rank FROM playerranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " AND CompetitionKey=". COMPETITION . " ORDER BY RankDate DESC LIMIT 0,1";
   $playerRanking = $_databaseObject -> queryGetFullArray($queryRanking, "Get Ranking");
+
+  $queryScore = "SELECT SUM(playermatchresults.score) Score
+                   FROM playermatchresults
+                  INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey AND playermatchresults.PlayerKey=" . $_authorisation->getConnectedUserKey() . "
+                  INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND LiveStatus=10
+                  INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=". COMPETITION;
+  $playerScore = $_databaseObject -> queryGetFullArray($queryScore, "Get Player Score");
+
+  $queryBonusScore = "SELECT SUM(playergroupresults.score) BonusScore
+                        FROM playergroupresults
+                       INNER JOIN groups ON groups.PrimaryKey=playergroupresults.GroupKey
+                         AND groups.CompetitionKey=". COMPETITION ."
+                         WHERE playergroupresults.PlayerKey=" . $_authorisation->getConnectedUserKey();
+  $playerBonusScore = $_databaseObject -> queryGetFullArray($queryBonusScore, "Get Player Bonus Score");
+
   $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " ORDER BY RankDate DESC LIMIT 0,1";
   $playerDivisionRanking = $_databaseObject -> queryGetFullArray($queryDivisionRanking, "Get DivisionRanking");
 
@@ -95,6 +110,9 @@ if ($_isAuthenticated )
   else
     $playerRank.="<sup>ème</sup>";
 
+  $playerGlobalScore = (int)$playerScore[0]["Score"] + (int)$playerBonusScore[0]["BonusScore"];
+  if ($_competitionType==2)
+    $playerRank.=" ($playerGlobalScore pts)";
   $playerDivisionRank = $playerDivisionRanking[0]["Rank"];
   if ($playerDivisionRank==0)
     $playerDivisionRank="-";
@@ -119,15 +137,15 @@ if ($_isAuthenticated )
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
   echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;" title="Classement général"/>';
   echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
-  if ($_competitionType==1) {
-  if (count($queryDivisionRanking)>0){
-    echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" title="Division '.$playerDivisionRanking[0]["DivisionKey"].'"/>';
-    echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
+  if ($_competitionType==1 && 1==0) {
+    if (count($queryDivisionRanking)>0){
+      echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" title="Division '.$playerDivisionRanking[0]["DivisionKey"].'"/>';
+      echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
+    }
+    echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.s'.$playerCurrentSeason.'.png" style="" title="Coupe Saison '.$playerCurrentSeason.'"/>';
+    echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$cupStatus.'</span>';
+    echo '</span>';
   }
-  echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.s'.$playerCurrentSeason.'.png" style="" title="Coupe Saison '.$playerCurrentSeason.'"/>';
-  echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$cupStatus.'</span>';
-  echo '</span>';
-}
 }
 else
 {
@@ -467,4 +485,4 @@ $ua=getBrowser();
 $yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
 //print_r($yourbrowser);
 require_once("end.file.php");
-?>	
+?>

@@ -86,6 +86,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
           foreach ($matchInfo["Queries"] as $query) {
             $_queries[] =$query;
           }
+
           break;
         case 3:
           $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");

@@ -30,7 +30,7 @@ Si vous êtes convaincu, alors rejoignez-nous en vous inscrivant, en un simple c
 </p>
 </div>
 	<div class='mainBloc' style='width:520px;'>
-<img src='" . ROOT_SITE . $_themePath . "/images/logo-home.png' />
+<img style='padding-left: 130;' src='" . ROOT_SITE . $_themePath . "/images/logo-home.png' />
 </div>
 	</div>
 
@@ -82,7 +82,7 @@ p {
 <div class='altBloc'>
 <h3 style='font-size:30px;font-family: Georgia;color:#365F89'>Bienvenue sur le site</h3>
 <h3 style='font-size:30px;font-family: Georgia;color:#365F89'>Pronostics4Fun</h3>
-<h4 style='font-size:20px;font-family: Georgia;color:#FFFFFF;text-align:center;'>Ligue 1 - Saison 2013/2014</h3>
+<h4 style='font-size:20px;font-family: Georgia;color:#FFFFFF;text-align:center;'>Ligue 1 - Saison 2014/2015</h3>
 <br/>
 <br/>
 <br/>

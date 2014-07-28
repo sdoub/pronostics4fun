@@ -75,7 +75,7 @@ AND players.IsReminderEmailSent=0
 
         $mail->AddAddress($address, $nickName);
 
-        $mail->AddAttachment("images/Logo.png");      // attachment
+        $mail->AddAttachment($_themePath."/images/Logo.png");      // attachment
 
         $mail->Send();
         echo "Message sent to $nickName!<br/>";
