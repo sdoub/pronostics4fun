@@ -156,6 +156,7 @@ foreach ($rowsSet as $rowSet)
                                      INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
                                      WHERE matches.GroupKey = $groupKey
                                     ) TMP
+                                    WHERE TMP.GlobalVoteCount > 0
                                       ORDER BY TMP.GlobalVoteValue desc
                                 LIMIT 0,1) TMP2)";
     $queries[]=$updateQuery;
