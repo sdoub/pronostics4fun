@@ -25,7 +25,7 @@ if ($_isAuthenticated)
       break;
     case "2":
       if (isset($_GET['Mode'])){
-        if (isset($_GET['GroupKey']) || $_competition==1) {
+        if (isset($_GET['GroupKey']) || $_competitionType==1) {
 			if ($_GET['Mode']=="1") {
 			  include("modules/result.group.php");
 			} else {
@@ -37,7 +37,7 @@ if ($_isAuthenticated)
 		  include("modules/resultsHome.php");
       }
       else {
-        if (isset($_GET['GroupKey']) || $_competition==1) 
+        if (isset($_GET['GroupKey']) || $_competitionType==1)
 		  include("modules/result.group.php");
 		else
 		  include("modules/resultsHome.php");

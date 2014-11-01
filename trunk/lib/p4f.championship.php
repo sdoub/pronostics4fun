@@ -126,12 +126,12 @@ $matches[$rowSet["Order"]]["NumberOfPlayers1"] =count($competitors);
     $championship->create($competitors);
     $matches[]=$championship->ToArray();
 
-    $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 20 AND 28";
+    $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 2 AND 10";
     $resultSetGroups = $_databaseObject->queryPerf($queryGroups,"Get players for current division");
     while ($rowSetGroup = $_databaseObject -> fetch_assoc ($resultSetGroups))
     {
       foreach ($championship->tour as $match) {
-        if ($rowSetGroup["DayKey"]-19==$match["Round"]) {
+        if ($rowSetGroup["DayKey"]-1==$match["Round"]) {
           $insertQuery = "INSERT IGNORE INTO playerdivisionmatches (PlayerHomeKey, PlayerAwayKey, SeasonKey, DivisionKey, GroupKey)
           VALUES (".$match["Home"].", ".$match["Away"].", $seasonKey, ".$rowSet["PrimaryKey"].", ".$rowSetGroup["PrimaryKey"].")";
 

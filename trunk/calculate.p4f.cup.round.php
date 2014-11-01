@@ -29,7 +29,7 @@ $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get last completed gr
 
 $arr = array();
 $arr[] = GetP4FCupMatchScores($rowsSet[0]["GroupKey"]);
-$arr[] = CreateNextRound ($_cupRoundKey, 4);
+$arr[] = CreateNextRound ($_cupRoundKey, 5);
 writeJsonResponse($arr);
 
 require_once("end.file.php");
