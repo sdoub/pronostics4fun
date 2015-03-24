@@ -26,7 +26,6 @@ var wrapperId 	=	'#wrapper';		// main container
 	// FirstLoad
 	$(waitId).html(waitNote).fadeIn('slow',function(){
 		// get request to load form
-
 		$.ajax({
 			  url: postFile,
 			  dataType: 'json',
@@ -42,12 +41,16 @@ var wrapperId 	=	'#wrapper';		// main container
 
 function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
 {
-	$.log(XMLHttpRequest);
+$.log("error loading screen");	
+$.log(XMLHttpRequest.statusText);
 	$.log(textStatus);
 	$.log(errorThrown);
 }
 
 function callbackPost (data){
+$.log("Screen loaded");
+$.log(data.status);
+
 	if(data.status==true) {
 		// status is authorized
 		if(autoRedir){ 
@@ -74,7 +77,7 @@ function callbackPost (data){
 					  _kc = true;
 					}
 					
-					$.log(_kc);
+					//$.log(_kc);
 					$.ajax({
 						type: "POST",
 						url: postFile,

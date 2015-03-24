@@ -64,9 +64,9 @@ function CreateNextSeason ($previousSeasonKey, $seasonKey) {
     $competitors = array();
     // Get players still in same division
     if ($rowSet["Order"]==1) // First division keep 8 first players
-      $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE RankDate =(SELECT MAX(RankDate) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$rowSet["PrimaryKey"]." AND Rank<9 ORDER BY Rank";
+      $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE DATE(RankDate) =(SELECT MAX(DATE(RankDate)) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$rowSet["PrimaryKey"]." AND Rank<9 ORDER BY Rank";
     else
-      $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE RankDate =(SELECT MAX(RankDate) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$rowSet["PrimaryKey"]." AND Rank BETWEEN 3 AND 8 AND NOT EXISTS (SELECT 1 FROM playerdivisionmatches pdm WHERE (pdm.PlayerHomeKey=playerdivisionranking.PlayerKey OR pdm.PlayerAwayKey=playerdivisionranking.PlayerKey) AND pdm.SeasonKey=$seasonKey) ORDER BY Rank";
+      $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE DATE(RankDate) =(SELECT MAX(DATE(RankDate)) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$rowSet["PrimaryKey"]." AND Rank BETWEEN 3 AND 8 AND NOT EXISTS (SELECT 1 FROM playerdivisionmatches pdm WHERE (pdm.PlayerHomeKey=playerdivisionranking.PlayerKey OR pdm.PlayerAwayKey=playerdivisionranking.PlayerKey) AND pdm.SeasonKey=$seasonKey) ORDER BY Rank";
 
     $resultSetPlayers = $_databaseObject->queryPerf($queryPlayers,"Get players for current division");
     while ($rowSetPlayer = $_databaseObject -> fetch_assoc ($resultSetPlayers))
@@ -86,7 +86,7 @@ $matches[$rowSet["Order"]]["NumberOfPlayers1"] =count($competitors);
 
     // Get relegated players
     $divisionUp = ((int)$rowSet["PrimaryKey"])-1;
-    $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE RankDate =(SELECT MAX(RankDate) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$divisionUp." AND Rank IN (9,10) ORDER BY Rank";
+    $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE DATE(RankDate) =(SELECT MAX(DATE(RankDate)) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$divisionUp." AND Rank IN (9,10) ORDER BY Rank";
     $resultSetPlayers = $_databaseObject->queryPerf($queryPlayers,"Get players for current division");
     $numberOfRelegatedPlayers = 0;
     while ($rowSetPlayer = $_databaseObject -> fetch_assoc ($resultSetPlayers)) {
@@ -102,7 +102,7 @@ $matches[$rowSet["Order"]]["NumberOfPlayers1"] =count($competitors);
 
     // Get promoted players
     $divisionDown = ((int)$rowSet["PrimaryKey"])+1;
-    $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE RankDate =(SELECT MAX(RankDate) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$divisionDown." ORDER BY Rank LIMIT 0," . $numberOfPromotedPlayers;
+    $queryPlayers= "SELECT PlayerKey FROM playerdivisionranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerdivisionranking.PlayerKey WHERE DATE(RankDate) =(SELECT MAX(DATE(RankDate)) FROM playerdivisionranking) AND playerdivisionranking.DivisionKey=".$divisionDown." ORDER BY Rank LIMIT 0," . $numberOfPromotedPlayers;
     $resultSetPlayers = $_databaseObject->queryPerf($queryPlayers,"Get players for current division");
     $numberOfRealPromotedPlayers = 0;
     while ($rowSetPlayer = $_databaseObject -> fetch_assoc ($resultSetPlayers)) {
@@ -113,7 +113,7 @@ $matches[$rowSet["Order"]]["NumberOfPlayers1"] =count($competitors);
       $matches[$rowSet["Order"]]["NumberOfRealPromotedPlayers"] =$numberOfRealPromotedPlayers;
     // Get new players if we are in last division
     if (count($competitors)<10) {
-      $queryPlayers= "SELECT PlayerKey FROM playerranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerranking.PlayerKey WHERE RankDate =(SELECT MAX(RankDate) FROM playerranking) AND playerranking.PlayerKey NOT IN (SELECT playerdivisionranking.PlayerKey FROM playerdivisionranking WHERE SeasonKey=".$previousSeasonKey.") AND playerranking.PlayerKey NOT IN (SELECT playerdivisionmatches.PlayerHomeKey FROM playerdivisionmatches WHERE SeasonKey=".$seasonKey.") AND playerranking.PlayerKey NOT IN (SELECT playerdivisionmatches.PlayerAwayKey FROM playerdivisionmatches WHERE SeasonKey=".$seasonKey.") ORDER BY Rank";
+      $queryPlayers= "SELECT PlayerKey FROM playerranking INNER JOIN  playersenabled ON playersenabled.PrimaryKey=playerranking.PlayerKey WHERE DATE(RankDate) =(SELECT MAX(DATE(RankDate)) FROM playerranking) AND playerranking.PlayerKey NOT IN (SELECT playerdivisionranking.PlayerKey FROM playerdivisionranking WHERE SeasonKey=".$previousSeasonKey.") AND playerranking.PlayerKey NOT IN (SELECT playerdivisionmatches.PlayerHomeKey FROM playerdivisionmatches WHERE SeasonKey=".$seasonKey.") AND playerranking.PlayerKey NOT IN (SELECT playerdivisionmatches.PlayerAwayKey FROM playerdivisionmatches WHERE SeasonKey=".$seasonKey.") ORDER BY Rank";
       $resultSetPlayers = $_databaseObject->queryPerf($queryPlayers,"Get players for current division");
       while ($rowSetPlayer = $_databaseObject -> fetch_assoc ($resultSetPlayers))
       {

@@ -126,10 +126,10 @@ if ($_isAuthenticated )
   $playerCupRound = $playerCupRounds[0]["Description"];
 
 
-  $queryCurrentCupRounds = "SELECT cuprounds.Description,playercupmatches.SeasonKey FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+  $queryCurrentCupRounds = "SELECT cuprounds.Description,playercupmatches.SeasonKey, seasons.Order FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
   $playerCurrentCupRounds = $_databaseObject -> queryGetFullArray($queryCurrentCupRounds, "Get DivisionRanking");
   $playerCurrentCupRound = $playerCurrentCupRounds[0]["Description"];
-  $playerCurrentSeason = $playerCurrentCupRounds[0]["SeasonKey"];
+  $playerCurrentSeason = $playerCurrentCupRounds[0]["Order"];
 
   $cupStatus = $playerCupRound;
   if ($playerCupRound!=$playerCurrentCupRound)
@@ -142,10 +142,8 @@ if ($_isAuthenticated )
       echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" title="Division '.$playerDivisionRanking[0]["DivisionKey"].'"/>';
       echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';
     }
-    /*
     echo '<img src="'.ROOT_SITE. $_themePath .'/images/cup.s'.$playerCurrentSeason.'.png" style="" title="Coupe Saison '.$playerCurrentSeason.'"/>';
     echo '<span style="color:#ffffff; font-size:10px;padding-left:5px;">'.$cupStatus.'</span>';
-    */
     echo '</span>';
   }
 }

@@ -30,7 +30,7 @@ function CreateCup () {
 //  $cup2->setBracket($bracket);
 //  $matches[]=$cup2->ToArray();
 
-  $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 22 AND 30 ORDER BY DayKey ASC";
+  $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 3 AND 10 ORDER BY DayKey ASC";
   $rowSetGroups = $_databaseObject->queryGetFullArray($queryGroups,"Get Groups");
 
   $queryCupRounds= "SELECT PrimaryKey FROM cuprounds ORDER BY PrimaryKey";

@@ -1,4 +1,3 @@
-
 <?php
 
 if (isset($_GET['DayKey'])) {
@@ -453,7 +452,7 @@ CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
 players.NickName FullNickName,
 players.AvatarName,
 SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
-      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.PrimaryKey=$_groupKey AND groups.CompetitionKey=" . COMPETITION . ")
       ),0)) Score,
 (SELECT CASE COUNT(*) WHEN 10 THEN 100 WHEN 9 THEN 60 WHEN 8 THEN 40 WHEN 7 THEN 20 ELSE 0 END
 		 FROM playermatchresults
@@ -533,8 +532,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if ($rowSet["GroupScore"]>0) {
     $styleBonus = "";
   }
-  //echo '<p style="float:left;"><a class="popupscroll" href="#">'. $rowSet["NickName"] .'</a></p><img class="avat" style="width:30px;height:30px;" src="' . $avatarPath .'"></img>';
-  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;" ><img title="Masquer ce joueur" player-key="'.$playerKey.'" class="HidePlayer" style="float:left;width:15px;height:15px;" src="' . ROOT_SITE .'/images/close.png"></img><span class="ellipsis textOverflow" displayWidth="70" style="_width=68px;">'. $rowSet["FullNickName"] .'</span><br/><span class="Bonus" style="font-size:9px;font-style:italic;'.$styleBonus.'" >Bonus : <u>' . $rowSet["GroupScore"] . ' pts</u></span></div>';
+  //echo '<p style="float:left;"><a class="popupscroll" href="#">'. $rowSet["NickName"]. '(' . $rowSet["Score"] .' pts)</a></p><img class="avat" style="width:30px;height:30px;" src="' . $avatarPath .'"></img>';
+  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;" ><img title="Masquer ce joueur" player-key="'.$playerKey.'" class="HidePlayer" style="float:left;width:15px;height:15px;" src="' . ROOT_SITE .'/images/close.png"></img><span class="ellipsis textOverflow" displayWidth="70" style="_width=68px;" title="Score : ' . $rowSet["Score"] . ' pts">'. $rowSet["FullNickName"] .'</span><br/><span class="Bonus" style="font-size:9px;font-style:italic;'.$styleBonus.'" >Bonus : <u>' . $rowSet["GroupScore"] . ' pts</u></span></div>';
   echo ' <div style="float:right;margin-right:14px;"> ';
 
   $queryForecats= "SELECT
@@ -1210,6 +1209,8 @@ function callbackRefreshInfo (data)
 	$.each ( data.players, function(i,player) {
 		var playerDetail = $("li[player-key="+player.PlayerKey+"]", $("#playerDetail"));
 		var playerMatchDetail =$("div.popupscroll",playerDetail);
+	        $(".ellipsis",playerMatchDetail).prop('title', 'Score: ' + player.PlayerScore + ' pts');("Bonus : <u>" + player.PlayerBonus + " pts</u>");
+
 		if (player.PlayerBonus>0){
 			$(".Bonus",playerMatchDetail).html("Bonus : <u>" + player.PlayerBonus + " pts</u>");
 			$(".Bonus",playerMatchDetail).css("visibility","visible");
@@ -1438,4 +1439,4 @@ function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
 }
 
 });
-</script>
+</script>	

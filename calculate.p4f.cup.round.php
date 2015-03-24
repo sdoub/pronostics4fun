@@ -19,6 +19,11 @@ else
 
 }
 
+if (isset($_GET['GroupKey']))
+{
+  $_groupKey = $_GET['GroupKey'];
+}
+else {
 $query= "SELECT groups.PrimaryKey GroupKey
            FROM groups
           WHERE groups.CompetitionKey=" . COMPETITION . "
@@ -26,11 +31,16 @@ $query= "SELECT groups.PrimaryKey GroupKey
             ORDER BY groups.EndDate DESC";
 
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get last completed group");
-
+$_groupKey = $rowsSet[0]["GroupKey"];
+}
 $arr = array();
-$arr[] = GetP4FCupMatchScores($rowsSet[0]["GroupKey"]);
-$arr[] = CreateNextRound ($_cupRoundKey, 5);
+if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
+{
+  $arr[] = GetP4FCupMatchScores($_groupKey);
+  $arr[] = CreateNextRound ($_cupRoundKey, 8);
+} else {
+  $arr["Error"] = "Not authorized";
+}
 writeJsonResponse($arr);
-
 require_once("end.file.php");
 ?>

@@ -132,7 +132,12 @@ foreach ($rowsSet as $rowSet)
   if ($isGroupScheduled) {
     $status="1";
   } else {
-    $status="0";
+    // Specific test for Lille - evian moved due to Davis cup
+    if ($groupKey==195) {
+      $status="1";
+    } else {
+      $status="0";
+    }
   }
 
 
@@ -173,7 +178,8 @@ foreach ($queries as $query) {
 
 $query = "SELECT PrimaryKey GroupKey, DayKey, Description, IF (TIMEDIFF(BeginDate,(NOW()+ INTERVAL 1 HOUR))<0,1,0) isVoteClosed,
 (SELECT COUNT(1) FROM matches WHERE matches.IsBonusMatch=1 AND matches.GroupKey=groups.PrimaryKey) IsBonusMatchValidated,
-Status
+Status,
+(SELECT SUM(GlobalVotes.value) FROM votes GlobalVotes WHERE GlobalVotes.MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=groups.PrimaryKey)) NumberOfVotes
             FROM groups
            WHERE IsCompleted=0 AND CompetitionKey = ".COMPETITION."
            LIMIT 0,5";
@@ -183,7 +189,7 @@ foreach ($rowsSet as $rowSet)
 {
   foreach ($rowsSetAfter as $rowSetAfter){
     // If the vote have just been closed
-    if ($rowSetAfter["GroupKey"]==$rowSet["GroupKey"] && $rowSetAfter["IsBonusMatchValidated"]==1 && $rowSet["IsBonusMatchValidated"]==0) {
+    if ($rowSetAfter["GroupKey"]==$rowSet["GroupKey"] && $rowSetAfter["IsBonusMatchValidated"]==1 && $rowSet["IsBonusMatchValidated"]==0 && $rowSetAfter["NumberOfVotes"]>0) {
 
       $queryVotes = "SELECT TMP.MatchKey, TeamHomeName, TeamAwayName,TMP.GlobalVoteValue stars,TMP.GlobalVoteCount NbrOfPlayers,TMP.GlobalVoteValue/TMP.GlobalVoteCount average FROM
                                 (SELECT matches.PrimaryKey MatchKey,
