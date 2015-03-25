@@ -361,7 +361,7 @@ CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
 players.NickName FullNickName,
 players.AvatarName,
 SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
-      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.PrimaryKey=$_groupKey AND groups.CompetitionKey=" . COMPETITION . ")
       ),0)) Score,
 (SELECT CASE COUNT(*) WHEN 8 THEN 60 WHEN 7 THEN 40 WHEN 6 THEN IF (groups.Code='1/8',10,40) WHEN 5 THEN IF (groups.Code='1/8',0,20) WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
 FROM playermatchresults
@@ -385,7 +385,7 @@ CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
 players.NickName FullNickName,
 players.AvatarName,
 SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
-      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.PrimaryKey=$_groupKey AND groups.CompetitionKey=" . COMPETITION . ")
       ),0)) Score,
 (SELECT CASE COUNT(*) WHEN 6 THEN 40 WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
        FROM playermatchresults
@@ -408,7 +408,7 @@ CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
 players.NickName FullNickName,
 players.AvatarName,
 SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
-      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.PrimaryKey=$_groupKey AND groups.CompetitionKey=" . COMPETITION . ")
       ),0)) Score,
 (SELECT CASE COUNT(*) WHEN 10 THEN 100 WHEN 9 THEN 60 WHEN 8 THEN 40 WHEN 7 THEN 20 ELSE 0 END
 		 FROM playermatchresults
@@ -487,12 +487,24 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     $variation = "eq";
   }
 
-  $styleBonus = "visibility:hidden;";
-  if ($rowSet["GroupScore"]>0) {
-    $styleBonus = "";
-  }
+	$bonusUrl = ROOT_SITE;
+	switch ($rowSet["GroupScore"]) {
+		case 0: 
+		  $bonusUrl = "";
+			breeak;
+		default:
+		 	 $bonusUrl .= "/images/bullet.bonus.".(string)$rowSet["GroupScore"] .".png";
+			 //$bonusUrl .= "/images/bullet.bonus.100.png";
+			 break;
+	}
+
+	
   //echo '<p style="float:left;"><a class="popupscroll" href="#">'. $rowSet["NickName"] .'</a></p><img class="avat" style="width:30px;height:30px;" src="' . $avatarPath .'"></img>';
-  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;" ><img title="Masquer ce joueur" player-key="'.$playerKey.'" class="HidePlayer" style="float:left;width:15px;height:15px;" src="' . ROOT_SITE .'/images/close.png"></img><span class="ellipsis textOverflow" displayWidth="70" style="_width=65px;">'. $rowSet["FullNickName"] .'</span><br/><span class="Bonus" style="font-size:9px;font-style:italic;'.$styleBonus.'" >Bonus : <u>' . $rowSet["GroupScore"] . ' pts</u></span></div>';
+  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;background:url('.$bonusUrl.') no-repeat right center;" ><img title="Masquer ce joueur" player-key="';
+	echo $playerKey.'" class="HidePlayer" style="float:left;width:15px;height:15px;" src="';
+	echo ROOT_SITE .'/images/close.png"></img><span class="ellipsis textOverflow" displayWidth="70" style="_width=65px;">';
+	echo $rowSet["FullNickName"] .'</span><br/><span class="Score" style="font-size:9px;font-style:italic;" >Score : <u>' . ($rowSet["Score"]+$rowSet["GroupScore"]) . ' pts</u></span>';
+	echo '</div>';
   echo ' <div style="float:right;margin-right:0px;height:33px;"> ';
 
   $queryForecats= "SELECT

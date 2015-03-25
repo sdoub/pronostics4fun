@@ -13,7 +13,6 @@ $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
 $_groupDescription=$rowSet["Description"];
 $_groupKey= $rowSet["GroupKey"];
 $_lastCompletedDayKey= $rowSet["DayKey"];
-echo $_lastCompletedDayKey;
 
 if (!$_groupKey) {
   $query = "SELECT PrimaryKey GroupKey, Description, DayKey FROM groups WHERE groups.CompetitionKey= " . COMPETITION . " AND DayKey=1";

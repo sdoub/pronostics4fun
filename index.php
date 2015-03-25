@@ -29,7 +29,7 @@ Beta -
 <?php }?>
 
 <?php
-if ($_SERVER['SERVER_NAME']=="localhost") {
+if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com") {
 ?>
 Dev -
 <?php }?>
@@ -64,7 +64,7 @@ if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
 <?php }?>
 
 <?php
-if ($_SERVER['SERVER_NAME']=="localhost") {
+if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com") {
 ?>
 <style>
 #header h1 a span {
@@ -75,7 +75,6 @@ if ($_SERVER['SERVER_NAME']=="localhost") {
 
 </head>
 <body>
-
 <div id="mainwrapper">
 	<div id="top">
 <?php
@@ -453,28 +452,6 @@ switch ($_currentPage)
 ?>
 });
 </script>
-
-<?php if ($_isAuthenticated && !IS_LOCAL)
-{
-  $rootSite = "http://pronostics4fun.com"; //ROOT_SITE;
-  $avatarPath = $rootSite . '/images/DefaultAvatar.jpg';
-  $avatarName= $_authorisation->getConnectedUserInfo("AvatarName");
-  if (!empty($avatarName)) {
-    $avatarPath= $rootSite . '/images/avatars/'.$avatarName;
-  }
-  if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
-    echo(envapi_get_html_for_reg_user('44429-vgUMa3nty16XWIxxSJmZlcu3sErngC2o', $_authorisation->getConnectedUser(), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
-  } else {
-    echo(envapi_get_html_for_reg_user('39138-79aeTiyaoMC02Ez6DD2B6usvySBgflLe', __decode($_authorisation->getConnectedUser()), '', $avatarPath, $_authorisation->getConnectedUserInfo("IsAdministrator")==1, ""));
-  }
-?>
-<!-- Envolve Chat -->
-<script type="text/javascript">
-var envoOptions={enableSharing : false,enableTranslation : false,enableNewChatButton : false,
-		strings : {Everyone: "Tout le monde", TypeAStatusMessageHere: "<?php echo "Message personnalisé"; ?>",NoOneIsHere: "<?php echo "Aucun membre connecté";?>", Everyone: "Membres", PeopleListHeaderText: "Tchatter avec les autres membres",PeopleListTitlePlural : " <?php echo "membres connectés";?>", PeopleListTitleSingular : " <?php echo "membre connecté";?>"}};
-</script>
-<?php } ?>
-
 </html>
 <?php
 writeGoogleAnalytics();
