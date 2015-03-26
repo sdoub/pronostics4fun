@@ -133,7 +133,6 @@ function callbackAuthentication(data) {
 		if(autoRedir){ 
 			$(waitId).html('Redirection...').fadeIn('fast', function(){
 				window.location.reload();
-				//window.location.replace(data.url);
 			});
 		} else {
 			$(waitId).fadeOut('slow', function(){ 
