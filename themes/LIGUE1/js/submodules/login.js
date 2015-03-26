@@ -54,7 +54,7 @@ $.log(data.status);
 	if(data.status==true) {
 		// status is authorized
 		if(autoRedir){ 
-			$(waitId).hide().html('Redirection...').fadeIn('fast', function(){window.location=data.url;});
+			$(waitId).hide().html('Redirection...').fadeIn('fast', function(){window.location.reload();});
 		} else {
 			$(waitId).fadeOut('slow', function(){ $(wrapperId).html(data.message).slideDown(); }).html();
 		}
@@ -132,8 +132,8 @@ function callbackAuthentication(data) {
 	if(data.status==true){ 
 		if(autoRedir){ 
 			$(waitId).html('Redirection...').fadeIn('fast', function(){
-				window.location.replace(data.url);
-				//window.location=data.url;
+				window.location.reload();
+				//window.location.replace(data.url);
 			});
 		} else {
 			$(waitId).fadeOut('slow', function(){ 
