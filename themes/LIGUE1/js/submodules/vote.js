@@ -233,22 +233,13 @@ function callbackVote(data) {
 				// window.location=data.url;
 			});
 		} else {
-			$(waitId).fadeOut('slow', function(){ 
-				$(wrapperId).slideUp('slow',function(){
-					$(this).html(data.message).slideDown('fast',function(){
-						// */ submit handler
-						$("#frmVoteValidated").submit( function() { 
-							
-							
-							$.closePopupLayer();
-							return false;
-						});	
-						
-						$("#btnClose").focus();
-						// */
-					});
-				}); 
-			}).html();
+			$.ajax({
+			  url: postFile,
+			  dataType: 'json',
+			  data: "",
+			  success: callbackPost,
+			  error: callbackPostError
+			});
 		}
 	} else {
 		$(waitId).html(data.message).slideDown('fast', function(){ 
