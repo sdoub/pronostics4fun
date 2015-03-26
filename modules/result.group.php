@@ -493,7 +493,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 		  $bonusUrl = "";
 			breeak;
 		default:
-		 	 $bonusUrl .= "/images/bullet.bonus.".(string)$rowSet["GroupScore"] .".png";
+		 	 $bonusUrl .= "/images/bonus.".(string)$rowSet["GroupScore"] .".png";
 			 //$bonusUrl .= "/images/bullet.bonus.100.png";
 			 break;
 	}
