@@ -46,7 +46,7 @@ WriteScripts();
 <div style="text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;">
 <?php echo $_groupDescription;?> en direct
 </div>
-<div style="text-align:left;font-size:11px;font-family:Arial,Helvetica,sans-serif;">
+<div id ="RefreshInfo" style="text-align:left;font-size:11px;font-family:Arial,Helvetica,sans-serif;">
 <?php
 $queryLastRefresh= "SELECT UNIX_TIMESTAMP(MAX(ResultDate)) LastRefreshDate, UNIX_TIMESTAMP(MAX(ResultDate))+UNIX_TIMESTAMP(MAX(ResultDate))+ 300 - UNIX_TIMESTAMP(NOW()) NextRefreshDate, UNIX_TIMESTAMP(NOW()) CurrentDate, MIN(results.LiveStatus) LiveStatus,UNIX_TIMESTAMP(MAX(ResultDate))+ 300 - UNIX_TIMESTAMP(NOW()) DiffDate
 FROM results
@@ -404,7 +404,7 @@ CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
 players.NickName FullNickName,
 players.AvatarName,
 SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
-      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.PrimaryKey=$_groupKey AND groups.CompetitionKey=" . COMPETITION . ")
       ),0)) Score,
 (SELECT CASE COUNT(*) WHEN 8 THEN 60 WHEN 7 THEN 40 WHEN 6 THEN IF (groups.Code='1/8',10,40) WHEN 5 THEN 20 WHEN 4 THEN IF (groups.Code='1/4',20,0) WHEN 3 THEN IF (groups.Code='1/4',10,0) ELSE 0 END
      FROM playermatchresults
@@ -528,12 +528,25 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     $variation = "eq";
   }
 
-  $styleBonus = "visibility:hidden;";
-  if ($rowSet["GroupScore"]>0) {
-    $styleBonus = "";
-  }
-  //echo '<p style="float:left;"><a class="popupscroll" href="#">'. $rowSet["NickName"]. '(' . $rowSet["Score"] .' pts)</a></p><img class="avat" style="width:30px;height:30px;" src="' . $avatarPath .'"></img>';
-  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;" ><img title="Masquer ce joueur" player-key="'.$playerKey.'" class="HidePlayer" style="float:left;width:15px;height:15px;" src="' . ROOT_SITE .'/images/close.png"></img><span class="ellipsis textOverflow" displayWidth="70" style="_width=68px;" title="Score : ' . $rowSet["Score"] . ' pts">'. $rowSet["FullNickName"] .'</span><br/><span class="Bonus" style="font-size:9px;font-style:italic;'.$styleBonus.'" >Bonus : <u>' . $rowSet["GroupScore"] . ' pts</u></span></div>';
+	$bonusUrl = ROOT_SITE;
+	switch ($rowSet["GroupScore"]) {
+		case 0: 
+		  $bonusUrl = "";
+			breeak;
+		default:
+		 	 $bonusUrl .= "/images/bonus.".(string)$rowSet["GroupScore"] .".png";
+			 //$bonusUrl .= "/images/bullet.bonus.100.png";
+			 break;
+	}
+
+	echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;';
+	echo 'background:url('.$bonusUrl.') no-repeat right center;" >';
+	echo '<img title="Masquer ce joueur" player-key="'.$playerKey.'" class="HidePlayer" ';
+	echo 'style="float:left;width:15px;height:15px;" src="' . ROOT_SITE .'/images/close.png"></img>';
+	echo '<span class="ellipsis textOverflow" displayWidth="70" style="_width=68px;" ';
+	echo '>'. $rowSet["FullNickName"] .'</span><br/>';
+	echo '<span class="Bonus" style="font-size:9px;font-style:italic;" >';
+	echo 'Score : <u>' . ($rowSet["Score"]+$rowSet["GroupScore"]) . ' pts</u></span></div>';
   echo ' <div style="float:right;margin-right:14px;"> ';
 
   $queryForecats= "SELECT
@@ -1209,14 +1222,11 @@ function callbackRefreshInfo (data)
 	$.each ( data.players, function(i,player) {
 		var playerDetail = $("li[player-key="+player.PlayerKey+"]", $("#playerDetail"));
 		var playerMatchDetail =$("div.popupscroll",playerDetail);
-	        $(".ellipsis",playerMatchDetail).prop('title', 'Score: ' + player.PlayerScore + ' pts');("Bonus : <u>" + player.PlayerBonus + " pts</u>");
-
-		if (player.PlayerBonus>0){
-			$(".Bonus",playerMatchDetail).html("Bonus : <u>" + player.PlayerBonus + " pts</u>");
-			$(".Bonus",playerMatchDetail).css("visibility","visible");
-		}
+		if (player.PlayerBonus==0)
+			$(playerMatchDetail).css("background", "url() no-repeat right center");
 		else
-			$(".Bonus",playerMatchDetail).css("visibility","hidden");
+			$(playerMatchDetail).css("background", "url(/images/bonus."+player.PlayerBonus+".png) no-repeat right center");
+		$(".Score",playerMatchDetail).html("Score : <u>" + (player.PlayerScore+player.PlayerBonus) + " pts</u>");
 		_isMatchInProgress = false;
      	$.each (player.matches, function (i,match) {
 			if (match.LiveStatus==1 || match.LiveStatus==2 || match.LiveStatus==3)
@@ -1230,7 +1240,6 @@ function callbackRefreshInfo (data)
      });
 
 	$("#lastRefresh").html( data.LastRefresh);
-
 	 if (_isMatchInProgress) {
 		 $('#ticker').countdown('change', {until: data.NextRefresh});
 	 }
@@ -1437,6 +1446,11 @@ function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
 	$.log(textStatus);
 	$.log(errorThrown);
 }
+
+  $("#RefreshInfo").bind( "click",function () {
+		_isMatchInProgress = true;
+		RunRefresh();
+	});
 
 });
 </script>	

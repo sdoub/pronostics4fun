@@ -500,10 +500,12 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 	
   //echo '<p style="float:left;"><a class="popupscroll" href="#">'. $rowSet["NickName"] .'</a></p><img class="avat" style="width:30px;height:30px;" src="' . $avatarPath .'"></img>';
-  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;background:url('.$bonusUrl.') no-repeat right center;" ><img title="Masquer ce joueur" player-key="';
+  echo '<div class="popupscroll" href="#" style="float:left;border-right:1px solid;width:92px;';
+	echo 'background:url('.$bonusUrl.') no-repeat right center;" ><img title="Masquer ce joueur" player-key="';
 	echo $playerKey.'" class="HidePlayer" style="float:left;width:15px;height:15px;" src="';
 	echo ROOT_SITE .'/images/close.png"></img><span class="ellipsis textOverflow" displayWidth="70" style="_width=65px;">';
-	echo $rowSet["FullNickName"] .'</span><br/><span class="Score" style="font-size:9px;font-style:italic;" >Score : <u>' . ($rowSet["Score"]+$rowSet["GroupScore"]) . ' pts</u></span>';
+	echo $rowSet["FullNickName"] .'</span><br/><span class="Score" style="font-size:9px;font-style:italic;" >';
+	echo 'Score : <u>' . ($rowSet["Score"]+$rowSet["GroupScore"]) . ' pts</u></span>';
 	echo '</div>';
   echo ' <div style="float:right;margin-right:0px;height:33px;"> ';
 
