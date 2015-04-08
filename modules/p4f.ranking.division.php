@@ -50,7 +50,45 @@ $defaultFilterItems[] = $defaultDivision;
 $defaultFilterItems[] = $defaultPlayer;
 
 $prepopulatedItems = json_encode($defaultFilterItems);
+if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
+{
+	$currentTime = time();
 
+	$query= "SELECT groups.PrimaryKey GroupKey, groups.Code GroupCode
+					 FROM groups
+					WHERE groups.CompetitionKey=" . COMPETITION . "
+						AND $currentTime >= (UNIX_TIMESTAMP(groups.EndDate))
+						ORDER BY groups.EndDate DESC";
+
+	$rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get last completed group");
+	$groupKey = $rowsSet[0]["GroupKey"];
+$calculateButton = '<div style="height:55px;"><div style="float:left;margin-left:327px;">
+<input type="submit"
+	value="Calculer les points de la" data-group-key="'.$rowsSet[0]["GroupKey"].'" class="buttonfield" id="btnCalculate" name="btnCalculate">
+	<div class="divHeightSpace" >&nbsp;</div></div>';
+	$groupList = "<div style='float:left;margin-top:12px;'>
+<select id='ValueChoice' style='z-index: 999; display: none;'>";
+
+  $sql = "SELECT groups.PrimaryKey GroupKey, groups.Code GroupName, groups.Description FROM groups WHERE CompetitionKey=" . COMPETITION . " AND (IsCompleted='1' OR EXISTS (SELECT 1 FROM matches INNER JOIN results ON matches.PrimaryKey=results.MatchKey WHERE matches.GroupKey=groups.PrimaryKey)) ORDER BY PrimaryKey";
+  $resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
+
+
+  $addComma = false;
+  while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+  {
+    $selected = "";
+    if ($rowSet["GroupKey"]==$groupKey)
+      $selected ="selected='selected'";
+
+
+    $groupList .= "<option ".$selected." value='" . $rowSet["GroupKey"] . "'>". $rowSet["Description"].'</option>';
+  }
+
+$groupList .= '</select></div></div>';
+
+	echo $calculateButton;
+	echo $groupList;
+}
 $seasonList = "<div id='ContainerGroup' >
 <label style='font-weight: bold;color: #FFFFFF;'>Saison : </label><select id='SeasonChoice' style='z-index: 999; display: none;'>";
 
@@ -87,8 +125,11 @@ $seasonList .= '</select>';
 
 $seasonList .= '</div>';
 echo $seasonList;
-
-echo '<div id="matches" style="float: left; position: absolute; right: 42px; top: 10px;color:#FFFFFF; font-weight:bold;">';
+if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
+	$matchesTop = 63;
+else
+	$matchesTop = 63;
+echo '<div id="matches" style="float:left;position:absolute;right:42px;top:'. $matchesTop.'px;color:#FFFFFF;font-weight:bold;">';
 
 echo '<input type="text" id="filter-matches" name="filter-matches" />';
 
@@ -274,6 +315,36 @@ var _divisionDescription = '<?php echo $_divisionDescription; ?>';
 var _manualRefresh = false;
 
 $(document).ready(function() {
+<?php if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
+{
+?>	
+	$("#btnCalculate").click(function() {
+			var groupKey = $(this).attr('data-group-key');
+			$.ajax({
+				type: "POST",
+				url: "calculate.p4f.championship.php?GroupKey="+groupKey,
+				data: { },
+				dataType: 'json',
+				success: function (data){
+					window.location.reload();
+					},
+				error: callbackPostError
+			});
+	});
+	$("#ValueChoice").dropdownchecklist({icon: {}, width: 180,maxDropHeight: 250, closeRadioOnClick:true,
+		onComplete: function(selector){
+			var groupName = "";
+			var groupKey = "";
+			for( i=0; i < selector.options.length; i++ ) {
+				if (selector.options[i].selected && (selector.options[i].value != "")) {
+					groupKey = selector.options[i].value;
+					groupName = $(selector.options[i]).html();
+				}
+      }
+		   $("#btnCalculate").attr('data-group-key', groupKey );
+		} 
+	});
+<?php } ?>
   $("#SeasonChoice").dropdownchecklist({zIndex:100,icon: {}, width: 180,maxDropHeight: 250, closeRadioOnClick:true,
     onComplete: function(selector){
     var seasonName = "";
@@ -340,5 +411,10 @@ function RefreshMatches () {
     $("#flexGridMatches").flexReload();
   }
 }
-
+	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
+	{
+		$.log(XMLHttpRequest);
+		$.log(textStatus);
+		$.log(errorThrown);
+	}
 </script>
