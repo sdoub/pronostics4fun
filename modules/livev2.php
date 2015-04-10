@@ -40,8 +40,123 @@ AddScriptReference("live");
 AddScriptReference("overflow");
 AddScriptReference("dropdownchecklist");
 WriteScripts();
+$connectPlayerKey =  $_authorisation->getConnectedUserKey();
+
+$sqlQueryP4FChamp = "SELECT 
+PlayerHomeKey, HomePlayer.NickName HomePlayerNickName, HomePlayer.AvatarName HomePlayerAvatar,
+PlayerAwayKey, AwayPlayer.NickName AwayPlayerNickName, AwayPlayer.AvatarName AwayPlayerAvatar,
+HomeScore, AwayScore, playerdivisionmatches.DivisionKey
+FROM playerdivisionmatches 
+INNER JOIN players HomePlayer ON HomePlayer.PrimaryKey=playerdivisionmatches.PlayerHomeKey
+INNER JOIN players AwayPlayer ON AwayPlayer.PrimaryKey=playerdivisionmatches.PlayerAwayKey
+WHERE GroupKey=$_groupKey AND (PlayerHomeKey=$connectPlayerKey OR PlayerAwayKey=$connectPlayerKey) ";
+
+$rowsSetP4FCh = $_databaseObject -> queryGetFullArray ($sqlQueryP4FChamp, "Get p4f championship info");
+$homeAvatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
+if (!empty($rowsSetP4FCh[0]["HomePlayerAvatar"])) {
+	$homeAvatarPath= ROOT_SITE. '/images/avatars/'.$rowsSetP4FCh[0]["HomePlayerAvatar"];
+}
+$awayAvatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
+if (!empty($rowsSetP4FCh[0]["AwayPlayerAvatar"])) {
+	$awayAvatarPath= ROOT_SITE. '/images/avatars/'.$rowsSetP4FCh[0]["AwayPlayerAvatar"];
+}
+
+$sqlQueryP4FCup = "SELECT 
+PlayerHomeKey, HomePlayer.NickName HomePlayerNickName, HomePlayer.AvatarName HomePlayerAvatar,
+PlayerAwayKey, AwayPlayer.NickName AwayPlayerNickName, AwayPlayer.AvatarName AwayPlayerAvatar,
+HomeScore, AwayScore, playercupmatches.CupRoundKey, cuprounds.Description RoundDescription
+FROM playercupmatches 
+INNER JOIN players HomePlayer ON HomePlayer.PrimaryKey=playercupmatches.PlayerHomeKey
+INNER JOIN players AwayPlayer ON AwayPlayer.PrimaryKey=playercupmatches.PlayerAwayKey
+INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey
+WHERE GroupKey=$_groupKey AND (PlayerHomeKey=$connectPlayerKey OR PlayerAwayKey=$connectPlayerKey) ";
+
+$rowsSetP4FCup = $_databaseObject -> queryGetFullArray ($sqlQueryP4FCup, "Get p4f championship info");
+
+$sqlQueryP4FCurrentCup = "SELECT 
+DISTINCT playercupmatches.CupRoundKey, cuprounds.Description RoundDescription
+FROM playercupmatches 
+INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey
+WHERE GroupKey=$_groupKey ";
+
+$rowsSetP4FCurrentCupRound = $_databaseObject -> queryGetFullArray ($sqlQueryP4FCurrentCup, "Get p4f championship info");
+
+$homeAvatarPathCup = ROOT_SITE. '/images/DefaultAvatar.jpg';
+if (!empty($rowsSetP4FCup[0]["HomePlayerAvatar"])) {
+	$homeAvatarPathCup= ROOT_SITE. '/images/avatars/'.$rowsSetP4FCup[0]["HomePlayerAvatar"];
+}
+$awayAvatarPathCup = ROOT_SITE. '/images/DefaultAvatar.jpg';
+if (!empty($rowsSetP4FCup[0]["AwayPlayerAvatar"])) {
+	$awayAvatarPathCup= ROOT_SITE. '/images/avatars/'.$rowsSetP4FCup[0]["AwayPlayerAvatar"];
+}
+
+
+if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
 ?>
 
+<div style="height:150px;display:block;">
+	<div style="margin-bottom:20px;text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">Duel P4F - <?php echo $_groupDescription;?></div>
+	<div style="float:left;background-color:#6D8AA8;width:300px;height:70px;margin-left:100px;">
+		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
+			Championnat - Division <?php echo $rowsSetP4FCh[0]["DivisionKey"]; ?>
+		</div>
+		<div style="height:30px;float:left;">
+			<div style="text-align:center;width:150px;">
+				<img style="width: 27px;height: 27px;margin-left: 50px;margin-right: 50px;padding: 3px;" src="<?php echo $homeAvatarPath; ?>"/>
+				<div style="font-size:12px;color:#ffffff;"><?php echo $rowsSetP4FCh[0]["HomePlayerNickName"]?></div>
+			</div>
+		</div>
+		<div style="height:30px;float:right;">
+			<div style="text-align:center;width:150px;">
+				<img style="width: 27px;height: 27px;margin-left: 50px;margin-right: 50px;padding: 3px;" src="<?php echo $awayAvatarPath; ?>"/>
+				<div style="font-size:12px;color:#ffffff;"><?php echo $rowsSetP4FCh[0]["AwayPlayerNickName"];?></div>
+			</div>
+		</div>
+		<div style="position:absolute;width:100px;top:71px;left:231px;text-align:center;font-size:24px;color:#ffffff;">
+			<span id="ScoreHomeChampionship" data-player-key="<?php echo $rowsSetP4FCh[0]["PlayerHomeKey"]?>"></span>
+			<span> - </span>
+			<span id="ScoreAwayChampionship" data-player-key="<?php echo $rowsSetP4FCh[0]["PlayerAwayKey"]?>"></span>
+			
+		</div>
+	</div>
+	<div style="float:right;background-color:#6D8AA8;width:300px;height:70px;;margin-right:100px;">
+<?php if (count($rowsSetP4FCurrentCupRound)>0) {?>
+		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
+			Coupe - <?php echo $rowsSetP4FCurrentCupRound[0]["RoundDescription"]; ?>
+		</div>
+<?php if (count($rowsSetP4FCup)>0) { ?>
+		<div style="height:30px;float:left;">
+			<div style="text-align:center;width:150px;">
+				<img style="width: 27px;height: 27px;margin-left: 50px;margin-right: 50px;padding: 3px;" src="<?php echo $homeAvatarPathCup; ?>"/>
+				<div style="font-size:12px;color:#ffffff;"><?php echo $rowsSetP4FCup[0]["HomePlayerNickName"]?></div>
+			</div>
+		</div>
+		<div style="height:30px;float:right;">
+			<div style="text-align:center;width:150px;">
+				<img style="width: 27px;height: 27px;margin-left: 50px;margin-right: 50px;padding: 3px;" src="<?php echo $awayAvatarPathCup; ?>"/>
+				<div style="font-size:12px;color:#ffffff;"><?php echo $rowsSetP4FCup[0]["AwayPlayerNickName"];?></div>
+			</div>
+		</div>
+		<div style="position:absolute;width:100px;top:71px;right:231px;text-align:center;font-size:24px;color:#ffffff;">
+			<span id="ScoreHomeCup" data-player-key="<?php echo $rowsSetP4FCup[0]["PlayerHomeKey"]?>"></span>
+			<span> - </span>
+			<span id="ScoreAwayCup" data-player-key="<?php echo $rowsSetP4FCup[0]["PlayerAwayKey"]?>"></span>
+		</div>
+<?php } else { ?>
+		<div style="position:absolute;width:100px;top:71px;right:231px;text-align:center;font-size:24px;color:#ffffff;">
+			Eliminé
+		</div>
+<?php } ?>
+		<?php } else { ?>
+		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
+			Aucune Coupe en cours
+		</div>
+
+		<?php } ?>
+		
+	</div>
+</div>
+<?php } ?>
 <div id="mainCol">
 <div style="text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;">
 <?php echo $_groupDescription;?> en direct
@@ -357,7 +472,7 @@ $('div[countdown]').each(function (){
 
 function everyMinute(periods) {
 	var htmlTimer= "";
-	$.log(periods);
+	//$.log(periods);
 	if (periods[3]>0) {
 		if (periods[3]==1)
 			htmlTimer = "1 jour";
@@ -491,8 +606,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	  $stylePlayer="display:none;";
 	}
   }
-      echo '<li id="li_' . $playerKey . '" class="playerforecastrow" player-key="'. $playerKey .'" style="width:'.$rowWidth.'px;'.$stylePlayer.'" >
-      <div style="width:100%" class="playerforecastrowcontent">';
+	echo '<li id="li_' . $playerKey . '" class="playerforecastrow" player-score="'.$rowSet["Score"].'" player-key="'. $playerKey .'" style="width:'.$rowWidth.'px;'.$stylePlayer.'" >
+	<div style="width:100%" class="playerforecastrowcontent">';
 
 
 
@@ -1226,6 +1341,8 @@ function callbackRefreshInfo (data)
 			$(playerMatchDetail).css("background", "url() no-repeat right center");
 		else
 			$(playerMatchDetail).css("background", "url(/images/bonus."+player.PlayerBonus+".png) no-repeat right center");
+		$("span[data-player-key="+player.PlayerKey+"]").html(player.PlayerScore);
+    playerDetail.attr('player-score',player.PlayerScore);
 		$(".Score",playerMatchDetail).html("Score : <u>" + (player.PlayerScore+player.PlayerBonus) + " pts</u>");
 		_isMatchInProgress = false;
      	$.each (player.matches, function (i,match) {
@@ -1391,7 +1508,7 @@ function RefreshValueWithAlert (htmlElement, newValue) {
 	var valueChanged = false;
 	var oldValue = $(htmlElement).html();
 	if (!compareStrings(oldValue,newValue,5)) {
-		$.log("ValueToBeChanged");
+		//$.log("ValueToBeChanged");
 		valueChanged = true;
 		$(htmlElement).html(newValue);
     	var colorBlendOptions = [{ param: "opacity", alpha:[10, 80, 30, 100], duration: 5000 , cycles:1}];
@@ -1440,17 +1557,31 @@ function RefreshMatchInfo (MatchKey, TeamHomeScore, TeamAwayScore, Status,Status
 
 }
 
-function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
-{
-	$.log(XMLHttpRequest);
-	$.log(textStatus);
-	$.log(errorThrown);
-}
+	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
+	{
+		$.log(XMLHttpRequest);
+		$.log(textStatus);
+		$.log(errorThrown);
+	}
 
   $("#RefreshInfo").bind( "click",function () {
 		_isMatchInProgress = true;
 		RunRefresh();
 	});
+
+	var homePlayerP4FCh = $("#ScoreHomeChampionship").attr('data-player-key'); 
+	var playerHomeDetail = $("li[player-key="+homePlayerP4FCh+"]", $("#playerDetail"));
+	$("#ScoreHomeChampionship").html(playerHomeDetail.attr('player-score'));
+	var awayPlayerP4FCh = $("#ScoreAwayChampionship").attr('data-player-key'); 
+	var playerAwayDetail = $("li[player-key="+awayPlayerP4FCh+"]", $("#playerDetail"));
+	$("#ScoreAwayChampionship").html(playerAwayDetail.attr('player-score'));
+
+	var homePlayerP4FCup = $("#ScoreHomeCup").attr('data-player-key'); 
+	var playerHomeDetailCup = $("li[player-key="+homePlayerP4FCup+"]", $("#playerDetail"));
+	$("#ScoreHomeCup").html(playerHomeDetailCup.attr('player-score'));
+	var awayPlayerP4FCup = $("#ScoreAwayCup").attr('data-player-key'); 
+	var playerAwayDetailCup = $("li[player-key="+awayPlayerP4FCup+"]", $("#playerDetail"));
+	$("#ScoreAwayCup").html(playerAwayDetailCup.attr('player-score'));
 
 });
 </script>	
