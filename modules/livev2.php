@@ -1341,7 +1341,21 @@ function callbackRefreshInfo (data)
 			$(playerMatchDetail).css("background", "url() no-repeat right center");
 		else
 			$(playerMatchDetail).css("background", "url(/images/bonus."+player.PlayerBonus+".png) no-repeat right center");
-		$("span[data-player-key="+player.PlayerKey+"]").html(player.PlayerScore);
+
+		var homePlayerP4FCh = $("#ScoreHomeChampionship").attr('data-player-key'); 
+		if (homePlayerP4FCh==player.PlayerKey)
+			$("#ScoreHomeChampionship").html(player.PlayerScore);
+		var awayPlayerP4FCh = $("#ScoreAwayChampionship").attr('data-player-key'); 
+		if (awayPlayerP4FCh==player.PlayerKey)
+			$("#ScoreAwayChampionship").html(player.PlayerScore);
+
+		var homePlayerP4FCup = $("#ScoreHomeCup").attr('data-player-key'); 
+		if (homePlayerP4FCup==player.PlayerKey)
+			$("#ScoreHomeCup").html(player.PlayerScore);
+		var awayPlayerP4FCup = $("#ScoreAwayCup").attr('data-player-key'); 
+		if (homePlayerP4FCup==player.PlayerKey)
+			$("#ScoreAwayCup").html(player.PlayerScore);
+		
     playerDetail.attr('player-score',player.PlayerScore);
 		$(".Score",playerMatchDetail).html("Score : <u>" + (player.PlayerScore+player.PlayerBonus) + " pts</u>");
 		_isMatchInProgress = false;
