@@ -710,6 +710,10 @@ function AddScriptReference ($name) {
         $tempScript=sprintf($jsScriptTemplate,"jquery.progressbar");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "spotlight":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.spotlight");
+        $_arrScripts[$name]=$tempScript;
+        break;
       case "dropdownchecklist":
         $tempScript=sprintf($jsScriptTemplate,"ui.dropdownchecklist");
         $tempScript.=sprintf($cssScriptTemplate,"ui.dropdownchecklist.themeroller");
