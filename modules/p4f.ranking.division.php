@@ -19,7 +19,8 @@ AddScriptReference("scrollpane");
 AddScriptReference("dropdownchecklist");
 AddScriptReference("tokeninput");
 AddScriptReference("ellipsis");
-
+AddScriptReference("cluetip");
+AddScriptReference("p4f.ranking.division");
 WriteScripts();
 
 $avatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
@@ -280,24 +281,44 @@ function flexGridRankingOnSuccess () {
 }
 
 function flexGridMatchesOnSuccess () {
-var handler = function () {
-hs.htmlExpand(null, {
-  pageOrigin: {
-    x: this.pageX,
-    y: this.pageY
-  },
-  headingText: "test",
+	var handler = function () {
+	hs.htmlExpand(null, {
+		pageOrigin: {
+			x: this.pageX,
+			y: this.pageY
+		},
+		headingText: "test",
 
-  objectType: 'ajax',
-  src: "get.group.day.php?RankDate="+this.x+"&NickName="+this.series.name+"&FullDay="+fullDay,
-  captionText: this.series.name,
-  width: 400
-});
-};
-$('tbody tr',$("#flexGridMatches")).unbind ('click',handler);
-$('tbody tr',$("#flexGridMatches")).bind ('click', handler);
+		objectType: 'ajax',
+		src: "get.group.day.php?RankDate="+this.x+"&NickName="+this.series.name+"&FullDay="+fullDay,
+		captionText: this.series.name,
+		width: 400
+	});
+	};
+	$('tbody tr',$("#flexGridMatches")).unbind ('click',handler);
+	$('tbody tr',$("#flexGridMatches")).bind ('click', handler);
+	$('tbody tr',$("#flexGridMatches")).cluetip(
+			{positionBy:'bottomTop',
+				showTitle:false,
+				width:715,
+				ajaxCache:false,
+				cluetipClass:'p4f',
+				arrows:false,
+				sticky:false,
+			  onShow:function (ct, ci) {
+					$("#playerDetail2 li:visible").each(function (index) {
+						if ((index % 2) == 0) {
+							$(this).removeClass('resultRowOdd');
+							$(this).addClass('resultRow');
+						} else {
+							$(this).removeClass('resultRow');
+							$(this).addClass('resultRowOdd');
+						}
+					});
+				}
+			});
 
-refreshScrollBar();
+	refreshScrollBar();
 }
 function refreshScrollBar() {
   $("div.bDiv").jScrollPane({
@@ -409,6 +430,7 @@ function RefreshMatches () {
     $.each(selectedKeys, function(key, value) { keys.push(value.id) });
     $("#flexGridMatches").flexOptions({url : 'get.p4f.matches.php?SpecialFilter=' + keys.join(",") });
     $("#flexGridMatches").flexReload();
+		
   }
 }
 	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)

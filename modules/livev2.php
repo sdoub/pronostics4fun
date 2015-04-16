@@ -39,6 +39,7 @@ AddScriptReference("progressbar");
 AddScriptReference("live");
 AddScriptReference("overflow");
 AddScriptReference("dropdownchecklist");
+AddScriptReference("spotlight");
 WriteScripts();
 $connectPlayerKey =  $_authorisation->getConnectedUserKey();
 
@@ -67,7 +68,7 @@ PlayerAwayKey, AwayPlayer.NickName AwayPlayerNickName, AwayPlayer.AvatarName Awa
 HomeScore, AwayScore, playercupmatches.CupRoundKey, cuprounds.Description RoundDescription
 FROM playercupmatches 
 INNER JOIN players HomePlayer ON HomePlayer.PrimaryKey=playercupmatches.PlayerHomeKey
-INNER JOIN players AwayPlayer ON AwayPlayer.PrimaryKey=playercupmatches.PlayerAwayKey
+LEFT JOIN players AwayPlayer ON AwayPlayer.PrimaryKey=playercupmatches.PlayerAwayKey
 INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey
 WHERE GroupKey=$_groupKey AND (PlayerHomeKey=$connectPlayerKey OR PlayerAwayKey=$connectPlayerKey) ";
 
@@ -90,13 +91,15 @@ if (!empty($rowsSetP4FCup[0]["AwayPlayerAvatar"])) {
 	$awayAvatarPathCup= ROOT_SITE. '/images/avatars/'.$rowsSetP4FCup[0]["AwayPlayerAvatar"];
 }
 
-
 if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
-?>
+	$playerChpKeys = $rowsSetP4FCh[0]["PlayerHomeKey"] . "," . $rowsSetP4FCh[0]["PlayerAwayKey"];
+	if (count($rowsSetP4FCup)>0 && $rowsSetP4FCup[0]["HomeScore"]==null) 
+		$playerCupKeys = $rowsSetP4FCup[0]["PlayerHomeKey"] . "," . $rowsSetP4FCup[0]["PlayerAwayKey"];
 
+?>
 <div style="height:150px;display:block;">
-	<div style="margin-bottom:20px;text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">Duel P4F - <?php echo $_groupDescription;?></div>
-	<div style="float:left;background-color:#6D8AA8;width:300px;height:70px;margin-left:100px;">
+	<div style="padding-right:80px;margin-bottom:20px;text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">Duel P4F - <?php echo $_groupDescription;?></div>
+	<div id="divP4FChp" style="float:left;background-color:#6D8AA8;width:300px;height:70px;margin-left:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerChpKeys; ?>">
 		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
 			Championnat - Division <?php echo $rowsSetP4FCh[0]["DivisionKey"]; ?>
 		</div>
@@ -119,7 +122,7 @@ if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
 			
 		</div>
 	</div>
-	<div style="float:right;background-color:#6D8AA8;width:300px;height:70px;;margin-right:100px;">
+	<div id="divP4FCup" style="float:right;background-color:#6D8AA8;width:300px;height:70px;;margin-right:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerCupKeys; ?>">
 <?php if (count($rowsSetP4FCurrentCupRound)>0) {?>
 		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
 			Coupe - <?php echo $rowsSetP4FCurrentCupRound[0]["RoundDescription"]; ?>
@@ -156,6 +159,68 @@ if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
 		
 	</div>
 </div>
+<script>
+$(document).ready(function($) {
+
+	$("#divP4FChp").cluetip(
+			{positionBy:'fixed',
+				showTitle:false,
+				width:715,
+				ajaxCache:false,
+				cluetipClass:'p4f',
+				arrows:false,
+				sticky:true,
+			 topOffset:75,
+			 leftOffset:-400,
+			  onShow:function (ct, ci) {
+					$("#cluetip-close").hide();
+					$('#divP4FChp,#cluetip').spotlight({color:'#ffffff',onHide: function(){
+						$("#cluetip-close").trigger("click");
+					}	});
+
+					$("#playerDetail2 li:visible").each(function (index) {
+						if ((index % 2) == 0) {
+							$(this).removeClass('resultRowOdd');
+							$(this).addClass('resultRow');
+						} else {
+							$(this).removeClass('resultRow');
+							$(this).addClass('resultRowOdd');
+						}
+					});
+				}
+			});
+<?php if (count($rowsSetP4FCup)>0) { ?>
+	$("#divP4FCup").cluetip(
+			{positionBy:'fixed',
+				showTitle:false,
+				width:715,
+				ajaxCache:false,
+				cluetipClass:'p4f',
+				arrows:false,
+				sticky:true,
+			 topOffset:75,
+			 leftOffset:-600,
+			  onShow:function (ct, ci) {
+					$("#cluetip-close").hide();
+					$('#divP4FCup,#cluetip').spotlight({color:'#ffffff',onHide: function(){
+						$("#cluetip-close").trigger("click");
+					}	});
+
+					$("#playerDetail2 li:visible").each(function (index) {
+						if ((index % 2) == 0) {
+							$(this).removeClass('resultRowOdd');
+							$(this).addClass('resultRow');
+						} else {
+							$(this).removeClass('resultRow');
+							$(this).addClass('resultRowOdd');
+						}
+					});
+				}
+			});
+	<?php } ?>
+});
+</script>
+
 <?php } ?>
 <div id="mainCol">
 <div style="text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;">
@@ -1000,7 +1065,7 @@ $previousScore=0;
 
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  echo '<li id="GRP_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'">';
+  echo '<li id="GRP_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'" rel="get.player.group.detail.php?GroupKey='.$_groupKey.'&PlayerKeys='.$rowSet["PlayerKey"].'&Mode=Ligue1">';
 
 
   $realRank++;
@@ -1049,6 +1114,31 @@ $previousRank=$rank;
 ?>
 </ol>
 </div>
+<script>
+$(document).ready(function($) {
+	$("li",$("#groupranking")).cluetip(
+			{positionBy:'bottomTop',
+				showTitle:false,
+				width:715,
+				ajaxCache:false,
+				cluetipClass:'p4f',
+				arrows:false,
+				sticky:false,
+			  onShow:function (ct, ci) {
+					$("#playerDetail2 li:visible").each(function (index) {
+						if ((index % 2) == 0) {
+							$(this).removeClass('resultRowOdd');
+							$(this).addClass('resultRow');
+						} else {
+							$(this).removeClass('resultRow');
+							$(this).addClass('resultRowOdd');
+						}
+					});
+				}
+			});
+});
+</script>
+
 <style type="text/css">
 .ui-sortable-placeholder { border: 1px dotted #999;background:#f4f4f4; visibility: visible !important; width:100%!important; }
 </style>

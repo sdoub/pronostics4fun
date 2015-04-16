@@ -74,9 +74,12 @@ $arr["total"] = $total;
 $arr["rows"] = array();
 
 $sql = "
-SELECT PDM.PrimaryKey, groups.DayKey, seasons.Code SeasonCode, divisions.Code DivisionCode,
+SELECT PDM.PrimaryKey, groups.PrimaryKey GroupKey, groups.DayKey, 
+seasons.Code SeasonCode, divisions.Code DivisionCode,
+HomePlayer.PrimaryKey HomePlayerKey,
 HomePlayer.NickName HomeNickName,
 HomePlayer.AvatarName HomeAvatarName,
+AwayPlayer.PrimaryKey AwayPlayerKey,
 AwayPlayer.NickName AwayNickName,
 AwayPlayer.AvatarName AwayAvatarName,
 PDM.HomeScore,PDM.AwayScore
@@ -95,7 +98,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   unset($tempArray);
   $tempArray["id"]=$rowSet["PrimaryKey"];
-
+  if ($rowSet["HomeScore"]>0 || $rowSet["AwayScore"]>0)
+		$tempArray["rel"]="get.player.group.detail.php?Mode=P4F&GroupKey=".$rowSet["GroupKey"]."&PlayerKeys=".$rowSet["HomePlayerKey"].",".$rowSet["AwayPlayerKey"];
   $tempArray["cell"][0]= $rowSet["SeasonCode"];
   $homeAvatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
   if (!empty($rowSet["HomeAvatarName"])) {

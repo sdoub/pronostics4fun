@@ -419,6 +419,7 @@
                                                         
                                                         if (row.id) tr.id = 'row' + row.id;
                                                         
+																												if (row.rel) $(tr).attr("rel", row.rel);
                                                         //add cell
                                                         $('thead tr:first th',g.hDiv).each
                                                         (
