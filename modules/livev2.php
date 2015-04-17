@@ -1,28 +1,24 @@
 <?php
 
 if (isset($_GET['DayKey'])) {
-
-  	$query= "SELECT
-	groups.PrimaryKey GroupKey,
-	groups.Description GroupDescription
-	FROM groups
-	WHERE groups.DayKey=" . $_GET['DayKey'] . "
-	 AND groups.CompetitionKey=" . COMPETITION;
-
+	$query= "SELECT
+		groups.PrimaryKey GroupKey,
+		groups.Description GroupDescription
+		FROM groups
+		WHERE groups.DayKey=" . $_GET['DayKey'] . "
+		 AND groups.CompetitionKey=" . COMPETITION;
 }
 else {
-
-
 	$scheduleDate = time();
 
 	$query= "   SELECT   groups.PrimaryKey GroupKey,
-  groups.Description GroupDescription,
-  ABS(UNIX_TIMESTAMP(matches.ScheduleDate)-$scheduleDate)
-    FROM matches
-    INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
-   WHERE DATE(matches.ScheduleDate)=DATE(FROM_UNIXTIME($scheduleDate))
-     ORDER BY 3
-     ";
+		groups.Description GroupDescription,
+		ABS(UNIX_TIMESTAMP(matches.ScheduleDate)-$scheduleDate)
+			FROM matches
+			INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+		 WHERE DATE(matches.ScheduleDate)=DATE(FROM_UNIXTIME($scheduleDate))
+			 ORDER BY 3
+	";
 }
 
 $resultSet = $_databaseObject->queryPerf($query,"Get players");
@@ -99,7 +95,7 @@ if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
 ?>
 <div style="height:150px;display:block;">
 	<div style="padding-right:80px;margin-bottom:20px;text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">Duel P4F - <?php echo $_groupDescription;?></div>
-	<div id="divP4FChp" style="float:left;background-color:#6D8AA8;width:300px;height:70px;margin-left:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerChpKeys; ?>">
+	<div id="divP4FChp" style="float:left;background-color:#6D8AA8;width:300px;height:70px;margin-left:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerChpKeys; ?>&Live=1">
 		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
 			Championnat - Division <?php echo $rowsSetP4FCh[0]["DivisionKey"]; ?>
 		</div>
@@ -122,7 +118,7 @@ if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
 			
 		</div>
 	</div>
-	<div id="divP4FCup" style="float:right;background-color:#6D8AA8;width:300px;height:70px;;margin-right:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerCupKeys; ?>">
+	<div id="divP4FCup" style="float:right;background-color:#6D8AA8;width:300px;height:70px;;margin-right:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerCupKeys; ?>&Live=1">
 <?php if (count($rowsSetP4FCurrentCupRound)>0) {?>
 		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
 			Coupe - <?php echo $rowsSetP4FCurrentCupRound[0]["RoundDescription"]; ?>
@@ -1064,8 +1060,8 @@ $realRank=0;
 $previousScore=0;
 
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-{
   echo '<li id="GRP_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'" rel="get.player.group.detail.php?GroupKey='.$_groupKey.'&PlayerKeys='.$rowSet["PlayerKey"].'&Mode=Ligue1">';
+{
 
 
   $realRank++;

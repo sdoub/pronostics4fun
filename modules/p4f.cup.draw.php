@@ -316,12 +316,17 @@ roundLabels :["1er tour<br/><small> Journée 3</small>","2ème tour<br/><small> 
 		$("div.g_game", $(this)).each(function( gameIndex ) {
 			var divGame = this;
 			var players = "";
+			var playersScore = 0;
 			$("div.g_team", $(divGame)).each(function (matchIndex){
 				if (players!="")
 					players += ",";	
 				players += $(this).attr('class').split(' ')[1];
+				$("small", $(this)).each(function (matchIndex){
+					playersScore += $(this).text();
+				});
 			});
-			$(divGame).attr('rel','get.player.group.detail.php?Mode=P4F&GroupKey='+currentGroupKey+'&PlayerKeys='+players);
+			if (players!="-2,-2" && playersScore>0)
+				$(divGame).attr('rel','get.player.group.detail.php?Mode=P4F&GroupKey='+currentGroupKey+'&PlayerKeys='+players);
 		});
 	});
 	$("div.g_game").cluetip(

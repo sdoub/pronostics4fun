@@ -4,8 +4,12 @@ require_once("begin.file.php");
 $_groupKey = $_GET["GroupKey"];
 $_playerKeys = $_GET["PlayerKeys"];
 $_mode = "P4F";
+$_liveScore = false;
 if (isset($_GET["Mode"])) {
 	$_mode = $_GET["Mode"];
+}
+if (isset($_GET["Live"])) {
+	$_liveScore = $_GET["Live"] =="1";
 }
 
 $sql = "SET NAMES utf8";
@@ -15,7 +19,7 @@ echo '<li style="width:95px;float:left;">
 &nbsp;
 </li>';
 
-if ($_mode=="P4F") {
+if ($_mode=="P4F" && !$_liveScore) {
 	$queryNotIn = "SELECT distinct matches.PrimaryKey MatchKey FROM matches 
 	INNER JOIN groups currentday ON currentday.PrimaryKey=matches.GroupKey AND currentday.PrimaryKey = $_groupKey
 	CROSS JOIN groups
@@ -73,7 +77,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     $classBonus =" matchesliveBonus";
   }
 
-	if ($_mode=="P4F" && seekKey($rowsSetP4FMatchesNotIn,"MatchKey",$matchKey)){
+	if ($_mode=="P4F" && !$_liveScore && seekKey($rowsSetP4FMatchesNotIn,"MatchKey",$matchKey)){
   	$classBonus =" matchesliveOfflimit";
   }
 
@@ -225,7 +229,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 			 break;
 	}
 	$totalScore = ($rowSet["Score"]+$rowSet["GroupScore"]);
-	if ($_mode=="P4F") {
+	if ($_mode=="P4F" && !$_liveScore) {
 		$bonusUrl = "";
 		$sqlQueryP4FChamp = "SELECT 
 		PlayerHomeKey, HomePlayer.NickName HomePlayerNickName, HomePlayer.AvatarName HomePlayerAvatar,
@@ -314,7 +318,7 @@ while ($rowSetForecasts = $_databaseObject -> fetch_assoc ($resultSetForecasts))
     }
   }
 	$classMatchResult = "forecastmatch forecastmatchTooltip";
-	if ($_mode=="P4F" && seekKey($rowsSetP4FMatchesNotIn,"MatchKey",$matchKey)){
+	if ($_mode=="P4F" && !$_liveScore && seekKey($rowsSetP4FMatchesNotIn,"MatchKey",$matchKey)){
 		$class = "NotStarted";
 		$classMatchResult = "forecastmatchofflimit forecastmatchTooltip";
 	}
