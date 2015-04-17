@@ -671,6 +671,10 @@ function AddScriptReference ($name) {
         $tempScript=sprintf($cssScriptTemplate,"modules/p4f.ranking.division");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "p4f.cup.draw":
+        $tempScript=sprintf($cssScriptTemplate,"modules/p4f.cup.draw");
+        $_arrScripts[$name]=$tempScript;
+        break;
         //Components
       case "flexigrid":
         $tempScript=sprintf($jsScriptTemplate,"flexigrid");

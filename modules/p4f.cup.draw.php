@@ -1,14 +1,17 @@
 <?php
 
 AddScriptReference("gracket");
-
+AddScriptReference("cluetip");
+AddScriptReference("p4f.cup.draw");
 WriteScripts();
 $_seasonKey=5;
 if (isset($_GET["SeasonKey"]))
   $_seasonKey = $_GET["SeasonKey"];
 
-$query = "SELECT playercupmatches.PlayerHomeKey, HomePlayer.NickName HomeNickName, playercupmatches.PlayerAwayKey, AwayPlayer.NickName AwayNickName,
-          CupRoundKey, playercupmatches.HomeScore, playercupmatches.AwayScore
+$query = "SELECT playercupmatches.PlayerHomeKey, HomePlayer.NickName HomeNickName, 
+                 playercupmatches.PlayerAwayKey, AwayPlayer.NickName AwayNickName,
+                 CupRoundKey, playercupmatches.HomeScore, playercupmatches.AwayScore,
+								 playercupmatches.GroupKey
             FROM playercupmatches
            LEFT JOIN players HomePlayer ON HomePlayer.PrimaryKey =playercupmatches.PlayerHomeKey
            LEFT JOIN players AwayPlayer ON AwayPlayer.PrimaryKey =playercupmatches.PlayerAwayKey
@@ -19,9 +22,12 @@ $resultSet = $_databaseObject->queryPerf($query,"Get round");
 $rounds = array();
 $matches = array();
 $roundKey = 0;
+$_groupKey ="";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  if ($roundKey==0)
+  if ($_groupKey=="")
+		$_groupKey = $rowSet["GroupKey"];
+	if ($roundKey==0)
     $roundKey = $rowSet["CupRoundKey"];
 
   if ($roundKey!=$rowSet["CupRoundKey"]) {
@@ -269,8 +275,8 @@ echo '<div id="" style="width:940px;overflow:hidden;"><div id="cupDraw" ></div><
     .g_gracket { width: 9999px; background-color: transparent; padding: 35px 15px 5px; line-height: 100%; position: relative; overflow: hidden;}
     .g_round { float: left; margin-right: 10px; }
     .g_game { position: relative; margin-bottom: 5px; }
-    .g_gracket h3 { margin: 0; padding: 5px 4px 4px; font-size: 11px; font-weight: normal; color: #fff}
-    .g_gracket h3 small{ background:#D7E1F6;float:right; padding-left:2px;padding-right:2px; color: #365F89}
+    .g_gracket h3 {margin:0;padding: 5px 4px 4px;font-size:11px;font-weight:normal;color:#fff}
+    .g_gracket h3 small{ background:#D7E1F6;float:right;position:absolute;right:3px;padding-left:2px;padding-right:2px;color:#365F89}
     .g_team { width:110px; background: #6D8AA8; }
     .g_team:last-child {  background: #6091c3; }
     .g_round:last-child { margin-right: 20px; }
@@ -278,7 +284,8 @@ echo '<div id="" style="width:940px;overflow:hidden;"><div id="cupDraw" ></div><
     .g_winner .g_team { background: #000; }
     .g_current { cursor: pointer; background: #365F89!important; }
     .g_round_label { top: 0px; font-weight: normal; color: #FFFFFF; text-align: center; font-size: 12px; padding-left:28px; }
-    #cupDraw3rd {bottom: 579px;left: 631px;position: absolute;width: 350px;}
+    #cupDraw3rd {bottom: 1400px;left: 751px;position: absolute;width: 350px;}
+		/* #cupDraw3rd {bottom: 579px;left: 631px;position: absolute;width: 350px;} */
   </style>
 <script type="text/javascript">
 (function(win, doc, $){
@@ -302,8 +309,43 @@ roundLabels :["1er tour<br/><small> Journée 30</small>","2ème tour<br/><small>
 roundLabels :["1er tour<br/><small> Journée 3</small>","2ème tour<br/><small> Journée 4</small>","1/16 finale<br/><small> Journée 5</small>","1/8 finale<br/><small> Journée 6</small>", "1/4 finale<br/><small> Journée 7</small>", "1/2 finale<br/><small> Journée 8</small>", "Finale<br/><small> Journée 9</small>", "Vainqueur"]
 <?php }?>
 });
+	var _groupKey = <?php echo $_groupKey; ?>;		
+	
+	$("div.g_round").each(function( roundIndex ) {
+		var currentGroupKey = _groupKey + roundIndex;
+		$("div.g_game", $(this)).each(function( gameIndex ) {
+			var divGame = this;
+			var players = "";
+			$("div.g_team", $(divGame)).each(function (matchIndex){
+				if (players!="")
+					players += ",";	
+				players += $(this).attr('class').split(' ')[1];
+			});
+			$(divGame).attr('rel','get.player.group.detail.php?Mode=P4F&GroupKey='+currentGroupKey+'&PlayerKeys='+players);
+		});
+	});
+	$("div.g_game").cluetip(
+			{positionBy:'bottomTop',
+				showTitle:false,
+				width:715,
+				ajaxCache:false,
+				cluetipClass:'p4f',
+				arrows:false,
+				sticky:false,
+			  onShow:function (ct, ci) {
+					$("#playerDetail2 li:visible").each(function (index) {
+						if ((index % 2) == 0) {
+							$(this).removeClass('resultRowOdd');
+							$(this).addClass('resultRow');
+						} else {
+							$(this).removeClass('resultRow');
+							$(this).addClass('resultRowOdd');
+						}
+					});
+				}
+			});
 
-var thirdPlaceData = <?php echo json_encode($rounds3rdPlace);?>;
+	var thirdPlaceData = <?php echo json_encode($rounds3rdPlace);?>;
       // initializer
       $("#cupDraw3rd").gracket(      {
         src : thirdPlaceData,
@@ -312,11 +354,11 @@ var thirdPlaceData = <?php echo json_encode($rounds3rdPlace);?>;
         cornerRadius : 3,         // adjusts edges of line
         canvasLineCap : "round",  // or "square"
         canvasLineColor : "white",
-        <?php if($_seasonKey==2) {?>
+        <?php if($_seasonKey==6) {?>
         roundLabels :["3ème place<br/><small> Journée 18</small>", "3ème"]
-<?php } else if ($_seasonKey==3) {?>
+<?php } else if ($_seasonKey==7) {?>
 roundLabels :["3ème place<br/><small> Journée 27</small>", "3ème"]
-<?php } else if ($_seasonKey==4) {?>
+<?php } else if ($_seasonKey==8) {?>
 roundLabels :["3ème place<br/><small> Journée 36</small>", "3ème"]
 <?php } else {?>
 roundLabels :["3ème place<br/><small> Journée 9</small>", "3ème"]
