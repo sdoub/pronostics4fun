@@ -94,7 +94,7 @@ if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]==null) {
 
 ?>
 <div style="height:150px;display:block;">
-	<div style="padding-right:80px;margin-bottom:20px;text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">Duel P4F - <?php echo $_groupDescription;?></div>
+	<div style="margin-bottom:20px;text-align:center;font-size:16px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">Duel P4F - <?php echo $_groupDescription;?></div>
 	<div id="divP4FChp" style="float:left;background-color:#6D8AA8;width:300px;height:70px;margin-left:100px;" rel="get.player.group.detail.php?GroupKey=<?php echo $_groupKey;?>&PlayerKeys=<?php echo $playerChpKeys; ?>&Live=1">
 		<div style="text-align:center;font-size:12px;font-weight:bold;font-family:Georgia,Arial,Helvetica,sans-serif;font-variant: small-caps;color:#ffffff;">
 			Championnat - Division <?php echo $rowsSetP4FCh[0]["DivisionKey"]; ?>
