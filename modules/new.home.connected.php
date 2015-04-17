@@ -187,86 +187,181 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 <div id="newsContainer">Tout ce qui se passe sur Pronostics4Fun ...</div>
 <div id="news" class="flexcroll">
 <ul id="newsList">
-<?php
-$query = "SELECT NewsKey, NewsInfos,InfoType, NewsPicture,NewsDate FROM (
-SELECT news.PrimaryKey NewsKey, news.Information NewsInfos,InfoType, '' NewsPicture,UNIX_TIMESTAMP(news.InfoDate) NewsDate
-FROM news
-WHERE CompetitionKey=" .COMPETITION . "
-UNION ALL
-SELECT playersenabled.PrimaryKey,
-playersenabled.NickName NewsInfos,
-3 InfoType,
-playersenabled.AvatarName NewsPicture,
-UNIX_TIMESTAMP(playersenabled.CreationDate) NewsDate
-FROM playersenabled
-WHERE playersenabled.CreationDate > CURDATE() - INTERVAL 365 DAY
-) NewsList
-ORDER BY NewsList.NewsDate desc
-";
-$resultSet = $_databaseObject->queryPerf($query,"Get news");
-
-$cnt = 0;
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-{
-  $playerKey = $rowSet["NewsKey"];
-  echo '<li class="news" player-key="' . $playerKey . '">';
-  if ($rowSet["InfoType"]=="3"){
-    echo "<div class='player'>";
-
-    $avatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
-    if (!empty($rowSet["NewsPicture"])) {
-      $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["NewsPicture"];
-    }
-    echo '<img class="avat" src="' . $avatarPath . '" ></img>';
-	$creationFormattedDate = strftime("%A %d %B %Y",$rowSet['NewsDate']);
-    echo "<strong>" . __encode($rowSet['NewsInfos'] ."</strong>". __encode(" est inscrit depuis le ") . $creationFormattedDate);
-    echo "</div>";
-  }
-  else {
-	$newsFormattedDate = strftime("%A %d %B %Y à %H:%M",$rowSet['NewsDate']);
-    echo "<div class='newsDate' news-key='$playerKey'>";
-    echo "Le " . __encode($newsFormattedDate);
-    echo "</div>";
-    echo "<div class='news' id='news.$playerKey'>";
-    if (strpos($rowSet["NewsInfos"],"<img") === false){
-      switch ($rowSet["InfoType"]) {
-        case "1":
-          echo '<img  class="news" src="' . ROOT_SITE . '/images/news.png" ></img>';
-          break;
-        case "2":
-          echo '<img  class="news" src="' . ROOT_SITE . '/images/stats.png" ></img>';
-          break;
-        case "5":
-          echo '<img  class="news" src="' . ROOT_SITE . '/images/calendar.png" ></img>';
-          break;
-        case "6":
-          echo '<img  class="news" src="' . ROOT_SITE . '/images/TropheeGold.png" ></img>';
-          break;
-        case "7":
-          echo '<img  class="news" src="' . ROOT_SITE . '/images/podium.png" ></img>';
-          break;
-        case "8":
-          echo '<img  class="news" src="' . ROOT_SITE . '/images/star_48.png" ></img>';
-          break;
-      }
-    }
-
-  echo __encode($rowSet['NewsInfos']);
-
-
-
-echo "</div>";
-
-  }
-
-
-
-  echo "</li>";
-}
-?>
 </ul>
 </div>
+<script>
+	var options = {
+		url: "save.news.php",
+		bg_over: "#365F89",
+		field_type: "textarea",
+		textarea_rows: "8",
+		textarea_cols: "95",
+		saving_image: "./images/wait.loader.gif",
+		use_html : true,
+		show_buttons : true,
+		success : function (html) {
+		},
+		delegate : {
+				// called while opening the editor.
+				// return false to prevent editor from opening
+				shouldOpenEditInPlace: function(aDOMNode, aSettingsDict, triggeringEvent) {
+					},
+				// return content to show in inplace editor
+				willOpenEditInPlace: function(aDOMNode, aSettingsDict) {
+						},
+				didOpenEditInPlace: function(aDOMNode, aSettingsDict) {
+							$("textarea.inplace_field").htmlarea(
+								{
+									css: '<?php echo ROOT_SITE.$_themePath ;?>/css/jHtmlArea.Editor.css',
+									toolbar :  [["html"], ["bold", "italic", "underline", "strikethrough", "|", "subscript", "superscript"],
+									["increasefontsize", "decreasefontsize"],
+									["orderedlist", "unorderedlist"],
+									["indent", "outdent"],
+									["link", "unlink", "image", "horizontalrule"],
+									[{
+											// This is how to add a completely custom Toolbar Button
+											css: "daynews",
+											text: "End Day",
+											action: function(btn) {
+										var html = this.toHtmlString();
 
+
+										 //Paste some specific HTML / Text value into the Editor
+											this.pasteHTML('<img class="news" src="images/TropheeGold.png"/>');
+
+									}
+									},
+									{
+											// This is how to add a completely custom Toolbar Button
+											css: "rankingnews",
+											text: "Ranking",
+											action: function(btn) {
+										 // Paste some specific HTML / Text value into the Editor
+											this.pasteHTML('<img class="news" src="images/podium.png"/>');
+
+									}
+									},
+									{
+											// This is how to add a completely custom Toolbar Button
+											css: "statsnews",
+											text: "Stats",
+											action: function(btn) {
+										 // Paste some specific HTML / Text value into the Editor
+											this.pasteHTML('<img class="news" src="images/stats.png"/>');
+
+									}
+									},
+									{
+											// This is how to add a completely custom Toolbar Button
+											css: "bonusnews",
+											text: "Bonus",
+											action: function(btn) {
+										 // Paste some specific HTML / Text value into the Editor
+											this.pasteHTML('<img class="news" src="images/star_48.png"/>');
+
+									}
+									},
+									{
+											// This is how to add a completely custom Toolbar Button
+											css: "p4fnews",
+											text: "p4f",
+											action: function(btn) {
+										 // Paste some specific HTML / Text value into the Editor
+											this.pasteHTML('<img class="news" src="images/p4f.update.png"/>');
+
+									}
+									},
+									{
+											// This is how to add a completely custom Toolbar Button
+											css: "calendarnews",
+											text: "Calendrier",
+											action: function(btn) {
+										 // Paste some specific HTML / Text value into the Editor
+											this.pasteHTML('<img class="news" src="images/calendar.png"/>');
+
+									}
+									}]
+									]
+							}
+						);
+			},
+
+			// called while closing the editor
+			// return false to prevent the editor from closing
+			shouldCloseEditInPlace: function(aDOMNode, aSettingsDict, triggeringEvent) {},
+			// return value will be shown during saving
+			willCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
+			didCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
+
+			missingCommaErrorPreventer:''
+		}
+
+	};
+
+	var _newsPages = 0;
+	var _totalNews = 1;
+	var _isNewsLoading = false;
+	function getNews () {
+		if (!_isNewsLoading && _newsPages * 10 < _totalNews) {
+			_isNewsLoading = true;
+			$('#WaitingLayer').fadeIn();
+			_newsPages++;
+			$.ajax({
+				type: "POST",
+				url: "get.news.php?Page="+_newsPages,
+				data: { Page: _newsPages},
+				dataType: 'json',
+				success: function (data) {
+					_totalNews = data.TotalNews;
+					/*<li class="news" player-key="1120">
+						<div class="newsDate" news-key="1120">Le mercredi 15 avril 2015 à 21:32</div>
+						<div style="background-color: transparent;" class="news" id="news.1120">
+							<img class="news" src="themes/LIGUE1/images/p4f.cup.png">
+								Les résultats des 16<sup>ème</sup> de finales de coupe sont disponibles ! 
+								Etes-vous qualifié pour les huitièmes de finale, la réponse c'est par 
+								<a href="index.php?Page=9&amp;Competition=Cup&amp;SeasonKey=8&amp;PHPSESSID=b61a1a017bb71f8f05c3fe72ac5f700f">ici</a>.
+								<br>
+						</div>
+					</li>
+
+					*/
+					var elementToBeAdded ="";
+					$.each(data.News, function(i,news) {
+						elementToBeAdded += '<li class="news" player-key="'+news.id+'">';
+						if (news.formattedDate)
+							elementToBeAdded += '<div class="newsDate" news-key="'+news.id+'">'+news.formattedDate+'</div>';
+						elementToBeAdded += '<div style="background-color: transparent;" class="news" id="news.'+news.id+'">';
+						elementToBeAdded += news.information;
+						elementToBeAdded += '</div></li>';
+					});
+					var numberOfNews = $("li",$("#newsList")).size()
+					$("#newsList").append(elementToBeAdded);
+					$('#newsList > li:gt('+numberOfNews+') > div.news').editInPlace(options);
+					if (numberOfNews==0)
+						$('#newsList > li:first > div.news').editInPlace(options);
+					$('#WaitingLayer').fadeOut();
+					_isNewsLoading = false;
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					$.log(XMLHttpRequest);
+					$.log(textStatus);
+					$.log(errorThrown);
+					$('#WaitingLayer').fadeOut();
+					_isNewsLoading = false;
+				}
+			});
+		}
+	}
+	$(document).ready(function() {
+		getNews();
+	});
+/*	$('#newsList').bind('scroll', function() {
+		if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight) {
+			getNews();
+		}
+	});
+	*/
+	</script>
 </div>
 <div >
 <div id="forecastsTitle">
@@ -482,10 +577,19 @@ $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
 	$("#forecastsTitle").corner();
 	$("#globalRankingTitle").corner();
 
-	$("div.flexcroll").jScrollPane({
+	$("div.flexcroll").bind(
+		'jsp-scroll-y',
+		function(event, scrollPositionY, isAtTop, isAtBottom)
+		{
+			if (isAtBottom)
+				getNews();
+		}
+	).jScrollPane({
 		showArrows: true,
-		horizontalGutter: 10
+		horizontalGutter: 10,
+		autoReinitialise: true
 	});
+
 });
 
 $("#forecastsTitle li").click(function() {
@@ -497,125 +601,13 @@ $("#forecastsTitle li").click(function() {
 	    if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) {
 ?>
 $(document).ready(function() {
-	var options = {
-			url: "save.news.php",
-			bg_over: "#365F89",
-			field_type: "textarea",
-			textarea_rows: "8",
-			textarea_cols: "95",
-			saving_image: "./images/wait.loader.gif",
-			use_html : true,
-			show_buttons : true,
-			success : function (html) {
-				$.log(this);
-
-			},
-			delegate : {
-					// called while opening the editor.
-					// return false to prevent editor from opening
-					shouldOpenEditInPlace: function(aDOMNode, aSettingsDict, triggeringEvent) {
-						},
-					// return content to show in inplace editor
-					willOpenEditInPlace: function(aDOMNode, aSettingsDict) {
-
-
-							},
-					didOpenEditInPlace: function(aDOMNode, aSettingsDict) {
-
-								$("textarea.inplace_field").htmlarea(
-									{
-								        css: '<?php echo ROOT_SITE.$_themePath ;?>/css/jHtmlArea.Editor.css',
-								        toolbar :  [["html"], ["bold", "italic", "underline", "strikethrough", "|", "subscript", "superscript"],
-								        ["increasefontsize", "decreasefontsize"],
-								        ["orderedlist", "unorderedlist"],
-								        ["indent", "outdent"],
-								        ["link", "unlink", "image", "horizontalrule"],
-								        [{
-								            // This is how to add a completely custom Toolbar Button
-								            css: "daynews",
-								            text: "End Day",
-								            action: function(btn) {
-								        	var html = this.toHtmlString();
-
-
-								        	 //Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="images/TropheeGold.png"/>');
-
-								        }
-								        },
-								        {
-								            // This is how to add a completely custom Toolbar Button
-								            css: "rankingnews",
-								            text: "Ranking",
-								            action: function(btn) {
-								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="images/podium.png"/>');
-
-								        }
-								        },
-								        {
-								            // This is how to add a completely custom Toolbar Button
-								            css: "statsnews",
-								            text: "Stats",
-								            action: function(btn) {
-								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="images/stats.png"/>');
-
-								        }
-								        },
-								        {
-								            // This is how to add a completely custom Toolbar Button
-								            css: "bonusnews",
-								            text: "Bonus",
-								            action: function(btn) {
-								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="images/star_48.png"/>');
-
-								        }
-								        },
-								        {
-								            // This is how to add a completely custom Toolbar Button
-								            css: "p4fnews",
-								            text: "p4f",
-								            action: function(btn) {
-								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="images/p4f.update.png"/>');
-
-								        }
-								        },
-								        {
-								            // This is how to add a completely custom Toolbar Button
-								            css: "calendarnews",
-								            text: "Calendrier",
-								            action: function(btn) {
-								        	 // Paste some specific HTML / Text value into the Editor
-								            this.pasteHTML('<img class="news" src="images/calendar.png"/>');
-
-								        }
-								        }]
-								        ]
-								    }
-									);
-						},
-
-					// called while closing the editor
-					// return false to prevent the editor from closing
-					shouldCloseEditInPlace: function(aDOMNode, aSettingsDict, triggeringEvent) {},
-					// return value will be shown during saving
-					willCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
-					didCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
-
-					missingCommaErrorPreventer:''
-				}
-
-		};
 	$('#AddNews').click (function () {
 		$('#newsList').prepend("<li class='news' player-key='newKey'><div style='float:right;border-left:1px solid #D7E1F6;border-bottom:1px solid #D7E1F6;background: #365F89;color: #FFFFFF;font: bold 11px normal Tahoma, Verdana;'>Maintenant</div><div style='padding-top:5px;' class='news' id='news.newKey'><br/><br/></div></li>");
 		$('#newsList > li:first > div.news').editInPlace(options);
 	});
 
 	$('div.news').editInPlace(options);
-	$('div.newsDate').mouseenter(function() {
+	$('div.newsDate').live ("mouseenter", function() {
 		var newsKey = $(this).attr("news-key");
 		$(this).append('<img id="DeleteNews" src="<?php echo ROOT_SITE;?>/images/delete.off.png" style="cursor:pointer;width:12px;height:12px;"/>').find('#DeleteNews').mouseenter(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.on.png');}).mouseleave(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.off.png');}).unbind('click').click(function () {
 			if (confirm('Voulez vous vraiment supprimer cette news ?'))
@@ -633,7 +625,7 @@ $(document).ready(function() {
 					});
 			}
 			});
-	  }).mouseleave(function() {
+	  }).live("mouseleave",function() {
 		  $(this).find('img').remove();
 	  });
 	function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
@@ -651,16 +643,13 @@ $(document).ready(function() {
 
 	$('input[name^="survey"]').click (function () {
 
-	$.log($(this).attr('name'));
-	$.log($(this).val());
 	var selectedValue =  $(this).val();
-	$.log(selectedValue);
-		var surveyKey = $(this).attr('name').substring(6);
-		var selectedValue =  $(this).val();
-		var answer1 = selectedValue==1?1:0;
-		var answer2 = selectedValue==2?1:0;
-		var answer3 = selectedValue==3?1:0;
-		var answer4 = selectedValue==4?1:0;
+	var surveyKey = $(this).attr('name').substring(6);
+	var selectedValue =  $(this).val();
+	var answer1 = selectedValue==1?1:0;
+	var answer2 = selectedValue==2?1:0;
+	var answer3 = selectedValue==3?1:0;
+	var answer4 = selectedValue==4?1:0;
 
 
 		$.ajax({
