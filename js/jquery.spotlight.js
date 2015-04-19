@@ -85,9 +85,12 @@
          * Colour in the overlay and clear all element masks
          */
         function fillOverlay () {
-            context.fillStyle = settings.color;
+          overlay.css('top', $(document).scrollTop());
+          overlay.css('heigth', $(window).height());
+  
+					context.fillStyle = settings.color;
 						//context.fillRect(0, 0, $(document).width(), $('body').height());
-            context.fillRect(0, $('body').scrollTop(), parent.innerWidth(), $('body').height());
+            context.fillRect(0, 0, parent.innerWidth(), $(window).height());
 
             // loop through elements and clear their position
             elements.each(function (i, e) {
@@ -98,7 +101,7 @@
 							currentPos = currentOffset;
 							context.clearRect(
                     currentPos.left - settings.paddingX,
-                    currentPos.top - settings.paddingY,
+                    currentPos.top - settings.paddingY - $(document).scrollTop(),
                     e.outerWidth() + (settings.paddingX * 2),
                     e.outerHeight() + (settings.paddingY * 2)
                 );
@@ -113,7 +116,6 @@
         function handleResize (e) {
             overlay.attr('width', parent.innerWidth());
             overlay.attr('height', parent.innerHeight());
-
             if (typeof context !== 'undefined') {
                 fillOverlay();
             }
@@ -150,6 +152,7 @@
         overlay.css(cssConfig);
         handleResize();
         $(window).resize(handleResize);
+			  $(window).scroll(handleResize);
 
         context = overlay[0].getContext('2d');
 

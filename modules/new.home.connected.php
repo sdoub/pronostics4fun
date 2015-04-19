@@ -336,9 +336,11 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 					});
 					var numberOfNews = $("li",$("#newsList")).size()
 					$("#newsList").append(elementToBeAdded);
+					<?php 	    if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) { ?>
 					$('#newsList > li:gt('+numberOfNews+') > div.news').editInPlace(options);
 					if (numberOfNews==0)
 						$('#newsList > li:first > div.news').editInPlace(options);
+					<?php }?>
 					$('#WaitingLayer').fadeOut();
 					_isNewsLoading = false;
 				},
@@ -355,12 +357,6 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	$(document).ready(function() {
 		getNews();
 	});
-/*	$('#newsList').bind('scroll', function() {
-		if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight) {
-			getNews();
-		}
-	});
-	*/
 	</script>
 </div>
 <div >

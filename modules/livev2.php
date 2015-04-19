@@ -816,7 +816,7 @@ $previousRank=$rank;
 <div class="node-in">
 <div id="tabsRanking"><a id="globalrankinglink" class="selected" >Général</a><a id="grouprankinglink"><?php  if ($_competitionType==1) {echo "Journée";} else {echo "Groupe";} ?></a></div>
 <div id="ContainerRanking" class="panel flexcroll" >
-<ol id="globalranking">
+<ol id="globalranking" style="position: absolute;width:182px;">
 
 
 <?php
@@ -959,7 +959,7 @@ $previousRank=$rank;
 }
 ?>
 </ol>
-<ol id="groupranking" style="display:none;">
+<ol id="groupranking" style="position: absolute;display:none;width:182px;">
 
 
 <?php
@@ -1059,10 +1059,8 @@ $previousRank=0;
 $realRank=0;
 $previousScore=0;
 
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
   echo '<li id="GRP_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'" rel="get.player.group.detail.php?GroupKey='.$_groupKey.'&PlayerKeys='.$rowSet["PlayerKey"].'&Mode=Ligue1">';
-{
-
 
   $realRank++;
   if ($previousScore>$rowSet["Score"]||$previousScore==0) {
@@ -1186,23 +1184,52 @@ $(document).ready(function($) {
 	$("#globalranking").sortable({ disabled: true });
 
 	$("#globalrankinglink").click(function() {
-		$("#groupranking").fadeOut('fast',function () {
-			$("#globalranking").fadeIn('fast');
+		if (!$("#globalranking").hasClass('active')) {
+			$("#globalranking").addClass('active').show().css({
+				left: -($("#groupranking").width())
+			});
+
+			$("#groupranking").removeClass('active').animate({
+				left: $("#groupranking").width()
+			}, 500);
+
+			$("#globalranking").animate({
+					left: 0
+			}, 500);
 			$("#globalrankinglink").toggleClass('selected');
 			$("#grouprankinglink").toggleClass('selected');
-			$("#mod-classements .ellipsis").ellipsis();
-		}).html();
+
+		}
 	});
 
 	$("#grouprankinglink").click(function() {
-		$("#globalranking").fadeOut('fast',function () {
-			$("#groupranking").fadeIn('fast');
+		if (!$("#groupranking").hasClass('active')) {
+			$("#groupranking").addClass('active').show().css({
+				left: $("#groupranking").width()
+			});
+
+			$("#globalranking").removeClass('active').animate({
+				left: -($("#groupranking").width())
+			}, 500);
+
+			$("#groupranking").animate({
+					left: 0
+			}, 500);
 			$("#globalrankinglink").toggleClass('selected');
 			$("#grouprankinglink").toggleClass('selected');
-			$("#mod-classements .ellipsis").ellipsis();
-		}).html();
+
+		}
 	});
 
+	/* $("#grouprankinglink").click(function() {
+		$("#globalranking").hide("slide", { direction: "left" }, 1000, function () {
+			$("#groupranking").show("slide", { direction: "right" }, 1000);
+			$("#globalrankinglink").toggleClass('selected');
+			$("#grouprankinglink").toggleClass('selected');
+			//$("#mod-classements .ellipsis").ellipsis();
+		}).html();
+	});
+*/
 	$(".HidePlayer").live('click',function() {
 		var playerKey = $(this).attr("player-key");
 		HidePlayer(playerKey);
