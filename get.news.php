@@ -23,7 +23,7 @@ $rec_count = $rowSet["NbrOfNews"];
 
 if( isset($_GET{'Page'} ) )
 {
-   $page = $_GET{'Page'} + 1;
+   $page = $_GET{'Page'};
    $offset = $rec_limit * $page ;
 }
 else

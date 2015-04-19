@@ -1529,6 +1529,27 @@ function callbackRefreshRanking (data)
      });
 	restoreOrderRanking("#groupranking",newGroupRankingOrder);
 	restoreOrderRanking("#globalranking",newGlobalRankingOrder);
+	$("li",$("#groupranking")).cluetip(
+		{positionBy:'bottomTop',
+			showTitle:false,
+			width:715,
+			ajaxCache:false,
+			cluetipClass:'p4f',
+			arrows:false,
+			sticky:false,
+			onShow:function (ct, ci) {
+				$("#playerDetail2 li:visible").each(function (index) {
+					if ((index % 2) == 0) {
+						$(this).removeClass('resultRowOdd');
+						$(this).addClass('resultRow');
+					} else {
+						$(this).removeClass('resultRow');
+						$(this).addClass('resultRowOdd');
+					}
+				});
+			}
+		});
+
 	$('#WaitingLayer').fadeOut();
 }
 
