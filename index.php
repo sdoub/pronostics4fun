@@ -401,10 +401,10 @@ if ($.browser.msie)
 
 
 
-$.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.center.js', function() {
-	$("#mainwrapper").center();
-	$("a.youtube").YouTubePopup({ idAttribute: 'youtube' });
-});
+//$.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.center.js', function() {
+	//$("#mainwrapper").center();
+	//$("a.youtube").YouTubePopup({ idAttribute: 'youtube' });
+//});
 
 var waitingLayerWidth = $("#WaitingLayer").width();
 var waitingLayerHeight = $("#WaitingLayer").height();

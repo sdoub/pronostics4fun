@@ -42,42 +42,9 @@
 	background-color: transparent;
 }
 
-*
-
-
-
-
-:
-
-
-
-
-:-webkit-scrollbar
-,
-textarea
-
-
-
-
-:
-
-
-
-
-:-webkit-scrollbar
-,
+*::-webkit-scrollbar,textarea::-webkit-scrollbar
 {
-border-radius
-
-
-
-
-:
-
-
-
-
-0
+	border-radius:0
 }
 /* - END -- ScrollBar color for Chrome, Safari ---- */
 	/* - START -- ScrollBar color for IE ---- */
@@ -163,7 +130,7 @@ a,a:active,a:visited {
   /*_margin: 0px;*/
   max-width: 1000px;
   /*_max-width: 900px;*/
-  min-width: 970px;
+  min-width: 1000px;
   /*_min-width: 870px;*/
   /*_width:1003px;*/
 }
@@ -178,7 +145,7 @@ a,a:active,a:visited {
 	/*_margin: 0px;*/
 	max-width: 1000px;
 	/*_max-width: 900px;*/
-	min-width: 970px;
+	min-width: 1000px;
 	/*_min-width: 870px;*/
 	/*_width:1003px;*/
 }
