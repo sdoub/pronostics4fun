@@ -176,7 +176,101 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 <?php }?>
-<div id="newsTitle">
+<div id="mod-classements2" style="">
+<div id="globalRankingTitle">
+<div class="node-in2" >
+<div class="panel2" style="padding-top:5px;padding-left:50px;padding-right:0px;">
+<ol>
+
+
+<?php
+
+$sql = "SELECT
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND PRK.CompetitionKey=" .COMPETITION ." ORDER BY RankDate desc LIMIT 0,1) Rank,
+(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND PRK.CompetitionKey=" .COMPETITION ." ORDER BY RankDate desc LIMIT 1,1) PreviousRank,
+players.PrimaryKey PlayerKey,
+CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
+players.NickName FullNickName,
+players.AvatarName,
+SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
+      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)),0) + IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
+      AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")),0)) Score
+FROM playersenabled players
+GROUP BY NickName
+ORDER BY Rank, NickName
+LIMIT 0,5";
+
+$resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
+$cnt = 0;
+$leftPosistion = 97;
+
+while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+{
+  $playerKey=$rowSet["PlayerKey"];
+  switch ($cnt) {
+    case 0:
+      echo '<li class="first" player-key="' . $playerKey . '">';
+      break;
+    case 4:
+      echo '<li class="last" player-key="' . $playerKey . '">';
+      break;
+    default:
+      echo '<li player-key="' . $playerKey . '">';
+      break;
+  }
+  $cnt++;
+
+  $avatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
+  if (!empty($rowSet["AvatarName"])) {
+    $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["AvatarName"];
+  }
+  echo '<a class="popupscroll" href="#"><img class="avat" src="' . $avatarPath .'"></img></a>';
+
+  if ($rowSet["PreviousRank"]) {
+    if ($rowSet["PreviousRank"]>$rowSet["Rank"]) {
+      $variation = "up";
+    }
+    else if ($rowSet["PreviousRank"]<$rowSet["Rank"]) {
+      $variation = "down";
+    }
+    else {
+      $variation = "eq";
+    }
+  }
+  else
+  {
+    $variation = "eq";
+  }
+	
+	echo '<div style="position: absolute;color: #ffffff;left: '.$leftPosistion.'px;top: 37px;font-weight: bold;font-size: 15px;text-shadow: 0px 0px 8px #6D8AA8, 0px 0px 8px #6D8AA8;">';
+	if ($cnt==1)
+		$leftPosistion += 174;
+	else
+		$leftPosistion += 177;
+	echo $cnt;
+	echo '<sup>';
+	if ($cnt==1)
+		echo 'er';
+	else
+		echo 'ème';
+	echo '</sup>';
+	echo '</div>';
+  echo '<p><a class="popupscroll" href="#">'. $rowSet["FullNickName"] .'<em>'. $rowSet["Score"] . ' pts</em></a></p>';
+	echo '<span class="var ' . $variation . '"></span>';
+  echo '</li>';
+
+
+}
+?>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="newsTitle" style="width:680px;margin-right:0px;float:left;">
 <div>
 <?php if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
 {
@@ -359,8 +453,8 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	});
 	</script>
 </div>
-<div >
-<div id="forecastsTitle">
+
+<div id="forecastsTitle" style="width:260px;">
 <div class="container" >
 	<div class="containerTitle"><?php echo __encode("Pronostics à venir ...");?></div>
 </div>
@@ -434,14 +528,14 @@ foreach ($rowsSet as $rowSet)
   }
 
 
-  echo '<li style="cursor:pointer;">';
+  echo '<li style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
   echo "<div class='status'>";
   echo $status;
   echo "</div>";
 
   if (strftime("%d",$rowSet['unixBeginDate']) == strftime("%d",$rowSet['unixEndDate'])){
     $groupDateFormatted = strftime("%d %B %Y",$rowSet['unixEndDate']);
-    $groupDateFormatted = " (".$groupDateFormatted.")";
+    //$groupDateFormatted = " (".$groupDateFormatted.")";
   }
   else {
     if (strftime("%B",$rowSet['unixBeginDate'])==strftime("%B",$rowSet['unixEndDate'])) {
@@ -450,23 +544,24 @@ foreach ($rowsSet as $rowSet)
 		$groupDateFormatted = strftime("%d %B-",$rowSet['unixBeginDate']);
 	}
     $groupDateFormatted .= strftime("%d %B %Y",$rowSet['unixEndDate']);
-    $groupDateFormatted = " (".$groupDateFormatted.")";
+    //$groupDateFormatted = " (".$groupDateFormatted.")";
   }
 
   if ($rowSet["unixBeginDate"]==0){
     $groupDateFormatted ="";
   }
-  echo '<span style="font-weight:bold;">'  . $rowSet["Description"] . $groupDateFormatted . '</span><br/>';
+  echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . '</span><br/>';
+  echo '<span style="color:#365F89;padding-left:5px;">' .  __encode("Pronostics : ") . '</span>
+  <span style="font-size:11px;color:'.$colorStatus.'">'.$groupStatus.'</span>';
   if ($rowSet["Status"]>0) {
-  echo '<span style="padding-left:10px;">' . $rowSet["players"] . __encode(" participants") . '</span><br/>';
-  }
-  echo '<span style="padding-left:10px;">' .  __encode("Pronostics : ") . '</span>
-  <span style="color:'.$colorStatus.'">'.$groupStatus.'</span>';
-  if ($rowSet["Status"]>0) {
-    echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
+    echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'" style="font-size:10px;">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
   }
   if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2 && $rowSet["unixBeginDate"]!=0) {
-    echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br/>';
+    echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+  }
+  if ($rowSet["Status"]>0) {
+	  echo '<br/><span style="color:#365F89;padding-left:15px;font-size:10px;">' . $rowSet["players"] . __encode(" participants") . '</span>';
   }
   echo '</li>';
 }
@@ -484,100 +579,21 @@ if ($_competitionType==3) {
 </div>
 
 </div>
-<div id="mod-classements" style="margin-left:0px;float:right;">
-<div id="globalRankingTitle">
-<div>&nbsp;</div>
-<div style="font-size:16px;text-transform: uppercase;font-weight:bold;margin-left:110px;margin-top:0px;"><?php echo __encode("Top 5");?></div>
-<div class="node-in" >
-<div class="panel" style="padding-top:10px;padding-left:30px;padding-right:15px;">
-<ol>
-
-
-<?php
-
-$sql = "SELECT
-(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND PRK.CompetitionKey=" .COMPETITION ." ORDER BY RankDate desc LIMIT 0,1) Rank,
-(SELECT PRK.Rank FROM playerranking PRK WHERE players.PrimaryKey=PRK.PlayerKey AND PRK.CompetitionKey=" .COMPETITION ." ORDER BY RankDate desc LIMIT 1,1) PreviousRank,
-players.PrimaryKey PlayerKey,
-CONCAT(SUBSTR(players.NickName,1,10),IF (LENGTH(nickname)>9,'...','')) NickName,
-players.NickName FullNickName,
-players.AvatarName,
-SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE players.PrimaryKey=playermatchresults.PlayerKey
-      AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . ")
-      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)),0) + IFNULL((SELECT SUM(playergroupresults.Score) FROM playergroupresults WHERE players.PrimaryKey=playergroupresults.PlayerKey
-      AND playergroupresults.GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=" . COMPETITION . ")),0)) Score
-FROM playersenabled players
-GROUP BY NickName
-ORDER BY Rank, NickName
-LIMIT 0,5";
-
-$resultSet = $_databaseObject->queryPerf($sql,"Get players ranking");
-$cnt = 0;
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-{
-  $playerKey=$rowSet["PlayerKey"];
-  switch ($cnt) {
-    case 0:
-      echo '<li class="first" player-key="' . $playerKey . '">';
-      break;
-    case 4:
-      echo '<li class="last" player-key="' . $playerKey . '">';
-      break;
-    default:
-      echo '<li player-key="' . $playerKey . '">';
-      break;
-  }
-  $cnt++;
-
-  $avatarPath = ROOT_SITE. '/images/DefaultAvatar.jpg';
-  if (!empty($rowSet["AvatarName"])) {
-    $avatarPath= ROOT_SITE. '/images/avatars/'.$rowSet["AvatarName"];
-  }
-  echo '<a class="popupscroll" href="#"><img class="avat" src="' . $avatarPath .'"></img></a>';
-
-  if ($rowSet["PreviousRank"]) {
-    if ($rowSet["PreviousRank"]>$rowSet["Rank"]) {
-      $variation = "up";
-    }
-    else if ($rowSet["PreviousRank"]<$rowSet["Rank"]) {
-      $variation = "down";
-    }
-    else {
-      $variation = "eq";
-    }
-  }
-  else
-  {
-    $variation = "eq";
-  }
-
-
-  echo '<p><a class="popupscroll" href="#">'. $rowSet["FullNickName"] .'<em>'. $rowSet["Score"] . ' pts</em><span class="var ' . $variation . '"></span></a></p>';
-  echo '</li>';
-
-
-}
-?>
-</ol>
-
-</div>
-</div>
-</div>
-</div>
+<div >
 
 <script>
 
 $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
-	$("div[name^='surveyTitle']").corner();
+	/*$("div[name^='surveyTitle']").corner();
 	$("#newsTitle").corner();
 	$("#forecastsTitle").corner();
 	$("#globalRankingTitle").corner();
-
+  */
 	$("div.flexcroll").bind(
 		'jsp-scroll-y',
 		function(event, scrollPositionY, isAtTop, isAtBottom)
 		{
-			if (isAtBottom)
+			if ($(this).parent().attr('id')=='newsTitle' && isAtBottom)
 				getNews();
 		}
 	).jScrollPane({

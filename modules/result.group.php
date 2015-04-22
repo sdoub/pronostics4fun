@@ -1025,7 +1025,7 @@ function ShowPlayer (playerKey) {
 }
 
 $(document).ready(function($) {
-	$("span .ellipsis").ellipsis();
+	//$("span .ellipsis").ellipsis();
 	$("#playerDetail ul").sortable({
 		placeholder: 'ui-sortable-placeholder',
 		forcePlaceholderSize: true,
@@ -1038,24 +1038,6 @@ $(document).ready(function($) {
 
 	$("#groupranking").sortable({ disabled: true });
 	$("#globalranking").sortable({ disabled: true });
-
-	$("#globalrankinglink").click(function() {
-		$("#groupranking").fadeOut('fast',function () {
-			$("#globalranking").fadeIn('fast');
-			$("#globalrankinglink").toggleClass('selected');
-			$("#grouprankinglink").toggleClass('selected');
-			$("#mod-classements .ellipsis").ellipsis();
-		}).html();
-	});
-
-	$("#grouprankinglink").click(function() {
-		$("#globalranking").fadeOut('fast',function () {
-			$("#groupranking").fadeIn('fast');
-			$("#globalrankinglink").toggleClass('selected');
-			$("#grouprankinglink").toggleClass('selected');
-			$("#mod-classements .ellipsis").ellipsis();
-		}).html();
-	});
 
 	$(".HidePlayer").live('click',function() {
 		var playerKey = $(this).attr("player-key");
