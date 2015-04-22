@@ -37,6 +37,11 @@ include_once(BASE_PATH . '/classes/authentication.php');
 //@ new acl instance
 $_authorisation = new Authorization;
 
+if(isset($_GET['login']) && isset($_GET['pwd']))
+{
+	$_authorisation->signin($_GET['login'],$_GET['pwd'],false);
+}
+
 //@ if logoff
 if(isset($_GET['logoff']))
 {
