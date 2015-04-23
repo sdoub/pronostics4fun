@@ -79,7 +79,7 @@ if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3
 {
 ?>
 	<div style="position:absolute;right:10px;top:5px;">
-	<a href="https://phpmyadmin.ovh.net/" title="mysql51-39.perso / pronostilxp4f" ><img style="width:100px;height:20px;" src="/images/PhpMyAdmin_logo.png"/></a>	
+	<a href="https://phpmyadmin.ovh.net/" title="mysql51-39.perso / pronostilxp4f" target="_blank"><img style="width:100px;height:20px;" src="/images/PhpMyAdmin_logo.png"/></a>	
 
 	</div>
 	<?php }	?>
