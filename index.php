@@ -75,7 +75,15 @@ if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3
 
 </head>
 <body>
-<div id="mainwrapper">
+<?php if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
+{
+?>
+	<div style="position:absolute;right:10px;top:5px;">
+	<a href="https://phpmyadmin.ovh.net/" title="mysql51-39.perso / pronostilxp4f" ><img style="width:100px;height:20px;" src="/images/PhpMyAdmin_logo.png"/></a>	
+
+	</div>
+	<?php }	?>
+	<div id="mainwrapper">
 	<div id="top">
 <?php
 
@@ -445,6 +453,9 @@ switch ($_currentPage)
       break;
     case "7":
       print ('$("#AdminConsole").addClass("activate");');
+      break;
+    case "9":
+      print ('$("#P4FCompetitions").addClass("activate");');
       break;
     default:
       print ('$("#Home").addClass("activate");');
