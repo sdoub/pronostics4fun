@@ -816,7 +816,7 @@ $previousRank=$rank;
 <div class="node-in">
 <div id="tabsRanking"><a id="globalrankinglink" class="selected" >Général</a><a id="grouprankinglink"><?php  if ($_competitionType==1) {echo "Journée";} else {echo "Groupe";} ?></a></div>
 <div id="ContainerRanking" class="panel flexcroll" >
-<ol id="globalranking" style="position: absolute;width:182px;">
+<ol id="globalranking" style="width:182px;">
 
 
 <?php
@@ -1188,6 +1188,8 @@ $(document).ready(function($) {
 			$("#globalranking").addClass('active').show().css({
 				left: -($("#groupranking").width())
 			});
+			$("#globalranking").css("position", "absolute");
+			$("#groupranking").css("position", "absolute");
 
 			$("#groupranking").removeClass('active').animate({
 				left: $("#groupranking").width()
@@ -1195,18 +1197,22 @@ $(document).ready(function($) {
 
 			$("#globalranking").animate({
 					left: 0
-			}, 500);
+			}, 500, function() {
+				$("#globalranking").css("position", "inherit");
+		  });
 			$("#globalrankinglink").toggleClass('selected');
 			$("#grouprankinglink").toggleClass('selected');
-
 		}
 	});
 
 	$("#grouprankinglink").click(function() {
+
 		if (!$("#groupranking").hasClass('active')) {
 			$("#groupranking").addClass('active').show().css({
 				left: $("#groupranking").width()
 			});
+			$("#globalranking").css("position", "absolute");
+			$("#groupranking").css("position", "absolute");
 
 			$("#globalranking").removeClass('active').animate({
 				left: -($("#groupranking").width())
@@ -1214,11 +1220,14 @@ $(document).ready(function($) {
 
 			$("#groupranking").animate({
 					left: 0
-			}, 500);
+			}, 500, function() {
+				$("#groupranking").css("position", "inherit");
+		  });
 			$("#globalrankinglink").toggleClass('selected');
 			$("#grouprankinglink").toggleClass('selected');
-
+			
 		}
+
 	});
 
 	/* $("#grouprankinglink").click(function() {

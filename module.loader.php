@@ -204,6 +204,9 @@ SELECT 1
         include("modules/p4f.ranking.division.php");
       }
       break;
+    case "10":
+      include("modules/winners.php");
+      break;
     default:
       include("modules/new.home.connected.php");
   }

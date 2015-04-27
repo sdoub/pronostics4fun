@@ -1,0 +1,581 @@
+{ "competitionKey" : 6,
+	"competitionType" : "ligue1",
+  "season" : "Saison 2013/2014",
+  "winners" : [ { "players" : [ { "name" : "joélo",
+              "score" : 2198
+            },
+            { "name" : "Arjulou",
+              "score" : 2163
+            },
+            { "name" : "Alexdu27",
+              "score" : 2158
+            }
+          ],
+        "winTitle" : "Classement général"
+      },
+      { "players" : [ { "day" : "15ème journée",
+              "name" : "Gigot",
+              "score" : 182
+            },
+            { "day" : "15ème journée",
+              "name" : "caoutchoutier",
+              "score" : 156
+            },
+            { "day" : "15ème journée",
+              "name" : "kendor",
+              "score" : 147
+            }
+          ],
+        "winTitle" : "Meilleur score"
+      }
+    ],
+  "winnersChp" : [ { "divisions" : [ { "division" : "Division 1",
+              "players" : [ { "SeasonKey" : 1,
+                    "name" : "Alexdu27",
+                    "pointsDifference" : "+115",
+                    "score" : 24,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "Arjulou",
+                    "pointsDifference" : "+8",
+                    "score" : 16,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "el muncho",
+                    "pointsDifference" : "+68",
+                    "score" : 15,
+                    "winTitle" : "Division 1"
+                  }
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ { "SeasonKey" : 1,
+                    "name" : "boubouch",
+                    "pointsDifference" : "+105",
+                    "score" : 21,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "Aloxen",
+                    "pointsDifference" : "+26",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "elstef",
+                    "pointsDifference" : "+24",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  }
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ { "SeasonKey" : 1,
+                    "name" : "faom5",
+                    "pointsDifference" : "+114",
+                    "score" : 21,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "tofred",
+                    "pointsDifference" : "+37",
+                    "score" : 20,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "greenangel",
+                    "pointsDifference" : "-6",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  }
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ { "SeasonKey" : 1,
+                    "name" : "harry_boo",
+                    "pointsDifference" : "+76",
+                    "score" : 24,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "sdoub",
+                    "pointsDifference" : "+81",
+                    "score" : 21,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "WAR22",
+                    "pointsDifference" : "+72",
+                    "score" : 18,
+                    "winTitle" : "Division 4"
+                  }
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ { "SeasonKey" : 1,
+                    "name" : "boubou",
+                    "pointsDifference" : "+46",
+                    "score" : 9,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "jean-pierre",
+                    "pointsDifference" : "+15",
+                    "score" : 6,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 1,
+                    "name" : "manouche",
+                    "pointsDifference" : "-10",
+                    "score" : 6,
+                    "winTitle" : "Division 5"
+                  }
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 1 --",
+        "winTitle" : "Championnat"
+      },
+      { "divisions" : [ { "division" : "Division 1",
+              "players" : [ { "SeasonKey" : 2,
+                    "name" : "Arjulou",
+                    "pointsDifference" : "+103",
+                    "score" : 21,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "Aloxen",
+                    "pointsDifference" : "+66",
+                    "score" : 21,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "caoutchoutier",
+                    "pointsDifference" : "+37",
+                    "score" : 18,
+                    "winTitle" : "Division 1"
+                  }
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ { "SeasonKey" : 2,
+                    "name" : "chatelin",
+                    "pointsDifference" : "+65",
+                    "score" : 21,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "Ghostwriter",
+                    "pointsDifference" : "+34",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "Juanito de la Hoya",
+                    "pointsDifference" : "+24",
+                    "score" : 16,
+                    "winTitle" : "Division 2"
+                  }
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ { "SeasonKey" : 2,
+                    "name" : "Djoninio",
+                    "pointsDifference" : "+127",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "didounio",
+                    "pointsDifference" : "+68",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "Lucette bonne mere",
+                    "pointsDifference" : "-19",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  }
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ { "SeasonKey" : 2,
+                    "name" : "boubou",
+                    "pointsDifference" : "+60",
+                    "score" : 21,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "WAR22",
+                    "pointsDifference" : "+68",
+                    "score" : 15,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "BOKERONE27",
+                    "pointsDifference" : "+64",
+                    "score" : 15,
+                    "winTitle" : "Division 4"
+                  }
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ { "SeasonKey" : 2,
+                    "name" : "manouche",
+                    "pointsDifference" : "+127",
+                    "score" : 21,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "jaz2710",
+                    "pointsDifference" : "+127",
+                    "score" : 21,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "doufiiiite",
+                    "pointsDifference" : "+127",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  }
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ { "SeasonKey" : 2,
+                    "name" : "steevy27",
+                    "pointsDifference" : "+119",
+                    "score" : 12,
+                    "winTitle" : "Division 6"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "cloclo",
+                    "pointsDifference" : "+69",
+                    "score" : 9,
+                    "winTitle" : "Division 6"
+                  },
+                  { "SeasonKey" : 2,
+                    "name" : "mykiki",
+                    "pointsDifference" : "-8",
+                    "score" : 6,
+                    "winTitle" : "Division 6"
+                  }
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 2 --",
+        "winTitle" : "Championnat"
+      },
+      { "divisions" : [ { "division" : "Division 1",
+              "players" : [ { "SeasonKey" : 3,
+                    "name" : "joélo",
+                    "pointsDifference" : "+45",
+                    "score" : 18,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "Ghostwriter",
+                    "pointsDifference" : "+6",
+                    "score" : 18,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "Arjulou",
+                    "pointsDifference" : "+42",
+                    "score" : 15,
+                    "winTitle" : "Division 1"
+                  }
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ { "SeasonKey" : 3,
+                    "name" : "Alexdu27",
+                    "pointsDifference" : "+120",
+                    "score" : 27,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "faom5",
+                    "pointsDifference" : "+68",
+                    "score" : 19,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "DanJL",
+                    "pointsDifference" : "+55",
+                    "score" : 15,
+                    "winTitle" : "Division 2"
+                  }
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ { "SeasonKey" : 3,
+                    "name" : "boubou",
+                    "pointsDifference" : "+81",
+                    "score" : 24,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "harry_boo",
+                    "pointsDifference" : "+127",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "elstef",
+                    "pointsDifference" : "+56",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  }
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ { "SeasonKey" : 3,
+                    "name" : "jaz2710",
+                    "pointsDifference" : "+74",
+                    "score" : 21,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "Loulou",
+                    "pointsDifference" : "+84",
+                    "score" : 18,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "doufiiiite",
+                    "pointsDifference" : "+72",
+                    "score" : 18,
+                    "winTitle" : "Division 4"
+                  }
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ { "SeasonKey" : 3,
+                    "name" : "steevy27",
+                    "pointsDifference" : "+127",
+                    "score" : 22,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "toff72",
+                    "pointsDifference" : "+127",
+                    "score" : 21,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "cloclo",
+                    "pointsDifference" : "+67",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  }
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ { "SeasonKey" : 3,
+                    "name" : "loulou27",
+                    "pointsDifference" : "+114",
+                    "score" : 15,
+                    "winTitle" : "Division 6"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "lamenace",
+                    "pointsDifference" : "+73",
+                    "score" : 9,
+                    "winTitle" : "Division 6"
+                  },
+                  { "SeasonKey" : 3,
+                    "name" : "jayjay27",
+                    "pointsDifference" : "+68",
+                    "score" : 9,
+                    "winTitle" : "Division 6"
+                  }
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 3 --",
+        "winTitle" : "Championnat"
+      },
+      { "divisions" : [ { "division" : "Division 1",
+              "players" : [ { "SeasonKey" : 4,
+                    "name" : "Alexdu27",
+                    "pointsDifference" : "+51",
+                    "score" : 21,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "joélo",
+                    "pointsDifference" : "+35",
+                    "score" : 19,
+                    "winTitle" : "Division 1"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Arjulou",
+                    "pointsDifference" : "+59",
+                    "score" : 18,
+                    "winTitle" : "Division 1"
+                  }
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ { "SeasonKey" : 4,
+                    "name" : "celenord",
+                    "pointsDifference" : "+107",
+                    "score" : 21,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Aloxen",
+                    "pointsDifference" : "+50",
+                    "score" : 21,
+                    "winTitle" : "Division 2"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "boubou",
+                    "pointsDifference" : "+37",
+                    "score" : 15,
+                    "winTitle" : "Division 2"
+                  }
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ { "SeasonKey" : 4,
+                    "name" : "BOKERONE27",
+                    "pointsDifference" : "+158",
+                    "score" : 24,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "meilleur buteur",
+                    "pointsDifference" : "+121",
+                    "score" : 24,
+                    "winTitle" : "Division 3"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Laem16",
+                    "pointsDifference" : "+30",
+                    "score" : 15,
+                    "winTitle" : "Division 3"
+                  }
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ { "SeasonKey" : 4,
+                    "name" : "nytonuma",
+                    "pointsDifference" : "+168",
+                    "score" : 24,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Xababa",
+                    "pointsDifference" : "+36",
+                    "score" : 18,
+                    "winTitle" : "Division 4"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "sdoub",
+                    "pointsDifference" : "+148",
+                    "score" : 15,
+                    "winTitle" : "Division 4"
+                  }
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ { "SeasonKey" : 4,
+                    "name" : "lamenace",
+                    "pointsDifference" : "+139",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "tontonboubou",
+                    "pointsDifference" : "+82",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Rominou",
+                    "pointsDifference" : "+26",
+                    "score" : 15,
+                    "winTitle" : "Division 5"
+                  }
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ { "SeasonKey" : 4,
+                    "name" : "vins973",
+                    "pointsDifference" : "+188",
+                    "score" : 15,
+                    "winTitle" : "Division 6"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Moulinardos",
+                    "pointsDifference" : "+183",
+                    "score" : 15,
+                    "winTitle" : "Division 6"
+                  },
+                  { "SeasonKey" : 4,
+                    "name" : "Xav76g",
+                    "pointsDifference" : "+182",
+                    "score" : 15,
+                    "winTitle" : "Division 6"
+                  }
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 4 --",
+        "winTitle" : "Championnat"
+      }
+    ],
+  "winnersCup" : [ { "players" : [ { "name" : "doufiiiite",
+              "score" : 81
+            },
+            { "name" : "didounio",
+              "score" : 53
+            },
+            { "name" : "el muncho",
+              "score" : 47
+            }
+          ],
+        "winTitle" : "Coupe P4F (Saison 1)"
+      },
+      { "players" : [ { "name" : "tofred",
+              "score" : 77
+            },
+            { "name" : "faom5",
+              "score" : 76
+            },
+            { "name" : "Laem16",
+              "score" : 80
+            }
+          ],
+        "winTitle" : "Coupe P4F (Saison 2)"
+      },
+      { "players" : [ { "name" : "Alexdu27",
+              "score" : 39
+            },
+            { "name" : "Arjulou",
+              "score" : 20
+            },
+            { "name" : "caoutchoutier",
+              "score" : 40
+            }
+          ],
+        "winTitle" : "Coupe P4F (Saison 3)"
+      },
+      { "players" : [ { "name" : "Alexdu27",
+              "score" : 43
+            },
+            { "name" : "celenord",
+              "score" : 31
+            },
+            { "name" : "Xav76g",
+              "score" : 75
+            }
+          ],
+        "winTitle" : "Coupe P4F (Saison 4)"
+      }
+    ]
+}

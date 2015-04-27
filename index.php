@@ -78,8 +78,18 @@ if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3
 <?php if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1)
 {
 ?>
-	<div style="position:absolute;right:10px;top:5px;">
-	<a href="https://phpmyadmin.ovh.net/" title="mysql51-39.perso / pronostilxp4f" target="_blank"><img style="width:100px;height:20px;" src="/images/PhpMyAdmin_logo.png"/></a>	
+	<div style="position:absolute;right:10px;top:5px;z-index:999">
+<?php
+	$phpMyAdminUrl = "https://phpmyadmin.ovh.net/";
+	$phpMyAdminTitle = "mysql51-39.perso / pronostilxp4f";
+ if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com") {
+	 $phpMyAdminUrl= "http://preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com/phpmyadmin";
+	 $phpMyAdminTitle = "root";
+ }
+?>
+		<a href="/index.php?Page=7" title=""><img style="width:128px;height:32px;" src="/images/p4f.admin.png"/></a>	
+		<a href="<?php echo $phpMyAdminUrl; ?>" title="<?php echo $phpMyAdminTitle; ?>" target="_blank"><img style="width:100px;height:20px;" src="/images/PhpMyAdmin_logo.png"/></a>	
+
 
 	</div>
 	<?php }	?>
@@ -164,7 +174,7 @@ else
 </div>
 	<div id="container">
     	<div id="header">
-    		<h1><a id="linkHome"><span>&nbsp;</span></a></h1>
+    		<h1><a id="linkHome" href="index.php"><span>&nbsp;</span></a></h1>
 
 <?php
 
@@ -181,7 +191,7 @@ else
 
     		<div id="navMenu">
               <ul id="navMenu1">
-              	<li id="Home"><a href="index.php" id="nav_home" ><span>Accueil</span></a></li>
+              	<!--<li id="Home"><a href="index.php" id="nav_home" ><span>Accueil</span></a></li>-->
               	<li id="Forecasts"><a href="index.php?Page=1" >Pronostics</a></li>
 <?php
 
@@ -204,6 +214,7 @@ else
               	<li id="Results"><a href="index.php?Page=2" >Résultats</a></li>
               	<li id="Ranking"><a href="index.php?Page=3" >Classements</a></li>
               	<li id="Statistics"><a href="index.php?Page=6" >Statistiques</a></li>
+								<li id="P4FWinners"><a href="index.php?Page=10" >Palmarès</a></li>
 <?php if ($_competitionType==1) {?>
                 <li id="P4FCompetitions"><a href="index.php?Page=9" >P4F - Compétitions</a></li>
 
@@ -213,6 +224,7 @@ else
               	<li id="Results" class="disabled" title="Non disponible!"><a href="javascript:void()" >Résultats</a></li>
               	<li id="Ranking" class="disabled" title="Non disponible!"> <a href="javascript:void()" >Classements</a></li>
               	<li id="Statistics" class="disabled" title="Non disponible!"><a href="javascript:void()" >Statistiques</a></li>
+								<li id="P4FWinners"><a href="index.php?Page=10" >Palmarès</a></li>
 <?php if ($_competitionType==1) {?>
                 <li id="P4FCompetitions" class="disabled" title="Non disponible!"><a href="javascript:void()" >P4F - Compétitions</a></li>
 <?php
@@ -252,11 +264,6 @@ else
               	<li class="navRight" id="Rules"><a href="javascript:void(0);" ><?php echo __encode("Règlements"); ?></a></li>
               	<li class="navRight" id="MyAccount"><a href="javascript:void(0);" >Mon compte</a></li>
 
-    		    <?php
-    		    if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) {
-              	  echo '<li class="navRight" id="AdminConsole"><a href="index.php?Page=7" >Administration</a></li>';
-              	}
-              	?>
               </ul>
               <?php
               include("submenu.loader.php");
@@ -451,11 +458,11 @@ switch ($_currentPage)
     case "6":
       print ('$("#Statistics").addClass("activate");');
       break;
-    case "7":
-      print ('$("#AdminConsole").addClass("activate");');
-      break;
     case "9":
       print ('$("#P4FCompetitions").addClass("activate");');
+      break;
+    case "10":
+      print ('$("#P4FWinners").addClass("activate");');
       break;
     default:
       print ('$("#Home").addClass("activate");');

@@ -675,6 +675,10 @@ function AddScriptReference ($name) {
         $tempScript=sprintf($cssScriptTemplate,"modules/p4f.cup.draw");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "winners":
+        $tempScript=sprintf($cssScriptTemplate,"modules/winners");
+        $_arrScripts[$name]=$tempScript;
+        break;
         //Components
       case "flexigrid":
         $tempScript=sprintf($jsScriptTemplate,"flexigrid");
@@ -774,6 +778,11 @@ function AddScriptReference ($name) {
         break;
       case "gracket":
         $tempScript=sprintf($jsScriptTemplate,"jquery.gracket");
+        $_arrScripts[$name]=$tempScript;
+        break;
+			case "json2html":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.json2html");
+        $tempScript.=sprintf($jsScriptTemplate,"json2html");
         $_arrScripts[$name]=$tempScript;
         break;
     }

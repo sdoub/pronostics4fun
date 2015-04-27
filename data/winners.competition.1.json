@@ -1,0 +1,34 @@
+{ "competitionKey" : 1,
+	"competitionType" : "worldcup",
+  "season" : "Coupe du monde 2010",
+  "winners" : [ { "players" : [ { "name" : "alix1005",
+              "score" : 362
+            },
+            { "name" : "tofred",
+              "score" : 361
+            },
+            { "name" : "NEVERDRINKALONE",
+              "score" : 335
+            }
+          ],
+        "winTitle" : "Classement général"
+      },
+      { "players" : [ { "day" : "1/8 Finale",
+              "name" : "alix1005",
+              "score" : 95
+            },
+            { "day" : "1/8 Finale",
+              "name" : "Aurel",
+              "score" : 93
+            },
+            { "day" : "1/8 Finale",
+              "name" : "tofred",
+              "score" : 88
+            }
+          ],
+        "winTitle" : "Meilleur score"
+      }
+    ],
+  "winnersChp" : [  ],
+  "winnersCup" : [  ]
+}
