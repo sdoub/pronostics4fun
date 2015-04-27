@@ -439,6 +439,7 @@ if (!$_isAuthenticated)
   print ('$("#Live").css("display","none");');
   print ('$("#Statistics").css("display","none");');
   print ('$("#P4FCompetitions").css("display","none");');
+  print ('$("#P4FWinners").css("display","none");');
 }
 
 switch ($_currentPage)

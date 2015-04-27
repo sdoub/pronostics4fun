@@ -1,9 +1,9 @@
 	#winnersContainer{
-		height:430px;
+		height:550px;
 	}
 	#winners {
 		color:#365F89;
-		height:430px;
+		height:550px;
 		overflow:auto;
 	}
 	#winners li {

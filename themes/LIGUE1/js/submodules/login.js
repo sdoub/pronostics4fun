@@ -51,10 +51,15 @@ function callbackPost (data){
 $.log("Screen loaded");
 $.log(data.status);
 
-	if(data.status==true) {
+	if(data.status===true) {
 		// status is authorized
 		if(autoRedir){ 
-			$(waitId).hide().html('Redirection...').fadeIn('fast', function(){window.location.reload();});
+			$(waitId).hide().html('Redirection...').fadeIn('fast', function(){
+				if (window.location.href.indexOf('logoff=')>0 )
+					window.location=data.url;
+				else
+					window.location.reload();
+			});
 		} else {
 			$(waitId).fadeOut('slow', function(){ $(wrapperId).html(data.message).slideDown(); }).html();
 		}
@@ -129,10 +134,13 @@ $.log(data.status);
 
 function callbackAuthentication(data) {
 	
-	if(data.status==true){ 
+	if(data.status===true){ 
 		if(autoRedir){ 
 			$(waitId).html('Redirection...').fadeIn('fast', function(){
-				window.location.reload();
+				if (window.location.href.indexOf('logoff=')>0 )
+					window.location=data.url;
+				else
+					window.location.reload();
 			});
 		} else {
 			$(waitId).fadeOut('slow', function(){ 
