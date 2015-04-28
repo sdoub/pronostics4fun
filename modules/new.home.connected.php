@@ -454,6 +454,104 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	</script>
 </div>
 
+<div id="resultsTitle" style="width:260px;">
+<div class="container" >
+	<div class="containerTitle">Dernier résultats</div>
+</div>
+<div class="container2 flexcroll" >
+<ul>
+<?php
+
+$query= "SELECT groups.PrimaryKey GroupKey, groups.Description,UNIX_TIMESTAMP( BeginDate) unixBeginDate, UNIX_TIMESTAMP(EndDate) unixEndDate,
+BeginDate, EndDate,DATEDIFF(BeginDate,NOW()) RemainingDays,IF (BeginDate>NOW(),0,1) hasStarted,
+groups.Status,
+(SELECT COUNT(DISTINCT forecasts.PlayerKey)
+   FROM forecasts
+  INNER JOIN matches ON matches.PrimaryKey=forecasts.MatchKey
+  WHERE matches.GroupKey=groups.PrimaryKey) players,
+(SELECT COUNT(matches.PrimaryKey)
+   FROM matches
+   LEFT JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus<>10
+  WHERE matches.GroupKey=groups.PrimaryKey) OpenedMatch,
+(SELECT COUNT(matches.PrimaryKey)
+   FROM matches
+  INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus=10
+  WHERE matches.GroupKey=groups.PrimaryKey) ClosedMatch,
+(SELECT COUNT(*)
+   FROM forecasts
+  INNER JOIN matches ON matches.PrimaryKey=forecasts.MatchKey
+   LEFT JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus<>10
+  WHERE matches.GroupKey=groups.PrimaryKey
+    AND forecasts.PlayerKey=".$_authorisation->getConnectedUserKey().") forecasts,
+(SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey=".$_authorisation->getConnectedUserKey()." 
+AND matches.GroupKey=groups.PrimaryKey)
++(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey=".$_authorisation->getConnectedUserKey()."
+AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
+(SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank
+ FROM groups
+WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=1
+ORDER BY groups.PrimaryKey DESC";
+
+
+$rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
+if (count($rowsSet)>0) {
+echo "<ul>";
+foreach ($rowsSet as $rowSet)
+{
+  $rank = "";
+
+	if ($rowSet["Score"]==1)
+		$rank = "Rang : 1<sup>er</sup>";
+	else
+		$rank = "Rang : ".$rowSet["Rank"]."<sup>ème</sup>";
+	
+	$groupScore = $rowSet["Score"]."pts";
+	$colorScore = "#B3D207";
+
+
+  echo '<li group-key="'.$rowSet["GroupKey"].'" style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
+  echo "<div class='status'>";
+  echo $rank;
+  echo "</div>";
+
+  if (strftime("%d",$rowSet['unixBeginDate']) == strftime("%d",$rowSet['unixEndDate'])){
+    $groupDateFormatted = strftime("%d %B %Y",$rowSet['unixEndDate']);
+    //$groupDateFormatted = " (".$groupDateFormatted.")";
+  }
+  else {
+    if (strftime("%B",$rowSet['unixBeginDate'])==strftime("%B",$rowSet['unixEndDate'])) {
+		$groupDateFormatted = strftime("%d-",$rowSet['unixBeginDate']);
+	} else {
+		$groupDateFormatted = strftime("%d %B-",$rowSet['unixBeginDate']);
+	}
+    $groupDateFormatted .= strftime("%d %B %Y",$rowSet['unixEndDate']);
+    //$groupDateFormatted = " (".$groupDateFormatted.")";
+  }
+
+  if ($rowSet["unixBeginDate"]==0){
+    $groupDateFormatted ="";
+  }
+  echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . '</span><br/>';
+  echo '<span style="color:#365F89;padding-left:5px;">Score : </span>
+  <span style="font-size:11px;color:'.$colorScore.'">'.$groupScore.'</span>';
+	echo '<br/><span style="color:#365F89;padding-left:15px;font-size:10px;">' . $rowSet["players"] . __encode(" participants") . '</span>';
+  echo '</li>';
+}
+echo "</ul>";
+} else {
+if ($_competitionType==3) {
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#1B3D1C;'>Aucun résultats !</div>";
+} else {
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>Aucun résultats !</div>";
+  }
+}
+?>
+
+</ul>
+</div>
+
+</div>
 <div id="forecastsTitle" style="width:260px;">
 <div class="container" >
 	<div class="containerTitle"><?php echo __encode("Pronostics à venir ...");?></div>
@@ -606,9 +704,13 @@ $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
 
 $("#forecastsTitle li").click(function() {
 	window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=1');
-
 });
 
+$("#resultsTitle li").click(function() {
+	var groupKey = $(this).attr('group-key');
+	window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=2&GroupKey='+groupKey);
+});	
+	
 <?php
 	    if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) {
 ?>
