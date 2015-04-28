@@ -289,7 +289,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 		bg_over: "#365F89",
 		field_type: "textarea",
 		textarea_rows: "8",
-		textarea_cols: "95",
+		textarea_cols: "85",
 		saving_image: "./images/wait.loader.gif",
 		use_html : true,
 		show_buttons : true,
