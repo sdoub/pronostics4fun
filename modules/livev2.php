@@ -911,7 +911,7 @@ $realRank=0;
 $previousScore=0;
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
-  echo '<li id="G_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'">';
+  echo '<li id="G_'.$rowSet["PlayerKey"].'" player-key="'.$rowSet["PlayerKey"].'" rel="get.player.group.detail.php?GroupKey='.$_groupKey.'&PlayerKeys='.$rowSet["PlayerKey"].'&Mode=Ligue1">';
 
 
   $realRank++;
@@ -1130,6 +1130,27 @@ $(document).ready(function($) {
 					});
 				}
 			});
+	$("li",$("#globalranking")).cluetip(
+			{positionBy:'bottomTop',
+				showTitle:false,
+				width:715,
+				ajaxCache:false,
+				cluetipClass:'p4f',
+				arrows:false,
+				sticky:false,
+			  onShow:function (ct, ci) {
+					$("#playerDetail2 li:visible").each(function (index) {
+						if ((index % 2) == 0) {
+							$(this).removeClass('resultRowOdd');
+							$(this).addClass('resultRow');
+						} else {
+							$(this).removeClass('resultRow');
+							$(this).addClass('resultRowOdd');
+						}
+					});
+				}
+			});
+
 });
 </script>
 
@@ -1539,6 +1560,26 @@ function callbackRefreshRanking (data)
 	restoreOrderRanking("#groupranking",newGroupRankingOrder);
 	restoreOrderRanking("#globalranking",newGlobalRankingOrder);
 	$("li",$("#groupranking")).cluetip(
+		{positionBy:'bottomTop',
+			showTitle:false,
+			width:715,
+			ajaxCache:false,
+			cluetipClass:'p4f',
+			arrows:false,
+			sticky:false,
+			onShow:function (ct, ci) {
+				$("#playerDetail2 li:visible").each(function (index) {
+					if ((index % 2) == 0) {
+						$(this).removeClass('resultRowOdd');
+						$(this).addClass('resultRow');
+					} else {
+						$(this).removeClass('resultRow');
+						$(this).addClass('resultRowOdd');
+					}
+				});
+			}
+		});
+	$("li",$("#globalranking")).cluetip(
 		{positionBy:'bottomTop',
 			showTitle:false,
 			width:715,

@@ -249,38 +249,37 @@ a,a:active,a:visited {
 	text-decoration: none;
 }
 
-#navMenu1 li.navRight {
+#navMenu1 .navRight {
 	float: right;
 }
-
-#navMenu1 li a:hover,#navMenu1 li a:hover span,#navMenu1 li.activate {
+#navMenu1 li #nav_home {
+	background:url(/images/home.png) no-repeat center center transparent;
+	text-indent: -9999px;
+	width: 25px;
+}
+#navMenu1 li #nav_home:hover {
 	color: #D7E1F6;
-	background: #365F89;
+	background:url(/images/home.png) no-repeat center center #365F89;
+}
+#navMenu1 li a:hover,#navMenu1 li a:hover span,#navMenu1 .activate {
+	color: #D7E1F6;
+	background-color: #365F89;
 }
 
 #navMenu1 li.disabled a:hover,#navMenu1 li.disabled a:hover span {
 	color: #CCCCCC;
-	background: #6D8AA8;
+	background-color: #6D8AA8;
 }
 
-#navMenu1 li a#nav_home {
-	margin-right: 10px;
-}
 
-#navMenu1 li a#nav_basket,#navMenu1 li a#nav_home {
+#navMenu1 li #nav_home {
 	color: #FFFFFF;
 	padding: 0;
+	margin-right: 5px;
 }
 
-#navMenu1 li a#nav_home {
-	margin-right: 10px;
-}
 
-#navMenu1 li a#nav_basket {
-	margin-left: 10px;
-}
-
-#navMenu1 li a#nav_basket span,#navMenu1 li a#nav_home span {
+#navMenu1 li #nav_home span {
 	cursor: pointer;
 	display: block;
 	float: left;

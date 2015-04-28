@@ -191,7 +191,7 @@ else
 
     		<div id="navMenu">
               <ul id="navMenu1">
-              	<!--<li id="Home"><a href="index.php" id="nav_home" ><span>Accueil</span></a></li>-->
+              	<li id="Home"><a href="index.php" id="nav_home">Accueil</a></li>
               	<li id="Forecasts"><a href="index.php?Page=1" >Pronostics</a></li>
 <?php
 
@@ -432,6 +432,7 @@ $('#WaitingLayer').css("left",leftPosition );
 <?php
 if (!$_isAuthenticated)
 {
+  print ('$("#Home").css("display","none");');
   print ('$("#MyAccount").css("display","none");');
   print ('$("#Forecasts").css("display","none");');
   print ('$("#Results").css("display","none");');
@@ -466,7 +467,8 @@ switch ($_currentPage)
       print ('$("#P4FWinners").addClass("activate");');
       break;
     default:
-      print ('$("#Home").addClass("activate");');
+			if ($_isAuthenticated)
+      	print ('$("#Home").addClass("activate");');
   }
 ?>
 });
