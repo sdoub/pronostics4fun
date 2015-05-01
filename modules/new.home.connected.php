@@ -560,7 +560,7 @@ if ($_competitionType==3) {
 <ul>
 <?php
 
-$query= "SELECT Description,UNIX_TIMESTAMP( BeginDate) unixBeginDate, UNIX_TIMESTAMP(EndDate) unixEndDate,
+$query= "SELECT groups.Description,UNIX_TIMESTAMP( BeginDate) unixBeginDate, UNIX_TIMESTAMP(EndDate) unixEndDate,
 BeginDate, EndDate,DATEDIFF(BeginDate,NOW()) RemainingDays,IF (BeginDate>NOW(),0,1) hasStarted,
 groups.Status,
 (SELECT COUNT(DISTINCT forecasts.PlayerKey)
@@ -580,8 +580,32 @@ groups.Status,
   INNER JOIN matches ON matches.PrimaryKey=forecasts.MatchKey
    LEFT JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus<>10
   WHERE matches.GroupKey=groups.PrimaryKey
-    AND forecasts.PlayerKey=".$_authorisation->getConnectedUserKey().") forecasts
+    AND forecasts.PlayerKey=".$_authorisation->getConnectedUserKey().") forecasts,
+		pdm.PlayerHomeKey P4FChpHomeKey,
+		pdmHomePlayer.NickName P4FChpHomeNickName,
+		pdm.PlayerAwayKey P4FChpAwayKey,
+		pdmAwayPlayer.NickName P4FChpAwayNickName,
+		pdm.DivisionKey P4FChpDivisionKey,
+		pdm.SeasonKey P4FChpSeasonKey,
+		pdmSeason.Description P4FChpSeason,
+		pcm.PlayerHomeKey P4FCupHomeKey,
+		pcmHomePlayer.NickName P4FCupHomeNickName,
+		pcm.PlayerAwayKey P4FCupAwayKey,
+		pcmAwayPlayer.NickName P4FCupAwayNickName,
+		pcm.CupRoundKey P4FCupRoundKey,
+		cuprounds.Description P4FCupRound,
+		pcm.SeasonKey P4FCupSeasonKey,
+		pcmSeason.Description P4FCupSeason
  FROM groups
+ LEFT JOIN playerdivisionmatches pdm ON pdm.GroupKey = groups.PrimaryKey AND pdm.HomeScore IS NULL AND (pdm.PlayerHomeKey=".$_authorisation->getConnectedUserKey()." OR pdm.PlayerAwayKey=".$_authorisation->getConnectedUserKey().")
+ LEFT JOIN players pdmHomePlayer ON pdmHomePlayer.PrimaryKey=pdm.PlayerHomekey 
+ LEFT JOIN players pdmAwayPlayer ON pdmAwayPlayer.PrimaryKey=pdm.PlayerAwaykey 
+ LEFT JOIN seasons pdmSeason ON pdmSeason.PrimaryKey = pdm.SeasonKey 
+ LEFT JOIN playercupmatches pcm ON pcm.GroupKey = groups.PrimaryKey AND pcm.HomeScore IS NULL AND (pcm.PlayerHomeKey=".$_authorisation->getConnectedUserKey()." OR pcm.PlayerAwayKey=".$_authorisation->getConnectedUserKey().")
+ LEFT JOIN players pcmHomePlayer ON pcmHomePlayer.PrimaryKey=pcm.PlayerHomekey 
+ LEFT JOIN players pcmAwayPlayer ON pcmAwayPlayer.PrimaryKey=pcm.PlayerAwaykey 
+ LEFT JOIN cuprounds ON cuprounds.PrimaryKey = pcm.CupRoundKey  
+ LEFT JOIN seasons pcmSeason ON pcmSeason.PrimaryKey = pcm.SeasonKey 
 WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=0
 ORDER BY groups.PrimaryKey";
 
@@ -649,19 +673,33 @@ foreach ($rowsSet as $rowSet)
     $groupDateFormatted ="";
   }
   echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
-  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . '</span><br/>';
-  echo '<span style="color:#365F89;padding-left:5px;">' .  __encode("Pronostics : ") . '</span>
-  <span style="font-size:11px;color:'.$colorStatus.'">'.$groupStatus.'</span>';
+  $players = "";
+	if ($rowSet["Status"]>0) {
+	  $players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . __encode(" participants") . ')</span>';
+  }
+
+	echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted .$players. '</span><br/>';
+  echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Pronostics : </span>
+  <span style="font-size:10px;color:'.$colorStatus.'">'.$groupStatus.'</span>';
   if ($rowSet["Status"]>0) {
-    echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'" style="font-size:10px;">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
+    echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'" style="font-size:10px;color:#365F89;">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
   }
   if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2 && $rowSet["unixBeginDate"]!=0) {
     echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
   }
-  if ($rowSet["Status"]>0) {
-	  echo '<br/><span style="color:#365F89;padding-left:15px;font-size:10px;">' . $rowSet["players"] . __encode(" participants") . '</span>';
-  }
-  echo '</li>';
+	if ($rowSet["P4FChpHomeKey"] || $rowSet["P4FCupHomeKey"]) {
+		$P4FSeason = $rowSet["P4FChpSeason"] ? $rowSet["P4FChpSeason"] : $rowSet["P4FCupSeason"];
+		echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Duel P4F ('.$P4FSeason.'): </span>';
+	}
+	if ($rowSet["P4FChpHomeKey"]) {
+		$opponent = $_authorisation->getConnectedUserKey() == $rowSet["P4FChpHomeKey"] ? $rowSet["P4FChpAwayNickName"] : $rowSet["P4FChpHomeNickName"]; 
+		echo '<br/><span style="color:#365F89;padding-left:10px;font-size:10px;">Division ' . $rowSet["P4FChpDivisionKey"] .  " : <span style='font-weight:bold;'>". $opponent . '</span></span>';
+	}
+	if ($rowSet["P4FCupHomeKey"]) {
+		$opponent = $_authorisation->getConnectedUserKey() == $rowSet["P4FCupHomeKey"] ? $rowSet["P4FCupAwayNickName"] : $rowSet["P4FCupHomeNickName"]; 
+		echo '<br/><span style="color:#365F89;padding-left:10px;font-size:10px;">Coupe - ' . $rowSet["P4FCupRound"] .  " : <span style='font-weight:bold;'>". $opponent . '</span></span>';
+	}
+	echo '</li>';
 }
 echo "</ul>";
 } else {
