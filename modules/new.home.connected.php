@@ -492,22 +492,19 @@ AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
 WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=1
 ORDER BY groups.PrimaryKey DESC";
 
-
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
 if (count($rowsSet)>0) {
 echo "<ul>";
 foreach ($rowsSet as $rowSet)
 {
-  $rank = "";
-
-	if ($rowSet["Score"]==1)
+	
+	$rank = "";
+	if ($rowSet["Rank"]==1)
 		$rank = "Rang : 1<sup>er</sup>";
 	else
 		$rank = "Rang : ".$rowSet["Rank"]."<sup>ème</sup>";
 	
 	$groupScore = $rowSet["Score"]."pts";
-	$colorScore = "#B3D207";
-
 
   echo '<li group-key="'.$rowSet["GroupKey"].'" style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
   echo "<div class='status'>";
@@ -537,6 +534,9 @@ foreach ($rowsSet as $rowSet)
   echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
   <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span>';
   echo '</li>';
+	
+	
+	
 }
 echo "</ul>";
 } else {
