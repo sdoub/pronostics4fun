@@ -532,10 +532,10 @@ foreach ($rowsSet as $rowSet)
     $groupDateFormatted ="";
   }
   echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
-  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . '</span><br/>';
-  echo '<span style="color:#365F89;padding-left:5px;">Score : </span>
-  <span style="font-size:11px;color:'.$colorScore.'">'.$groupScore.'</span>';
-	echo '<br/><span style="color:#365F89;padding-left:15px;font-size:10px;">' . $rowSet["players"] . __encode(" participants") . '</span>';
+	$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . $players .'</span><br/>';
+  echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span>';
   echo '</li>';
 }
 echo "</ul>";
