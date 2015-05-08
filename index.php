@@ -15,12 +15,13 @@ $_browserInfo=getBrowser();
 //$yourbrowser= "Your browser: " . $_browserInfo['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
 define('IEBROWSER',"Internet Explorer");
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
-<meta name="robots" content="index,follow"/>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="gwt:property" content="locale=fr">
+	<meta name="robots" content="index,follow"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="gwt:property" content="locale=fr">
+	<meta charset="utf-8" />
 <title>
 <?php
 if ($_SERVER['SERVER_NAME']=="beta.pronostics4fun.com") {
