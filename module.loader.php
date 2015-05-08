@@ -196,10 +196,16 @@ SELECT 1
       break;
     case "9":
       if (isset($_GET['Competition'])) {
-        if ($_GET['Competition']=="Cup")
-          include("modules/p4f.cup.draw.php");
-        else
-          include("modules/p4f.ranking.division.php");
+        switch ($_GET['Competition']){
+					case "OldCup":
+						include("modules/p4f.cup.draw.php");
+						break;
+					case "Cup":
+						include("modules/p4f.cup.php"); 
+						break;
+					default:
+						include("modules/p4f.ranking.division.php");
+				}
       } else {
         include("modules/p4f.ranking.division.php");
       }

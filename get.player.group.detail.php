@@ -165,7 +165,7 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
         WHERE groups.PrimaryKey=$_groupKey
           AND votes.playerKey=players.PrimaryKey)
       GroupScore
-FROM playersenabled players
+FROM players
 WHERE players.PrimaryKey IN (".$_playerKeys.")
 GROUP BY NickName
 ORDER BY NickName) A, (SELECT @rownum:=0) r";

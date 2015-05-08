@@ -42,6 +42,7 @@ Des classements et des statistiques sont établis à la fin de chaque journée d
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link href="<?php echo ROOT_SITE.$_themePath; ?>/css/default.css?ver=1.3" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.7.min.js"></script>
+<!--<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.8.3.min.js"></script>-->
 <!--  <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-migrate-1.2.1.min.js"></script> -->
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jmpopups.js"></script>

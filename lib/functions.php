@@ -785,6 +785,11 @@ function AddScriptReference ($name) {
         $tempScript.=sprintf($jsScriptTemplate,"json2html");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "dropdown":
+        $tempScript=sprintf($jsScriptTemplate,"jquery.dropdown.min");
+        $tempScript.=sprintf($cssScriptTemplate,"jquery.dropdown.min");
+        $_arrScripts[$name]=$tempScript;
+        break;
     }
   }
 
