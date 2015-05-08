@@ -288,9 +288,7 @@ echo '<div id="" style="width:940px;overflow:hidden;">
 		<div class="next">
 			<a href="#">Suivant</a>
 		</div>
-		<div id ="cupSubHeader" style="text-align:center;font-size:9px;">
-			33ème journée
-		</div>
+		<div id ="cupSubHeader" style="text-align:center;font-size:9px;" rel="get.player.group.detail.php?GroupKey="> </div>
 	</div>
 	<ul>
 <?php
@@ -402,7 +400,7 @@ echo $htmlMatches;
 <?php
 $html='';
 for ($index=0;$index<count($cupRounds);$index++) {
-	$html.='<li data-cup-round-key="'.$cupRounds[$index]["Key"].'" data-group-name="'.$cupRounds[$index]["GroupName"].'"><a href="#1">'.$cupRounds[$index]["Description"].'</a></li>';
+	$html.='<li data-cup-round-key="'.$cupRounds[$index]["Key"].'" data-group-name="'.$cupRounds[$index]["GroupName"].'" data-group-key="'.$cupRounds[$index]["GroupKey"].'"><a href="#1">'.$cupRounds[$index]["Description"].'</a></li>';
 }
 echo $html;
 
@@ -410,9 +408,7 @@ echo $html;
 	</ul>
 </div>
 <script>
-	$(document).ready(function() {
-	$("li").cluetip(
-			{positionBy:'auto',
+	var cluetipOptions = {positionBy:'auto',
 				showTitle:false,
 				width:715,
 				ajaxCache:false,
@@ -435,7 +431,9 @@ echo $html;
 						}
 					});
 				}
-			});
+			};
+	$(document).ready(function() {
+		$("li").cluetip(cluetipOptions);
 
 		$("#jq-dropdown-1").appendTo("body");
 
@@ -456,8 +454,13 @@ echo $html;
 			cupRoundKey = parseInt(cupRoundKey);
 			var cupRoundDesc = $("li[data-cup-round-key='"+cupRoundKey+"']",$("#jq-dropdown-1")).text();
 			var cupRoundGroupName = $("li[data-cup-round-key='"+cupRoundKey+"']",$("#jq-dropdown-1")).attr('data-group-name');
+			var cupRoundGroupKey = $("li[data-cup-round-key='"+cupRoundKey+"']",$("#jq-dropdown-1")).attr('data-group-key');
 
+			$("div.cupRoundTitle a").html(cupRoundDesc);
 			$("#cupSubHeader").html(cupRoundGroupName); 
+			$("#cupSubHeader").attr('rel','get.player.group.detail.php?GroupKey='+cupRoundGroupKey+'&PlayerKeys=-1');
+			$("#cupSubHeader").cluetip(cluetipOptions);
+
 
 			$( "li",$("#cupContainer") ).hide();
 			$( "li",$("#cupContainer") ).filter(function( index ) {

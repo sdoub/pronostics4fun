@@ -240,11 +240,11 @@ GROUP BY players.PrimaryKey";
       $playerKey =$rowSet["PlayerKey"];
       $score =$rowSet["Score"];
 
-      $updateQuery="UPDATE playerdivisionmatches SET HomeScore=$score WHERE PlayerHomeKey=$playerKey AND GroupKey=$groupKey";
+      $updateQuery="UPDATE playerdivisionmatches SET HomeScore=$score, ResultDate=NOW() WHERE PlayerHomeKey=$playerKey AND GroupKey=$groupKey";
       $_databaseObject -> queryPerf ($updateQuery, "Update home player score against group");
 
       $queries[] = $updateQuery;
-      $updateQuery="UPDATE playerdivisionmatches SET AwayScore=$score WHERE PlayerAwayKey=$playerKey AND GroupKey=$groupKey";
+      $updateQuery="UPDATE playerdivisionmatches SET AwayScore=$score, ResultDate=NOW() WHERE PlayerAwayKey=$playerKey AND GroupKey=$groupKey";
       $_databaseObject -> queryPerf ($updateQuery, "Update away player score against group");
 
       $queries[] = $updateQuery;
