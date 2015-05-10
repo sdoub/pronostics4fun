@@ -141,13 +141,12 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
   <script>
 		var _matchKey="";
 
-
    $(document).ready(function($) {
-	   $("div.flexcroll").jScrollPane({
+/* 	   $("div.flexcroll").jScrollPane({
 			showArrows: true,
 			horizontalGutter: 10
-		});
-	   $("div.detail2[rel]").css("cursor","help");
+		}); */
+/* 	   $("div.detail2[rel]").css("cursor","help"); */
 	   $("div.detail2[rel]").cluetip(
 				{positionBy:'fixed',
 					showTitle:false,
@@ -158,7 +157,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 					sticky:false,
 					topOffset: 30,
 					leftOffset: -250
-	});
+		});
 
 		$(":input[rel]").cluetip(
 				{positionBy:'fixed',
@@ -171,13 +170,11 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 					activation:'focus',
 					topOffset: 40,
 					leftOffset: -280
-	});
-		$("input[name=TeamHomeScore]").numberInput();
-		$("input[name=TeamAwayScore]").numberInput();
-
-		$("input.buttonField").click (function () {
+		});
+		//$("input[name=TeamHomeScore]").numberInput();
+		//$("input[name=TeamAwayScore]").numberInput();
+		$(".buttonfield").click(function () {
 			var matchKey = $(this).attr('match-key');
-			$(this).parent();
 
 			var addParameter = "";
 			if (!confirm ("Voulez-vous rafarichir les données à partir de la source ?")) {
@@ -200,7 +197,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 				error: callbackPostError
 			});
 
-			return false;
+			//return false;
 		});
 
   });

@@ -490,7 +490,7 @@ AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
 (SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank
  FROM groups
 WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=1
-ORDER BY groups.PrimaryKey DESC";
+ORDER BY groups.EndDate DESC";
 
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
 if (count($rowsSet)>0) {
