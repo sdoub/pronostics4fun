@@ -1,0 +1,34 @@
+{ "competitionKey" : 4,
+	"competitionType" : "uefa",
+  "season" : "Euro 2012",
+  "winners" : [ { "players" : [ { "name" : "Moulinardos",
+              "score" : 204
+            },
+            { "name" : "Ghostwriter",
+              "score" : 200
+            },
+            { "name" : "KABOOZ",
+              "score" : 188
+            }
+          ],
+        "winTitle" : "Classement général"
+      },
+      { "players" : [ { "day" : "Groupe B",
+              "name" : "Aurel",
+              "score" : 79
+            },
+            { "day" : "Groupe B",
+              "name" : "KABOOZ",
+              "score" : 74
+            },
+            { "day" : "Groupe B",
+              "name" : "Moulinardos",
+              "score" : 72
+            }
+          ],
+        "winTitle" : "Meilleur score"
+      }
+    ],
+  "winnersChp" : [  ],
+  "winnersCup" : [  ]
+}

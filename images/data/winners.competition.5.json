@@ -1,0 +1,32 @@
+{ "competitionKey" : 5,
+	"competitionType" : "ligue1",
+  "season" : "Saison 2012/2013",
+  "winners" : [ { "players" : [ { "name" : "celenord",
+                    "score" : 1960
+                  },
+                  { "name" : "Juanito de la Hoya",
+                    "score" : 1945
+									},
+                  { "name" : "Boubouch",
+                    "score" : 1948
+                  } ],
+        "winTitle" : "Classement général"
+      },
+      { "players" : [ { "name" : "DJUD27",
+                    "score" : 129,
+											 "day":"25ème journée"
+                  },
+                  { "name" : "nytonuma",
+                    "score" : 129,
+									 "day":"38ème journée"
+									},
+                  { "name" : "OPH27",
+                    "score" : 128,
+									 "day":"21ème journée"
+                  } ],
+        "winTitle" : "Meilleur score"
+      }
+    ],
+  "winnersChp" : [ ],
+  "winnersCup" : [ ]
+}
