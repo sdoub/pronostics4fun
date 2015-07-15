@@ -141,7 +141,7 @@ if (count($rowsSetP4FCh)>0 && $rowsSetP4FCh[0]["HomeScore"]!=null) {
 		</div>
 	<?php } else { ?>
 		<?php if ($rowsSetP4FCup[0]["HomeScore"]>0 ) {?>
-			<div style="position:absolute;width:290px;top:71px;right:136px;text-align:center;font-size:24px;color:#ffffff;">
+			<div style="position:absolute;width:290px;top:71px;right:136px;text-align:center;font-size:23px;color:#ffffff;">
 				Qualifié pour le second tour
 			</div>
 		<?php } else { ?>
