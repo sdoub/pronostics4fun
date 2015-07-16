@@ -1,5 +1,5 @@
 { "competitionKey" : 7,
-	"competitionType" : "worldcup",
+	"competitionType" : "worldcup2014",
   "season" : "Coupe du monde 2014",
   "winners" : [ { "players" : [ { "name" : "jean-pierre",
               "score" : 410

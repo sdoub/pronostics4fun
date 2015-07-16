@@ -1,5 +1,5 @@
 { "competitionKey" : 1,
-	"competitionType" : "worldcup",
+	"competitionType" : "worldcup2010",
   "season" : "Coupe du monde 2010",
   "winners" : [ { "players" : [ { "name" : "alix1005",
               "score" : 362

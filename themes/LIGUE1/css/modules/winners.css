@@ -33,12 +33,16 @@
 		background:url(/images/winners.ligue1.png) top right #D7E1F6 no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
-	.competitionworldcup{
-		background:url(/images/winners.worldcup.png) top right #D7E1F6 no-repeat;
+	.competitionworldcup2010{
+		background:url(/images/winners.worldcup.2010.png) top right #D7E1F6 no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
-	.competitionuefa{
-		background:url(/images/winners.uefa.png) top right #D7E1F6 no-repeat;
+	.competitionworldcup2014{
+		background:url(/images/winners.worldcup.2014.png) top right #D7E1F6 no-repeat;
+		/*background-color:#D7E1F6;*/
+	}
+	.competitionuefa2012{
+		background:url(/images/winners.uefa.2012.png) top right #D7E1F6 no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
 	.competitionTitle {
@@ -87,9 +91,6 @@
 	.ligue1 {
 		width:25px;height:25px;
 	}
-	.worldcup {
-		width:18px;height:30px;
-	}
-	.uefa {
+	.worldcup2010, .worldcup2014, .uefa2012 {
 		width:18px;height:30px;
 	}
