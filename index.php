@@ -118,7 +118,7 @@ if ($_isAuthenticated )
                          WHERE playergroupresults.PlayerKey=" . $_authorisation->getConnectedUserKey();
   $playerBonusScore = $_databaseObject -> queryGetFullArray($queryBonusScore, "Get Player Bonus Score");
 
-  $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " ORDER BY RankDate DESC LIMIT 0,1";
+  $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " INNER JOIN seasons ON seasons.PrimaryKey=playerdivisionranking.SeasonKey AND seasons.CompetitionKey=".COMPETITION." ORDER BY RankDate DESC LIMIT 0,1";
   $playerDivisionRanking = $_databaseObject -> queryGetFullArray($queryDivisionRanking, "Get DivisionRanking");
 
   $playerRank = $playerRanking[0]["Rank"];
@@ -140,7 +140,12 @@ if ($_isAuthenticated )
   else
     $playerDivisionRank.="<sup>ème</sup>";
 
-  $queryCupRounds = "SELECT cuprounds.Description FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey WHERE (PlayerHomeKey=" . $_authorisation->getConnectedUserKey() . " OR PlayerAwayKey=" . $_authorisation->getConnectedUserKey() . ") ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+  $queryCupRounds = "SELECT cuprounds.Description 
+	FROM playercupmatches 
+	INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey 
+	INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey AND seasons.CompetitionKey=".COMPETITION." 
+	WHERE (playercupmatches.PlayerHomeKey=" . $_authorisation->getConnectedUserKey() . " OR playercupmatches.PlayerAwayKey=" . $_authorisation->getConnectedUserKey() . ")
+	ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
   $playerCupRounds = $_databaseObject -> queryGetFullArray($queryCupRounds, "Get DivisionRanking");
   $playerCupRound = $playerCupRounds[0]["Description"];
 
@@ -153,6 +158,10 @@ if ($_isAuthenticated )
   $cupStatus = $playerCupRound;
   if ($playerCupRound!=$playerCurrentCupRound)
     $cupStatus = "éliminé";
+	if (!$playerCupRound) {
+		$cupStatus = "-";
+		$playerCurrentSeason = 0;
+	}
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
   echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;" title="Classement général"/>';
   echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
