@@ -316,7 +316,9 @@ function ConvertLfpKeyToP4F($lfpKey) {
   "PSG_logo" => 48,
   "Monaco_AS"=>38,
   "Stade_reims"=>67,
-  "logo_nice_100" => 49
+  "logo_nice_100" => 49,
+	501931 => 78,
+	546836 => 79	
   );
 
   if (array_key_exists($lfpKey,$arrlfpKeys)) {

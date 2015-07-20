@@ -10,11 +10,7 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
   switch (COMPETITION){
     case 1:
       break;
-    case 2:
-    case 3:
-    case 5:
-    case 6:
-    case 8:
+    default:
       if ($isLive) {
         $urlToGetMatchInfo = "http://" .EXTERNAL_WEB_SITE . "/ligue1/feuille_match/$_externalKey?live=1";
       } else {
@@ -26,7 +22,6 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
   $homeId="";
   $awayId="";
   if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
-
 
     $homeId = $htmlMatch->getElementById('#dom_id_hidden')->getAttribute("value");
     $awayId = $htmlMatch->getElementById('#ext_id_hidden')->getAttribute("value");
@@ -1114,7 +1109,7 @@ function GetMatchCompleteInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchK
     case 1:
       break;
     case 2:
-    case 3:
+    default:
       $urlToGetMatchInfo = "http://" .EXTERNAL_WEB_SITE . "/ligue1/feuille_match/$_externalKey";
       break;
   }
@@ -1397,7 +1392,7 @@ function GetMatchsLineupsInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchK
       //$urlToGetMatchInfoTL = "http://live.football365.fr/direct_sybase/3/1/0/0/" . $_groupFootball365Key . "/" . $_matchFootball365Key . "_timeline.xml";
       break;
     case 2:
-    case 3:
+    default:
       if ($isLive) {
         $urlToGetMatchInfo = "http://" .EXTERNAL_WEB_SITE . "/ligue1/feuille_match/showInfosMatch?matchId=$_externalKey&domId=$homeId&extId=$awayId&live=1";
       } else {

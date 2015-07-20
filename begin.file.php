@@ -69,7 +69,7 @@ else
 
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
-DEFINE ('COMPETITION','8');
+DEFINE ('COMPETITION','9');
 $_themePath = "/themes/LIGUE1";
 $_competitionType =1;
 $_competitionName="Ligue 1";
