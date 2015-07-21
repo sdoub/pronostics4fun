@@ -82,7 +82,7 @@ p {
 <div class='altBloc'>
 <h3 style='font-size:30px;font-family: Georgia;color:#365F89'>Bienvenue sur le site</h3>
 <h3 style='font-size:30px;font-family: Georgia;color:#365F89'>Pronostics4Fun</h3>
-<h4 style='font-size:20px;font-family: Georgia;color:#FFFFFF;text-align:center;'>Ligue 1 - Saison 2014/2015</h3>
+<h4 style='font-size:20px;font-family: Georgia;color:#FFFFFF;text-align:center;'>Ligue 1 - Saison 2015/2016</h3>
 <br/>
 <br/>
 <br/>
