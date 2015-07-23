@@ -29,7 +29,7 @@ $writeScript=false;
 //     11 => "79");
 
     $arrSeasons = array(
-     12 => "80");
+     15 => "83");
 
     $arrGroups = array(
     1 => "1ère journée",
@@ -100,6 +100,8 @@ $writeScript=false;
         while (list ($Daykey, $GroupDescription) = each ($arrGroups)) {
           $query="INSERT INTO groups (PrimaryKey,Description,Code,CompetitionKey,IsCompleted,DayKey)
         VALUES (NULL,'$GroupDescription','J$Daykey',$Competitionkey,0,$Daykey)";
+      print ('<br/>');
+      print ($query);
           $statement = $ligue1db->prepare($query);
           $statement->execute();
         }
@@ -238,6 +240,19 @@ $writeScript=false;
     $ligue1db  = new PDO("sqlite:data/ligue1.db");
     $ligue1db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+		$query= "SELECT COUNT(1) as NbrOfRemainingMatch
+         FROM matches
+         WHERE matches.Status=0";
+
+    $statement = $ligue1db->prepare($query);
+
+    $statement->execute();
+    $rowsSet = $statement->fetchAll();
+
+    foreach ($rowsSet as $rowSet) {
+			 echo "<br/>Number of remaining matches : " . $rowSet["NbrOfRemainingMatch"];
+		}
+		
     $query= "SELECT
               matches.PrimaryKey MatchKey,
               matches.GroupKey,
@@ -281,7 +296,7 @@ $writeScript=false;
         }
 
         if ($homeGoals=="") {
-          echo "Match reporté</br>";
+          echo "</br>Match reporté";
           $writeScript = false;
         }
         $updateQuery = "INSERT OR IGNORE INTO results (MatchKey, LiveStatus, ActualTime, ResultDate) VALUES ($matchKey, $liveStatus, $actualTime, date('now'))";
@@ -311,7 +326,7 @@ $writeScript=false;
             else {
               $eventAdditionalTime = 0;
             }
-            echo '$eventAdditionalTime :' . $eventAdditionalTime;
+            echo '</br> $eventAdditionalTime :' . $eventAdditionalTime;
 
             $eventTime = substr($eventTime,0,strpos($eventTime,"'"));
             if ((int)$eventTime>45) {
@@ -380,7 +395,7 @@ $writeScript=false;
             else {
               $eventAdditionalTime = 0;
             }
-            echo '$eventAdditionalTime :' . $eventAdditionalTime;
+            echo '</br>$eventAdditionalTime :' . $eventAdditionalTime;
 
             $eventTime = substr($eventTime,0,strpos($eventTime,"'"));
             if ((int)$eventTime>45) {
@@ -446,7 +461,7 @@ $writeScript=false;
           else {
             $eventAdditionalTime = 0;
           }
-          echo '$eventAdditionalTime :' . $eventAdditionalTime;
+          echo '</br>$eventAdditionalTime :' . $eventAdditionalTime;
 
           $eventTime = substr($eventTime,0,strpos($eventTime,"'"));
           if ((int)$eventTime>45) {
@@ -498,7 +513,7 @@ $writeScript=false;
             else {
               $eventAdditionalTime = 0;
             }
-            echo '$eventAdditionalTime :' . $eventAdditionalTime;
+            echo '</br>$eventAdditionalTime :' . $eventAdditionalTime;
 
             $eventTime = substr($eventTime,0,strpos($eventTime,"'"));
             if ((int)$eventTime>45) {
@@ -547,8 +562,7 @@ $writeScript=false;
 
     }
     foreach ($_queries as $query) {
-      print($query);
-      print("<br/>");
+      print("</br>".$query);
       $statement = $ligue1db->prepare($query);
       $statement->execute();
     }
