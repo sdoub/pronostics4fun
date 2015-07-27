@@ -1,6 +1,6 @@
 <?php
 require_once("begin.file.php");
-require_once('lib/envolve_api_client.php');
+//require_once('lib/envolve_api_client.php');
 
 if (isset($_GET["Page"]))
 {
@@ -11,7 +11,7 @@ else
 $_currentPage="0";
 }
 
-$_browserInfo=getBrowser();
+//$_browserInfo=getBrowser();
 //$yourbrowser= "Your browser: " . $_browserInfo['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
 define('IEBROWSER',"Internet Explorer");
 ?>

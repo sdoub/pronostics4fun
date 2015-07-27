@@ -2,10 +2,18 @@
 define('VALID_ACCESS_CONFIG_',		true);
 define('BASE_PATH',realpath('.'));
 define('BASE_URL', dirname($_SERVER["SCRIPT_NAME"]));
+require __DIR__ . '/vendor/autoload.php';
+// setup Propel
+require_once __DIR__ . '/generated-conf/config.php';
 
-include_once(BASE_PATH . "/lib/mobile.detect.php");
+$defaultLogger = new Monolog\Logger('defaultLogger');
+$defaultLogger->pushHandler(new Monolog\Handler\StreamHandler('log/app.log', Monolog\Logger::WARNING));
 
-$uagent_info = new uagent_info();
+//$serviceContainer->setLogger('defaultLogger', $defaultLogger);
+//$log->addWarning('Foo');
+//include_once(BASE_PATH . "/lib/mobile.detect.php");
+
+//$uagent_info = new uagent_info();
 
 session_start();
 

@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+  <table name="Queries" idMethod="native" phpName="Queries">
+    <column name="Name" phpName="Name" type="VARCHAR" size="100" required="true"/>
+    <column name="Query" phpName="Query" type="LONGVARCHAR" required="true"/>
+    <unique name="Name">
+      <unique-column name="Name"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="competitions" idMethod="native" phpName="Competitions">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Name" phpName="Name" type="VARCHAR" size="30" required="true"/>
+    <unique name="Name">
+      <unique-column name="Name"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="connectedusers" idMethod="native" phpName="Connectedusers">
+    <column name="VisiteDate" phpName="Visitedate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="UserUniqueId" phpName="Useruniqueid" type="VARCHAR" size="100" primaryKey="true" required="true"/>
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="cronjobs" idMethod="native" phpName="Cronjobs">
+    <column name="JobName" phpName="Jobname" type="VARCHAR" size="30" required="true"/>
+    <column name="LastExecution" phpName="Lastexecution" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="LastStatus" phpName="Laststatus" type="BOOLEAN" size="1" defaultValue="false"/>
+    <column name="LastExecutionInformation" phpName="Lastexecutioninformation" type="LONGVARCHAR"/>
+    <unique name="JobName">
+      <unique-column name="JobName"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="cuprounds" idMethod="native" phpName="Cuprounds">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Description" phpName="Description" type="VARCHAR" size="50" required="true"/>
+    <column name="Code" phpName="Code" type="VARCHAR" size="5" required="true"/>
+    <column name="NextRoundKey" phpName="Nextroundkey" type="INTEGER"/>
+    <column name="PreviousRoundKey" phpName="Previousroundkey" type="INTEGER"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="divisions" idMethod="native" phpName="Divisions">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Description" phpName="Description" type="VARCHAR" size="50" required="true"/>
+    <column name="Code" phpName="Code" type="VARCHAR" size="3" required="true"/>
+    <column name="Order" phpName="Order" type="TINYINT" size="2" required="true" defaultValue="1"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="events" idMethod="native" phpName="Events">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="ResultKey" phpName="Resultkey" type="INTEGER" required="true"/>
+    <column name="TeamPlayerKey" phpName="Teamplayerkey" type="INTEGER" required="true"/>
+    <column name="EventTime" phpName="Eventtime" type="INTEGER" required="true"/>
+    <column name="EventType" phpName="Eventtype" type="INTEGER" required="true"/>
+    <column name="Half" phpName="Half" type="INTEGER" required="true"/>
+    <column name="TeamKey" phpName="Teamkey" type="INTEGER" required="true"/>
+    <index name="ResultKey_2">
+      <index-column name="ResultKey"/>
+    </index>
+    <index name="TeamKey">
+      <index-column name="TeamKey"/>
+    </index>
+    <index name="Half">
+      <index-column name="Half"/>
+    </index>
+    <unique name="ResultKey">
+      <unique-column name="ResultKey"/>
+      <unique-column name="EventTime"/>
+      <unique-column name="EventType"/>
+      <unique-column name="TeamKey"/>
+      <unique-column name="TeamPlayerKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="forecasts" idMethod="native" phpName="Forecasts">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
+    <column name="TeamHomeScore" phpName="Teamhomescore" type="INTEGER" required="true"/>
+    <column name="TeamAwayScore" phpName="Teamawayscore" type="INTEGER" required="true"/>
+    <column name="ForecastDate" phpName="Forecastdate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <index name="PlayerKey">
+      <index-column name="PlayerKey"/>
+    </index>
+    <index name="MatchKey_2">
+      <index-column name="MatchKey"/>
+    </index>
+    <unique name="MatchKey">
+      <unique-column name="MatchKey"/>
+      <unique-column name="PlayerKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="groups" idMethod="native" phpName="Groups">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Description" phpName="Description" type="VARCHAR" size="30" required="true"/>
+    <column name="Code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+    <column name="CompetitionKey" phpName="Competitionkey" type="INTEGER" required="true"/>
+    <column name="BeginDate" phpName="Begindate" type="TIMESTAMP"/>
+    <column name="EndDate" phpName="Enddate" type="TIMESTAMP"/>
+    <column name="Status" phpName="Status" type="BOOLEAN" size="1" required="true"/>
+    <column name="IsCompleted" phpName="Iscompleted" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="DayKey" phpName="Daykey" type="INTEGER"/>
+    <index name="CompetitionKey">
+      <index-column name="CompetitionKey"/>
+    </index>
+    <unique name="Code">
+      <unique-column name="Code"/>
+      <unique-column name="CompetitionKey"/>
+    </unique>
+    <unique name="Description">
+      <unique-column name="Description"/>
+      <unique-column name="CompetitionKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="lineups" idMethod="native" phpName="Lineups">
+    <column name="MatchKey" phpName="Matchkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="TeamKey" phpName="Teamkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="TeamPlayerKey" phpName="Teamplayerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="IsSubstitute" phpName="Issubstitute" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="TimeIn" phpName="Timein" type="INTEGER"/>
+    <column name="TeamPlayerReplacedKey" phpName="Teamplayerreplacedkey" type="INTEGER"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="matches" idMethod="native" phpName="Matches">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="GroupKey" phpName="Groupkey" type="INTEGER" required="true"/>
+    <column name="TeamHomeKey" phpName="Teamhomekey" type="INTEGER" required="true"/>
+    <column name="TeamAwayKey" phpName="Teamawaykey" type="INTEGER" required="true"/>
+    <column name="ScheduleDate" phpName="Scheduledate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="IsBonusMatch" phpName="Isbonusmatch" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="Status" phpName="Status" type="INTEGER" required="true" defaultValue="0"/>
+    <column name="ExternalKey" phpName="Externalkey" type="INTEGER"/>
+    <index name="ScheduleDate">
+      <index-column name="ScheduleDate"/>
+    </index>
+    <index name="GroupKey_IS">
+      <index-column name="GroupKey"/>
+    </index>
+    <unique name="GroupKey">
+      <unique-column name="GroupKey"/>
+      <unique-column name="TeamHomeKey"/>
+      <unique-column name="TeamAwayKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="matchstates" idMethod="native" phpName="Matchstates">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
+    <column name="StateDate" phpName="Statedate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="EventKey" phpName="Eventkey" type="INTEGER" required="true"/>
+    <column name="TeamHomeScore" phpName="Teamhomescore" type="INTEGER" required="true"/>
+    <column name="TeamAwayScore" phpName="Teamawayscore" type="INTEGER" required="true"/>
+    <unique name="MatchKey">
+      <unique-column name="MatchKey"/>
+      <unique-column name="StateDate"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="news" idMethod="native" phpName="News">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="CompetitionKey" phpName="Competitionkey" type="INTEGER" required="true"/>
+    <column name="Information" phpName="Information" type="VARCHAR" size="4000" required="true"/>
+    <column name="InfoDate" phpName="Infodate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="InfoType" phpName="Infotype" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playercupmatches" idMethod="native" phpName="Playercupmatches">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PlayerHomeKey" phpName="Playerhomekey" type="INTEGER" required="true"/>
+    <column name="PlayerAwayKey" phpName="Playerawaykey" type="INTEGER" required="true"/>
+    <column name="CupRoundKey" phpName="Cuproundkey" type="INTEGER" required="true"/>
+    <column name="SeasonKey" phpName="Seasonkey" type="INTEGER" required="true"/>
+    <column name="GroupKey" phpName="Groupkey" type="INTEGER" required="true"/>
+    <column name="HomeScore" phpName="Homescore" type="TINYINT" size="3"/>
+    <column name="AwayScore" phpName="Awayscore" type="TINYINT" size="3"/>
+    <column name="ScheduleDate" phpName="Scheduledate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="ResultDate" phpName="Resultdate" type="DATE"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playerdivisionmatches" idMethod="native" phpName="Playerdivisionmatches">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PlayerHomeKey" phpName="Playerhomekey" type="INTEGER" required="true"/>
+    <column name="PlayerAwayKey" phpName="Playerawaykey" type="INTEGER" required="true"/>
+    <column name="SeasonKey" phpName="Seasonkey" type="INTEGER" required="true"/>
+    <column name="DivisionKey" phpName="Divisionkey" type="INTEGER" required="true"/>
+    <column name="GroupKey" phpName="Groupkey" type="INTEGER" required="true"/>
+    <column name="HomeScore" phpName="Homescore" type="TINYINT" size="3"/>
+    <column name="AwayScore" phpName="Awayscore" type="TINYINT" size="3"/>
+    <column name="ScheduleDate" phpName="Scheduledate" type="TIMESTAMP"/>
+    <column name="ResultDate" phpName="Resultdate" type="DATE"/>
+    <unique name="PlayerHomeKey">
+      <unique-column name="PlayerHomeKey"/>
+      <unique-column name="PlayerAwayKey"/>
+      <unique-column name="SeasonKey"/>
+      <unique-column name="DivisionKey"/>
+      <unique-column name="GroupKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playerdivisionranking" idMethod="native" phpName="Playerdivisionranking">
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="SeasonKey" phpName="Seasonkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="DivisionKey" phpName="Divisionkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="Score" phpName="Score" type="TINYINT" size="2" required="true"/>
+    <column name="RankDate" phpName="Rankdate" type="TIMESTAMP" primaryKey="true" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="Rank" phpName="Rank" type="TINYINT" size="2" required="true"/>
+    <column name="Won" phpName="Won" type="TINYINT" size="2" required="true"/>
+    <column name="Drawn" phpName="Drawn" type="TINYINT" size="2" required="true"/>
+    <column name="Lost" phpName="Lost" type="TINYINT" size="2" required="true"/>
+    <column name="PointsFor" phpName="Pointsfor" type="SMALLINT" size="4" required="true"/>
+    <column name="PointsAgainst" phpName="Pointsagainst" type="SMALLINT" size="4" required="true"/>
+    <column name="PointsDifference" phpName="Pointsdifference" type="SMALLINT" size="4" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playergroupranking" idMethod="native" phpName="Playergroupranking">
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="GroupKey" phpName="Groupkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="RankDate" phpName="Rankdate" type="DATE" primaryKey="true" required="true"/>
+    <column name="Rank" phpName="Rank" type="INTEGER" required="true"/>
+    <index name="GroupKey">
+      <index-column name="GroupKey"/>
+    </index>
+    <index name="RankDate">
+      <index-column name="RankDate"/>
+    </index>
+    <index name="PlayerKey">
+      <index-column name="PlayerKey"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playergroupresults" idMethod="native" phpName="Playergroupresults">
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="GroupKey" phpName="Groupkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="Score" phpName="Score" type="INTEGER"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playergroupstates" idMethod="native" phpName="Playergroupstates">
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="GroupKey" phpName="Groupkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="StateDate" phpName="Statedate" type="TIMESTAMP" primaryKey="true" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="Rank" phpName="Rank" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="Score" phpName="Score" type="INTEGER" required="true"/>
+    <column name="Bonus" phpName="Bonus" type="INTEGER" required="true" defaultValue="0"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playermatchresults" idMethod="native" phpName="Playermatchresults">
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="MatchKey" phpName="Matchkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="Score" phpName="Score" type="INTEGER"/>
+    <column name="IsPerfect" phpName="Isperfect" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <index name="MatchKey">
+      <index-column name="MatchKey"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playermatchstates" idMethod="native" phpName="Playermatchstates">
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="MatchStateKey" phpName="Matchstatekey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="Score" phpName="Score" type="INTEGER" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="playerranking" idMethod="native" phpName="Playerranking">
+    <column name="CompetitionKey" phpName="Competitionkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="RankDate" phpName="Rankdate" type="DATE" primaryKey="true" required="true"/>
+    <column name="Rank" phpName="Rank" type="INTEGER" required="true"/>
+    <index name="PlayerKey">
+      <index-column name="PlayerKey"/>
+    </index>
+    <index name="RankDate">
+      <index-column name="RankDate"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="players" idMethod="native" phpName="Players">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="NickName" phpName="Nickname" type="VARCHAR" size="20" required="true"/>
+    <column name="FirstName" phpName="Firstname" type="VARCHAR" size="50" required="true"/>
+    <column name="LastName" phpName="Lastname" type="VARCHAR" size="50" required="true"/>
+    <column name="EmailAddress" phpName="Emailaddress" type="VARCHAR" size="80" required="true"/>
+    <column name="Password" phpName="Password" type="VARCHAR" size="100" required="true"/>
+    <column name="IsAdministrator" phpName="Isadministrator" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="ActivationKey" phpName="Activationkey" type="VARCHAR" size="255"/>
+    <column name="IsEnabled" phpName="Isenabled" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="LastConnection" phpName="Lastconnection" type="DATE" required="true"/>
+    <column name="Token" phpName="Token" type="VARCHAR" size="50"/>
+    <column name="AvatarName" phpName="Avatarname" type="VARCHAR" size="20"/>
+    <column name="CreationDate" phpName="Creationdate" type="DATE" required="true"/>
+    <column name="IsCalendarDefaultView" phpName="Iscalendardefaultview" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="ReceiveAlert" phpName="Receivealert" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="ReceiveNewletter" phpName="Receivenewletter" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="ReceiveResult" phpName="Receiveresult" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="IsReminderEmailSent" phpName="Isreminderemailsent" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="IsResultEmailSent" phpName="Isresultemailsent" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <index name="Token">
+      <index-column name="Token"/>
+    </index>
+    <unique name="NickName">
+      <unique-column name="NickName"/>
+    </unique>
+    <unique name="EmailAddress">
+      <unique-column name="EmailAddress"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="results" idMethod="native" phpName="Results">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
+    <column name="LiveStatus" phpName="Livestatus" type="INTEGER" required="true"/>
+    <column name="ActualTime" phpName="Actualtime" type="INTEGER" required="true"/>
+    <column name="ResultDate" phpName="Resultdate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <unique name="MatchKey">
+      <unique-column name="MatchKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="seasons" idMethod="native" phpName="Seasons">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Description" phpName="Description" type="VARCHAR" size="50" required="true"/>
+    <column name="Code" phpName="Code" type="VARCHAR" size="3" required="true"/>
+    <column name="Order" phpName="Order" type="TINYINT" size="2" required="true"/>
+    <column name="CompetitionKey" phpName="Competitionkey" type="INTEGER" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="surveys" idMethod="native" phpName="Surveys">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Question" phpName="Question" type="VARCHAR" size="2000" required="true"/>
+    <column name="Answer1" phpName="Answer1" type="VARCHAR" size="200" required="true"/>
+    <column name="Answer2" phpName="Answer2" type="VARCHAR" size="200" required="true"/>
+    <column name="Answer3" phpName="Answer3" type="VARCHAR" size="200"/>
+    <column name="Answer4" phpName="Answer4" type="VARCHAR" size="200"/>
+    <column name="Score1" phpName="Score1" type="INTEGER" size="3" required="true" defaultValue="0"/>
+    <column name="Score2" phpName="Score2" type="INTEGER" size="3" required="true" defaultValue="0"/>
+    <column name="Score3" phpName="Score3" type="INTEGER" size="3" required="true" defaultValue="0"/>
+    <column name="Score4" phpName="Score4" type="INTEGER" size="3" required="true" defaultValue="0"/>
+    <column name="Participants" phpName="Participants" type="VARCHAR" size="2000"/>
+    <column name="StartDate" phpName="Startdate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="EndDate" phpName="Enddate" type="TIMESTAMP" required="true" defaultValue="0000-00-00 00:00:00"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="teamplayers" idMethod="native" phpName="Teamplayers">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="FullName" phpName="Fullname" type="VARCHAR" size="255" required="true"/>
+    <unique name="FullName">
+      <unique-column name="FullName"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="teams" idMethod="native" phpName="Teams">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Name" phpName="Name" type="VARCHAR" size="30" required="true"/>
+    <column name="Code" phpName="Code" type="VARCHAR" size="10" required="true"/>
+    <unique name="Name">
+      <unique-column name="Name"/>
+    </unique>
+    <unique name="Code">
+      <unique-column name="Code"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="votes" idMethod="native" phpName="Votes">
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
+    <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
+    <column name="Value" phpName="Value" type="BOOLEAN" size="1" required="true"/>
+    <column name="VoteDate" phpName="Votedate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <unique name="MatchKey">
+      <unique-column name="MatchKey"/>
+      <unique-column name="PlayerKey"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+</database>
