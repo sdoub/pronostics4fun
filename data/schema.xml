@@ -339,6 +339,7 @@
     <column name="ReceiveResult" phpName="Receiveresult" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
     <column name="IsReminderEmailSent" phpName="Isreminderemailsent" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <column name="IsResultEmailSent" phpName="Isresultemailsent" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <column name="IsEmailValid" phpName="Isemailvalid" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <index name="Token">
       <index-column name="Token"/>
     </index>
