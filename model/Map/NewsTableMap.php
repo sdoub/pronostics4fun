@@ -108,8 +108,8 @@ class NewsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Competitionkey', 'Information', 'Infodate', 'Infotype', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'competitionkey', 'information', 'infodate', 'infotype', ),
+        self::TYPE_PHPNAME       => array('NewsPK', 'Competitionkey', 'Information', 'Infodate', 'Infotype', ),
+        self::TYPE_CAMELNAME     => array('newsPK', 'competitionkey', 'information', 'infodate', 'infotype', ),
         self::TYPE_COLNAME       => array(NewsTableMap::COL_PRIMARYKEY, NewsTableMap::COL_COMPETITIONKEY, NewsTableMap::COL_INFORMATION, NewsTableMap::COL_INFODATE, NewsTableMap::COL_INFOTYPE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'CompetitionKey', 'Information', 'InfoDate', 'InfoType', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -122,8 +122,8 @@ class NewsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Competitionkey' => 1, 'Information' => 2, 'Infodate' => 3, 'Infotype' => 4, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'competitionkey' => 1, 'information' => 2, 'infodate' => 3, 'infotype' => 4, ),
+        self::TYPE_PHPNAME       => array('NewsPK' => 0, 'Competitionkey' => 1, 'Information' => 2, 'Infodate' => 3, 'Infotype' => 4, ),
+        self::TYPE_CAMELNAME     => array('newsPK' => 0, 'competitionkey' => 1, 'information' => 2, 'infodate' => 3, 'infotype' => 4, ),
         self::TYPE_COLNAME       => array(NewsTableMap::COL_PRIMARYKEY => 0, NewsTableMap::COL_COMPETITIONKEY => 1, NewsTableMap::COL_INFORMATION => 2, NewsTableMap::COL_INFODATE => 3, NewsTableMap::COL_INFOTYPE => 4, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'CompetitionKey' => 1, 'Information' => 2, 'InfoDate' => 3, 'InfoType' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -146,7 +146,7 @@ class NewsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'NewsPK', 'INTEGER', true, null, null);
         $this->addColumn('CompetitionKey', 'Competitionkey', 'INTEGER', true, null, null);
         $this->addColumn('Information', 'Information', 'VARCHAR', true, 4000, null);
         $this->addColumn('InfoDate', 'Infodate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
@@ -176,11 +176,11 @@ class NewsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('NewsPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('NewsPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -200,7 +200,7 @@ class NewsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('NewsPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

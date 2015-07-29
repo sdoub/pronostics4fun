@@ -359,7 +359,7 @@ abstract class Groups implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getGroupPK()
     {
         return $this->primarykey;
     }
@@ -490,7 +490,7 @@ abstract class Groups implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Groups The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setGroupPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -502,7 +502,7 @@ abstract class Groups implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setGroupPK()
 
     /**
      * Set the value of [description] column.
@@ -720,7 +720,7 @@ abstract class Groups implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GroupsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : GroupsTableMap::translateFieldName('GroupPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : GroupsTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
@@ -1035,7 +1035,7 @@ abstract class Groups implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setGroupPK($pk);
 
         $this->setNew(false);
     }
@@ -1085,7 +1085,7 @@ abstract class Groups implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getGroupPK();
                 break;
             case 1:
                 return $this->getDescription();
@@ -1140,7 +1140,7 @@ abstract class Groups implements ActiveRecordInterface
         $alreadyDumpedObjects['Groups'][$this->hashCode()] = true;
         $keys = GroupsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getGroupPK(),
             $keys[1] => $this->getDescription(),
             $keys[2] => $this->getCode(),
             $keys[3] => $this->getCompetitionkey(),
@@ -1203,7 +1203,7 @@ abstract class Groups implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setGroupPK($value);
                 break;
             case 1:
                 $this->setDescription($value);
@@ -1256,7 +1256,7 @@ abstract class Groups implements ActiveRecordInterface
         $keys = GroupsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setGroupPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setDescription($arr[$keys[1]]);
@@ -1380,7 +1380,7 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getGroupPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1400,7 +1400,7 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getGroupPK();
     }
 
     /**
@@ -1411,7 +1411,7 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setGroupPK($key);
     }
 
     /**
@@ -1420,7 +1420,7 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getGroupPK();
     }
 
     /**
@@ -1446,7 +1446,7 @@ abstract class Groups implements ActiveRecordInterface
         $copyObj->setDaykey($this->getDaykey());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setGroupPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

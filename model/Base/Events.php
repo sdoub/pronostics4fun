@@ -331,7 +331,7 @@ abstract class Events implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getEventPK()
     {
         return $this->primarykey;
     }
@@ -402,7 +402,7 @@ abstract class Events implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Events The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setEventPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -414,7 +414,7 @@ abstract class Events implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setEventPK()
 
     /**
      * Set the value of [resultkey] column.
@@ -572,7 +572,7 @@ abstract class Events implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : EventsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : EventsTableMap::translateFieldName('EventPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : EventsTableMap::translateFieldName('Resultkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -863,7 +863,7 @@ abstract class Events implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setEventPK($pk);
 
         $this->setNew(false);
     }
@@ -913,7 +913,7 @@ abstract class Events implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getEventPK();
                 break;
             case 1:
                 return $this->getResultkey();
@@ -962,7 +962,7 @@ abstract class Events implements ActiveRecordInterface
         $alreadyDumpedObjects['Events'][$this->hashCode()] = true;
         $keys = EventsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getEventPK(),
             $keys[1] => $this->getResultkey(),
             $keys[2] => $this->getTeamplayerkey(),
             $keys[3] => $this->getEventtime(),
@@ -1009,7 +1009,7 @@ abstract class Events implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setEventPK($value);
                 break;
             case 1:
                 $this->setResultkey($value);
@@ -1056,7 +1056,7 @@ abstract class Events implements ActiveRecordInterface
         $keys = EventsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setEventPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setResultkey($arr[$keys[1]]);
@@ -1168,7 +1168,7 @@ abstract class Events implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getEventPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1188,7 +1188,7 @@ abstract class Events implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getEventPK();
     }
 
     /**
@@ -1199,7 +1199,7 @@ abstract class Events implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setEventPK($key);
     }
 
     /**
@@ -1208,7 +1208,7 @@ abstract class Events implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getEventPK();
     }
 
     /**
@@ -1232,7 +1232,7 @@ abstract class Events implements ActiveRecordInterface
         $copyObj->setTeamkey($this->getTeamkey());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setEventPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

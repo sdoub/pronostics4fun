@@ -8,9 +8,11 @@ require_once __DIR__ . '/generated-conf/config.php';
 
 $defaultLogger = new Monolog\Logger('defaultLogger');
 $defaultLogger->pushHandler(new Monolog\Handler\StreamHandler('log/app.log', Monolog\Logger::WARNING));
-
 $serviceContainer->setLogger('defaultLogger', $defaultLogger);
-//$log->addWarning('Foo');
+$q = new PlayersQuery();
+$firstPlayer = $q->findPK(19);
+
+$defaultLogger->addWarning($firstPlayer);
 //include_once(BASE_PATH . "/lib/mobile.detect.php");
 
 //$uagent_info = new uagent_info();

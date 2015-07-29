@@ -19,13 +19,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildResultsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildResultsQuery orderByResultPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildResultsQuery orderByMatchkey($order = Criteria::ASC) Order by the MatchKey column
  * @method     ChildResultsQuery orderByLivestatus($order = Criteria::ASC) Order by the LiveStatus column
  * @method     ChildResultsQuery orderByActualtime($order = Criteria::ASC) Order by the ActualTime column
  * @method     ChildResultsQuery orderByResultdate($order = Criteria::ASC) Order by the ResultDate column
  *
- * @method     ChildResultsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildResultsQuery groupByResultPK() Group by the PrimaryKey column
  * @method     ChildResultsQuery groupByMatchkey() Group by the MatchKey column
  * @method     ChildResultsQuery groupByLivestatus() Group by the LiveStatus column
  * @method     ChildResultsQuery groupByActualtime() Group by the ActualTime column
@@ -38,7 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildResults findOne(ConnectionInterface $con = null) Return the first ChildResults matching the query
  * @method     ChildResults findOneOrCreate(ConnectionInterface $con = null) Return the first ChildResults matching the query, or a new ChildResults object populated from the query conditions when no match is found
  *
- * @method     ChildResults findOneByPrimarykey(int $PrimaryKey) Return the first ChildResults filtered by the PrimaryKey column
+ * @method     ChildResults findOneByResultPK(int $PrimaryKey) Return the first ChildResults filtered by the PrimaryKey column
  * @method     ChildResults findOneByMatchkey(int $MatchKey) Return the first ChildResults filtered by the MatchKey column
  * @method     ChildResults findOneByLivestatus(int $LiveStatus) Return the first ChildResults filtered by the LiveStatus column
  * @method     ChildResults findOneByActualtime(int $ActualTime) Return the first ChildResults filtered by the ActualTime column
@@ -47,14 +47,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildResults requirePk($key, ConnectionInterface $con = null) Return the ChildResults by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildResults requireOne(ConnectionInterface $con = null) Return the first ChildResults matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildResults requireOneByPrimarykey(int $PrimaryKey) Return the first ChildResults filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildResults requireOneByResultPK(int $PrimaryKey) Return the first ChildResults filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildResults requireOneByMatchkey(int $MatchKey) Return the first ChildResults filtered by the MatchKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildResults requireOneByLivestatus(int $LiveStatus) Return the first ChildResults filtered by the LiveStatus column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildResults requireOneByActualtime(int $ActualTime) Return the first ChildResults filtered by the ActualTime column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildResults requireOneByResultdate(string $ResultDate) Return the first ChildResults filtered by the ResultDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildResults[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildResults objects based on current ModelCriteria
- * @method     ChildResults[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildResults objects filtered by the PrimaryKey column
+ * @method     ChildResults[]|ObjectCollection findByResultPK(int $PrimaryKey) Return ChildResults objects filtered by the PrimaryKey column
  * @method     ChildResults[]|ObjectCollection findByMatchkey(int $MatchKey) Return ChildResults objects filtered by the MatchKey column
  * @method     ChildResults[]|ObjectCollection findByLivestatus(int $LiveStatus) Return ChildResults objects filtered by the LiveStatus column
  * @method     ChildResults[]|ObjectCollection findByActualtime(int $ActualTime) Return ChildResults objects filtered by the ActualTime column
@@ -246,12 +246,12 @@ abstract class ResultsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByResultPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByResultPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByResultPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $resultPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -259,16 +259,16 @@ abstract class ResultsQuery extends ModelCriteria
      *
      * @return $this|ChildResultsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByResultPK($resultPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($resultPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($resultPK['min'])) {
+                $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $resultPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($resultPK['max'])) {
+                $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $resultPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -279,7 +279,7 @@ abstract class ResultsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $resultPK, $comparison);
     }
 
     /**
@@ -458,7 +458,7 @@ abstract class ResultsQuery extends ModelCriteria
     public function prune($results = null)
     {
         if ($results) {
-            $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $results->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $results->getResultPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

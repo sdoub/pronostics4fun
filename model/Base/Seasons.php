@@ -319,7 +319,7 @@ abstract class Seasons implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getSeasonPK()
     {
         return $this->primarykey;
     }
@@ -370,7 +370,7 @@ abstract class Seasons implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Seasons The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setSeasonPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -382,7 +382,7 @@ abstract class Seasons implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setSeasonPK()
 
     /**
      * Set the value of [description] column.
@@ -500,7 +500,7 @@ abstract class Seasons implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SeasonsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SeasonsTableMap::translateFieldName('SeasonPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SeasonsTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
@@ -773,7 +773,7 @@ abstract class Seasons implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setSeasonPK($pk);
 
         $this->setNew(false);
     }
@@ -823,7 +823,7 @@ abstract class Seasons implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getSeasonPK();
                 break;
             case 1:
                 return $this->getDescription();
@@ -866,7 +866,7 @@ abstract class Seasons implements ActiveRecordInterface
         $alreadyDumpedObjects['Seasons'][$this->hashCode()] = true;
         $keys = SeasonsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getSeasonPK(),
             $keys[1] => $this->getDescription(),
             $keys[2] => $this->getCode(),
             $keys[3] => $this->getOrder(),
@@ -911,7 +911,7 @@ abstract class Seasons implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setSeasonPK($value);
                 break;
             case 1:
                 $this->setDescription($value);
@@ -952,7 +952,7 @@ abstract class Seasons implements ActiveRecordInterface
         $keys = SeasonsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setSeasonPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setDescription($arr[$keys[1]]);
@@ -1052,7 +1052,7 @@ abstract class Seasons implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getSeasonPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1072,7 +1072,7 @@ abstract class Seasons implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getSeasonPK();
     }
 
     /**
@@ -1083,7 +1083,7 @@ abstract class Seasons implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setSeasonPK($key);
     }
 
     /**
@@ -1092,7 +1092,7 @@ abstract class Seasons implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getSeasonPK();
     }
 
     /**
@@ -1114,7 +1114,7 @@ abstract class Seasons implements ActiveRecordInterface
         $copyObj->setCompetitionkey($this->getCompetitionkey());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setSeasonPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

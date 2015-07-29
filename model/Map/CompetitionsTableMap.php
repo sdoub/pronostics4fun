@@ -93,8 +93,8 @@ class CompetitionsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Name', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'name', ),
+        self::TYPE_PHPNAME       => array('CompetitionPK', 'Name', ),
+        self::TYPE_CAMELNAME     => array('competitionPK', 'name', ),
         self::TYPE_COLNAME       => array(CompetitionsTableMap::COL_PRIMARYKEY, CompetitionsTableMap::COL_NAME, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'Name', ),
         self::TYPE_NUM           => array(0, 1, )
@@ -107,8 +107,8 @@ class CompetitionsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Name' => 1, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'name' => 1, ),
+        self::TYPE_PHPNAME       => array('CompetitionPK' => 0, 'Name' => 1, ),
+        self::TYPE_CAMELNAME     => array('competitionPK' => 0, 'name' => 1, ),
         self::TYPE_COLNAME       => array(CompetitionsTableMap::COL_PRIMARYKEY => 0, CompetitionsTableMap::COL_NAME => 1, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'Name' => 1, ),
         self::TYPE_NUM           => array(0, 1, )
@@ -131,7 +131,7 @@ class CompetitionsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'CompetitionPK', 'INTEGER', true, null, null);
         $this->addColumn('Name', 'Name', 'VARCHAR', true, 30, null);
     } // initialize()
 
@@ -158,11 +158,11 @@ class CompetitionsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('CompetitionPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('CompetitionPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -182,7 +182,7 @@ class CompetitionsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('CompetitionPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

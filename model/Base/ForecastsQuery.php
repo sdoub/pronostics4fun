@@ -19,14 +19,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildForecastsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildForecastsQuery orderByForecastPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildForecastsQuery orderByMatchkey($order = Criteria::ASC) Order by the MatchKey column
  * @method     ChildForecastsQuery orderByPlayerkey($order = Criteria::ASC) Order by the PlayerKey column
  * @method     ChildForecastsQuery orderByTeamhomescore($order = Criteria::ASC) Order by the TeamHomeScore column
  * @method     ChildForecastsQuery orderByTeamawayscore($order = Criteria::ASC) Order by the TeamAwayScore column
  * @method     ChildForecastsQuery orderByForecastdate($order = Criteria::ASC) Order by the ForecastDate column
  *
- * @method     ChildForecastsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildForecastsQuery groupByForecastPK() Group by the PrimaryKey column
  * @method     ChildForecastsQuery groupByMatchkey() Group by the MatchKey column
  * @method     ChildForecastsQuery groupByPlayerkey() Group by the PlayerKey column
  * @method     ChildForecastsQuery groupByTeamhomescore() Group by the TeamHomeScore column
@@ -40,7 +40,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildForecasts findOne(ConnectionInterface $con = null) Return the first ChildForecasts matching the query
  * @method     ChildForecasts findOneOrCreate(ConnectionInterface $con = null) Return the first ChildForecasts matching the query, or a new ChildForecasts object populated from the query conditions when no match is found
  *
- * @method     ChildForecasts findOneByPrimarykey(int $PrimaryKey) Return the first ChildForecasts filtered by the PrimaryKey column
+ * @method     ChildForecasts findOneByForecastPK(int $PrimaryKey) Return the first ChildForecasts filtered by the PrimaryKey column
  * @method     ChildForecasts findOneByMatchkey(int $MatchKey) Return the first ChildForecasts filtered by the MatchKey column
  * @method     ChildForecasts findOneByPlayerkey(int $PlayerKey) Return the first ChildForecasts filtered by the PlayerKey column
  * @method     ChildForecasts findOneByTeamhomescore(int $TeamHomeScore) Return the first ChildForecasts filtered by the TeamHomeScore column
@@ -50,7 +50,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildForecasts requirePk($key, ConnectionInterface $con = null) Return the ChildForecasts by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildForecasts requireOne(ConnectionInterface $con = null) Return the first ChildForecasts matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildForecasts requireOneByPrimarykey(int $PrimaryKey) Return the first ChildForecasts filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildForecasts requireOneByForecastPK(int $PrimaryKey) Return the first ChildForecasts filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildForecasts requireOneByMatchkey(int $MatchKey) Return the first ChildForecasts filtered by the MatchKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildForecasts requireOneByPlayerkey(int $PlayerKey) Return the first ChildForecasts filtered by the PlayerKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildForecasts requireOneByTeamhomescore(int $TeamHomeScore) Return the first ChildForecasts filtered by the TeamHomeScore column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -58,7 +58,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildForecasts requireOneByForecastdate(string $ForecastDate) Return the first ChildForecasts filtered by the ForecastDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildForecasts[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildForecasts objects based on current ModelCriteria
- * @method     ChildForecasts[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildForecasts objects filtered by the PrimaryKey column
+ * @method     ChildForecasts[]|ObjectCollection findByForecastPK(int $PrimaryKey) Return ChildForecasts objects filtered by the PrimaryKey column
  * @method     ChildForecasts[]|ObjectCollection findByMatchkey(int $MatchKey) Return ChildForecasts objects filtered by the MatchKey column
  * @method     ChildForecasts[]|ObjectCollection findByPlayerkey(int $PlayerKey) Return ChildForecasts objects filtered by the PlayerKey column
  * @method     ChildForecasts[]|ObjectCollection findByTeamhomescore(int $TeamHomeScore) Return ChildForecasts objects filtered by the TeamHomeScore column
@@ -251,12 +251,12 @@ abstract class ForecastsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByForecastPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByForecastPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByForecastPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $forecastPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -264,16 +264,16 @@ abstract class ForecastsQuery extends ModelCriteria
      *
      * @return $this|ChildForecastsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByForecastPK($forecastPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($forecastPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($forecastPK['min'])) {
+                $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $forecastPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($forecastPK['max'])) {
+                $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $forecastPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -284,7 +284,7 @@ abstract class ForecastsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $forecastPK, $comparison);
     }
 
     /**
@@ -504,7 +504,7 @@ abstract class ForecastsQuery extends ModelCriteria
     public function prune($forecasts = null)
     {
         if ($forecasts) {
-            $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $forecasts->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(ForecastsTableMap::COL_PRIMARYKEY, $forecasts->getForecastPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

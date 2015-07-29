@@ -392,7 +392,7 @@ abstract class Surveys implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getSurveyPK()
     {
         return $this->primarykey;
     }
@@ -543,7 +543,7 @@ abstract class Surveys implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Surveys The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setSurveyPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -555,7 +555,7 @@ abstract class Surveys implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setSurveyPK()
 
     /**
      * Set the value of [question] column.
@@ -855,7 +855,7 @@ abstract class Surveys implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SurveysTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SurveysTableMap::translateFieldName('SurveyPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SurveysTableMap::translateFieldName('Question', TableMap::TYPE_PHPNAME, $indexType)];
@@ -1206,7 +1206,7 @@ abstract class Surveys implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setSurveyPK($pk);
 
         $this->setNew(false);
     }
@@ -1256,7 +1256,7 @@ abstract class Surveys implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getSurveyPK();
                 break;
             case 1:
                 return $this->getQuestion();
@@ -1323,7 +1323,7 @@ abstract class Surveys implements ActiveRecordInterface
         $alreadyDumpedObjects['Surveys'][$this->hashCode()] = true;
         $keys = SurveysTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getSurveyPK(),
             $keys[1] => $this->getQuestion(),
             $keys[2] => $this->getAnswer1(),
             $keys[3] => $this->getAnswer2(),
@@ -1390,7 +1390,7 @@ abstract class Surveys implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setSurveyPK($value);
                 break;
             case 1:
                 $this->setQuestion($value);
@@ -1455,7 +1455,7 @@ abstract class Surveys implements ActiveRecordInterface
         $keys = SurveysTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setSurveyPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setQuestion($arr[$keys[1]]);
@@ -1603,7 +1603,7 @@ abstract class Surveys implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getSurveyPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1623,7 +1623,7 @@ abstract class Surveys implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getSurveyPK();
     }
 
     /**
@@ -1634,7 +1634,7 @@ abstract class Surveys implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setSurveyPK($key);
     }
 
     /**
@@ -1643,7 +1643,7 @@ abstract class Surveys implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getSurveyPK();
     }
 
     /**
@@ -1673,7 +1673,7 @@ abstract class Surveys implements ActiveRecordInterface
         $copyObj->setEnddate($this->getEnddate());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setSurveyPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

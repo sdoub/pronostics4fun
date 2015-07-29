@@ -19,13 +19,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildNewsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildNewsQuery orderByNewsPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildNewsQuery orderByCompetitionkey($order = Criteria::ASC) Order by the CompetitionKey column
  * @method     ChildNewsQuery orderByInformation($order = Criteria::ASC) Order by the Information column
  * @method     ChildNewsQuery orderByInfodate($order = Criteria::ASC) Order by the InfoDate column
  * @method     ChildNewsQuery orderByInfotype($order = Criteria::ASC) Order by the InfoType column
  *
- * @method     ChildNewsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildNewsQuery groupByNewsPK() Group by the PrimaryKey column
  * @method     ChildNewsQuery groupByCompetitionkey() Group by the CompetitionKey column
  * @method     ChildNewsQuery groupByInformation() Group by the Information column
  * @method     ChildNewsQuery groupByInfodate() Group by the InfoDate column
@@ -38,7 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildNews findOne(ConnectionInterface $con = null) Return the first ChildNews matching the query
  * @method     ChildNews findOneOrCreate(ConnectionInterface $con = null) Return the first ChildNews matching the query, or a new ChildNews object populated from the query conditions when no match is found
  *
- * @method     ChildNews findOneByPrimarykey(int $PrimaryKey) Return the first ChildNews filtered by the PrimaryKey column
+ * @method     ChildNews findOneByNewsPK(int $PrimaryKey) Return the first ChildNews filtered by the PrimaryKey column
  * @method     ChildNews findOneByCompetitionkey(int $CompetitionKey) Return the first ChildNews filtered by the CompetitionKey column
  * @method     ChildNews findOneByInformation(string $Information) Return the first ChildNews filtered by the Information column
  * @method     ChildNews findOneByInfodate(string $InfoDate) Return the first ChildNews filtered by the InfoDate column
@@ -47,14 +47,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildNews requirePk($key, ConnectionInterface $con = null) Return the ChildNews by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildNews requireOne(ConnectionInterface $con = null) Return the first ChildNews matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildNews requireOneByPrimarykey(int $PrimaryKey) Return the first ChildNews filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildNews requireOneByNewsPK(int $PrimaryKey) Return the first ChildNews filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildNews requireOneByCompetitionkey(int $CompetitionKey) Return the first ChildNews filtered by the CompetitionKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildNews requireOneByInformation(string $Information) Return the first ChildNews filtered by the Information column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildNews requireOneByInfodate(string $InfoDate) Return the first ChildNews filtered by the InfoDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildNews requireOneByInfotype(boolean $InfoType) Return the first ChildNews filtered by the InfoType column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildNews[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildNews objects based on current ModelCriteria
- * @method     ChildNews[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildNews objects filtered by the PrimaryKey column
+ * @method     ChildNews[]|ObjectCollection findByNewsPK(int $PrimaryKey) Return ChildNews objects filtered by the PrimaryKey column
  * @method     ChildNews[]|ObjectCollection findByCompetitionkey(int $CompetitionKey) Return ChildNews objects filtered by the CompetitionKey column
  * @method     ChildNews[]|ObjectCollection findByInformation(string $Information) Return ChildNews objects filtered by the Information column
  * @method     ChildNews[]|ObjectCollection findByInfodate(string $InfoDate) Return ChildNews objects filtered by the InfoDate column
@@ -246,12 +246,12 @@ abstract class NewsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByNewsPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByNewsPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByNewsPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $newsPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -259,16 +259,16 @@ abstract class NewsQuery extends ModelCriteria
      *
      * @return $this|ChildNewsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByNewsPK($newsPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($newsPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($newsPK['min'])) {
+                $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $newsPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($newsPK['max'])) {
+                $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $newsPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -279,7 +279,7 @@ abstract class NewsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $newsPK, $comparison);
     }
 
     /**
@@ -432,7 +432,7 @@ abstract class NewsQuery extends ModelCriteria
     public function prune($news = null)
     {
         if ($news) {
-            $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $news->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(NewsTableMap::COL_PRIMARYKEY, $news->getNewsPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

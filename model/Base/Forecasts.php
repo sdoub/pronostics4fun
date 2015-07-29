@@ -340,7 +340,7 @@ abstract class Forecasts implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getForecastPK()
     {
         return $this->primarykey;
     }
@@ -411,7 +411,7 @@ abstract class Forecasts implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Forecasts The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setForecastPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -423,7 +423,7 @@ abstract class Forecasts implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setForecastPK()
 
     /**
      * Set the value of [matchkey] column.
@@ -561,7 +561,7 @@ abstract class Forecasts implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ForecastsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ForecastsTableMap::translateFieldName('ForecastPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ForecastsTableMap::translateFieldName('Matchkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -846,7 +846,7 @@ abstract class Forecasts implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setForecastPK($pk);
 
         $this->setNew(false);
     }
@@ -896,7 +896,7 @@ abstract class Forecasts implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getForecastPK();
                 break;
             case 1:
                 return $this->getMatchkey();
@@ -942,7 +942,7 @@ abstract class Forecasts implements ActiveRecordInterface
         $alreadyDumpedObjects['Forecasts'][$this->hashCode()] = true;
         $keys = ForecastsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getForecastPK(),
             $keys[1] => $this->getMatchkey(),
             $keys[2] => $this->getPlayerkey(),
             $keys[3] => $this->getTeamhomescore(),
@@ -996,7 +996,7 @@ abstract class Forecasts implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setForecastPK($value);
                 break;
             case 1:
                 $this->setMatchkey($value);
@@ -1040,7 +1040,7 @@ abstract class Forecasts implements ActiveRecordInterface
         $keys = ForecastsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setForecastPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setMatchkey($arr[$keys[1]]);
@@ -1146,7 +1146,7 @@ abstract class Forecasts implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getForecastPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1166,7 +1166,7 @@ abstract class Forecasts implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getForecastPK();
     }
 
     /**
@@ -1177,7 +1177,7 @@ abstract class Forecasts implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setForecastPK($key);
     }
 
     /**
@@ -1186,7 +1186,7 @@ abstract class Forecasts implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getForecastPK();
     }
 
     /**
@@ -1209,7 +1209,7 @@ abstract class Forecasts implements ActiveRecordInterface
         $copyObj->setForecastdate($this->getForecastdate());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setForecastPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

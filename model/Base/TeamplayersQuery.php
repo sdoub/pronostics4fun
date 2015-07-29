@@ -19,10 +19,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildTeamplayersQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildTeamplayersQuery orderByTeamPlayerPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildTeamplayersQuery orderByFullname($order = Criteria::ASC) Order by the FullName column
  *
- * @method     ChildTeamplayersQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildTeamplayersQuery groupByTeamPlayerPK() Group by the PrimaryKey column
  * @method     ChildTeamplayersQuery groupByFullname() Group by the FullName column
  *
  * @method     ChildTeamplayersQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -32,17 +32,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTeamplayers findOne(ConnectionInterface $con = null) Return the first ChildTeamplayers matching the query
  * @method     ChildTeamplayers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildTeamplayers matching the query, or a new ChildTeamplayers object populated from the query conditions when no match is found
  *
- * @method     ChildTeamplayers findOneByPrimarykey(int $PrimaryKey) Return the first ChildTeamplayers filtered by the PrimaryKey column
+ * @method     ChildTeamplayers findOneByTeamPlayerPK(int $PrimaryKey) Return the first ChildTeamplayers filtered by the PrimaryKey column
  * @method     ChildTeamplayers findOneByFullname(string $FullName) Return the first ChildTeamplayers filtered by the FullName column *
 
  * @method     ChildTeamplayers requirePk($key, ConnectionInterface $con = null) Return the ChildTeamplayers by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeamplayers requireOne(ConnectionInterface $con = null) Return the first ChildTeamplayers matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildTeamplayers requireOneByPrimarykey(int $PrimaryKey) Return the first ChildTeamplayers filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTeamplayers requireOneByTeamPlayerPK(int $PrimaryKey) Return the first ChildTeamplayers filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTeamplayers requireOneByFullname(string $FullName) Return the first ChildTeamplayers filtered by the FullName column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildTeamplayers[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildTeamplayers objects based on current ModelCriteria
- * @method     ChildTeamplayers[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildTeamplayers objects filtered by the PrimaryKey column
+ * @method     ChildTeamplayers[]|ObjectCollection findByTeamPlayerPK(int $PrimaryKey) Return ChildTeamplayers objects filtered by the PrimaryKey column
  * @method     ChildTeamplayers[]|ObjectCollection findByFullname(string $FullName) Return ChildTeamplayers objects filtered by the FullName column
  * @method     ChildTeamplayers[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -231,12 +231,12 @@ abstract class TeamplayersQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByTeamPlayerPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByTeamPlayerPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByTeamPlayerPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $teamPlayerPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -244,16 +244,16 @@ abstract class TeamplayersQuery extends ModelCriteria
      *
      * @return $this|ChildTeamplayersQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByTeamPlayerPK($teamPlayerPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($teamPlayerPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($teamPlayerPK['min'])) {
+                $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $teamPlayerPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($teamPlayerPK['max'])) {
+                $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $teamPlayerPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -264,7 +264,7 @@ abstract class TeamplayersQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $teamPlayerPK, $comparison);
     }
 
     /**
@@ -306,7 +306,7 @@ abstract class TeamplayersQuery extends ModelCriteria
     public function prune($teamplayers = null)
     {
         if ($teamplayers) {
-            $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $teamplayers->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $teamplayers->getTeamPlayerPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

@@ -319,7 +319,7 @@ abstract class Cuprounds implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getCupRoundPK()
     {
         return $this->primarykey;
     }
@@ -370,7 +370,7 @@ abstract class Cuprounds implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Cuprounds The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setCupRoundPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -382,7 +382,7 @@ abstract class Cuprounds implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setCupRoundPK()
 
     /**
      * Set the value of [description] column.
@@ -500,7 +500,7 @@ abstract class Cuprounds implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CuproundsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CuproundsTableMap::translateFieldName('CupRoundPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CuproundsTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
@@ -773,7 +773,7 @@ abstract class Cuprounds implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setCupRoundPK($pk);
 
         $this->setNew(false);
     }
@@ -823,7 +823,7 @@ abstract class Cuprounds implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getCupRoundPK();
                 break;
             case 1:
                 return $this->getDescription();
@@ -866,7 +866,7 @@ abstract class Cuprounds implements ActiveRecordInterface
         $alreadyDumpedObjects['Cuprounds'][$this->hashCode()] = true;
         $keys = CuproundsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getCupRoundPK(),
             $keys[1] => $this->getDescription(),
             $keys[2] => $this->getCode(),
             $keys[3] => $this->getNextroundkey(),
@@ -911,7 +911,7 @@ abstract class Cuprounds implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setCupRoundPK($value);
                 break;
             case 1:
                 $this->setDescription($value);
@@ -952,7 +952,7 @@ abstract class Cuprounds implements ActiveRecordInterface
         $keys = CuproundsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setCupRoundPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setDescription($arr[$keys[1]]);
@@ -1052,7 +1052,7 @@ abstract class Cuprounds implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getCupRoundPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1072,7 +1072,7 @@ abstract class Cuprounds implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getCupRoundPK();
     }
 
     /**
@@ -1083,7 +1083,7 @@ abstract class Cuprounds implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setCupRoundPK($key);
     }
 
     /**
@@ -1092,7 +1092,7 @@ abstract class Cuprounds implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getCupRoundPK();
     }
 
     /**
@@ -1114,7 +1114,7 @@ abstract class Cuprounds implements ActiveRecordInterface
         $copyObj->setPreviousroundkey($this->getPreviousroundkey());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setCupRoundPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

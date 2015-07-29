@@ -351,7 +351,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getPlayerDivisionMatchPK()
     {
         return $this->primarykey;
     }
@@ -472,7 +472,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Playerdivisionmatches The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setPlayerDivisionMatchPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -484,7 +484,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setPlayerDivisionMatchPK()
 
     /**
      * Set the value of [playerhomekey] column.
@@ -702,7 +702,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PlayerdivisionmatchesTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PlayerdivisionmatchesTableMap::translateFieldName('PlayerDivisionMatchPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PlayerdivisionmatchesTableMap::translateFieldName('Playerhomekey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -1026,7 +1026,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setPlayerDivisionMatchPK($pk);
 
         $this->setNew(false);
     }
@@ -1076,7 +1076,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getPlayerDivisionMatchPK();
                 break;
             case 1:
                 return $this->getPlayerhomekey();
@@ -1134,7 +1134,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
         $alreadyDumpedObjects['Playerdivisionmatches'][$this->hashCode()] = true;
         $keys = PlayerdivisionmatchesTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getPlayerDivisionMatchPK(),
             $keys[1] => $this->getPlayerhomekey(),
             $keys[2] => $this->getPlayerawaykey(),
             $keys[3] => $this->getSeasonkey(),
@@ -1198,7 +1198,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setPlayerDivisionMatchPK($value);
                 break;
             case 1:
                 $this->setPlayerhomekey($value);
@@ -1254,7 +1254,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
         $keys = PlayerdivisionmatchesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setPlayerDivisionMatchPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setPlayerhomekey($arr[$keys[1]]);
@@ -1384,7 +1384,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getPlayerDivisionMatchPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1404,7 +1404,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getPlayerDivisionMatchPK();
     }
 
     /**
@@ -1415,7 +1415,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setPlayerDivisionMatchPK($key);
     }
 
     /**
@@ -1424,7 +1424,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getPlayerDivisionMatchPK();
     }
 
     /**
@@ -1451,7 +1451,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
         $copyObj->setResultdate($this->getResultdate());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setPlayerDivisionMatchPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

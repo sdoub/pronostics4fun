@@ -364,7 +364,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getPlayerCupMatchPK()
     {
         return $this->primarykey;
     }
@@ -485,7 +485,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Playercupmatches The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setPlayerCupMatchPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -497,7 +497,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setPlayerCupMatchPK()
 
     /**
      * Set the value of [playerhomekey] column.
@@ -715,7 +715,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PlayercupmatchesTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PlayercupmatchesTableMap::translateFieldName('PlayerCupMatchPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PlayercupmatchesTableMap::translateFieldName('Playerhomekey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -1039,7 +1039,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setPlayerCupMatchPK($pk);
 
         $this->setNew(false);
     }
@@ -1089,7 +1089,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getPlayerCupMatchPK();
                 break;
             case 1:
                 return $this->getPlayerhomekey();
@@ -1147,7 +1147,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
         $alreadyDumpedObjects['Playercupmatches'][$this->hashCode()] = true;
         $keys = PlayercupmatchesTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getPlayerCupMatchPK(),
             $keys[1] => $this->getPlayerhomekey(),
             $keys[2] => $this->getPlayerawaykey(),
             $keys[3] => $this->getCuproundkey(),
@@ -1211,7 +1211,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setPlayerCupMatchPK($value);
                 break;
             case 1:
                 $this->setPlayerhomekey($value);
@@ -1267,7 +1267,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
         $keys = PlayercupmatchesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setPlayerCupMatchPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setPlayerhomekey($arr[$keys[1]]);
@@ -1397,7 +1397,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getPlayerCupMatchPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1417,7 +1417,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getPlayerCupMatchPK();
     }
 
     /**
@@ -1428,7 +1428,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setPlayerCupMatchPK($key);
     }
 
     /**
@@ -1437,7 +1437,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getPlayerCupMatchPK();
     }
 
     /**
@@ -1464,7 +1464,7 @@ abstract class Playercupmatches implements ActiveRecordInterface
         $copyObj->setResultdate($this->getResultdate());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setPlayerCupMatchPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

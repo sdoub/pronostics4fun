@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildEventsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildEventsQuery orderByEventPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildEventsQuery orderByResultkey($order = Criteria::ASC) Order by the ResultKey column
  * @method     ChildEventsQuery orderByTeamplayerkey($order = Criteria::ASC) Order by the TeamPlayerKey column
  * @method     ChildEventsQuery orderByEventtime($order = Criteria::ASC) Order by the EventTime column
@@ -27,7 +27,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventsQuery orderByHalf($order = Criteria::ASC) Order by the Half column
  * @method     ChildEventsQuery orderByTeamkey($order = Criteria::ASC) Order by the TeamKey column
  *
- * @method     ChildEventsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildEventsQuery groupByEventPK() Group by the PrimaryKey column
  * @method     ChildEventsQuery groupByResultkey() Group by the ResultKey column
  * @method     ChildEventsQuery groupByTeamplayerkey() Group by the TeamPlayerKey column
  * @method     ChildEventsQuery groupByEventtime() Group by the EventTime column
@@ -42,7 +42,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvents findOne(ConnectionInterface $con = null) Return the first ChildEvents matching the query
  * @method     ChildEvents findOneOrCreate(ConnectionInterface $con = null) Return the first ChildEvents matching the query, or a new ChildEvents object populated from the query conditions when no match is found
  *
- * @method     ChildEvents findOneByPrimarykey(int $PrimaryKey) Return the first ChildEvents filtered by the PrimaryKey column
+ * @method     ChildEvents findOneByEventPK(int $PrimaryKey) Return the first ChildEvents filtered by the PrimaryKey column
  * @method     ChildEvents findOneByResultkey(int $ResultKey) Return the first ChildEvents filtered by the ResultKey column
  * @method     ChildEvents findOneByTeamplayerkey(int $TeamPlayerKey) Return the first ChildEvents filtered by the TeamPlayerKey column
  * @method     ChildEvents findOneByEventtime(int $EventTime) Return the first ChildEvents filtered by the EventTime column
@@ -53,7 +53,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvents requirePk($key, ConnectionInterface $con = null) Return the ChildEvents by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvents requireOne(ConnectionInterface $con = null) Return the first ChildEvents matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildEvents requireOneByPrimarykey(int $PrimaryKey) Return the first ChildEvents filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvents requireOneByEventPK(int $PrimaryKey) Return the first ChildEvents filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvents requireOneByResultkey(int $ResultKey) Return the first ChildEvents filtered by the ResultKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvents requireOneByTeamplayerkey(int $TeamPlayerKey) Return the first ChildEvents filtered by the TeamPlayerKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvents requireOneByEventtime(int $EventTime) Return the first ChildEvents filtered by the EventTime column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -62,7 +62,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvents requireOneByTeamkey(int $TeamKey) Return the first ChildEvents filtered by the TeamKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildEvents[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildEvents objects based on current ModelCriteria
- * @method     ChildEvents[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildEvents objects filtered by the PrimaryKey column
+ * @method     ChildEvents[]|ObjectCollection findByEventPK(int $PrimaryKey) Return ChildEvents objects filtered by the PrimaryKey column
  * @method     ChildEvents[]|ObjectCollection findByResultkey(int $ResultKey) Return ChildEvents objects filtered by the ResultKey column
  * @method     ChildEvents[]|ObjectCollection findByTeamplayerkey(int $TeamPlayerKey) Return ChildEvents objects filtered by the TeamPlayerKey column
  * @method     ChildEvents[]|ObjectCollection findByEventtime(int $EventTime) Return ChildEvents objects filtered by the EventTime column
@@ -256,12 +256,12 @@ abstract class EventsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByEventPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByEventPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByEventPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $eventPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -269,16 +269,16 @@ abstract class EventsQuery extends ModelCriteria
      *
      * @return $this|ChildEventsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByEventPK($eventPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($eventPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($eventPK['min'])) {
+                $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $eventPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($eventPK['max'])) {
+                $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $eventPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -289,7 +289,7 @@ abstract class EventsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $eventPK, $comparison);
     }
 
     /**
@@ -548,7 +548,7 @@ abstract class EventsQuery extends ModelCriteria
     public function prune($events = null)
     {
         if ($events) {
-            $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $events->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(EventsTableMap::COL_PRIMARYKEY, $events->getEventPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

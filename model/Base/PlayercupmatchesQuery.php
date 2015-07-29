@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildPlayercupmatchesQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildPlayercupmatchesQuery orderByPlayerCupMatchPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildPlayercupmatchesQuery orderByPlayerhomekey($order = Criteria::ASC) Order by the PlayerHomeKey column
  * @method     ChildPlayercupmatchesQuery orderByPlayerawaykey($order = Criteria::ASC) Order by the PlayerAwayKey column
  * @method     ChildPlayercupmatchesQuery orderByCuproundkey($order = Criteria::ASC) Order by the CupRoundKey column
@@ -30,7 +30,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayercupmatchesQuery orderByScheduledate($order = Criteria::ASC) Order by the ScheduleDate column
  * @method     ChildPlayercupmatchesQuery orderByResultdate($order = Criteria::ASC) Order by the ResultDate column
  *
- * @method     ChildPlayercupmatchesQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildPlayercupmatchesQuery groupByPlayerCupMatchPK() Group by the PrimaryKey column
  * @method     ChildPlayercupmatchesQuery groupByPlayerhomekey() Group by the PlayerHomeKey column
  * @method     ChildPlayercupmatchesQuery groupByPlayerawaykey() Group by the PlayerAwayKey column
  * @method     ChildPlayercupmatchesQuery groupByCuproundkey() Group by the CupRoundKey column
@@ -48,7 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayercupmatches findOne(ConnectionInterface $con = null) Return the first ChildPlayercupmatches matching the query
  * @method     ChildPlayercupmatches findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayercupmatches matching the query, or a new ChildPlayercupmatches object populated from the query conditions when no match is found
  *
- * @method     ChildPlayercupmatches findOneByPrimarykey(int $PrimaryKey) Return the first ChildPlayercupmatches filtered by the PrimaryKey column
+ * @method     ChildPlayercupmatches findOneByPlayerCupMatchPK(int $PrimaryKey) Return the first ChildPlayercupmatches filtered by the PrimaryKey column
  * @method     ChildPlayercupmatches findOneByPlayerhomekey(int $PlayerHomeKey) Return the first ChildPlayercupmatches filtered by the PlayerHomeKey column
  * @method     ChildPlayercupmatches findOneByPlayerawaykey(int $PlayerAwayKey) Return the first ChildPlayercupmatches filtered by the PlayerAwayKey column
  * @method     ChildPlayercupmatches findOneByCuproundkey(int $CupRoundKey) Return the first ChildPlayercupmatches filtered by the CupRoundKey column
@@ -62,7 +62,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayercupmatches requirePk($key, ConnectionInterface $con = null) Return the ChildPlayercupmatches by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayercupmatches requireOne(ConnectionInterface $con = null) Return the first ChildPlayercupmatches matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildPlayercupmatches requireOneByPrimarykey(int $PrimaryKey) Return the first ChildPlayercupmatches filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPlayercupmatches requireOneByPlayerCupMatchPK(int $PrimaryKey) Return the first ChildPlayercupmatches filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayercupmatches requireOneByPlayerhomekey(int $PlayerHomeKey) Return the first ChildPlayercupmatches filtered by the PlayerHomeKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayercupmatches requireOneByPlayerawaykey(int $PlayerAwayKey) Return the first ChildPlayercupmatches filtered by the PlayerAwayKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayercupmatches requireOneByCuproundkey(int $CupRoundKey) Return the first ChildPlayercupmatches filtered by the CupRoundKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -74,7 +74,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayercupmatches requireOneByResultdate(string $ResultDate) Return the first ChildPlayercupmatches filtered by the ResultDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPlayercupmatches[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPlayercupmatches objects based on current ModelCriteria
- * @method     ChildPlayercupmatches[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildPlayercupmatches objects filtered by the PrimaryKey column
+ * @method     ChildPlayercupmatches[]|ObjectCollection findByPlayerCupMatchPK(int $PrimaryKey) Return ChildPlayercupmatches objects filtered by the PrimaryKey column
  * @method     ChildPlayercupmatches[]|ObjectCollection findByPlayerhomekey(int $PlayerHomeKey) Return ChildPlayercupmatches objects filtered by the PlayerHomeKey column
  * @method     ChildPlayercupmatches[]|ObjectCollection findByPlayerawaykey(int $PlayerAwayKey) Return ChildPlayercupmatches objects filtered by the PlayerAwayKey column
  * @method     ChildPlayercupmatches[]|ObjectCollection findByCuproundkey(int $CupRoundKey) Return ChildPlayercupmatches objects filtered by the CupRoundKey column
@@ -271,12 +271,12 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByPlayerCupMatchPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByPlayerCupMatchPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByPlayerCupMatchPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $playerCupMatchPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -284,16 +284,16 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return $this|ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByPlayerCupMatchPK($playerCupMatchPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($playerCupMatchPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($playerCupMatchPK['min'])) {
+                $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $playerCupMatchPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($playerCupMatchPK['max'])) {
+                $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $playerCupMatchPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -304,7 +304,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $playerCupMatchPK, $comparison);
     }
 
     /**
@@ -690,7 +690,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
     public function prune($playercupmatches = null)
     {
         if ($playercupmatches) {
-            $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $playercupmatches->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(PlayercupmatchesTableMap::COL_PRIMARYKEY, $playercupmatches->getPlayerCupMatchPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

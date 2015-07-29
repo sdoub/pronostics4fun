@@ -356,7 +356,7 @@ abstract class Matches implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getMatchPK()
     {
         return $this->primarykey;
     }
@@ -457,7 +457,7 @@ abstract class Matches implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Matches The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setMatchPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -469,7 +469,7 @@ abstract class Matches implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setMatchPK()
 
     /**
      * Set the value of [groupkey] column.
@@ -663,7 +663,7 @@ abstract class Matches implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : MatchesTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : MatchesTableMap::translateFieldName('MatchPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : MatchesTableMap::translateFieldName('Groupkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -966,7 +966,7 @@ abstract class Matches implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setMatchPK($pk);
 
         $this->setNew(false);
     }
@@ -1016,7 +1016,7 @@ abstract class Matches implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getMatchPK();
                 break;
             case 1:
                 return $this->getGroupkey();
@@ -1068,7 +1068,7 @@ abstract class Matches implements ActiveRecordInterface
         $alreadyDumpedObjects['Matches'][$this->hashCode()] = true;
         $keys = MatchesTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getMatchPK(),
             $keys[1] => $this->getGroupkey(),
             $keys[2] => $this->getTeamhomekey(),
             $keys[3] => $this->getTeamawaykey(),
@@ -1124,7 +1124,7 @@ abstract class Matches implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setMatchPK($value);
                 break;
             case 1:
                 $this->setGroupkey($value);
@@ -1174,7 +1174,7 @@ abstract class Matches implements ActiveRecordInterface
         $keys = MatchesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setMatchPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setGroupkey($arr[$keys[1]]);
@@ -1292,7 +1292,7 @@ abstract class Matches implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getMatchPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1312,7 +1312,7 @@ abstract class Matches implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getMatchPK();
     }
 
     /**
@@ -1323,7 +1323,7 @@ abstract class Matches implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setMatchPK($key);
     }
 
     /**
@@ -1332,7 +1332,7 @@ abstract class Matches implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getMatchPK();
     }
 
     /**
@@ -1357,7 +1357,7 @@ abstract class Matches implements ActiveRecordInterface
         $copyObj->setExternalkey($this->getExternalkey());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setMatchPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

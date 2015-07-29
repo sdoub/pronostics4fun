@@ -307,7 +307,7 @@ abstract class Teams implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getTeamPK()
     {
         return $this->primarykey;
     }
@@ -338,7 +338,7 @@ abstract class Teams implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Teams The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setTeamPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -350,7 +350,7 @@ abstract class Teams implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setTeamPK()
 
     /**
      * Set the value of [name] column.
@@ -428,7 +428,7 @@ abstract class Teams implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : TeamsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : TeamsTableMap::translateFieldName('TeamPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TeamsTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
@@ -683,7 +683,7 @@ abstract class Teams implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setTeamPK($pk);
 
         $this->setNew(false);
     }
@@ -733,7 +733,7 @@ abstract class Teams implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getTeamPK();
                 break;
             case 1:
                 return $this->getName();
@@ -770,7 +770,7 @@ abstract class Teams implements ActiveRecordInterface
         $alreadyDumpedObjects['Teams'][$this->hashCode()] = true;
         $keys = TeamsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getTeamPK(),
             $keys[1] => $this->getName(),
             $keys[2] => $this->getCode(),
         );
@@ -813,7 +813,7 @@ abstract class Teams implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setTeamPK($value);
                 break;
             case 1:
                 $this->setName($value);
@@ -848,7 +848,7 @@ abstract class Teams implements ActiveRecordInterface
         $keys = TeamsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setTeamPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setName($arr[$keys[1]]);
@@ -936,7 +936,7 @@ abstract class Teams implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getTeamPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -956,7 +956,7 @@ abstract class Teams implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getTeamPK();
     }
 
     /**
@@ -967,7 +967,7 @@ abstract class Teams implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setTeamPK($key);
     }
 
     /**
@@ -976,7 +976,7 @@ abstract class Teams implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getTeamPK();
     }
 
     /**
@@ -996,7 +996,7 @@ abstract class Teams implements ActiveRecordInterface
         $copyObj->setCode($this->getCode());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setTeamPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

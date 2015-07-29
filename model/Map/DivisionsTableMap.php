@@ -103,8 +103,8 @@ class DivisionsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Description', 'Code', 'Order', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'description', 'code', 'order', ),
+        self::TYPE_PHPNAME       => array('DivisionPK', 'Description', 'Code', 'Order', ),
+        self::TYPE_CAMELNAME     => array('divisionPK', 'description', 'code', 'order', ),
         self::TYPE_COLNAME       => array(DivisionsTableMap::COL_PRIMARYKEY, DivisionsTableMap::COL_DESCRIPTION, DivisionsTableMap::COL_CODE, DivisionsTableMap::COL_ORDER, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'Description', 'Code', 'Order', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
@@ -117,8 +117,8 @@ class DivisionsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Description' => 1, 'Code' => 2, 'Order' => 3, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'description' => 1, 'code' => 2, 'order' => 3, ),
+        self::TYPE_PHPNAME       => array('DivisionPK' => 0, 'Description' => 1, 'Code' => 2, 'Order' => 3, ),
+        self::TYPE_CAMELNAME     => array('divisionPK' => 0, 'description' => 1, 'code' => 2, 'order' => 3, ),
         self::TYPE_COLNAME       => array(DivisionsTableMap::COL_PRIMARYKEY => 0, DivisionsTableMap::COL_DESCRIPTION => 1, DivisionsTableMap::COL_CODE => 2, DivisionsTableMap::COL_ORDER => 3, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'Description' => 1, 'Code' => 2, 'Order' => 3, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
@@ -141,7 +141,7 @@ class DivisionsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'DivisionPK', 'INTEGER', true, null, null);
         $this->addColumn('Description', 'Description', 'VARCHAR', true, 50, null);
         $this->addColumn('Code', 'Code', 'VARCHAR', true, 3, null);
         $this->addColumn('Order', 'Order', 'TINYINT', true, 2, 1);
@@ -170,11 +170,11 @@ class DivisionsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('DivisionPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('DivisionPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -194,7 +194,7 @@ class DivisionsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('DivisionPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

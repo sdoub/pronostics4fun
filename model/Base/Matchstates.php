@@ -340,7 +340,7 @@ abstract class Matchstates implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getMatchStatePK()
     {
         return $this->primarykey;
     }
@@ -411,7 +411,7 @@ abstract class Matchstates implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Matchstates The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setMatchStatePK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -423,7 +423,7 @@ abstract class Matchstates implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setMatchStatePK()
 
     /**
      * Set the value of [matchkey] column.
@@ -561,7 +561,7 @@ abstract class Matchstates implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : MatchstatesTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : MatchstatesTableMap::translateFieldName('MatchStatePK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : MatchstatesTableMap::translateFieldName('Matchkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -846,7 +846,7 @@ abstract class Matchstates implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setMatchStatePK($pk);
 
         $this->setNew(false);
     }
@@ -896,7 +896,7 @@ abstract class Matchstates implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getMatchStatePK();
                 break;
             case 1:
                 return $this->getMatchkey();
@@ -942,7 +942,7 @@ abstract class Matchstates implements ActiveRecordInterface
         $alreadyDumpedObjects['Matchstates'][$this->hashCode()] = true;
         $keys = MatchstatesTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getMatchStatePK(),
             $keys[1] => $this->getMatchkey(),
             $keys[2] => $this->getStatedate(),
             $keys[3] => $this->getEventkey(),
@@ -996,7 +996,7 @@ abstract class Matchstates implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setMatchStatePK($value);
                 break;
             case 1:
                 $this->setMatchkey($value);
@@ -1040,7 +1040,7 @@ abstract class Matchstates implements ActiveRecordInterface
         $keys = MatchstatesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setMatchStatePK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setMatchkey($arr[$keys[1]]);
@@ -1146,7 +1146,7 @@ abstract class Matchstates implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getMatchStatePK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1166,7 +1166,7 @@ abstract class Matchstates implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getMatchStatePK();
     }
 
     /**
@@ -1177,7 +1177,7 @@ abstract class Matchstates implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setMatchStatePK($key);
     }
 
     /**
@@ -1186,7 +1186,7 @@ abstract class Matchstates implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getMatchStatePK();
     }
 
     /**
@@ -1209,7 +1209,7 @@ abstract class Matchstates implements ActiveRecordInterface
         $copyObj->setTeamawayscore($this->getTeamawayscore());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setMatchStatePK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

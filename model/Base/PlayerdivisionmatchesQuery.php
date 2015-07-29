@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildPlayerdivisionmatchesQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildPlayerdivisionmatchesQuery orderByPlayerDivisionMatchPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildPlayerdivisionmatchesQuery orderByPlayerhomekey($order = Criteria::ASC) Order by the PlayerHomeKey column
  * @method     ChildPlayerdivisionmatchesQuery orderByPlayerawaykey($order = Criteria::ASC) Order by the PlayerAwayKey column
  * @method     ChildPlayerdivisionmatchesQuery orderBySeasonkey($order = Criteria::ASC) Order by the SeasonKey column
@@ -30,7 +30,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayerdivisionmatchesQuery orderByScheduledate($order = Criteria::ASC) Order by the ScheduleDate column
  * @method     ChildPlayerdivisionmatchesQuery orderByResultdate($order = Criteria::ASC) Order by the ResultDate column
  *
- * @method     ChildPlayerdivisionmatchesQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildPlayerdivisionmatchesQuery groupByPlayerDivisionMatchPK() Group by the PrimaryKey column
  * @method     ChildPlayerdivisionmatchesQuery groupByPlayerhomekey() Group by the PlayerHomeKey column
  * @method     ChildPlayerdivisionmatchesQuery groupByPlayerawaykey() Group by the PlayerAwayKey column
  * @method     ChildPlayerdivisionmatchesQuery groupBySeasonkey() Group by the SeasonKey column
@@ -48,7 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayerdivisionmatches findOne(ConnectionInterface $con = null) Return the first ChildPlayerdivisionmatches matching the query
  * @method     ChildPlayerdivisionmatches findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayerdivisionmatches matching the query, or a new ChildPlayerdivisionmatches object populated from the query conditions when no match is found
  *
- * @method     ChildPlayerdivisionmatches findOneByPrimarykey(int $PrimaryKey) Return the first ChildPlayerdivisionmatches filtered by the PrimaryKey column
+ * @method     ChildPlayerdivisionmatches findOneByPlayerDivisionMatchPK(int $PrimaryKey) Return the first ChildPlayerdivisionmatches filtered by the PrimaryKey column
  * @method     ChildPlayerdivisionmatches findOneByPlayerhomekey(int $PlayerHomeKey) Return the first ChildPlayerdivisionmatches filtered by the PlayerHomeKey column
  * @method     ChildPlayerdivisionmatches findOneByPlayerawaykey(int $PlayerAwayKey) Return the first ChildPlayerdivisionmatches filtered by the PlayerAwayKey column
  * @method     ChildPlayerdivisionmatches findOneBySeasonkey(int $SeasonKey) Return the first ChildPlayerdivisionmatches filtered by the SeasonKey column
@@ -62,7 +62,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayerdivisionmatches requirePk($key, ConnectionInterface $con = null) Return the ChildPlayerdivisionmatches by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayerdivisionmatches requireOne(ConnectionInterface $con = null) Return the first ChildPlayerdivisionmatches matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildPlayerdivisionmatches requireOneByPrimarykey(int $PrimaryKey) Return the first ChildPlayerdivisionmatches filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPlayerdivisionmatches requireOneByPlayerDivisionMatchPK(int $PrimaryKey) Return the first ChildPlayerdivisionmatches filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayerdivisionmatches requireOneByPlayerhomekey(int $PlayerHomeKey) Return the first ChildPlayerdivisionmatches filtered by the PlayerHomeKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayerdivisionmatches requireOneByPlayerawaykey(int $PlayerAwayKey) Return the first ChildPlayerdivisionmatches filtered by the PlayerAwayKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayerdivisionmatches requireOneBySeasonkey(int $SeasonKey) Return the first ChildPlayerdivisionmatches filtered by the SeasonKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -74,7 +74,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayerdivisionmatches requireOneByResultdate(string $ResultDate) Return the first ChildPlayerdivisionmatches filtered by the ResultDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPlayerdivisionmatches[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPlayerdivisionmatches objects based on current ModelCriteria
- * @method     ChildPlayerdivisionmatches[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildPlayerdivisionmatches objects filtered by the PrimaryKey column
+ * @method     ChildPlayerdivisionmatches[]|ObjectCollection findByPlayerDivisionMatchPK(int $PrimaryKey) Return ChildPlayerdivisionmatches objects filtered by the PrimaryKey column
  * @method     ChildPlayerdivisionmatches[]|ObjectCollection findByPlayerhomekey(int $PlayerHomeKey) Return ChildPlayerdivisionmatches objects filtered by the PlayerHomeKey column
  * @method     ChildPlayerdivisionmatches[]|ObjectCollection findByPlayerawaykey(int $PlayerAwayKey) Return ChildPlayerdivisionmatches objects filtered by the PlayerAwayKey column
  * @method     ChildPlayerdivisionmatches[]|ObjectCollection findBySeasonkey(int $SeasonKey) Return ChildPlayerdivisionmatches objects filtered by the SeasonKey column
@@ -271,12 +271,12 @@ abstract class PlayerdivisionmatchesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByPlayerDivisionMatchPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByPlayerDivisionMatchPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByPlayerDivisionMatchPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $playerDivisionMatchPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -284,16 +284,16 @@ abstract class PlayerdivisionmatchesQuery extends ModelCriteria
      *
      * @return $this|ChildPlayerdivisionmatchesQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByPlayerDivisionMatchPK($playerDivisionMatchPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($playerDivisionMatchPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($playerDivisionMatchPK['min'])) {
+                $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $playerDivisionMatchPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($playerDivisionMatchPK['max'])) {
+                $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $playerDivisionMatchPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -304,7 +304,7 @@ abstract class PlayerdivisionmatchesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $playerDivisionMatchPK, $comparison);
     }
 
     /**
@@ -690,7 +690,7 @@ abstract class PlayerdivisionmatchesQuery extends ModelCriteria
     public function prune($playerdivisionmatches = null)
     {
         if ($playerdivisionmatches) {
-            $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $playerdivisionmatches->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(PlayerdivisionmatchesTableMap::COL_PRIMARYKEY, $playerdivisionmatches->getPlayerDivisionMatchPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

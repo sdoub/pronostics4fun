@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildMatchesQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildMatchesQuery orderByMatchPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildMatchesQuery orderByGroupkey($order = Criteria::ASC) Order by the GroupKey column
  * @method     ChildMatchesQuery orderByTeamhomekey($order = Criteria::ASC) Order by the TeamHomeKey column
  * @method     ChildMatchesQuery orderByTeamawaykey($order = Criteria::ASC) Order by the TeamAwayKey column
@@ -28,7 +28,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatchesQuery orderByStatus($order = Criteria::ASC) Order by the Status column
  * @method     ChildMatchesQuery orderByExternalkey($order = Criteria::ASC) Order by the ExternalKey column
  *
- * @method     ChildMatchesQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildMatchesQuery groupByMatchPK() Group by the PrimaryKey column
  * @method     ChildMatchesQuery groupByGroupkey() Group by the GroupKey column
  * @method     ChildMatchesQuery groupByTeamhomekey() Group by the TeamHomeKey column
  * @method     ChildMatchesQuery groupByTeamawaykey() Group by the TeamAwayKey column
@@ -44,7 +44,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatches findOne(ConnectionInterface $con = null) Return the first ChildMatches matching the query
  * @method     ChildMatches findOneOrCreate(ConnectionInterface $con = null) Return the first ChildMatches matching the query, or a new ChildMatches object populated from the query conditions when no match is found
  *
- * @method     ChildMatches findOneByPrimarykey(int $PrimaryKey) Return the first ChildMatches filtered by the PrimaryKey column
+ * @method     ChildMatches findOneByMatchPK(int $PrimaryKey) Return the first ChildMatches filtered by the PrimaryKey column
  * @method     ChildMatches findOneByGroupkey(int $GroupKey) Return the first ChildMatches filtered by the GroupKey column
  * @method     ChildMatches findOneByTeamhomekey(int $TeamHomeKey) Return the first ChildMatches filtered by the TeamHomeKey column
  * @method     ChildMatches findOneByTeamawaykey(int $TeamAwayKey) Return the first ChildMatches filtered by the TeamAwayKey column
@@ -56,7 +56,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatches requirePk($key, ConnectionInterface $con = null) Return the ChildMatches by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatches requireOne(ConnectionInterface $con = null) Return the first ChildMatches matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildMatches requireOneByPrimarykey(int $PrimaryKey) Return the first ChildMatches filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMatches requireOneByMatchPK(int $PrimaryKey) Return the first ChildMatches filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatches requireOneByGroupkey(int $GroupKey) Return the first ChildMatches filtered by the GroupKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatches requireOneByTeamhomekey(int $TeamHomeKey) Return the first ChildMatches filtered by the TeamHomeKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatches requireOneByTeamawaykey(int $TeamAwayKey) Return the first ChildMatches filtered by the TeamAwayKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -66,7 +66,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatches requireOneByExternalkey(int $ExternalKey) Return the first ChildMatches filtered by the ExternalKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildMatches[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildMatches objects based on current ModelCriteria
- * @method     ChildMatches[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildMatches objects filtered by the PrimaryKey column
+ * @method     ChildMatches[]|ObjectCollection findByMatchPK(int $PrimaryKey) Return ChildMatches objects filtered by the PrimaryKey column
  * @method     ChildMatches[]|ObjectCollection findByGroupkey(int $GroupKey) Return ChildMatches objects filtered by the GroupKey column
  * @method     ChildMatches[]|ObjectCollection findByTeamhomekey(int $TeamHomeKey) Return ChildMatches objects filtered by the TeamHomeKey column
  * @method     ChildMatches[]|ObjectCollection findByTeamawaykey(int $TeamAwayKey) Return ChildMatches objects filtered by the TeamAwayKey column
@@ -261,12 +261,12 @@ abstract class MatchesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByMatchPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByMatchPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByMatchPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $matchPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -274,16 +274,16 @@ abstract class MatchesQuery extends ModelCriteria
      *
      * @return $this|ChildMatchesQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByMatchPK($matchPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($matchPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($matchPK['min'])) {
+                $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $matchPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($matchPK['max'])) {
+                $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $matchPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -294,7 +294,7 @@ abstract class MatchesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $matchPK, $comparison);
     }
 
     /**
@@ -582,7 +582,7 @@ abstract class MatchesQuery extends ModelCriteria
     public function prune($matches = null)
     {
         if ($matches) {
-            $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $matches->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(MatchesTableMap::COL_PRIMARYKEY, $matches->getMatchPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

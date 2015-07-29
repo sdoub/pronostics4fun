@@ -334,7 +334,7 @@ abstract class Results implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getResultPK()
     {
         return $this->primarykey;
     }
@@ -395,7 +395,7 @@ abstract class Results implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Results The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setResultPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -407,7 +407,7 @@ abstract class Results implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setResultPK()
 
     /**
      * Set the value of [matchkey] column.
@@ -525,7 +525,7 @@ abstract class Results implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ResultsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ResultsTableMap::translateFieldName('ResultPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ResultsTableMap::translateFieldName('Matchkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -801,7 +801,7 @@ abstract class Results implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setResultPK($pk);
 
         $this->setNew(false);
     }
@@ -851,7 +851,7 @@ abstract class Results implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getResultPK();
                 break;
             case 1:
                 return $this->getMatchkey();
@@ -894,7 +894,7 @@ abstract class Results implements ActiveRecordInterface
         $alreadyDumpedObjects['Results'][$this->hashCode()] = true;
         $keys = ResultsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getResultPK(),
             $keys[1] => $this->getMatchkey(),
             $keys[2] => $this->getLivestatus(),
             $keys[3] => $this->getActualtime(),
@@ -947,7 +947,7 @@ abstract class Results implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setResultPK($value);
                 break;
             case 1:
                 $this->setMatchkey($value);
@@ -988,7 +988,7 @@ abstract class Results implements ActiveRecordInterface
         $keys = ResultsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setResultPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setMatchkey($arr[$keys[1]]);
@@ -1088,7 +1088,7 @@ abstract class Results implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getResultPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1108,7 +1108,7 @@ abstract class Results implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getResultPK();
     }
 
     /**
@@ -1119,7 +1119,7 @@ abstract class Results implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setResultPK($key);
     }
 
     /**
@@ -1128,7 +1128,7 @@ abstract class Results implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getResultPK();
     }
 
     /**
@@ -1150,7 +1150,7 @@ abstract class Results implements ActiveRecordInterface
         $copyObj->setResultdate($this->getResultdate());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setResultPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

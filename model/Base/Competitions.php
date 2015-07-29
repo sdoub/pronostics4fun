@@ -301,7 +301,7 @@ abstract class Competitions implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getCompetitionPK()
     {
         return $this->primarykey;
     }
@@ -322,7 +322,7 @@ abstract class Competitions implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Competitions The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setCompetitionPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -334,7 +334,7 @@ abstract class Competitions implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setCompetitionPK()
 
     /**
      * Set the value of [name] column.
@@ -392,7 +392,7 @@ abstract class Competitions implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CompetitionsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CompetitionsTableMap::translateFieldName('CompetitionPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CompetitionsTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
@@ -638,7 +638,7 @@ abstract class Competitions implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setCompetitionPK($pk);
 
         $this->setNew(false);
     }
@@ -688,7 +688,7 @@ abstract class Competitions implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getCompetitionPK();
                 break;
             case 1:
                 return $this->getName();
@@ -722,7 +722,7 @@ abstract class Competitions implements ActiveRecordInterface
         $alreadyDumpedObjects['Competitions'][$this->hashCode()] = true;
         $keys = CompetitionsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getCompetitionPK(),
             $keys[1] => $this->getName(),
         );
         $virtualColumns = $this->virtualColumns;
@@ -764,7 +764,7 @@ abstract class Competitions implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setCompetitionPK($value);
                 break;
             case 1:
                 $this->setName($value);
@@ -796,7 +796,7 @@ abstract class Competitions implements ActiveRecordInterface
         $keys = CompetitionsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setCompetitionPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setName($arr[$keys[1]]);
@@ -878,7 +878,7 @@ abstract class Competitions implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getCompetitionPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -898,7 +898,7 @@ abstract class Competitions implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getCompetitionPK();
     }
 
     /**
@@ -909,7 +909,7 @@ abstract class Competitions implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setCompetitionPK($key);
     }
 
     /**
@@ -918,7 +918,7 @@ abstract class Competitions implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getCompetitionPK();
     }
 
     /**
@@ -937,7 +937,7 @@ abstract class Competitions implements ActiveRecordInterface
         $copyObj->setName($this->getName());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setCompetitionPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

@@ -327,7 +327,7 @@ abstract class Divisions implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getDivisionPK()
     {
         return $this->primarykey;
     }
@@ -368,7 +368,7 @@ abstract class Divisions implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Divisions The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setDivisionPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -380,7 +380,7 @@ abstract class Divisions implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setDivisionPK()
 
     /**
      * Set the value of [description] column.
@@ -482,7 +482,7 @@ abstract class Divisions implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : DivisionsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : DivisionsTableMap::translateFieldName('DivisionPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : DivisionsTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
@@ -746,7 +746,7 @@ abstract class Divisions implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setDivisionPK($pk);
 
         $this->setNew(false);
     }
@@ -796,7 +796,7 @@ abstract class Divisions implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getDivisionPK();
                 break;
             case 1:
                 return $this->getDescription();
@@ -836,7 +836,7 @@ abstract class Divisions implements ActiveRecordInterface
         $alreadyDumpedObjects['Divisions'][$this->hashCode()] = true;
         $keys = DivisionsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getDivisionPK(),
             $keys[1] => $this->getDescription(),
             $keys[2] => $this->getCode(),
             $keys[3] => $this->getOrder(),
@@ -880,7 +880,7 @@ abstract class Divisions implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setDivisionPK($value);
                 break;
             case 1:
                 $this->setDescription($value);
@@ -918,7 +918,7 @@ abstract class Divisions implements ActiveRecordInterface
         $keys = DivisionsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setDivisionPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setDescription($arr[$keys[1]]);
@@ -1012,7 +1012,7 @@ abstract class Divisions implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getDivisionPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1032,7 +1032,7 @@ abstract class Divisions implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getDivisionPK();
     }
 
     /**
@@ -1043,7 +1043,7 @@ abstract class Divisions implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setDivisionPK($key);
     }
 
     /**
@@ -1052,7 +1052,7 @@ abstract class Divisions implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getDivisionPK();
     }
 
     /**
@@ -1073,7 +1073,7 @@ abstract class Divisions implements ActiveRecordInterface
         $copyObj->setOrder($this->getOrder());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setDivisionPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

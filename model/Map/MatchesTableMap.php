@@ -123,8 +123,8 @@ class MatchesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Groupkey', 'Teamhomekey', 'Teamawaykey', 'Scheduledate', 'Isbonusmatch', 'Status', 'Externalkey', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'groupkey', 'teamhomekey', 'teamawaykey', 'scheduledate', 'isbonusmatch', 'status', 'externalkey', ),
+        self::TYPE_PHPNAME       => array('MatchPK', 'Groupkey', 'Teamhomekey', 'Teamawaykey', 'Scheduledate', 'Isbonusmatch', 'Status', 'Externalkey', ),
+        self::TYPE_CAMELNAME     => array('matchPK', 'groupkey', 'teamhomekey', 'teamawaykey', 'scheduledate', 'isbonusmatch', 'status', 'externalkey', ),
         self::TYPE_COLNAME       => array(MatchesTableMap::COL_PRIMARYKEY, MatchesTableMap::COL_GROUPKEY, MatchesTableMap::COL_TEAMHOMEKEY, MatchesTableMap::COL_TEAMAWAYKEY, MatchesTableMap::COL_SCHEDULEDATE, MatchesTableMap::COL_ISBONUSMATCH, MatchesTableMap::COL_STATUS, MatchesTableMap::COL_EXTERNALKEY, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'GroupKey', 'TeamHomeKey', 'TeamAwayKey', 'ScheduleDate', 'IsBonusMatch', 'Status', 'ExternalKey', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
@@ -137,8 +137,8 @@ class MatchesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Groupkey' => 1, 'Teamhomekey' => 2, 'Teamawaykey' => 3, 'Scheduledate' => 4, 'Isbonusmatch' => 5, 'Status' => 6, 'Externalkey' => 7, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'groupkey' => 1, 'teamhomekey' => 2, 'teamawaykey' => 3, 'scheduledate' => 4, 'isbonusmatch' => 5, 'status' => 6, 'externalkey' => 7, ),
+        self::TYPE_PHPNAME       => array('MatchPK' => 0, 'Groupkey' => 1, 'Teamhomekey' => 2, 'Teamawaykey' => 3, 'Scheduledate' => 4, 'Isbonusmatch' => 5, 'Status' => 6, 'Externalkey' => 7, ),
+        self::TYPE_CAMELNAME     => array('matchPK' => 0, 'groupkey' => 1, 'teamhomekey' => 2, 'teamawaykey' => 3, 'scheduledate' => 4, 'isbonusmatch' => 5, 'status' => 6, 'externalkey' => 7, ),
         self::TYPE_COLNAME       => array(MatchesTableMap::COL_PRIMARYKEY => 0, MatchesTableMap::COL_GROUPKEY => 1, MatchesTableMap::COL_TEAMHOMEKEY => 2, MatchesTableMap::COL_TEAMAWAYKEY => 3, MatchesTableMap::COL_SCHEDULEDATE => 4, MatchesTableMap::COL_ISBONUSMATCH => 5, MatchesTableMap::COL_STATUS => 6, MatchesTableMap::COL_EXTERNALKEY => 7, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'GroupKey' => 1, 'TeamHomeKey' => 2, 'TeamAwayKey' => 3, 'ScheduleDate' => 4, 'IsBonusMatch' => 5, 'Status' => 6, 'ExternalKey' => 7, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
@@ -161,7 +161,7 @@ class MatchesTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'MatchPK', 'INTEGER', true, null, null);
         $this->addColumn('GroupKey', 'Groupkey', 'INTEGER', true, null, null);
         $this->addColumn('TeamHomeKey', 'Teamhomekey', 'INTEGER', true, null, null);
         $this->addColumn('TeamAwayKey', 'Teamawaykey', 'INTEGER', true, null, null);
@@ -194,11 +194,11 @@ class MatchesTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('MatchPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('MatchPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -218,7 +218,7 @@ class MatchesTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('MatchPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

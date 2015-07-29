@@ -108,8 +108,8 @@ class VotesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Matchkey', 'Playerkey', 'Value', 'Votedate', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'matchkey', 'playerkey', 'value', 'votedate', ),
+        self::TYPE_PHPNAME       => array('VotePK', 'Matchkey', 'Playerkey', 'Value', 'Votedate', ),
+        self::TYPE_CAMELNAME     => array('votePK', 'matchkey', 'playerkey', 'value', 'votedate', ),
         self::TYPE_COLNAME       => array(VotesTableMap::COL_PRIMARYKEY, VotesTableMap::COL_MATCHKEY, VotesTableMap::COL_PLAYERKEY, VotesTableMap::COL_VALUE, VotesTableMap::COL_VOTEDATE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'MatchKey', 'PlayerKey', 'Value', 'VoteDate', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -122,8 +122,8 @@ class VotesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Matchkey' => 1, 'Playerkey' => 2, 'Value' => 3, 'Votedate' => 4, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'matchkey' => 1, 'playerkey' => 2, 'value' => 3, 'votedate' => 4, ),
+        self::TYPE_PHPNAME       => array('VotePK' => 0, 'Matchkey' => 1, 'Playerkey' => 2, 'Value' => 3, 'Votedate' => 4, ),
+        self::TYPE_CAMELNAME     => array('votePK' => 0, 'matchkey' => 1, 'playerkey' => 2, 'value' => 3, 'votedate' => 4, ),
         self::TYPE_COLNAME       => array(VotesTableMap::COL_PRIMARYKEY => 0, VotesTableMap::COL_MATCHKEY => 1, VotesTableMap::COL_PLAYERKEY => 2, VotesTableMap::COL_VALUE => 3, VotesTableMap::COL_VOTEDATE => 4, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'MatchKey' => 1, 'PlayerKey' => 2, 'Value' => 3, 'VoteDate' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -146,7 +146,7 @@ class VotesTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'VotePK', 'INTEGER', true, null, null);
         $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
         $this->addColumn('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
         $this->addColumn('Value', 'Value', 'BOOLEAN', true, 1, null);
@@ -176,11 +176,11 @@ class VotesTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('VotePK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('VotePK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -200,7 +200,7 @@ class VotesTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('VotePK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

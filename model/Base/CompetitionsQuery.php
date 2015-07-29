@@ -19,10 +19,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildCompetitionsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildCompetitionsQuery orderByCompetitionPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildCompetitionsQuery orderByName($order = Criteria::ASC) Order by the Name column
  *
- * @method     ChildCompetitionsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildCompetitionsQuery groupByCompetitionPK() Group by the PrimaryKey column
  * @method     ChildCompetitionsQuery groupByName() Group by the Name column
  *
  * @method     ChildCompetitionsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -32,17 +32,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCompetitions findOne(ConnectionInterface $con = null) Return the first ChildCompetitions matching the query
  * @method     ChildCompetitions findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCompetitions matching the query, or a new ChildCompetitions object populated from the query conditions when no match is found
  *
- * @method     ChildCompetitions findOneByPrimarykey(int $PrimaryKey) Return the first ChildCompetitions filtered by the PrimaryKey column
+ * @method     ChildCompetitions findOneByCompetitionPK(int $PrimaryKey) Return the first ChildCompetitions filtered by the PrimaryKey column
  * @method     ChildCompetitions findOneByName(string $Name) Return the first ChildCompetitions filtered by the Name column *
 
  * @method     ChildCompetitions requirePk($key, ConnectionInterface $con = null) Return the ChildCompetitions by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCompetitions requireOne(ConnectionInterface $con = null) Return the first ChildCompetitions matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildCompetitions requireOneByPrimarykey(int $PrimaryKey) Return the first ChildCompetitions filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCompetitions requireOneByCompetitionPK(int $PrimaryKey) Return the first ChildCompetitions filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCompetitions requireOneByName(string $Name) Return the first ChildCompetitions filtered by the Name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCompetitions[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCompetitions objects based on current ModelCriteria
- * @method     ChildCompetitions[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildCompetitions objects filtered by the PrimaryKey column
+ * @method     ChildCompetitions[]|ObjectCollection findByCompetitionPK(int $PrimaryKey) Return ChildCompetitions objects filtered by the PrimaryKey column
  * @method     ChildCompetitions[]|ObjectCollection findByName(string $Name) Return ChildCompetitions objects filtered by the Name column
  * @method     ChildCompetitions[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -231,12 +231,12 @@ abstract class CompetitionsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByCompetitionPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByCompetitionPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByCompetitionPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $competitionPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -244,16 +244,16 @@ abstract class CompetitionsQuery extends ModelCriteria
      *
      * @return $this|ChildCompetitionsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByCompetitionPK($competitionPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($competitionPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($competitionPK['min'])) {
+                $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $competitionPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($competitionPK['max'])) {
+                $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $competitionPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -264,7 +264,7 @@ abstract class CompetitionsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $competitionPK, $comparison);
     }
 
     /**
@@ -306,7 +306,7 @@ abstract class CompetitionsQuery extends ModelCriteria
     public function prune($competitions = null)
     {
         if ($competitions) {
-            $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $competitions->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $competitions->getCompetitionPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

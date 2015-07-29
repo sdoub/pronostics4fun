@@ -19,13 +19,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildVotesQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildVotesQuery orderByVotePK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildVotesQuery orderByMatchkey($order = Criteria::ASC) Order by the MatchKey column
  * @method     ChildVotesQuery orderByPlayerkey($order = Criteria::ASC) Order by the PlayerKey column
  * @method     ChildVotesQuery orderByValue($order = Criteria::ASC) Order by the Value column
  * @method     ChildVotesQuery orderByVotedate($order = Criteria::ASC) Order by the VoteDate column
  *
- * @method     ChildVotesQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildVotesQuery groupByVotePK() Group by the PrimaryKey column
  * @method     ChildVotesQuery groupByMatchkey() Group by the MatchKey column
  * @method     ChildVotesQuery groupByPlayerkey() Group by the PlayerKey column
  * @method     ChildVotesQuery groupByValue() Group by the Value column
@@ -38,7 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVotes findOne(ConnectionInterface $con = null) Return the first ChildVotes matching the query
  * @method     ChildVotes findOneOrCreate(ConnectionInterface $con = null) Return the first ChildVotes matching the query, or a new ChildVotes object populated from the query conditions when no match is found
  *
- * @method     ChildVotes findOneByPrimarykey(int $PrimaryKey) Return the first ChildVotes filtered by the PrimaryKey column
+ * @method     ChildVotes findOneByVotePK(int $PrimaryKey) Return the first ChildVotes filtered by the PrimaryKey column
  * @method     ChildVotes findOneByMatchkey(int $MatchKey) Return the first ChildVotes filtered by the MatchKey column
  * @method     ChildVotes findOneByPlayerkey(int $PlayerKey) Return the first ChildVotes filtered by the PlayerKey column
  * @method     ChildVotes findOneByValue(boolean $Value) Return the first ChildVotes filtered by the Value column
@@ -47,14 +47,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVotes requirePk($key, ConnectionInterface $con = null) Return the ChildVotes by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVotes requireOne(ConnectionInterface $con = null) Return the first ChildVotes matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildVotes requireOneByPrimarykey(int $PrimaryKey) Return the first ChildVotes filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVotes requireOneByVotePK(int $PrimaryKey) Return the first ChildVotes filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVotes requireOneByMatchkey(int $MatchKey) Return the first ChildVotes filtered by the MatchKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVotes requireOneByPlayerkey(int $PlayerKey) Return the first ChildVotes filtered by the PlayerKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVotes requireOneByValue(boolean $Value) Return the first ChildVotes filtered by the Value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVotes requireOneByVotedate(string $VoteDate) Return the first ChildVotes filtered by the VoteDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildVotes[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildVotes objects based on current ModelCriteria
- * @method     ChildVotes[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildVotes objects filtered by the PrimaryKey column
+ * @method     ChildVotes[]|ObjectCollection findByVotePK(int $PrimaryKey) Return ChildVotes objects filtered by the PrimaryKey column
  * @method     ChildVotes[]|ObjectCollection findByMatchkey(int $MatchKey) Return ChildVotes objects filtered by the MatchKey column
  * @method     ChildVotes[]|ObjectCollection findByPlayerkey(int $PlayerKey) Return ChildVotes objects filtered by the PlayerKey column
  * @method     ChildVotes[]|ObjectCollection findByValue(boolean $Value) Return ChildVotes objects filtered by the Value column
@@ -246,12 +246,12 @@ abstract class VotesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByVotePK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByVotePK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByVotePK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $votePK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -259,16 +259,16 @@ abstract class VotesQuery extends ModelCriteria
      *
      * @return $this|ChildVotesQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByVotePK($votePK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($votePK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($votePK['min'])) {
+                $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $votePK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($votePK['max'])) {
+                $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $votePK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -279,7 +279,7 @@ abstract class VotesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $votePK, $comparison);
     }
 
     /**
@@ -444,7 +444,7 @@ abstract class VotesQuery extends ModelCriteria
     public function prune($votes = null)
     {
         if ($votes) {
-            $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $votes->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(VotesTableMap::COL_PRIMARYKEY, $votes->getVotePK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

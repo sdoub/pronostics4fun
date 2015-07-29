@@ -336,7 +336,7 @@ abstract class News implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getNewsPK()
     {
         return $this->primarykey;
     }
@@ -407,7 +407,7 @@ abstract class News implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\News The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setNewsPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -419,7 +419,7 @@ abstract class News implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setNewsPK()
 
     /**
      * Set the value of [competitionkey] column.
@@ -549,7 +549,7 @@ abstract class News implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : NewsTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : NewsTableMap::translateFieldName('NewsPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : NewsTableMap::translateFieldName('Competitionkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -825,7 +825,7 @@ abstract class News implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setNewsPK($pk);
 
         $this->setNew(false);
     }
@@ -875,7 +875,7 @@ abstract class News implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getNewsPK();
                 break;
             case 1:
                 return $this->getCompetitionkey();
@@ -918,7 +918,7 @@ abstract class News implements ActiveRecordInterface
         $alreadyDumpedObjects['News'][$this->hashCode()] = true;
         $keys = NewsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getNewsPK(),
             $keys[1] => $this->getCompetitionkey(),
             $keys[2] => $this->getInformation(),
             $keys[3] => $this->getInfodate(),
@@ -971,7 +971,7 @@ abstract class News implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setNewsPK($value);
                 break;
             case 1:
                 $this->setCompetitionkey($value);
@@ -1012,7 +1012,7 @@ abstract class News implements ActiveRecordInterface
         $keys = NewsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setNewsPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setCompetitionkey($arr[$keys[1]]);
@@ -1112,7 +1112,7 @@ abstract class News implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getNewsPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1132,7 +1132,7 @@ abstract class News implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getNewsPK();
     }
 
     /**
@@ -1143,7 +1143,7 @@ abstract class News implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setNewsPK($key);
     }
 
     /**
@@ -1152,7 +1152,7 @@ abstract class News implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getNewsPK();
     }
 
     /**
@@ -1174,7 +1174,7 @@ abstract class News implements ActiveRecordInterface
         $copyObj->setInfotype($this->getInfotype());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setNewsPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

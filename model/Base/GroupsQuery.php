@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildGroupsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildGroupsQuery orderByGroupPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildGroupsQuery orderByDescription($order = Criteria::ASC) Order by the Description column
  * @method     ChildGroupsQuery orderByCode($order = Criteria::ASC) Order by the Code column
  * @method     ChildGroupsQuery orderByCompetitionkey($order = Criteria::ASC) Order by the CompetitionKey column
@@ -29,7 +29,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroupsQuery orderByIscompleted($order = Criteria::ASC) Order by the IsCompleted column
  * @method     ChildGroupsQuery orderByDaykey($order = Criteria::ASC) Order by the DayKey column
  *
- * @method     ChildGroupsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildGroupsQuery groupByGroupPK() Group by the PrimaryKey column
  * @method     ChildGroupsQuery groupByDescription() Group by the Description column
  * @method     ChildGroupsQuery groupByCode() Group by the Code column
  * @method     ChildGroupsQuery groupByCompetitionkey() Group by the CompetitionKey column
@@ -46,7 +46,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroups findOne(ConnectionInterface $con = null) Return the first ChildGroups matching the query
  * @method     ChildGroups findOneOrCreate(ConnectionInterface $con = null) Return the first ChildGroups matching the query, or a new ChildGroups object populated from the query conditions when no match is found
  *
- * @method     ChildGroups findOneByPrimarykey(int $PrimaryKey) Return the first ChildGroups filtered by the PrimaryKey column
+ * @method     ChildGroups findOneByGroupPK(int $PrimaryKey) Return the first ChildGroups filtered by the PrimaryKey column
  * @method     ChildGroups findOneByDescription(string $Description) Return the first ChildGroups filtered by the Description column
  * @method     ChildGroups findOneByCode(string $Code) Return the first ChildGroups filtered by the Code column
  * @method     ChildGroups findOneByCompetitionkey(int $CompetitionKey) Return the first ChildGroups filtered by the CompetitionKey column
@@ -59,7 +59,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroups requirePk($key, ConnectionInterface $con = null) Return the ChildGroups by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOne(ConnectionInterface $con = null) Return the first ChildGroups matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildGroups requireOneByPrimarykey(int $PrimaryKey) Return the first ChildGroups filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildGroups requireOneByGroupPK(int $PrimaryKey) Return the first ChildGroups filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOneByDescription(string $Description) Return the first ChildGroups filtered by the Description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOneByCode(string $Code) Return the first ChildGroups filtered by the Code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildGroups requireOneByCompetitionkey(int $CompetitionKey) Return the first ChildGroups filtered by the CompetitionKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -70,7 +70,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildGroups requireOneByDaykey(int $DayKey) Return the first ChildGroups filtered by the DayKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildGroups[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildGroups objects based on current ModelCriteria
- * @method     ChildGroups[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildGroups objects filtered by the PrimaryKey column
+ * @method     ChildGroups[]|ObjectCollection findByGroupPK(int $PrimaryKey) Return ChildGroups objects filtered by the PrimaryKey column
  * @method     ChildGroups[]|ObjectCollection findByDescription(string $Description) Return ChildGroups objects filtered by the Description column
  * @method     ChildGroups[]|ObjectCollection findByCode(string $Code) Return ChildGroups objects filtered by the Code column
  * @method     ChildGroups[]|ObjectCollection findByCompetitionkey(int $CompetitionKey) Return ChildGroups objects filtered by the CompetitionKey column
@@ -266,12 +266,12 @@ abstract class GroupsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByGroupPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByGroupPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByGroupPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $groupPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -279,16 +279,16 @@ abstract class GroupsQuery extends ModelCriteria
      *
      * @return $this|ChildGroupsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByGroupPK($groupPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($groupPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($groupPK['min'])) {
+                $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $groupPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($groupPK['max'])) {
+                $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $groupPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -299,7 +299,7 @@ abstract class GroupsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $groupPK, $comparison);
     }
 
     /**
@@ -592,7 +592,7 @@ abstract class GroupsQuery extends ModelCriteria
     public function prune($groups = null)
     {
         if ($groups) {
-            $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $groups->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(GroupsTableMap::COL_PRIMARYKEY, $groups->getGroupPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

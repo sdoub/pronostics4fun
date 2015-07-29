@@ -11,7 +11,7 @@
     </vendor>
   </table>
   <table name="competitions" idMethod="native" phpName="Competitions">
-    <column name="PrimaryKey" phpName="CompetitionPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Name" phpName="Name" type="VARCHAR" size="30" required="true"/>
     <unique name="Name">
       <unique-column name="Name"/>
@@ -41,7 +41,7 @@
     </vendor>
   </table>
   <table name="cuprounds" idMethod="native" phpName="Cuprounds">
-    <column name="PrimaryKey" phpName="CupRoundPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Description" phpName="Description" type="VARCHAR" size="50" required="true"/>
     <column name="Code" phpName="Code" type="VARCHAR" size="5" required="true"/>
     <column name="NextRoundKey" phpName="Nextroundkey" type="INTEGER"/>
@@ -51,7 +51,7 @@
     </vendor>
   </table>
   <table name="divisions" idMethod="native" phpName="Divisions">
-    <column name="PrimaryKey" phpName="DivisionPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Description" phpName="Description" type="VARCHAR" size="50" required="true"/>
     <column name="Code" phpName="Code" type="VARCHAR" size="3" required="true"/>
     <column name="Order" phpName="Order" type="TINYINT" size="2" required="true" defaultValue="1"/>
@@ -60,7 +60,7 @@
     </vendor>
   </table>
   <table name="events" idMethod="native" phpName="Events">
-    <column name="PrimaryKey" phpName="EventPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="ResultKey" phpName="Resultkey" type="INTEGER" required="true"/>
     <column name="TeamPlayerKey" phpName="Teamplayerkey" type="INTEGER" required="true"/>
     <column name="EventTime" phpName="Eventtime" type="INTEGER" required="true"/>
@@ -88,7 +88,7 @@
     </vendor>
   </table>
   <table name="forecasts" idMethod="native" phpName="Forecasts">
-    <column name="PrimaryKey" phpName="ForecastPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
     <column name="TeamHomeScore" phpName="Teamhomescore" type="INTEGER" required="true"/>
@@ -109,7 +109,7 @@
     </vendor>
   </table>
   <table name="groups" idMethod="native" phpName="Groups">
-    <column name="PrimaryKey" phpName="GroupPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Description" phpName="Description" type="VARCHAR" size="30" required="true"/>
     <column name="Code" phpName="Code" type="VARCHAR" size="10" required="true"/>
     <column name="CompetitionKey" phpName="Competitionkey" type="INTEGER" required="true"/>
@@ -145,7 +145,7 @@
     </vendor>
   </table>
   <table name="matches" idMethod="native" phpName="Matches">
-    <column name="PrimaryKey" phpName="MatchPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="GroupKey" phpName="Groupkey" type="INTEGER" required="true"/>
     <column name="TeamHomeKey" phpName="Teamhomekey" type="INTEGER" required="true"/>
     <column name="TeamAwayKey" phpName="Teamawaykey" type="INTEGER" required="true"/>
@@ -169,7 +169,7 @@
     </vendor>
   </table>
   <table name="matchstates" idMethod="native" phpName="Matchstates">
-    <column name="PrimaryKey" phpName="MatchStatePK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
     <column name="StateDate" phpName="Statedate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <column name="EventKey" phpName="Eventkey" type="INTEGER" required="true"/>
@@ -184,7 +184,7 @@
     </vendor>
   </table>
   <table name="news" idMethod="native" phpName="News">
-    <column name="PrimaryKey" phpName="NewsPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="CompetitionKey" phpName="Competitionkey" type="INTEGER" required="true"/>
     <column name="Information" phpName="Information" type="VARCHAR" size="4000" required="true"/>
     <column name="InfoDate" phpName="Infodate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
@@ -194,7 +194,7 @@
     </vendor>
   </table>
   <table name="playercupmatches" idMethod="native" phpName="Playercupmatches">
-    <column name="PrimaryKey" phpName="PlayerCupMatchPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="PlayerHomeKey" phpName="Playerhomekey" type="INTEGER" required="true"/>
     <column name="PlayerAwayKey" phpName="Playerawaykey" type="INTEGER" required="true"/>
     <column name="CupRoundKey" phpName="Cuproundkey" type="INTEGER" required="true"/>
@@ -209,7 +209,7 @@
     </vendor>
   </table>
   <table name="playerdivisionmatches" idMethod="native" phpName="Playerdivisionmatches">
-    <column name="PrimaryKey" phpName="PlayerDivisionMatchPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="PlayerHomeKey" phpName="Playerhomekey" type="INTEGER" required="true"/>
     <column name="PlayerAwayKey" phpName="Playerawaykey" type="INTEGER" required="true"/>
     <column name="SeasonKey" phpName="Seasonkey" type="INTEGER" required="true"/>
@@ -320,7 +320,7 @@
     </vendor>
   </table>
   <table name="players" idMethod="native" phpName="Players">
-    <column name="PrimaryKey" phpName="PlayerPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="NickName" phpName="Nickname" type="VARCHAR" size="20" required="true"/>
     <column name="FirstName" phpName="Firstname" type="VARCHAR" size="50" required="true"/>
     <column name="LastName" phpName="Lastname" type="VARCHAR" size="50" required="true"/>
@@ -339,7 +339,6 @@
     <column name="ReceiveResult" phpName="Receiveresult" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
     <column name="IsReminderEmailSent" phpName="Isreminderemailsent" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <column name="IsResultEmailSent" phpName="Isresultemailsent" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
-    <column name="IsEmailValid" phpName="Isemailvalid" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <index name="Token">
       <index-column name="Token"/>
     </index>
@@ -354,7 +353,7 @@
     </vendor>
   </table>
   <table name="results" idMethod="native" phpName="Results">
-    <column name="PrimaryKey" phpName="ResultPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
     <column name="LiveStatus" phpName="Livestatus" type="INTEGER" required="true"/>
     <column name="ActualTime" phpName="Actualtime" type="INTEGER" required="true"/>
@@ -367,7 +366,7 @@
     </vendor>
   </table>
   <table name="seasons" idMethod="native" phpName="Seasons">
-    <column name="PrimaryKey" phpName="SeasonPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Description" phpName="Description" type="VARCHAR" size="50" required="true"/>
     <column name="Code" phpName="Code" type="VARCHAR" size="3" required="true"/>
     <column name="Order" phpName="Order" type="TINYINT" size="2" required="true"/>
@@ -377,7 +376,7 @@
     </vendor>
   </table>
   <table name="surveys" idMethod="native" phpName="Surveys">
-    <column name="PrimaryKey" phpName="SurveyPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Question" phpName="Question" type="VARCHAR" size="2000" required="true"/>
     <column name="Answer1" phpName="Answer1" type="VARCHAR" size="200" required="true"/>
     <column name="Answer2" phpName="Answer2" type="VARCHAR" size="200" required="true"/>
@@ -395,7 +394,7 @@
     </vendor>
   </table>
   <table name="teamplayers" idMethod="native" phpName="Teamplayers">
-    <column name="PrimaryKey" phpName="TeamPlayerPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="FullName" phpName="Fullname" type="VARCHAR" size="255" required="true"/>
     <unique name="FullName">
       <unique-column name="FullName"/>
@@ -405,7 +404,7 @@
     </vendor>
   </table>
   <table name="teams" idMethod="native" phpName="Teams">
-    <column name="PrimaryKey" phpName="TeamPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Name" phpName="Name" type="VARCHAR" size="30" required="true"/>
     <column name="Code" phpName="Code" type="VARCHAR" size="10" required="true"/>
     <unique name="Name">
@@ -419,7 +418,7 @@
     </vendor>
   </table>
   <table name="votes" idMethod="native" phpName="Votes">
-    <column name="PrimaryKey" phpName="VotePK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="PrimaryKey" phpName="Primarykey" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="MatchKey" phpName="Matchkey" type="INTEGER" required="true"/>
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
     <column name="Value" phpName="Value" type="BOOLEAN" size="1" required="true"/>

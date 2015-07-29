@@ -128,8 +128,8 @@ class GroupsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Description', 'Code', 'Competitionkey', 'Begindate', 'Enddate', 'Status', 'Iscompleted', 'Daykey', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'description', 'code', 'competitionkey', 'begindate', 'enddate', 'status', 'iscompleted', 'daykey', ),
+        self::TYPE_PHPNAME       => array('GroupPK', 'Description', 'Code', 'Competitionkey', 'Begindate', 'Enddate', 'Status', 'Iscompleted', 'Daykey', ),
+        self::TYPE_CAMELNAME     => array('groupPK', 'description', 'code', 'competitionkey', 'begindate', 'enddate', 'status', 'iscompleted', 'daykey', ),
         self::TYPE_COLNAME       => array(GroupsTableMap::COL_PRIMARYKEY, GroupsTableMap::COL_DESCRIPTION, GroupsTableMap::COL_CODE, GroupsTableMap::COL_COMPETITIONKEY, GroupsTableMap::COL_BEGINDATE, GroupsTableMap::COL_ENDDATE, GroupsTableMap::COL_STATUS, GroupsTableMap::COL_ISCOMPLETED, GroupsTableMap::COL_DAYKEY, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'Description', 'Code', 'CompetitionKey', 'BeginDate', 'EndDate', 'Status', 'IsCompleted', 'DayKey', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
@@ -142,8 +142,8 @@ class GroupsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Description' => 1, 'Code' => 2, 'Competitionkey' => 3, 'Begindate' => 4, 'Enddate' => 5, 'Status' => 6, 'Iscompleted' => 7, 'Daykey' => 8, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'description' => 1, 'code' => 2, 'competitionkey' => 3, 'begindate' => 4, 'enddate' => 5, 'status' => 6, 'iscompleted' => 7, 'daykey' => 8, ),
+        self::TYPE_PHPNAME       => array('GroupPK' => 0, 'Description' => 1, 'Code' => 2, 'Competitionkey' => 3, 'Begindate' => 4, 'Enddate' => 5, 'Status' => 6, 'Iscompleted' => 7, 'Daykey' => 8, ),
+        self::TYPE_CAMELNAME     => array('groupPK' => 0, 'description' => 1, 'code' => 2, 'competitionkey' => 3, 'begindate' => 4, 'enddate' => 5, 'status' => 6, 'iscompleted' => 7, 'daykey' => 8, ),
         self::TYPE_COLNAME       => array(GroupsTableMap::COL_PRIMARYKEY => 0, GroupsTableMap::COL_DESCRIPTION => 1, GroupsTableMap::COL_CODE => 2, GroupsTableMap::COL_COMPETITIONKEY => 3, GroupsTableMap::COL_BEGINDATE => 4, GroupsTableMap::COL_ENDDATE => 5, GroupsTableMap::COL_STATUS => 6, GroupsTableMap::COL_ISCOMPLETED => 7, GroupsTableMap::COL_DAYKEY => 8, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'Description' => 1, 'Code' => 2, 'CompetitionKey' => 3, 'BeginDate' => 4, 'EndDate' => 5, 'Status' => 6, 'IsCompleted' => 7, 'DayKey' => 8, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
@@ -166,7 +166,7 @@ class GroupsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'GroupPK', 'INTEGER', true, null, null);
         $this->addColumn('Description', 'Description', 'VARCHAR', true, 30, null);
         $this->addColumn('Code', 'Code', 'VARCHAR', true, 10, null);
         $this->addColumn('CompetitionKey', 'Competitionkey', 'INTEGER', true, null, null);
@@ -200,11 +200,11 @@ class GroupsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('GroupPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('GroupPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -224,7 +224,7 @@ class GroupsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('GroupPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

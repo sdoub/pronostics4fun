@@ -184,6 +184,13 @@ abstract class Players implements ActiveRecordInterface
     protected $isresultemailsent;
 
     /**
+     * The value for the isemailvalid field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $isemailvalid;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -207,6 +214,7 @@ abstract class Players implements ActiveRecordInterface
         $this->receiveresult = true;
         $this->isreminderemailsent = false;
         $this->isresultemailsent = false;
+        $this->isemailvalid = false;
     }
 
     /**
@@ -433,7 +441,7 @@ abstract class Players implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getPlayerPK()
     {
         return $this->primarykey;
     }
@@ -719,12 +727,32 @@ abstract class Players implements ActiveRecordInterface
     }
 
     /**
+     * Get the [isemailvalid] column value.
+     *
+     * @return boolean
+     */
+    public function getIsemailvalid()
+    {
+        return $this->isemailvalid;
+    }
+
+    /**
+     * Get the [isemailvalid] column value.
+     *
+     * @return boolean
+     */
+    public function isIsemailvalid()
+    {
+        return $this->getIsemailvalid();
+    }
+
+    /**
      * Set the value of [primarykey] column.
      *
      * @param int $v new value
      * @return $this|\Players The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setPlayerPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -736,7 +764,7 @@ abstract class Players implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setPlayerPK()
 
     /**
      * Set the value of [nickname] column.
@@ -1163,6 +1191,34 @@ abstract class Players implements ActiveRecordInterface
     } // setIsresultemailsent()
 
     /**
+     * Sets the value of the [isemailvalid] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\Players The current object (for fluent API support)
+     */
+    public function setIsemailvalid($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->isemailvalid !== $v) {
+            $this->isemailvalid = $v;
+            $this->modifiedColumns[PlayersTableMap::COL_ISEMAILVALID] = true;
+        }
+
+        return $this;
+    } // setIsemailvalid()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -1204,6 +1260,10 @@ abstract class Players implements ActiveRecordInterface
                 return false;
             }
 
+            if ($this->isemailvalid !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -1230,7 +1290,7 @@ abstract class Players implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PlayersTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PlayersTableMap::translateFieldName('PlayerPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PlayersTableMap::translateFieldName('Nickname', TableMap::TYPE_PHPNAME, $indexType)];
@@ -1292,6 +1352,9 @@ abstract class Players implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 18 + $startcol : PlayersTableMap::translateFieldName('Isresultemailsent', TableMap::TYPE_PHPNAME, $indexType)];
             $this->isresultemailsent = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 19 + $startcol : PlayersTableMap::translateFieldName('Isemailvalid', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->isemailvalid = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1300,7 +1363,7 @@ abstract class Players implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 19; // 19 = PlayersTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 20; // 20 = PlayersTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Players'), 0, $e);
@@ -1554,6 +1617,9 @@ abstract class Players implements ActiveRecordInterface
         if ($this->isColumnModified(PlayersTableMap::COL_ISRESULTEMAILSENT)) {
             $modifiedColumns[':p' . $index++]  = 'IsResultEmailSent';
         }
+        if ($this->isColumnModified(PlayersTableMap::COL_ISEMAILVALID)) {
+            $modifiedColumns[':p' . $index++]  = 'IsEmailValid';
+        }
 
         $sql = sprintf(
             'INSERT INTO players (%s) VALUES (%s)',
@@ -1622,6 +1688,9 @@ abstract class Players implements ActiveRecordInterface
                     case 'IsResultEmailSent':
                         $stmt->bindValue($identifier, (int) $this->isresultemailsent, PDO::PARAM_INT);
                         break;
+                    case 'IsEmailValid':
+                        $stmt->bindValue($identifier, (int) $this->isemailvalid, PDO::PARAM_INT);
+                        break;
                 }
             }
             $stmt->execute();
@@ -1635,7 +1704,7 @@ abstract class Players implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setPlayerPK($pk);
 
         $this->setNew(false);
     }
@@ -1685,7 +1754,7 @@ abstract class Players implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getPlayerPK();
                 break;
             case 1:
                 return $this->getNickname();
@@ -1741,6 +1810,9 @@ abstract class Players implements ActiveRecordInterface
             case 18:
                 return $this->getIsresultemailsent();
                 break;
+            case 19:
+                return $this->getIsemailvalid();
+                break;
             default:
                 return null;
                 break;
@@ -1770,7 +1842,7 @@ abstract class Players implements ActiveRecordInterface
         $alreadyDumpedObjects['Players'][$this->hashCode()] = true;
         $keys = PlayersTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getPlayerPK(),
             $keys[1] => $this->getNickname(),
             $keys[2] => $this->getFirstname(),
             $keys[3] => $this->getLastname(),
@@ -1789,6 +1861,7 @@ abstract class Players implements ActiveRecordInterface
             $keys[16] => $this->getReceiveresult(),
             $keys[17] => $this->getIsreminderemailsent(),
             $keys[18] => $this->getIsresultemailsent(),
+            $keys[19] => $this->getIsemailvalid(),
         );
 
         $utc = new \DateTimeZone('utc');
@@ -1843,7 +1916,7 @@ abstract class Players implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setPlayerPK($value);
                 break;
             case 1:
                 $this->setNickname($value);
@@ -1899,6 +1972,9 @@ abstract class Players implements ActiveRecordInterface
             case 18:
                 $this->setIsresultemailsent($value);
                 break;
+            case 19:
+                $this->setIsemailvalid($value);
+                break;
         } // switch()
 
         return $this;
@@ -1926,7 +2002,7 @@ abstract class Players implements ActiveRecordInterface
         $keys = PlayersTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setPlayerPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setNickname($arr[$keys[1]]);
@@ -1981,6 +2057,9 @@ abstract class Players implements ActiveRecordInterface
         }
         if (array_key_exists($keys[18], $arr)) {
             $this->setIsresultemailsent($arr[$keys[18]]);
+        }
+        if (array_key_exists($keys[19], $arr)) {
+            $this->setIsemailvalid($arr[$keys[19]]);
         }
     }
 
@@ -2080,6 +2159,9 @@ abstract class Players implements ActiveRecordInterface
         if ($this->isColumnModified(PlayersTableMap::COL_ISRESULTEMAILSENT)) {
             $criteria->add(PlayersTableMap::COL_ISRESULTEMAILSENT, $this->isresultemailsent);
         }
+        if ($this->isColumnModified(PlayersTableMap::COL_ISEMAILVALID)) {
+            $criteria->add(PlayersTableMap::COL_ISEMAILVALID, $this->isemailvalid);
+        }
 
         return $criteria;
     }
@@ -2110,7 +2192,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getPlayerPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -2130,7 +2212,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getPlayerPK();
     }
 
     /**
@@ -2141,7 +2223,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setPlayerPK($key);
     }
 
     /**
@@ -2150,7 +2232,7 @@ abstract class Players implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getPlayerPK();
     }
 
     /**
@@ -2184,9 +2266,10 @@ abstract class Players implements ActiveRecordInterface
         $copyObj->setReceiveresult($this->getReceiveresult());
         $copyObj->setIsreminderemailsent($this->getIsreminderemailsent());
         $copyObj->setIsresultemailsent($this->getIsresultemailsent());
+        $copyObj->setIsemailvalid($this->getIsemailvalid());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setPlayerPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -2238,6 +2321,7 @@ abstract class Players implements ActiveRecordInterface
         $this->receiveresult = null;
         $this->isreminderemailsent = null;
         $this->isresultemailsent = null;
+        $this->isemailvalid = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

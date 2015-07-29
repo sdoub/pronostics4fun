@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildSurveysQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildSurveysQuery orderBySurveyPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildSurveysQuery orderByQuestion($order = Criteria::ASC) Order by the Question column
  * @method     ChildSurveysQuery orderByAnswer1($order = Criteria::ASC) Order by the Answer1 column
  * @method     ChildSurveysQuery orderByAnswer2($order = Criteria::ASC) Order by the Answer2 column
@@ -33,7 +33,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSurveysQuery orderByStartdate($order = Criteria::ASC) Order by the StartDate column
  * @method     ChildSurveysQuery orderByEnddate($order = Criteria::ASC) Order by the EndDate column
  *
- * @method     ChildSurveysQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildSurveysQuery groupBySurveyPK() Group by the PrimaryKey column
  * @method     ChildSurveysQuery groupByQuestion() Group by the Question column
  * @method     ChildSurveysQuery groupByAnswer1() Group by the Answer1 column
  * @method     ChildSurveysQuery groupByAnswer2() Group by the Answer2 column
@@ -54,7 +54,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSurveys findOne(ConnectionInterface $con = null) Return the first ChildSurveys matching the query
  * @method     ChildSurveys findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSurveys matching the query, or a new ChildSurveys object populated from the query conditions when no match is found
  *
- * @method     ChildSurveys findOneByPrimarykey(int $PrimaryKey) Return the first ChildSurveys filtered by the PrimaryKey column
+ * @method     ChildSurveys findOneBySurveyPK(int $PrimaryKey) Return the first ChildSurveys filtered by the PrimaryKey column
  * @method     ChildSurveys findOneByQuestion(string $Question) Return the first ChildSurveys filtered by the Question column
  * @method     ChildSurveys findOneByAnswer1(string $Answer1) Return the first ChildSurveys filtered by the Answer1 column
  * @method     ChildSurveys findOneByAnswer2(string $Answer2) Return the first ChildSurveys filtered by the Answer2 column
@@ -71,7 +71,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSurveys requirePk($key, ConnectionInterface $con = null) Return the ChildSurveys by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSurveys requireOne(ConnectionInterface $con = null) Return the first ChildSurveys matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildSurveys requireOneByPrimarykey(int $PrimaryKey) Return the first ChildSurveys filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSurveys requireOneBySurveyPK(int $PrimaryKey) Return the first ChildSurveys filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSurveys requireOneByQuestion(string $Question) Return the first ChildSurveys filtered by the Question column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSurveys requireOneByAnswer1(string $Answer1) Return the first ChildSurveys filtered by the Answer1 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSurveys requireOneByAnswer2(string $Answer2) Return the first ChildSurveys filtered by the Answer2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -86,7 +86,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSurveys requireOneByEnddate(string $EndDate) Return the first ChildSurveys filtered by the EndDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSurveys[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSurveys objects based on current ModelCriteria
- * @method     ChildSurveys[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildSurveys objects filtered by the PrimaryKey column
+ * @method     ChildSurveys[]|ObjectCollection findBySurveyPK(int $PrimaryKey) Return ChildSurveys objects filtered by the PrimaryKey column
  * @method     ChildSurveys[]|ObjectCollection findByQuestion(string $Question) Return ChildSurveys objects filtered by the Question column
  * @method     ChildSurveys[]|ObjectCollection findByAnswer1(string $Answer1) Return ChildSurveys objects filtered by the Answer1 column
  * @method     ChildSurveys[]|ObjectCollection findByAnswer2(string $Answer2) Return ChildSurveys objects filtered by the Answer2 column
@@ -286,12 +286,12 @@ abstract class SurveysQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterBySurveyPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterBySurveyPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterBySurveyPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $surveyPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -299,16 +299,16 @@ abstract class SurveysQuery extends ModelCriteria
      *
      * @return $this|ChildSurveysQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterBySurveyPK($surveyPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($surveyPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($surveyPK['min'])) {
+                $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $surveyPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($surveyPK['max'])) {
+                $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $surveyPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -319,7 +319,7 @@ abstract class SurveysQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $surveyPK, $comparison);
     }
 
     /**
@@ -756,7 +756,7 @@ abstract class SurveysQuery extends ModelCriteria
     public function prune($surveys = null)
     {
         if ($surveys) {
-            $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $surveys->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(SurveysTableMap::COL_PRIMARYKEY, $surveys->getSurveyPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

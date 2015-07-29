@@ -113,8 +113,8 @@ class MatchstatesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Matchkey', 'Statedate', 'Eventkey', 'Teamhomescore', 'Teamawayscore', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'matchkey', 'statedate', 'eventkey', 'teamhomescore', 'teamawayscore', ),
+        self::TYPE_PHPNAME       => array('MatchStatePK', 'Matchkey', 'Statedate', 'Eventkey', 'Teamhomescore', 'Teamawayscore', ),
+        self::TYPE_CAMELNAME     => array('matchStatePK', 'matchkey', 'statedate', 'eventkey', 'teamhomescore', 'teamawayscore', ),
         self::TYPE_COLNAME       => array(MatchstatesTableMap::COL_PRIMARYKEY, MatchstatesTableMap::COL_MATCHKEY, MatchstatesTableMap::COL_STATEDATE, MatchstatesTableMap::COL_EVENTKEY, MatchstatesTableMap::COL_TEAMHOMESCORE, MatchstatesTableMap::COL_TEAMAWAYSCORE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'MatchKey', 'StateDate', 'EventKey', 'TeamHomeScore', 'TeamAwayScore', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
@@ -127,8 +127,8 @@ class MatchstatesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Matchkey' => 1, 'Statedate' => 2, 'Eventkey' => 3, 'Teamhomescore' => 4, 'Teamawayscore' => 5, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'matchkey' => 1, 'statedate' => 2, 'eventkey' => 3, 'teamhomescore' => 4, 'teamawayscore' => 5, ),
+        self::TYPE_PHPNAME       => array('MatchStatePK' => 0, 'Matchkey' => 1, 'Statedate' => 2, 'Eventkey' => 3, 'Teamhomescore' => 4, 'Teamawayscore' => 5, ),
+        self::TYPE_CAMELNAME     => array('matchStatePK' => 0, 'matchkey' => 1, 'statedate' => 2, 'eventkey' => 3, 'teamhomescore' => 4, 'teamawayscore' => 5, ),
         self::TYPE_COLNAME       => array(MatchstatesTableMap::COL_PRIMARYKEY => 0, MatchstatesTableMap::COL_MATCHKEY => 1, MatchstatesTableMap::COL_STATEDATE => 2, MatchstatesTableMap::COL_EVENTKEY => 3, MatchstatesTableMap::COL_TEAMHOMESCORE => 4, MatchstatesTableMap::COL_TEAMAWAYSCORE => 5, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'MatchKey' => 1, 'StateDate' => 2, 'EventKey' => 3, 'TeamHomeScore' => 4, 'TeamAwayScore' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
@@ -151,7 +151,7 @@ class MatchstatesTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'MatchStatePK', 'INTEGER', true, null, null);
         $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
         $this->addColumn('StateDate', 'Statedate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('EventKey', 'Eventkey', 'INTEGER', true, null, null);
@@ -182,11 +182,11 @@ class MatchstatesTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('MatchStatePK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('MatchStatePK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -206,7 +206,7 @@ class MatchstatesTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('MatchStatePK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

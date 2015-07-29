@@ -148,8 +148,8 @@ class SurveysTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Question', 'Answer1', 'Answer2', 'Answer3', 'Answer4', 'Score1', 'Score2', 'Score3', 'Score4', 'Participants', 'Startdate', 'Enddate', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'question', 'answer1', 'answer2', 'answer3', 'answer4', 'score1', 'score2', 'score3', 'score4', 'participants', 'startdate', 'enddate', ),
+        self::TYPE_PHPNAME       => array('SurveyPK', 'Question', 'Answer1', 'Answer2', 'Answer3', 'Answer4', 'Score1', 'Score2', 'Score3', 'Score4', 'Participants', 'Startdate', 'Enddate', ),
+        self::TYPE_CAMELNAME     => array('surveyPK', 'question', 'answer1', 'answer2', 'answer3', 'answer4', 'score1', 'score2', 'score3', 'score4', 'participants', 'startdate', 'enddate', ),
         self::TYPE_COLNAME       => array(SurveysTableMap::COL_PRIMARYKEY, SurveysTableMap::COL_QUESTION, SurveysTableMap::COL_ANSWER1, SurveysTableMap::COL_ANSWER2, SurveysTableMap::COL_ANSWER3, SurveysTableMap::COL_ANSWER4, SurveysTableMap::COL_SCORE1, SurveysTableMap::COL_SCORE2, SurveysTableMap::COL_SCORE3, SurveysTableMap::COL_SCORE4, SurveysTableMap::COL_PARTICIPANTS, SurveysTableMap::COL_STARTDATE, SurveysTableMap::COL_ENDDATE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'Question', 'Answer1', 'Answer2', 'Answer3', 'Answer4', 'Score1', 'Score2', 'Score3', 'Score4', 'Participants', 'StartDate', 'EndDate', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
@@ -162,8 +162,8 @@ class SurveysTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Question' => 1, 'Answer1' => 2, 'Answer2' => 3, 'Answer3' => 4, 'Answer4' => 5, 'Score1' => 6, 'Score2' => 7, 'Score3' => 8, 'Score4' => 9, 'Participants' => 10, 'Startdate' => 11, 'Enddate' => 12, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'question' => 1, 'answer1' => 2, 'answer2' => 3, 'answer3' => 4, 'answer4' => 5, 'score1' => 6, 'score2' => 7, 'score3' => 8, 'score4' => 9, 'participants' => 10, 'startdate' => 11, 'enddate' => 12, ),
+        self::TYPE_PHPNAME       => array('SurveyPK' => 0, 'Question' => 1, 'Answer1' => 2, 'Answer2' => 3, 'Answer3' => 4, 'Answer4' => 5, 'Score1' => 6, 'Score2' => 7, 'Score3' => 8, 'Score4' => 9, 'Participants' => 10, 'Startdate' => 11, 'Enddate' => 12, ),
+        self::TYPE_CAMELNAME     => array('surveyPK' => 0, 'question' => 1, 'answer1' => 2, 'answer2' => 3, 'answer3' => 4, 'answer4' => 5, 'score1' => 6, 'score2' => 7, 'score3' => 8, 'score4' => 9, 'participants' => 10, 'startdate' => 11, 'enddate' => 12, ),
         self::TYPE_COLNAME       => array(SurveysTableMap::COL_PRIMARYKEY => 0, SurveysTableMap::COL_QUESTION => 1, SurveysTableMap::COL_ANSWER1 => 2, SurveysTableMap::COL_ANSWER2 => 3, SurveysTableMap::COL_ANSWER3 => 4, SurveysTableMap::COL_ANSWER4 => 5, SurveysTableMap::COL_SCORE1 => 6, SurveysTableMap::COL_SCORE2 => 7, SurveysTableMap::COL_SCORE3 => 8, SurveysTableMap::COL_SCORE4 => 9, SurveysTableMap::COL_PARTICIPANTS => 10, SurveysTableMap::COL_STARTDATE => 11, SurveysTableMap::COL_ENDDATE => 12, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'Question' => 1, 'Answer1' => 2, 'Answer2' => 3, 'Answer3' => 4, 'Answer4' => 5, 'Score1' => 6, 'Score2' => 7, 'Score3' => 8, 'Score4' => 9, 'Participants' => 10, 'StartDate' => 11, 'EndDate' => 12, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
@@ -186,7 +186,7 @@ class SurveysTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'SurveyPK', 'INTEGER', true, null, null);
         $this->addColumn('Question', 'Question', 'VARCHAR', true, 2000, null);
         $this->addColumn('Answer1', 'Answer1', 'VARCHAR', true, 200, null);
         $this->addColumn('Answer2', 'Answer2', 'VARCHAR', true, 200, null);
@@ -224,11 +224,11 @@ class SurveysTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('SurveyPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('SurveyPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -248,7 +248,7 @@ class SurveysTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('SurveyPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

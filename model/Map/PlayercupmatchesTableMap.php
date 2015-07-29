@@ -133,8 +133,8 @@ class PlayercupmatchesTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Playerhomekey', 'Playerawaykey', 'Cuproundkey', 'Seasonkey', 'Groupkey', 'Homescore', 'Awayscore', 'Scheduledate', 'Resultdate', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'playerhomekey', 'playerawaykey', 'cuproundkey', 'seasonkey', 'groupkey', 'homescore', 'awayscore', 'scheduledate', 'resultdate', ),
+        self::TYPE_PHPNAME       => array('PlayerCupMatchPK', 'Playerhomekey', 'Playerawaykey', 'Cuproundkey', 'Seasonkey', 'Groupkey', 'Homescore', 'Awayscore', 'Scheduledate', 'Resultdate', ),
+        self::TYPE_CAMELNAME     => array('playerCupMatchPK', 'playerhomekey', 'playerawaykey', 'cuproundkey', 'seasonkey', 'groupkey', 'homescore', 'awayscore', 'scheduledate', 'resultdate', ),
         self::TYPE_COLNAME       => array(PlayercupmatchesTableMap::COL_PRIMARYKEY, PlayercupmatchesTableMap::COL_PLAYERHOMEKEY, PlayercupmatchesTableMap::COL_PLAYERAWAYKEY, PlayercupmatchesTableMap::COL_CUPROUNDKEY, PlayercupmatchesTableMap::COL_SEASONKEY, PlayercupmatchesTableMap::COL_GROUPKEY, PlayercupmatchesTableMap::COL_HOMESCORE, PlayercupmatchesTableMap::COL_AWAYSCORE, PlayercupmatchesTableMap::COL_SCHEDULEDATE, PlayercupmatchesTableMap::COL_RESULTDATE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'PlayerHomeKey', 'PlayerAwayKey', 'CupRoundKey', 'SeasonKey', 'GroupKey', 'HomeScore', 'AwayScore', 'ScheduleDate', 'ResultDate', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
@@ -147,8 +147,8 @@ class PlayercupmatchesTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Playerhomekey' => 1, 'Playerawaykey' => 2, 'Cuproundkey' => 3, 'Seasonkey' => 4, 'Groupkey' => 5, 'Homescore' => 6, 'Awayscore' => 7, 'Scheduledate' => 8, 'Resultdate' => 9, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'playerhomekey' => 1, 'playerawaykey' => 2, 'cuproundkey' => 3, 'seasonkey' => 4, 'groupkey' => 5, 'homescore' => 6, 'awayscore' => 7, 'scheduledate' => 8, 'resultdate' => 9, ),
+        self::TYPE_PHPNAME       => array('PlayerCupMatchPK' => 0, 'Playerhomekey' => 1, 'Playerawaykey' => 2, 'Cuproundkey' => 3, 'Seasonkey' => 4, 'Groupkey' => 5, 'Homescore' => 6, 'Awayscore' => 7, 'Scheduledate' => 8, 'Resultdate' => 9, ),
+        self::TYPE_CAMELNAME     => array('playerCupMatchPK' => 0, 'playerhomekey' => 1, 'playerawaykey' => 2, 'cuproundkey' => 3, 'seasonkey' => 4, 'groupkey' => 5, 'homescore' => 6, 'awayscore' => 7, 'scheduledate' => 8, 'resultdate' => 9, ),
         self::TYPE_COLNAME       => array(PlayercupmatchesTableMap::COL_PRIMARYKEY => 0, PlayercupmatchesTableMap::COL_PLAYERHOMEKEY => 1, PlayercupmatchesTableMap::COL_PLAYERAWAYKEY => 2, PlayercupmatchesTableMap::COL_CUPROUNDKEY => 3, PlayercupmatchesTableMap::COL_SEASONKEY => 4, PlayercupmatchesTableMap::COL_GROUPKEY => 5, PlayercupmatchesTableMap::COL_HOMESCORE => 6, PlayercupmatchesTableMap::COL_AWAYSCORE => 7, PlayercupmatchesTableMap::COL_SCHEDULEDATE => 8, PlayercupmatchesTableMap::COL_RESULTDATE => 9, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'PlayerHomeKey' => 1, 'PlayerAwayKey' => 2, 'CupRoundKey' => 3, 'SeasonKey' => 4, 'GroupKey' => 5, 'HomeScore' => 6, 'AwayScore' => 7, 'ScheduleDate' => 8, 'ResultDate' => 9, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
@@ -171,7 +171,7 @@ class PlayercupmatchesTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'PlayerCupMatchPK', 'INTEGER', true, null, null);
         $this->addColumn('PlayerHomeKey', 'Playerhomekey', 'INTEGER', true, null, null);
         $this->addColumn('PlayerAwayKey', 'Playerawaykey', 'INTEGER', true, null, null);
         $this->addColumn('CupRoundKey', 'Cuproundkey', 'INTEGER', true, null, null);
@@ -206,11 +206,11 @@ class PlayercupmatchesTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('PlayerCupMatchPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('PlayerCupMatchPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -230,7 +230,7 @@ class PlayercupmatchesTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('PlayerCupMatchPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

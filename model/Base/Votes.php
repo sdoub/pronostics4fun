@@ -334,7 +334,7 @@ abstract class Votes implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getVotePK()
     {
         return $this->primarykey;
     }
@@ -405,7 +405,7 @@ abstract class Votes implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Votes The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setVotePK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -417,7 +417,7 @@ abstract class Votes implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setVotePK()
 
     /**
      * Set the value of [matchkey] column.
@@ -543,7 +543,7 @@ abstract class Votes implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : VotesTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : VotesTableMap::translateFieldName('VotePK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : VotesTableMap::translateFieldName('Matchkey', TableMap::TYPE_PHPNAME, $indexType)];
@@ -819,7 +819,7 @@ abstract class Votes implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setVotePK($pk);
 
         $this->setNew(false);
     }
@@ -869,7 +869,7 @@ abstract class Votes implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getVotePK();
                 break;
             case 1:
                 return $this->getMatchkey();
@@ -912,7 +912,7 @@ abstract class Votes implements ActiveRecordInterface
         $alreadyDumpedObjects['Votes'][$this->hashCode()] = true;
         $keys = VotesTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getVotePK(),
             $keys[1] => $this->getMatchkey(),
             $keys[2] => $this->getPlayerkey(),
             $keys[3] => $this->getValue(),
@@ -965,7 +965,7 @@ abstract class Votes implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setVotePK($value);
                 break;
             case 1:
                 $this->setMatchkey($value);
@@ -1006,7 +1006,7 @@ abstract class Votes implements ActiveRecordInterface
         $keys = VotesTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setVotePK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setMatchkey($arr[$keys[1]]);
@@ -1106,7 +1106,7 @@ abstract class Votes implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getVotePK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1126,7 +1126,7 @@ abstract class Votes implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getVotePK();
     }
 
     /**
@@ -1137,7 +1137,7 @@ abstract class Votes implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setVotePK($key);
     }
 
     /**
@@ -1146,7 +1146,7 @@ abstract class Votes implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getVotePK();
     }
 
     /**
@@ -1168,7 +1168,7 @@ abstract class Votes implements ActiveRecordInterface
         $copyObj->setVotedate($this->getVotedate());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setVotePK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

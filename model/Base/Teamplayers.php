@@ -301,7 +301,7 @@ abstract class Teamplayers implements ActiveRecordInterface
      *
      * @return int
      */
-    public function getPrimarykey()
+    public function getTeamPlayerPK()
     {
         return $this->primarykey;
     }
@@ -322,7 +322,7 @@ abstract class Teamplayers implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Teamplayers The current object (for fluent API support)
      */
-    public function setPrimarykey($v)
+    public function setTeamPlayerPK($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -334,7 +334,7 @@ abstract class Teamplayers implements ActiveRecordInterface
         }
 
         return $this;
-    } // setPrimarykey()
+    } // setTeamPlayerPK()
 
     /**
      * Set the value of [fullname] column.
@@ -392,7 +392,7 @@ abstract class Teamplayers implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : TeamplayersTableMap::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : TeamplayersTableMap::translateFieldName('TeamPlayerPK', TableMap::TYPE_PHPNAME, $indexType)];
             $this->primarykey = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TeamplayersTableMap::translateFieldName('Fullname', TableMap::TYPE_PHPNAME, $indexType)];
@@ -638,7 +638,7 @@ abstract class Teamplayers implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setPrimarykey($pk);
+        $this->setTeamPlayerPK($pk);
 
         $this->setNew(false);
     }
@@ -688,7 +688,7 @@ abstract class Teamplayers implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getPrimarykey();
+                return $this->getTeamPlayerPK();
                 break;
             case 1:
                 return $this->getFullname();
@@ -722,7 +722,7 @@ abstract class Teamplayers implements ActiveRecordInterface
         $alreadyDumpedObjects['Teamplayers'][$this->hashCode()] = true;
         $keys = TeamplayersTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getPrimarykey(),
+            $keys[0] => $this->getTeamPlayerPK(),
             $keys[1] => $this->getFullname(),
         );
         $virtualColumns = $this->virtualColumns;
@@ -764,7 +764,7 @@ abstract class Teamplayers implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setPrimarykey($value);
+                $this->setTeamPlayerPK($value);
                 break;
             case 1:
                 $this->setFullname($value);
@@ -796,7 +796,7 @@ abstract class Teamplayers implements ActiveRecordInterface
         $keys = TeamplayersTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setPrimarykey($arr[$keys[0]]);
+            $this->setTeamPlayerPK($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setFullname($arr[$keys[1]]);
@@ -878,7 +878,7 @@ abstract class Teamplayers implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getPrimarykey();
+        $validPk = null !== $this->getTeamPlayerPK();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -898,7 +898,7 @@ abstract class Teamplayers implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getPrimarykey();
+        return $this->getTeamPlayerPK();
     }
 
     /**
@@ -909,7 +909,7 @@ abstract class Teamplayers implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setPrimarykey($key);
+        $this->setTeamPlayerPK($key);
     }
 
     /**
@@ -918,7 +918,7 @@ abstract class Teamplayers implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getPrimarykey();
+        return null === $this->getTeamPlayerPK();
     }
 
     /**
@@ -937,7 +937,7 @@ abstract class Teamplayers implements ActiveRecordInterface
         $copyObj->setFullname($this->getFullname());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setPrimarykey(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setTeamPlayerPK(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

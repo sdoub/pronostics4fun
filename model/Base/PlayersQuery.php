@@ -19,7 +19,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildPlayersQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildPlayersQuery orderByPlayerPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildPlayersQuery orderByNickname($order = Criteria::ASC) Order by the NickName column
  * @method     ChildPlayersQuery orderByFirstname($order = Criteria::ASC) Order by the FirstName column
  * @method     ChildPlayersQuery orderByLastname($order = Criteria::ASC) Order by the LastName column
@@ -38,8 +38,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery orderByReceiveresult($order = Criteria::ASC) Order by the ReceiveResult column
  * @method     ChildPlayersQuery orderByIsreminderemailsent($order = Criteria::ASC) Order by the IsReminderEmailSent column
  * @method     ChildPlayersQuery orderByIsresultemailsent($order = Criteria::ASC) Order by the IsResultEmailSent column
+ * @method     ChildPlayersQuery orderByIsemailvalid($order = Criteria::ASC) Order by the IsEmailValid column
  *
- * @method     ChildPlayersQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildPlayersQuery groupByPlayerPK() Group by the PrimaryKey column
  * @method     ChildPlayersQuery groupByNickname() Group by the NickName column
  * @method     ChildPlayersQuery groupByFirstname() Group by the FirstName column
  * @method     ChildPlayersQuery groupByLastname() Group by the LastName column
@@ -58,6 +59,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery groupByReceiveresult() Group by the ReceiveResult column
  * @method     ChildPlayersQuery groupByIsreminderemailsent() Group by the IsReminderEmailSent column
  * @method     ChildPlayersQuery groupByIsresultemailsent() Group by the IsResultEmailSent column
+ * @method     ChildPlayersQuery groupByIsemailvalid() Group by the IsEmailValid column
  *
  * @method     ChildPlayersQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPlayersQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -66,7 +68,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayers findOne(ConnectionInterface $con = null) Return the first ChildPlayers matching the query
  * @method     ChildPlayers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayers matching the query, or a new ChildPlayers object populated from the query conditions when no match is found
  *
- * @method     ChildPlayers findOneByPrimarykey(int $PrimaryKey) Return the first ChildPlayers filtered by the PrimaryKey column
+ * @method     ChildPlayers findOneByPlayerPK(int $PrimaryKey) Return the first ChildPlayers filtered by the PrimaryKey column
  * @method     ChildPlayers findOneByNickname(string $NickName) Return the first ChildPlayers filtered by the NickName column
  * @method     ChildPlayers findOneByFirstname(string $FirstName) Return the first ChildPlayers filtered by the FirstName column
  * @method     ChildPlayers findOneByLastname(string $LastName) Return the first ChildPlayers filtered by the LastName column
@@ -84,12 +86,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayers findOneByReceivenewletter(boolean $ReceiveNewletter) Return the first ChildPlayers filtered by the ReceiveNewletter column
  * @method     ChildPlayers findOneByReceiveresult(boolean $ReceiveResult) Return the first ChildPlayers filtered by the ReceiveResult column
  * @method     ChildPlayers findOneByIsreminderemailsent(boolean $IsReminderEmailSent) Return the first ChildPlayers filtered by the IsReminderEmailSent column
- * @method     ChildPlayers findOneByIsresultemailsent(boolean $IsResultEmailSent) Return the first ChildPlayers filtered by the IsResultEmailSent column *
+ * @method     ChildPlayers findOneByIsresultemailsent(boolean $IsResultEmailSent) Return the first ChildPlayers filtered by the IsResultEmailSent column
+ * @method     ChildPlayers findOneByIsemailvalid(boolean $IsEmailValid) Return the first ChildPlayers filtered by the IsEmailValid column *
 
  * @method     ChildPlayers requirePk($key, ConnectionInterface $con = null) Return the ChildPlayers by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOne(ConnectionInterface $con = null) Return the first ChildPlayers matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildPlayers requireOneByPrimarykey(int $PrimaryKey) Return the first ChildPlayers filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPlayers requireOneByPlayerPK(int $PrimaryKey) Return the first ChildPlayers filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOneByNickname(string $NickName) Return the first ChildPlayers filtered by the NickName column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOneByFirstname(string $FirstName) Return the first ChildPlayers filtered by the FirstName column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOneByLastname(string $LastName) Return the first ChildPlayers filtered by the LastName column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -108,9 +111,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayers requireOneByReceiveresult(boolean $ReceiveResult) Return the first ChildPlayers filtered by the ReceiveResult column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOneByIsreminderemailsent(boolean $IsReminderEmailSent) Return the first ChildPlayers filtered by the IsReminderEmailSent column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPlayers requireOneByIsresultemailsent(boolean $IsResultEmailSent) Return the first ChildPlayers filtered by the IsResultEmailSent column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPlayers requireOneByIsemailvalid(boolean $IsEmailValid) Return the first ChildPlayers filtered by the IsEmailValid column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPlayers[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPlayers objects based on current ModelCriteria
- * @method     ChildPlayers[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildPlayers objects filtered by the PrimaryKey column
+ * @method     ChildPlayers[]|ObjectCollection findByPlayerPK(int $PrimaryKey) Return ChildPlayers objects filtered by the PrimaryKey column
  * @method     ChildPlayers[]|ObjectCollection findByNickname(string $NickName) Return ChildPlayers objects filtered by the NickName column
  * @method     ChildPlayers[]|ObjectCollection findByFirstname(string $FirstName) Return ChildPlayers objects filtered by the FirstName column
  * @method     ChildPlayers[]|ObjectCollection findByLastname(string $LastName) Return ChildPlayers objects filtered by the LastName column
@@ -129,6 +133,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayers[]|ObjectCollection findByReceiveresult(boolean $ReceiveResult) Return ChildPlayers objects filtered by the ReceiveResult column
  * @method     ChildPlayers[]|ObjectCollection findByIsreminderemailsent(boolean $IsReminderEmailSent) Return ChildPlayers objects filtered by the IsReminderEmailSent column
  * @method     ChildPlayers[]|ObjectCollection findByIsresultemailsent(boolean $IsResultEmailSent) Return ChildPlayers objects filtered by the IsResultEmailSent column
+ * @method     ChildPlayers[]|ObjectCollection findByIsemailvalid(boolean $IsEmailValid) Return ChildPlayers objects filtered by the IsEmailValid column
  * @method     ChildPlayers[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -221,7 +226,7 @@ abstract class PlayersQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT PrimaryKey, NickName, FirstName, LastName, EmailAddress, Password, IsAdministrator, ActivationKey, IsEnabled, LastConnection, Token, AvatarName, CreationDate, IsCalendarDefaultView, ReceiveAlert, ReceiveNewletter, ReceiveResult, IsReminderEmailSent, IsResultEmailSent FROM players WHERE PrimaryKey = :p0';
+        $sql = 'SELECT PrimaryKey, NickName, FirstName, LastName, EmailAddress, Password, IsAdministrator, ActivationKey, IsEnabled, LastConnection, Token, AvatarName, CreationDate, IsCalendarDefaultView, ReceiveAlert, ReceiveNewletter, ReceiveResult, IsReminderEmailSent, IsResultEmailSent, IsEmailValid FROM players WHERE PrimaryKey = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -316,12 +321,12 @@ abstract class PlayersQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByPlayerPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByPlayerPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByPlayerPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $playerPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -329,16 +334,16 @@ abstract class PlayersQuery extends ModelCriteria
      *
      * @return $this|ChildPlayersQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByPlayerPK($playerPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($playerPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($playerPK['min'])) {
+                $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $playerPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($playerPK['max'])) {
+                $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $playerPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -349,7 +354,7 @@ abstract class PlayersQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $playerPK, $comparison);
     }
 
     /**
@@ -887,6 +892,33 @@ abstract class PlayersQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the IsEmailValid column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIsemailvalid(true); // WHERE IsEmailValid = true
+     * $query->filterByIsemailvalid('yes'); // WHERE IsEmailValid = true
+     * </code>
+     *
+     * @param     boolean|string $isemailvalid The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPlayersQuery The current query, for fluid interface
+     */
+    public function filterByIsemailvalid($isemailvalid = null, $comparison = null)
+    {
+        if (is_string($isemailvalid)) {
+            $isemailvalid = in_array(strtolower($isemailvalid), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(PlayersTableMap::COL_ISEMAILVALID, $isemailvalid, $comparison);
+    }
+
+    /**
      * Exclude object from result
      *
      * @param   ChildPlayers $players Object to remove from the list of results
@@ -896,7 +928,7 @@ abstract class PlayersQuery extends ModelCriteria
     public function prune($players = null)
     {
         if ($players) {
-            $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $players->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $players->getPlayerPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

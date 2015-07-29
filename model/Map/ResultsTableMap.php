@@ -108,8 +108,8 @@ class ResultsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Matchkey', 'Livestatus', 'Actualtime', 'Resultdate', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'matchkey', 'livestatus', 'actualtime', 'resultdate', ),
+        self::TYPE_PHPNAME       => array('ResultPK', 'Matchkey', 'Livestatus', 'Actualtime', 'Resultdate', ),
+        self::TYPE_CAMELNAME     => array('resultPK', 'matchkey', 'livestatus', 'actualtime', 'resultdate', ),
         self::TYPE_COLNAME       => array(ResultsTableMap::COL_PRIMARYKEY, ResultsTableMap::COL_MATCHKEY, ResultsTableMap::COL_LIVESTATUS, ResultsTableMap::COL_ACTUALTIME, ResultsTableMap::COL_RESULTDATE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'MatchKey', 'LiveStatus', 'ActualTime', 'ResultDate', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -122,8 +122,8 @@ class ResultsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Matchkey' => 1, 'Livestatus' => 2, 'Actualtime' => 3, 'Resultdate' => 4, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'matchkey' => 1, 'livestatus' => 2, 'actualtime' => 3, 'resultdate' => 4, ),
+        self::TYPE_PHPNAME       => array('ResultPK' => 0, 'Matchkey' => 1, 'Livestatus' => 2, 'Actualtime' => 3, 'Resultdate' => 4, ),
+        self::TYPE_CAMELNAME     => array('resultPK' => 0, 'matchkey' => 1, 'livestatus' => 2, 'actualtime' => 3, 'resultdate' => 4, ),
         self::TYPE_COLNAME       => array(ResultsTableMap::COL_PRIMARYKEY => 0, ResultsTableMap::COL_MATCHKEY => 1, ResultsTableMap::COL_LIVESTATUS => 2, ResultsTableMap::COL_ACTUALTIME => 3, ResultsTableMap::COL_RESULTDATE => 4, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'MatchKey' => 1, 'LiveStatus' => 2, 'ActualTime' => 3, 'ResultDate' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -146,7 +146,7 @@ class ResultsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'ResultPK', 'INTEGER', true, null, null);
         $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
         $this->addColumn('LiveStatus', 'Livestatus', 'INTEGER', true, null, null);
         $this->addColumn('ActualTime', 'Actualtime', 'INTEGER', true, null, null);
@@ -176,11 +176,11 @@ class ResultsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ResultPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ResultPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -200,7 +200,7 @@ class ResultsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('ResultPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

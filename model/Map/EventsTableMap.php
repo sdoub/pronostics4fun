@@ -118,8 +118,8 @@ class EventsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Resultkey', 'Teamplayerkey', 'Eventtime', 'Eventtype', 'Half', 'Teamkey', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'resultkey', 'teamplayerkey', 'eventtime', 'eventtype', 'half', 'teamkey', ),
+        self::TYPE_PHPNAME       => array('EventPK', 'Resultkey', 'Teamplayerkey', 'Eventtime', 'Eventtype', 'Half', 'Teamkey', ),
+        self::TYPE_CAMELNAME     => array('eventPK', 'resultkey', 'teamplayerkey', 'eventtime', 'eventtype', 'half', 'teamkey', ),
         self::TYPE_COLNAME       => array(EventsTableMap::COL_PRIMARYKEY, EventsTableMap::COL_RESULTKEY, EventsTableMap::COL_TEAMPLAYERKEY, EventsTableMap::COL_EVENTTIME, EventsTableMap::COL_EVENTTYPE, EventsTableMap::COL_HALF, EventsTableMap::COL_TEAMKEY, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'ResultKey', 'TeamPlayerKey', 'EventTime', 'EventType', 'Half', 'TeamKey', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
@@ -132,8 +132,8 @@ class EventsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Resultkey' => 1, 'Teamplayerkey' => 2, 'Eventtime' => 3, 'Eventtype' => 4, 'Half' => 5, 'Teamkey' => 6, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'resultkey' => 1, 'teamplayerkey' => 2, 'eventtime' => 3, 'eventtype' => 4, 'half' => 5, 'teamkey' => 6, ),
+        self::TYPE_PHPNAME       => array('EventPK' => 0, 'Resultkey' => 1, 'Teamplayerkey' => 2, 'Eventtime' => 3, 'Eventtype' => 4, 'Half' => 5, 'Teamkey' => 6, ),
+        self::TYPE_CAMELNAME     => array('eventPK' => 0, 'resultkey' => 1, 'teamplayerkey' => 2, 'eventtime' => 3, 'eventtype' => 4, 'half' => 5, 'teamkey' => 6, ),
         self::TYPE_COLNAME       => array(EventsTableMap::COL_PRIMARYKEY => 0, EventsTableMap::COL_RESULTKEY => 1, EventsTableMap::COL_TEAMPLAYERKEY => 2, EventsTableMap::COL_EVENTTIME => 3, EventsTableMap::COL_EVENTTYPE => 4, EventsTableMap::COL_HALF => 5, EventsTableMap::COL_TEAMKEY => 6, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'ResultKey' => 1, 'TeamPlayerKey' => 2, 'EventTime' => 3, 'EventType' => 4, 'Half' => 5, 'TeamKey' => 6, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
@@ -156,7 +156,7 @@ class EventsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'EventPK', 'INTEGER', true, null, null);
         $this->addColumn('ResultKey', 'Resultkey', 'INTEGER', true, null, null);
         $this->addColumn('TeamPlayerKey', 'Teamplayerkey', 'INTEGER', true, null, null);
         $this->addColumn('EventTime', 'Eventtime', 'INTEGER', true, null, null);
@@ -188,11 +188,11 @@ class EventsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -212,7 +212,7 @@ class EventsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('EventPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

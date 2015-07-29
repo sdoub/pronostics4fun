@@ -108,8 +108,8 @@ class SeasonsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Description', 'Code', 'Order', 'Competitionkey', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'description', 'code', 'order', 'competitionkey', ),
+        self::TYPE_PHPNAME       => array('SeasonPK', 'Description', 'Code', 'Order', 'Competitionkey', ),
+        self::TYPE_CAMELNAME     => array('seasonPK', 'description', 'code', 'order', 'competitionkey', ),
         self::TYPE_COLNAME       => array(SeasonsTableMap::COL_PRIMARYKEY, SeasonsTableMap::COL_DESCRIPTION, SeasonsTableMap::COL_CODE, SeasonsTableMap::COL_ORDER, SeasonsTableMap::COL_COMPETITIONKEY, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'Description', 'Code', 'Order', 'CompetitionKey', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -122,8 +122,8 @@ class SeasonsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Description' => 1, 'Code' => 2, 'Order' => 3, 'Competitionkey' => 4, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'description' => 1, 'code' => 2, 'order' => 3, 'competitionkey' => 4, ),
+        self::TYPE_PHPNAME       => array('SeasonPK' => 0, 'Description' => 1, 'Code' => 2, 'Order' => 3, 'Competitionkey' => 4, ),
+        self::TYPE_CAMELNAME     => array('seasonPK' => 0, 'description' => 1, 'code' => 2, 'order' => 3, 'competitionkey' => 4, ),
         self::TYPE_COLNAME       => array(SeasonsTableMap::COL_PRIMARYKEY => 0, SeasonsTableMap::COL_DESCRIPTION => 1, SeasonsTableMap::COL_CODE => 2, SeasonsTableMap::COL_ORDER => 3, SeasonsTableMap::COL_COMPETITIONKEY => 4, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'Description' => 1, 'Code' => 2, 'Order' => 3, 'CompetitionKey' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
@@ -146,7 +146,7 @@ class SeasonsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'SeasonPK', 'INTEGER', true, null, null);
         $this->addColumn('Description', 'Description', 'VARCHAR', true, 50, null);
         $this->addColumn('Code', 'Code', 'VARCHAR', true, 3, null);
         $this->addColumn('Order', 'Order', 'TINYINT', true, 2, null);
@@ -176,11 +176,11 @@ class SeasonsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('SeasonPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('SeasonPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -200,7 +200,7 @@ class SeasonsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('SeasonPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 

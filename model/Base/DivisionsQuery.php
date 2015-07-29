@@ -19,12 +19,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildDivisionsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildDivisionsQuery orderByDivisionPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildDivisionsQuery orderByDescription($order = Criteria::ASC) Order by the Description column
  * @method     ChildDivisionsQuery orderByCode($order = Criteria::ASC) Order by the Code column
  * @method     ChildDivisionsQuery orderByOrder($order = Criteria::ASC) Order by the Order column
  *
- * @method     ChildDivisionsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildDivisionsQuery groupByDivisionPK() Group by the PrimaryKey column
  * @method     ChildDivisionsQuery groupByDescription() Group by the Description column
  * @method     ChildDivisionsQuery groupByCode() Group by the Code column
  * @method     ChildDivisionsQuery groupByOrder() Group by the Order column
@@ -36,7 +36,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDivisions findOne(ConnectionInterface $con = null) Return the first ChildDivisions matching the query
  * @method     ChildDivisions findOneOrCreate(ConnectionInterface $con = null) Return the first ChildDivisions matching the query, or a new ChildDivisions object populated from the query conditions when no match is found
  *
- * @method     ChildDivisions findOneByPrimarykey(int $PrimaryKey) Return the first ChildDivisions filtered by the PrimaryKey column
+ * @method     ChildDivisions findOneByDivisionPK(int $PrimaryKey) Return the first ChildDivisions filtered by the PrimaryKey column
  * @method     ChildDivisions findOneByDescription(string $Description) Return the first ChildDivisions filtered by the Description column
  * @method     ChildDivisions findOneByCode(string $Code) Return the first ChildDivisions filtered by the Code column
  * @method     ChildDivisions findOneByOrder(int $Order) Return the first ChildDivisions filtered by the Order column *
@@ -44,13 +44,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDivisions requirePk($key, ConnectionInterface $con = null) Return the ChildDivisions by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDivisions requireOne(ConnectionInterface $con = null) Return the first ChildDivisions matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildDivisions requireOneByPrimarykey(int $PrimaryKey) Return the first ChildDivisions filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildDivisions requireOneByDivisionPK(int $PrimaryKey) Return the first ChildDivisions filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDivisions requireOneByDescription(string $Description) Return the first ChildDivisions filtered by the Description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDivisions requireOneByCode(string $Code) Return the first ChildDivisions filtered by the Code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDivisions requireOneByOrder(int $Order) Return the first ChildDivisions filtered by the Order column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildDivisions[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildDivisions objects based on current ModelCriteria
- * @method     ChildDivisions[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildDivisions objects filtered by the PrimaryKey column
+ * @method     ChildDivisions[]|ObjectCollection findByDivisionPK(int $PrimaryKey) Return ChildDivisions objects filtered by the PrimaryKey column
  * @method     ChildDivisions[]|ObjectCollection findByDescription(string $Description) Return ChildDivisions objects filtered by the Description column
  * @method     ChildDivisions[]|ObjectCollection findByCode(string $Code) Return ChildDivisions objects filtered by the Code column
  * @method     ChildDivisions[]|ObjectCollection findByOrder(int $Order) Return ChildDivisions objects filtered by the Order column
@@ -241,12 +241,12 @@ abstract class DivisionsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByDivisionPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByDivisionPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByDivisionPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $divisionPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -254,16 +254,16 @@ abstract class DivisionsQuery extends ModelCriteria
      *
      * @return $this|ChildDivisionsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByDivisionPK($divisionPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($divisionPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($divisionPK['min'])) {
+                $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $divisionPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($divisionPK['max'])) {
+                $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $divisionPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -274,7 +274,7 @@ abstract class DivisionsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $divisionPK, $comparison);
     }
 
     /**
@@ -386,7 +386,7 @@ abstract class DivisionsQuery extends ModelCriteria
     public function prune($divisions = null)
     {
         if ($divisions) {
-            $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $divisions->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $divisions->getDivisionPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

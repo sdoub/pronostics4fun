@@ -19,13 +19,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildSeasonsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildSeasonsQuery orderBySeasonPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildSeasonsQuery orderByDescription($order = Criteria::ASC) Order by the Description column
  * @method     ChildSeasonsQuery orderByCode($order = Criteria::ASC) Order by the Code column
  * @method     ChildSeasonsQuery orderByOrder($order = Criteria::ASC) Order by the Order column
  * @method     ChildSeasonsQuery orderByCompetitionkey($order = Criteria::ASC) Order by the CompetitionKey column
  *
- * @method     ChildSeasonsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildSeasonsQuery groupBySeasonPK() Group by the PrimaryKey column
  * @method     ChildSeasonsQuery groupByDescription() Group by the Description column
  * @method     ChildSeasonsQuery groupByCode() Group by the Code column
  * @method     ChildSeasonsQuery groupByOrder() Group by the Order column
@@ -38,7 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSeasons findOne(ConnectionInterface $con = null) Return the first ChildSeasons matching the query
  * @method     ChildSeasons findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSeasons matching the query, or a new ChildSeasons object populated from the query conditions when no match is found
  *
- * @method     ChildSeasons findOneByPrimarykey(int $PrimaryKey) Return the first ChildSeasons filtered by the PrimaryKey column
+ * @method     ChildSeasons findOneBySeasonPK(int $PrimaryKey) Return the first ChildSeasons filtered by the PrimaryKey column
  * @method     ChildSeasons findOneByDescription(string $Description) Return the first ChildSeasons filtered by the Description column
  * @method     ChildSeasons findOneByCode(string $Code) Return the first ChildSeasons filtered by the Code column
  * @method     ChildSeasons findOneByOrder(int $Order) Return the first ChildSeasons filtered by the Order column
@@ -47,14 +47,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSeasons requirePk($key, ConnectionInterface $con = null) Return the ChildSeasons by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSeasons requireOne(ConnectionInterface $con = null) Return the first ChildSeasons matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildSeasons requireOneByPrimarykey(int $PrimaryKey) Return the first ChildSeasons filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSeasons requireOneBySeasonPK(int $PrimaryKey) Return the first ChildSeasons filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSeasons requireOneByDescription(string $Description) Return the first ChildSeasons filtered by the Description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSeasons requireOneByCode(string $Code) Return the first ChildSeasons filtered by the Code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSeasons requireOneByOrder(int $Order) Return the first ChildSeasons filtered by the Order column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSeasons requireOneByCompetitionkey(int $CompetitionKey) Return the first ChildSeasons filtered by the CompetitionKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSeasons[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSeasons objects based on current ModelCriteria
- * @method     ChildSeasons[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildSeasons objects filtered by the PrimaryKey column
+ * @method     ChildSeasons[]|ObjectCollection findBySeasonPK(int $PrimaryKey) Return ChildSeasons objects filtered by the PrimaryKey column
  * @method     ChildSeasons[]|ObjectCollection findByDescription(string $Description) Return ChildSeasons objects filtered by the Description column
  * @method     ChildSeasons[]|ObjectCollection findByCode(string $Code) Return ChildSeasons objects filtered by the Code column
  * @method     ChildSeasons[]|ObjectCollection findByOrder(int $Order) Return ChildSeasons objects filtered by the Order column
@@ -246,12 +246,12 @@ abstract class SeasonsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterBySeasonPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterBySeasonPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterBySeasonPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $seasonPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -259,16 +259,16 @@ abstract class SeasonsQuery extends ModelCriteria
      *
      * @return $this|ChildSeasonsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterBySeasonPK($seasonPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($seasonPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($seasonPK['min'])) {
+                $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $seasonPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($seasonPK['max'])) {
+                $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $seasonPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -279,7 +279,7 @@ abstract class SeasonsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $seasonPK, $comparison);
     }
 
     /**
@@ -432,7 +432,7 @@ abstract class SeasonsQuery extends ModelCriteria
     public function prune($seasons = null)
     {
         if ($seasons) {
-            $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $seasons->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(SeasonsTableMap::COL_PRIMARYKEY, $seasons->getSeasonPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

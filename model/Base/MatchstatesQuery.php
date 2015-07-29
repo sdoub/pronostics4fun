@@ -19,14 +19,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildMatchstatesQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildMatchstatesQuery orderByMatchStatePK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildMatchstatesQuery orderByMatchkey($order = Criteria::ASC) Order by the MatchKey column
  * @method     ChildMatchstatesQuery orderByStatedate($order = Criteria::ASC) Order by the StateDate column
  * @method     ChildMatchstatesQuery orderByEventkey($order = Criteria::ASC) Order by the EventKey column
  * @method     ChildMatchstatesQuery orderByTeamhomescore($order = Criteria::ASC) Order by the TeamHomeScore column
  * @method     ChildMatchstatesQuery orderByTeamawayscore($order = Criteria::ASC) Order by the TeamAwayScore column
  *
- * @method     ChildMatchstatesQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildMatchstatesQuery groupByMatchStatePK() Group by the PrimaryKey column
  * @method     ChildMatchstatesQuery groupByMatchkey() Group by the MatchKey column
  * @method     ChildMatchstatesQuery groupByStatedate() Group by the StateDate column
  * @method     ChildMatchstatesQuery groupByEventkey() Group by the EventKey column
@@ -40,7 +40,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatchstates findOne(ConnectionInterface $con = null) Return the first ChildMatchstates matching the query
  * @method     ChildMatchstates findOneOrCreate(ConnectionInterface $con = null) Return the first ChildMatchstates matching the query, or a new ChildMatchstates object populated from the query conditions when no match is found
  *
- * @method     ChildMatchstates findOneByPrimarykey(int $PrimaryKey) Return the first ChildMatchstates filtered by the PrimaryKey column
+ * @method     ChildMatchstates findOneByMatchStatePK(int $PrimaryKey) Return the first ChildMatchstates filtered by the PrimaryKey column
  * @method     ChildMatchstates findOneByMatchkey(int $MatchKey) Return the first ChildMatchstates filtered by the MatchKey column
  * @method     ChildMatchstates findOneByStatedate(string $StateDate) Return the first ChildMatchstates filtered by the StateDate column
  * @method     ChildMatchstates findOneByEventkey(int $EventKey) Return the first ChildMatchstates filtered by the EventKey column
@@ -50,7 +50,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatchstates requirePk($key, ConnectionInterface $con = null) Return the ChildMatchstates by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatchstates requireOne(ConnectionInterface $con = null) Return the first ChildMatchstates matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildMatchstates requireOneByPrimarykey(int $PrimaryKey) Return the first ChildMatchstates filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildMatchstates requireOneByMatchStatePK(int $PrimaryKey) Return the first ChildMatchstates filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatchstates requireOneByMatchkey(int $MatchKey) Return the first ChildMatchstates filtered by the MatchKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatchstates requireOneByStatedate(string $StateDate) Return the first ChildMatchstates filtered by the StateDate column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildMatchstates requireOneByEventkey(int $EventKey) Return the first ChildMatchstates filtered by the EventKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -58,7 +58,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildMatchstates requireOneByTeamawayscore(int $TeamAwayScore) Return the first ChildMatchstates filtered by the TeamAwayScore column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildMatchstates[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildMatchstates objects based on current ModelCriteria
- * @method     ChildMatchstates[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildMatchstates objects filtered by the PrimaryKey column
+ * @method     ChildMatchstates[]|ObjectCollection findByMatchStatePK(int $PrimaryKey) Return ChildMatchstates objects filtered by the PrimaryKey column
  * @method     ChildMatchstates[]|ObjectCollection findByMatchkey(int $MatchKey) Return ChildMatchstates objects filtered by the MatchKey column
  * @method     ChildMatchstates[]|ObjectCollection findByStatedate(string $StateDate) Return ChildMatchstates objects filtered by the StateDate column
  * @method     ChildMatchstates[]|ObjectCollection findByEventkey(int $EventKey) Return ChildMatchstates objects filtered by the EventKey column
@@ -251,12 +251,12 @@ abstract class MatchstatesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByMatchStatePK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByMatchStatePK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByMatchStatePK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $matchStatePK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -264,16 +264,16 @@ abstract class MatchstatesQuery extends ModelCriteria
      *
      * @return $this|ChildMatchstatesQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByMatchStatePK($matchStatePK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($matchStatePK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($matchStatePK['min'])) {
+                $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $matchStatePK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($matchStatePK['max'])) {
+                $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $matchStatePK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -284,7 +284,7 @@ abstract class MatchstatesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $matchStatePK, $comparison);
     }
 
     /**
@@ -504,7 +504,7 @@ abstract class MatchstatesQuery extends ModelCriteria
     public function prune($matchstates = null)
     {
         if ($matchstates) {
-            $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $matchstates->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(MatchstatesTableMap::COL_PRIMARYKEY, $matchstates->getMatchStatePK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

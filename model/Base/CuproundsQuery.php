@@ -19,13 +19,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildCuproundsQuery orderByPrimarykey($order = Criteria::ASC) Order by the PrimaryKey column
+ * @method     ChildCuproundsQuery orderByCupRoundPK($order = Criteria::ASC) Order by the PrimaryKey column
  * @method     ChildCuproundsQuery orderByDescription($order = Criteria::ASC) Order by the Description column
  * @method     ChildCuproundsQuery orderByCode($order = Criteria::ASC) Order by the Code column
  * @method     ChildCuproundsQuery orderByNextroundkey($order = Criteria::ASC) Order by the NextRoundKey column
  * @method     ChildCuproundsQuery orderByPreviousroundkey($order = Criteria::ASC) Order by the PreviousRoundKey column
  *
- * @method     ChildCuproundsQuery groupByPrimarykey() Group by the PrimaryKey column
+ * @method     ChildCuproundsQuery groupByCupRoundPK() Group by the PrimaryKey column
  * @method     ChildCuproundsQuery groupByDescription() Group by the Description column
  * @method     ChildCuproundsQuery groupByCode() Group by the Code column
  * @method     ChildCuproundsQuery groupByNextroundkey() Group by the NextRoundKey column
@@ -38,7 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCuprounds findOne(ConnectionInterface $con = null) Return the first ChildCuprounds matching the query
  * @method     ChildCuprounds findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCuprounds matching the query, or a new ChildCuprounds object populated from the query conditions when no match is found
  *
- * @method     ChildCuprounds findOneByPrimarykey(int $PrimaryKey) Return the first ChildCuprounds filtered by the PrimaryKey column
+ * @method     ChildCuprounds findOneByCupRoundPK(int $PrimaryKey) Return the first ChildCuprounds filtered by the PrimaryKey column
  * @method     ChildCuprounds findOneByDescription(string $Description) Return the first ChildCuprounds filtered by the Description column
  * @method     ChildCuprounds findOneByCode(string $Code) Return the first ChildCuprounds filtered by the Code column
  * @method     ChildCuprounds findOneByNextroundkey(int $NextRoundKey) Return the first ChildCuprounds filtered by the NextRoundKey column
@@ -47,14 +47,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCuprounds requirePk($key, ConnectionInterface $con = null) Return the ChildCuprounds by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCuprounds requireOne(ConnectionInterface $con = null) Return the first ChildCuprounds matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildCuprounds requireOneByPrimarykey(int $PrimaryKey) Return the first ChildCuprounds filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCuprounds requireOneByCupRoundPK(int $PrimaryKey) Return the first ChildCuprounds filtered by the PrimaryKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCuprounds requireOneByDescription(string $Description) Return the first ChildCuprounds filtered by the Description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCuprounds requireOneByCode(string $Code) Return the first ChildCuprounds filtered by the Code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCuprounds requireOneByNextroundkey(int $NextRoundKey) Return the first ChildCuprounds filtered by the NextRoundKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCuprounds requireOneByPreviousroundkey(int $PreviousRoundKey) Return the first ChildCuprounds filtered by the PreviousRoundKey column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCuprounds[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCuprounds objects based on current ModelCriteria
- * @method     ChildCuprounds[]|ObjectCollection findByPrimarykey(int $PrimaryKey) Return ChildCuprounds objects filtered by the PrimaryKey column
+ * @method     ChildCuprounds[]|ObjectCollection findByCupRoundPK(int $PrimaryKey) Return ChildCuprounds objects filtered by the PrimaryKey column
  * @method     ChildCuprounds[]|ObjectCollection findByDescription(string $Description) Return ChildCuprounds objects filtered by the Description column
  * @method     ChildCuprounds[]|ObjectCollection findByCode(string $Code) Return ChildCuprounds objects filtered by the Code column
  * @method     ChildCuprounds[]|ObjectCollection findByNextroundkey(int $NextRoundKey) Return ChildCuprounds objects filtered by the NextRoundKey column
@@ -246,12 +246,12 @@ abstract class CuproundsQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByPrimarykey(1234); // WHERE PrimaryKey = 1234
-     * $query->filterByPrimarykey(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
-     * $query->filterByPrimarykey(array('min' => 12)); // WHERE PrimaryKey > 12
+     * $query->filterByCupRoundPK(1234); // WHERE PrimaryKey = 1234
+     * $query->filterByCupRoundPK(array(12, 34)); // WHERE PrimaryKey IN (12, 34)
+     * $query->filterByCupRoundPK(array('min' => 12)); // WHERE PrimaryKey > 12
      * </code>
      *
-     * @param     mixed $primarykey The value to use as filter.
+     * @param     mixed $cupRoundPK The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -259,16 +259,16 @@ abstract class CuproundsQuery extends ModelCriteria
      *
      * @return $this|ChildCuproundsQuery The current query, for fluid interface
      */
-    public function filterByPrimarykey($primarykey = null, $comparison = null)
+    public function filterByCupRoundPK($cupRoundPK = null, $comparison = null)
     {
-        if (is_array($primarykey)) {
+        if (is_array($cupRoundPK)) {
             $useMinMax = false;
-            if (isset($primarykey['min'])) {
-                $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $primarykey['min'], Criteria::GREATER_EQUAL);
+            if (isset($cupRoundPK['min'])) {
+                $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cupRoundPK['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($primarykey['max'])) {
-                $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $primarykey['max'], Criteria::LESS_EQUAL);
+            if (isset($cupRoundPK['max'])) {
+                $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cupRoundPK['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -279,7 +279,7 @@ abstract class CuproundsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $primarykey, $comparison);
+        return $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cupRoundPK, $comparison);
     }
 
     /**
@@ -432,7 +432,7 @@ abstract class CuproundsQuery extends ModelCriteria
     public function prune($cuprounds = null)
     {
         if ($cuprounds) {
-            $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cuprounds->getPrimarykey(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cuprounds->getCupRoundPK(), Criteria::NOT_EQUAL);
         }
 
         return $this;

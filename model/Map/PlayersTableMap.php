@@ -59,7 +59,7 @@ class PlayersTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 19;
+    const NUM_COLUMNS = 20;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class PlayersTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 19;
+    const NUM_HYDRATE_COLUMNS = 20;
 
     /**
      * the column name for the PrimaryKey field
@@ -167,6 +167,11 @@ class PlayersTableMap extends TableMap
     const COL_ISRESULTEMAILSENT = 'players.IsResultEmailSent';
 
     /**
+     * the column name for the IsEmailValid field
+     */
+    const COL_ISEMAILVALID = 'players.IsEmailValid';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -178,11 +183,11 @@ class PlayersTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Nickname', 'Firstname', 'Lastname', 'Emailaddress', 'Password', 'Isadministrator', 'Activationkey', 'Isenabled', 'Lastconnection', 'Token', 'Avatarname', 'Creationdate', 'Iscalendardefaultview', 'Receivealert', 'Receivenewletter', 'Receiveresult', 'Isreminderemailsent', 'Isresultemailsent', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'nickname', 'firstname', 'lastname', 'emailaddress', 'password', 'isadministrator', 'activationkey', 'isenabled', 'lastconnection', 'token', 'avatarname', 'creationdate', 'iscalendardefaultview', 'receivealert', 'receivenewletter', 'receiveresult', 'isreminderemailsent', 'isresultemailsent', ),
-        self::TYPE_COLNAME       => array(PlayersTableMap::COL_PRIMARYKEY, PlayersTableMap::COL_NICKNAME, PlayersTableMap::COL_FIRSTNAME, PlayersTableMap::COL_LASTNAME, PlayersTableMap::COL_EMAILADDRESS, PlayersTableMap::COL_PASSWORD, PlayersTableMap::COL_ISADMINISTRATOR, PlayersTableMap::COL_ACTIVATIONKEY, PlayersTableMap::COL_ISENABLED, PlayersTableMap::COL_LASTCONNECTION, PlayersTableMap::COL_TOKEN, PlayersTableMap::COL_AVATARNAME, PlayersTableMap::COL_CREATIONDATE, PlayersTableMap::COL_ISCALENDARDEFAULTVIEW, PlayersTableMap::COL_RECEIVEALERT, PlayersTableMap::COL_RECEIVENEWLETTER, PlayersTableMap::COL_RECEIVERESULT, PlayersTableMap::COL_ISREMINDEREMAILSENT, PlayersTableMap::COL_ISRESULTEMAILSENT, ),
-        self::TYPE_FIELDNAME     => array('PrimaryKey', 'NickName', 'FirstName', 'LastName', 'EmailAddress', 'Password', 'IsAdministrator', 'ActivationKey', 'IsEnabled', 'LastConnection', 'Token', 'AvatarName', 'CreationDate', 'IsCalendarDefaultView', 'ReceiveAlert', 'ReceiveNewletter', 'ReceiveResult', 'IsReminderEmailSent', 'IsResultEmailSent', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, )
+        self::TYPE_PHPNAME       => array('PlayerPK', 'Nickname', 'Firstname', 'Lastname', 'Emailaddress', 'Password', 'Isadministrator', 'Activationkey', 'Isenabled', 'Lastconnection', 'Token', 'Avatarname', 'Creationdate', 'Iscalendardefaultview', 'Receivealert', 'Receivenewletter', 'Receiveresult', 'Isreminderemailsent', 'Isresultemailsent', 'Isemailvalid', ),
+        self::TYPE_CAMELNAME     => array('playerPK', 'nickname', 'firstname', 'lastname', 'emailaddress', 'password', 'isadministrator', 'activationkey', 'isenabled', 'lastconnection', 'token', 'avatarname', 'creationdate', 'iscalendardefaultview', 'receivealert', 'receivenewletter', 'receiveresult', 'isreminderemailsent', 'isresultemailsent', 'isemailvalid', ),
+        self::TYPE_COLNAME       => array(PlayersTableMap::COL_PRIMARYKEY, PlayersTableMap::COL_NICKNAME, PlayersTableMap::COL_FIRSTNAME, PlayersTableMap::COL_LASTNAME, PlayersTableMap::COL_EMAILADDRESS, PlayersTableMap::COL_PASSWORD, PlayersTableMap::COL_ISADMINISTRATOR, PlayersTableMap::COL_ACTIVATIONKEY, PlayersTableMap::COL_ISENABLED, PlayersTableMap::COL_LASTCONNECTION, PlayersTableMap::COL_TOKEN, PlayersTableMap::COL_AVATARNAME, PlayersTableMap::COL_CREATIONDATE, PlayersTableMap::COL_ISCALENDARDEFAULTVIEW, PlayersTableMap::COL_RECEIVEALERT, PlayersTableMap::COL_RECEIVENEWLETTER, PlayersTableMap::COL_RECEIVERESULT, PlayersTableMap::COL_ISREMINDEREMAILSENT, PlayersTableMap::COL_ISRESULTEMAILSENT, PlayersTableMap::COL_ISEMAILVALID, ),
+        self::TYPE_FIELDNAME     => array('PrimaryKey', 'NickName', 'FirstName', 'LastName', 'EmailAddress', 'Password', 'IsAdministrator', 'ActivationKey', 'IsEnabled', 'LastConnection', 'Token', 'AvatarName', 'CreationDate', 'IsCalendarDefaultView', 'ReceiveAlert', 'ReceiveNewletter', 'ReceiveResult', 'IsReminderEmailSent', 'IsResultEmailSent', 'IsEmailValid', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, )
     );
 
     /**
@@ -192,11 +197,11 @@ class PlayersTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Nickname' => 1, 'Firstname' => 2, 'Lastname' => 3, 'Emailaddress' => 4, 'Password' => 5, 'Isadministrator' => 6, 'Activationkey' => 7, 'Isenabled' => 8, 'Lastconnection' => 9, 'Token' => 10, 'Avatarname' => 11, 'Creationdate' => 12, 'Iscalendardefaultview' => 13, 'Receivealert' => 14, 'Receivenewletter' => 15, 'Receiveresult' => 16, 'Isreminderemailsent' => 17, 'Isresultemailsent' => 18, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'nickname' => 1, 'firstname' => 2, 'lastname' => 3, 'emailaddress' => 4, 'password' => 5, 'isadministrator' => 6, 'activationkey' => 7, 'isenabled' => 8, 'lastconnection' => 9, 'token' => 10, 'avatarname' => 11, 'creationdate' => 12, 'iscalendardefaultview' => 13, 'receivealert' => 14, 'receivenewletter' => 15, 'receiveresult' => 16, 'isreminderemailsent' => 17, 'isresultemailsent' => 18, ),
-        self::TYPE_COLNAME       => array(PlayersTableMap::COL_PRIMARYKEY => 0, PlayersTableMap::COL_NICKNAME => 1, PlayersTableMap::COL_FIRSTNAME => 2, PlayersTableMap::COL_LASTNAME => 3, PlayersTableMap::COL_EMAILADDRESS => 4, PlayersTableMap::COL_PASSWORD => 5, PlayersTableMap::COL_ISADMINISTRATOR => 6, PlayersTableMap::COL_ACTIVATIONKEY => 7, PlayersTableMap::COL_ISENABLED => 8, PlayersTableMap::COL_LASTCONNECTION => 9, PlayersTableMap::COL_TOKEN => 10, PlayersTableMap::COL_AVATARNAME => 11, PlayersTableMap::COL_CREATIONDATE => 12, PlayersTableMap::COL_ISCALENDARDEFAULTVIEW => 13, PlayersTableMap::COL_RECEIVEALERT => 14, PlayersTableMap::COL_RECEIVENEWLETTER => 15, PlayersTableMap::COL_RECEIVERESULT => 16, PlayersTableMap::COL_ISREMINDEREMAILSENT => 17, PlayersTableMap::COL_ISRESULTEMAILSENT => 18, ),
-        self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'NickName' => 1, 'FirstName' => 2, 'LastName' => 3, 'EmailAddress' => 4, 'Password' => 5, 'IsAdministrator' => 6, 'ActivationKey' => 7, 'IsEnabled' => 8, 'LastConnection' => 9, 'Token' => 10, 'AvatarName' => 11, 'CreationDate' => 12, 'IsCalendarDefaultView' => 13, 'ReceiveAlert' => 14, 'ReceiveNewletter' => 15, 'ReceiveResult' => 16, 'IsReminderEmailSent' => 17, 'IsResultEmailSent' => 18, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, )
+        self::TYPE_PHPNAME       => array('PlayerPK' => 0, 'Nickname' => 1, 'Firstname' => 2, 'Lastname' => 3, 'Emailaddress' => 4, 'Password' => 5, 'Isadministrator' => 6, 'Activationkey' => 7, 'Isenabled' => 8, 'Lastconnection' => 9, 'Token' => 10, 'Avatarname' => 11, 'Creationdate' => 12, 'Iscalendardefaultview' => 13, 'Receivealert' => 14, 'Receivenewletter' => 15, 'Receiveresult' => 16, 'Isreminderemailsent' => 17, 'Isresultemailsent' => 18, 'Isemailvalid' => 19, ),
+        self::TYPE_CAMELNAME     => array('playerPK' => 0, 'nickname' => 1, 'firstname' => 2, 'lastname' => 3, 'emailaddress' => 4, 'password' => 5, 'isadministrator' => 6, 'activationkey' => 7, 'isenabled' => 8, 'lastconnection' => 9, 'token' => 10, 'avatarname' => 11, 'creationdate' => 12, 'iscalendardefaultview' => 13, 'receivealert' => 14, 'receivenewletter' => 15, 'receiveresult' => 16, 'isreminderemailsent' => 17, 'isresultemailsent' => 18, 'isemailvalid' => 19, ),
+        self::TYPE_COLNAME       => array(PlayersTableMap::COL_PRIMARYKEY => 0, PlayersTableMap::COL_NICKNAME => 1, PlayersTableMap::COL_FIRSTNAME => 2, PlayersTableMap::COL_LASTNAME => 3, PlayersTableMap::COL_EMAILADDRESS => 4, PlayersTableMap::COL_PASSWORD => 5, PlayersTableMap::COL_ISADMINISTRATOR => 6, PlayersTableMap::COL_ACTIVATIONKEY => 7, PlayersTableMap::COL_ISENABLED => 8, PlayersTableMap::COL_LASTCONNECTION => 9, PlayersTableMap::COL_TOKEN => 10, PlayersTableMap::COL_AVATARNAME => 11, PlayersTableMap::COL_CREATIONDATE => 12, PlayersTableMap::COL_ISCALENDARDEFAULTVIEW => 13, PlayersTableMap::COL_RECEIVEALERT => 14, PlayersTableMap::COL_RECEIVENEWLETTER => 15, PlayersTableMap::COL_RECEIVERESULT => 16, PlayersTableMap::COL_ISREMINDEREMAILSENT => 17, PlayersTableMap::COL_ISRESULTEMAILSENT => 18, PlayersTableMap::COL_ISEMAILVALID => 19, ),
+        self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'NickName' => 1, 'FirstName' => 2, 'LastName' => 3, 'EmailAddress' => 4, 'Password' => 5, 'IsAdministrator' => 6, 'ActivationKey' => 7, 'IsEnabled' => 8, 'LastConnection' => 9, 'Token' => 10, 'AvatarName' => 11, 'CreationDate' => 12, 'IsCalendarDefaultView' => 13, 'ReceiveAlert' => 14, 'ReceiveNewletter' => 15, 'ReceiveResult' => 16, 'IsReminderEmailSent' => 17, 'IsResultEmailSent' => 18, 'IsEmailValid' => 19, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, )
     );
 
     /**
@@ -216,7 +221,7 @@ class PlayersTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'PlayerPK', 'INTEGER', true, null, null);
         $this->addColumn('NickName', 'Nickname', 'VARCHAR', true, 20, null);
         $this->addColumn('FirstName', 'Firstname', 'VARCHAR', true, 50, null);
         $this->addColumn('LastName', 'Lastname', 'VARCHAR', true, 50, null);
@@ -235,6 +240,7 @@ class PlayersTableMap extends TableMap
         $this->addColumn('ReceiveResult', 'Receiveresult', 'BOOLEAN', true, 1, true);
         $this->addColumn('IsReminderEmailSent', 'Isreminderemailsent', 'BOOLEAN', true, 1, false);
         $this->addColumn('IsResultEmailSent', 'Isresultemailsent', 'BOOLEAN', true, 1, false);
+        $this->addColumn('IsEmailValid', 'Isemailvalid', 'BOOLEAN', true, 1, false);
     } // initialize()
 
     /**
@@ -260,11 +266,11 @@ class PlayersTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('PlayerPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('PlayerPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -284,7 +290,7 @@ class PlayersTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('PlayerPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -404,6 +410,7 @@ class PlayersTableMap extends TableMap
             $criteria->addSelectColumn(PlayersTableMap::COL_RECEIVERESULT);
             $criteria->addSelectColumn(PlayersTableMap::COL_ISREMINDEREMAILSENT);
             $criteria->addSelectColumn(PlayersTableMap::COL_ISRESULTEMAILSENT);
+            $criteria->addSelectColumn(PlayersTableMap::COL_ISEMAILVALID);
         } else {
             $criteria->addSelectColumn($alias . '.PrimaryKey');
             $criteria->addSelectColumn($alias . '.NickName');
@@ -424,6 +431,7 @@ class PlayersTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.ReceiveResult');
             $criteria->addSelectColumn($alias . '.IsReminderEmailSent');
             $criteria->addSelectColumn($alias . '.IsResultEmailSent');
+            $criteria->addSelectColumn($alias . '.IsEmailValid');
         }
     }
 

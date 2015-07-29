@@ -113,8 +113,8 @@ class ForecastsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Primarykey', 'Matchkey', 'Playerkey', 'Teamhomescore', 'Teamawayscore', 'Forecastdate', ),
-        self::TYPE_CAMELNAME     => array('primarykey', 'matchkey', 'playerkey', 'teamhomescore', 'teamawayscore', 'forecastdate', ),
+        self::TYPE_PHPNAME       => array('ForecastPK', 'Matchkey', 'Playerkey', 'Teamhomescore', 'Teamawayscore', 'Forecastdate', ),
+        self::TYPE_CAMELNAME     => array('forecastPK', 'matchkey', 'playerkey', 'teamhomescore', 'teamawayscore', 'forecastdate', ),
         self::TYPE_COLNAME       => array(ForecastsTableMap::COL_PRIMARYKEY, ForecastsTableMap::COL_MATCHKEY, ForecastsTableMap::COL_PLAYERKEY, ForecastsTableMap::COL_TEAMHOMESCORE, ForecastsTableMap::COL_TEAMAWAYSCORE, ForecastsTableMap::COL_FORECASTDATE, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey', 'MatchKey', 'PlayerKey', 'TeamHomeScore', 'TeamAwayScore', 'ForecastDate', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
@@ -127,8 +127,8 @@ class ForecastsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Primarykey' => 0, 'Matchkey' => 1, 'Playerkey' => 2, 'Teamhomescore' => 3, 'Teamawayscore' => 4, 'Forecastdate' => 5, ),
-        self::TYPE_CAMELNAME     => array('primarykey' => 0, 'matchkey' => 1, 'playerkey' => 2, 'teamhomescore' => 3, 'teamawayscore' => 4, 'forecastdate' => 5, ),
+        self::TYPE_PHPNAME       => array('ForecastPK' => 0, 'Matchkey' => 1, 'Playerkey' => 2, 'Teamhomescore' => 3, 'Teamawayscore' => 4, 'Forecastdate' => 5, ),
+        self::TYPE_CAMELNAME     => array('forecastPK' => 0, 'matchkey' => 1, 'playerkey' => 2, 'teamhomescore' => 3, 'teamawayscore' => 4, 'forecastdate' => 5, ),
         self::TYPE_COLNAME       => array(ForecastsTableMap::COL_PRIMARYKEY => 0, ForecastsTableMap::COL_MATCHKEY => 1, ForecastsTableMap::COL_PLAYERKEY => 2, ForecastsTableMap::COL_TEAMHOMESCORE => 3, ForecastsTableMap::COL_TEAMAWAYSCORE => 4, ForecastsTableMap::COL_FORECASTDATE => 5, ),
         self::TYPE_FIELDNAME     => array('PrimaryKey' => 0, 'MatchKey' => 1, 'PlayerKey' => 2, 'TeamHomeScore' => 3, 'TeamAwayScore' => 4, 'ForecastDate' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
@@ -151,7 +151,7 @@ class ForecastsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('PrimaryKey', 'Primarykey', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('PrimaryKey', 'ForecastPK', 'INTEGER', true, null, null);
         $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
         $this->addColumn('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
         $this->addColumn('TeamHomeScore', 'Teamhomescore', 'INTEGER', true, null, null);
@@ -182,11 +182,11 @@ class ForecastsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ForecastPK', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ForecastPK', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -206,7 +206,7 @@ class ForecastsTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Primarykey', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('ForecastPK', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
