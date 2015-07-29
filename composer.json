@@ -1,6 +1,6 @@
 {
 	"require": {
-		"monolog/monolog": "1.0.*",
-		"propel/propel": "~2.0@dev"
+		"monolog/monolog": "1.15.*",
+		"propel/propel": "2.0.0-alpha5"
 	}
 }

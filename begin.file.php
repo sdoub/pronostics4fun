@@ -9,7 +9,7 @@ require_once __DIR__ . '/generated-conf/config.php';
 $defaultLogger = new Monolog\Logger('defaultLogger');
 $defaultLogger->pushHandler(new Monolog\Handler\StreamHandler('log/app.log', Monolog\Logger::WARNING));
 
-//$serviceContainer->setLogger('defaultLogger', $defaultLogger);
+$serviceContainer->setLogger('defaultLogger', $defaultLogger);
 //$log->addWarning('Foo');
 //include_once(BASE_PATH . "/lib/mobile.detect.php");
 

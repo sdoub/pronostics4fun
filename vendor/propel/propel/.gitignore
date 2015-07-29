@@ -1,5 +1,7 @@
+vendor/
 composer.phar
 /composer.lock
+autoload.php
 phpunit.xml
 pom.xml
 php-cs-fixer.phar
