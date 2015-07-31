@@ -708,7 +708,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	switch ($rowSet["GroupScore"]) {
 		case 0: 
 		  $bonusUrl = "";
-			breeak;
+			break;
 		default:
 		 	 $bonusUrl .= "/images/bonus.".(string)$rowSet["GroupScore"] .".png";
 			 //$bonusUrl .= "/images/bullet.bonus.100.png";
@@ -927,7 +927,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   if ($previousRank==$rank) {
     $rankToBeDisplayed="-";
   }
-  echo "<span id='rankSpan'>$rankToBeDisplayed</span>";
+  echo "<span id='rankSpan' class='rankspan'>$rankToBeDisplayed</span>";
   echo '<a class="popupscroll" href="#"><img class="avat" src="' . $avatarPath .'"></img></a>';
 
   $previousScore=$rowSet["Score"];
@@ -1075,7 +1075,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
   if ($previousRank==$rank) {
     $rankToBeDisplayed="-";
   }
-  echo "<span id='rankSpan'>$rankToBeDisplayed</span>";
+  echo "<span id='rankSpan' class='rankspan'>$rankToBeDisplayed</span>";
   echo '<a class="popupscroll" href="#"><img class="avat" src="' . $avatarPath .'"></img></a>';
 
   $previousScore=$rowSet["Score"];
