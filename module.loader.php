@@ -219,14 +219,17 @@ SELECT 1
 }
 else
 {
-  //  switch ($_currentPage)
-  //  {
-  //    case "3":
-  //      include("modules/ranking.temp.php");
-  //      break;
-  //    default:
-  include("modules/home.php");
-  //  }
+    switch ($_currentPage)
+    {
+      case "8":
+			  include("modules/account.change.password.php");
+        break;
+      case "11":
+			  include("modules/account.email.validation.php");
+        break;
+      default:
+  			include("modules/home.php");
+    }
 
 }
 ?>

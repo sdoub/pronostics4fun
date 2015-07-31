@@ -1,7 +1,8 @@
 {
 	"require": {
 		"monolog/monolog": "1.15.*",
-		"propel/propel": "2.0.0-alpha5"
+		"propel/propel": "2.0.0-alpha5",
+		"phpmailer/phpmailer":"5.2.10"
 	},
 	"autoload": {
     "classmap": ["model/"]

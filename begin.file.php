@@ -6,18 +6,17 @@ require __DIR__ . '/vendor/autoload.php';
 // setup Propel
 require_once __DIR__ . '/generated-conf/config.php';
 
-$defaultLogger = new Monolog\Logger('defaultLogger');
-$defaultLogger->pushHandler(new Monolog\Handler\StreamHandler('log/app.log', Monolog\Logger::WARNING));
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$defaultLogger = new Logger('defaultLogger');
+$defaultLogger->pushHandler(new StreamHandler('log/app.log', Logger::DEBUG));
 $serviceContainer->setLogger('defaultLogger', $defaultLogger);
-$q = new PlayersQuery();
-$firstPlayer = $q->findPK(19);
-
-$defaultLogger->addWarning($firstPlayer);
 //include_once(BASE_PATH . "/lib/mobile.detect.php");
-
 //$uagent_info = new uagent_info();
 
 session_start();
+
 
 include_once(BASE_PATH . "/config/config.php");
 
@@ -36,8 +35,8 @@ include_once(BASE_PATH . "/lib/functions.php");
 saveStartTime();
 
 // @ error reporting setting  ( modify as needed )
-ini_set("display_errors", 0);
-error_reporting(NULL);
+//ini_set("display_errors", 0);
+//error_reporting(NULL);
 
 //@ validate inclusion
 define('VALID_ACCESS_AUTHENTICATION_',		true);
@@ -100,4 +99,3 @@ $_competitionName="Ligue 1";
 //echo $_SESSION['exp_user']['expires'];
 //echo "<br/>";
 //echo time();
-?>

@@ -635,6 +635,10 @@ function AddScriptReference ($name) {
         $tempScript=sprintf($cssScriptTemplate,"modules/account.change.password");
         $_arrScripts[$name]=$tempScript;
         break;
+      case "account.email.validation":
+        $tempScript=sprintf($cssScriptTemplate,"modules/account.email.validation");
+        $_arrScripts[$name]=$tempScript;
+        break;
       case "home":
         $tempScript=sprintf($cssScriptTemplate,"modules/home");
         $_arrScripts[$name]=$tempScript;

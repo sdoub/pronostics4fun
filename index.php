@@ -121,7 +121,10 @@ if ($_isAuthenticated )
   $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " INNER JOIN seasons ON seasons.PrimaryKey=playerdivisionranking.SeasonKey AND seasons.CompetitionKey=".COMPETITION." ORDER BY RankDate DESC LIMIT 0,1";
   $playerDivisionRanking = $_databaseObject -> queryGetFullArray($queryDivisionRanking, "Get DivisionRanking");
 
-  $playerRank = $playerRanking[0]["Rank"];
+  if ($playerRanking)
+		$playerRank = $playerRanking[0]["Rank"];
+	else
+		$playerRank='';
   if ($playerRank=="")
   	$playerRank.="<sup>-</sup>";
   elseif ($playerRank==1)
@@ -147,7 +150,10 @@ if ($_isAuthenticated )
 	WHERE (playercupmatches.PlayerHomeKey=" . $_authorisation->getConnectedUserKey() . " OR playercupmatches.PlayerAwayKey=" . $_authorisation->getConnectedUserKey() . ")
 	ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
   $playerCupRounds = $_databaseObject -> queryGetFullArray($queryCupRounds, "Get DivisionRanking");
-  $playerCupRound = $playerCupRounds[0]["Description"];
+  if ($playerCupRounds)
+		$playerCupRound = $playerCupRounds[0]["Description"];
+	else
+		$playerCupRound='';
 
 
   $queryCurrentCupRounds = "SELECT cuprounds.Description,playercupmatches.SeasonKey, seasons.Order FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
@@ -191,7 +197,15 @@ else
 
 if ($_isAuthenticated)
 {
-  echo '<h2><span style="font-size:14px;padding-right: 30px;">Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> Déconnexion</a></span></h2>';
+  $q = new PlayersQuery();
+$firstPlayer = $q->findPK($_authorisation->getConnectedUserKey());
+
+//$defaultLogger->addWarning($firstPlayer->getIsemailvalid());
+
+	if ($firstPlayer->getIsemailvalid())
+		echo '<h2><span style="font-size:14px;padding-right: 30px;">Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> Déconnexion</a></span></h2>';
+	else
+		echo '<h2><span style="font-size:14px;padding-right: 30px;"><img style="width:20px;height:20px;padding-right:5px;" title="Adresse email non valide, veuillez mettre à jour votre compte pour bénéficier des notifications (Alertes, Résultats, ...) de Pronostics4Fun" src="/images/warning.png"/>Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> Déconnexion</a></span></h2>';
 }
 else
 {

@@ -24,13 +24,19 @@ class Authorization
     if(empty($_SESSION['exp_user']) || @$_SESSION['exp_user']['expires'] < time())
     {
       setcookie("SessionIsEmpty", "true", time() + 90 * 24 * 60 * 60, "/");
-      if ($_SESSION['exp_user']['expires'] < time())
-      {   setcookie("SessionHasExpired", $_SESSION['exp_user']['expires'], time() + 90 * 24 * 60 * 60, "/");
-      setcookie("ServerTime", time(), time() + 90 * 24 * 60 * 60, "/");
-      }
-      else {
-        setcookie("SessionHasExpired", "false", time() + 90 * 24 * 60 * 60, "/");
-      }
+			if (array_key_exists('exp_user',$_SESSION) && array_key_exists('expires',$_SESSION['exp_user'])) {
+				if ($_SESSION['exp_user']['expires'] < time())
+				{ 
+					setcookie("SessionHasExpired", $_SESSION['exp_user']['expires'], time() + 90 * 24 * 60 * 60, "/");
+					setcookie("ServerTime", time(), time() + 90 * 24 * 60 * 60, "/");
+				}
+				else {
+					setcookie("SessionHasExpired", "false", time() + 90 * 24 * 60 * 60, "/");
+				}
+			} else {
+				setcookie("SessionHasExpired", "true", time() + 90 * 24 * 60 * 60, "/");
+			} 
+				
       return false;
     }
     else
@@ -278,8 +284,8 @@ class Authorization
       {
         //TODO: Send email in order to activate the new account
         $this->signin($nickName, $password, false);
+        $this->SendEmailToAdminNewAccount($nickName, $email, $activationKey);
         $this->SendEmailNewAccount($nickName, $email, $activationKey);
-        //$return = $this->SendEmail($nickName, $email, $activationKey);
         $return = true;
         $userId=$this->getConnectedUserKey();
         $sqlFixRank ="INSERT INTO playerranking  (CompetitionKey, PlayerKey, RankDate, Rank)
@@ -337,15 +343,18 @@ class Authorization
     {
       $activationKey = generatePassword(15,4);
       //INSERT INTO `pronostics4fun`.`players` (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`) VALUES (NULL, 'sdoub', 'S?bastien', 'Dubuc', 'sebastien.dubuc@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '0');
+			$resetEmailAddress ='';
+			if ($_SESSION['exp_user']['EmailAddress']!=$email)
+				$resetEmailAddress =' , IsEmailValid=0';
       $sql = "UPDATE players SET `FirstName`='".mysql_real_escape_string($firstName)."',
       `LastName`='".mysql_real_escape_string($lastName)."',
       `EmailAddress`='".mysql_real_escape_string($email)."',
-      AvatarName='',
-      ActivationKey='" . $activationKey . "',
-      IsCalendarDefaultView = " . $defaultView .",
-      ReceiveAlert = " . $receiveAlert .",
-      ReceiveResult = " . $receiveResult .",
-      AvatarName='" . $avatar . "'
+      ActivationKey='$activationKey',
+      IsCalendarDefaultView = $defaultView,
+      ReceiveAlert = $receiveAlert,
+      ReceiveResult = $receiveResult,
+      AvatarName='$avatar'
+			$resetEmailAddress
       WHERE PrimaryKey=" . $_SESSION['exp_user']['PrimaryKey'];
       if(!$_databaseObject->queryPerf($sql,"Update Account"))
       {
@@ -359,7 +368,8 @@ class Authorization
         else {
           $return = true;
         }
-
+				if ($_SESSION['exp_user']['EmailAddress']!=$email)
+					$this->SendEmailEmailChanged($_SESSION['exp_user']['NickName'], $email, $activationKey);
         $_SESSION['exp_user']['LastName']=$lastName;
         $_SESSION['exp_user']['FirstName']=$firstName;
         $_SESSION['exp_user']['EmailAddress']=$email;
@@ -375,7 +385,7 @@ class Authorization
     return $return;
   }
 
-  private function SendEmailNewAccount ($pseudo, $email, $activationKey)
+  private function SendEmailToAdminNewAccount ($pseudo, $email, $activationKey)
   {
 
     $mail = new P4FMailer();
@@ -386,7 +396,7 @@ class Authorization
       $mail->Subject    = "Pronostics4Fun - $pseudo vient de s'inscrire!";
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-      $emailBody = "<h3>" . $pseudo . " a cr�� un nouveau compte</h3>";
+      $emailBody = "<h3>" . $pseudo . " <".$email."> a créé un nouveau compte</h3>";
       $emailBody .= "</br>";
       $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
 
@@ -444,7 +454,7 @@ class Authorization
 
   }
 
-  private function SendEmail ($pseudo, $email, $activationKey)
+  private function SendEmailNewAccount ($pseudo, $email, $activationKey)
   {
 
     $mail = new P4FMailer();
@@ -453,13 +463,13 @@ class Authorization
     try {
       $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
       $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-      $mail->Subject    = "Pronostics4Fun - Activez votre compte";
+      $mail->Subject    = "Pronostics4Fun - Bienvenue !";
 
       $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
-      $emailBody = "<h3>Merci $pseudo de vous êtes inscrit sur Pronostics4Fun</h3>";
+      $emailBody = "<h3>Bienvenue $pseudo et merci de vous êtes inscrit sur Pronostics4Fun</h3>";
       $emailBody .= "<br/>";
-      $emailBody .= "<p>Pour valider votre inscription veuillez cliquer sur le lien ci-dessous :</p>";
-      $emailBody .= "<a href='" . ROOT_SITE . "/account.activation.php?ActivationKey=" . $activationKey . "'>" . ROOT_SITE . "/AccountActivation.php?ActivationKey=" . $activationKey . "</a>";
+      $emailBody .= "<p>Afin de pouvoir recevoir les notifications (Alertes, Résultats, ...) de Pronostics4Fun, veuillez cliquer sur le lien ci-dessous :</p>";
+      $emailBody .= "<a href='" . ROOT_SITE . "/email.validation.php?key=" . $activationKey . "'>Validation de l'adresse email</a>";
       $emailBody .= "</br>";
       $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
 
@@ -482,6 +492,43 @@ class Authorization
     return $return;
   }
 
+  private function SendEmailEmailChanged ($pseudo, $email, $activationKey)
+  {
+
+    $mail = new P4FMailer();
+    $return = false;
+
+    try {
+      $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+      $mail->Subject    = "Pronostics4Fun - Changement d'adresse email";
+
+      $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+      $emailBody = "<h3>Bonjour $pseudo,</h3>";
+      $emailBody .= "<br/>";
+      $emailBody .= "<p>Vous avez changé d'adresse email, afin de continuer à recevoir les notifications (Alertes, Résultats, ...) de Pronostics4Fun, veuillez cliquer sur le lien ci-dessous :</p>";
+      $emailBody .= "<a href='" . ROOT_SITE . "/email.validation.php?key=" . $activationKey . "'>Validation de l'adresse email</a>";
+      $emailBody .= "</br>";
+      $emailBody .= "<p>L'administrateur de Pronostics4Fun.</p>";
+
+      $mail->MsgHTML($emailBody);
+
+      $mail->AddAddress($email, $pseudo);
+
+      $mail->AddAttachment("images/Logo.png");      // attachment
+
+      $mail->Send();
+      $return = true;
+
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); //Pretty error messages from PHPMailer
+    } catch (Exception $e) {
+      echo $e->getMessage(); //Boring error messages from anything else!
+    }
+
+    unset($mail);
+    return $return;
+  }
 
   public function signin($u,$p,$KeepConnection)
   {
@@ -518,8 +565,8 @@ class Authorization
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
         setcookie("keepConnection", $keepConnection, time() + 90 * 24 * 60 * 60, "/");
         $_SESSION['exp_user']['Token'] = $userToken;
+	      $this->updateLastConnection($userToken);
       }
-      $this->updateLastConnection($userToken);
       return $return;
     }
 

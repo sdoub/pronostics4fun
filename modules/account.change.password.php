@@ -20,7 +20,7 @@ if ($_activationKey) {
   //echo $sql;
   $resultSet = $_databaseObject->queryPerf($sql,"Recuperation des infos du user");
 
-  if(!$resultSet) return exit (__encode("La cl� est non valide!"));
+  if(!$resultSet) return exit ("La clé est non valide!");
 
   $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
   $rootSite = ROOT_SITE;
@@ -35,7 +35,7 @@ if ($_activationKey) {
 ?>
 <div id="containerTitle">
 <div class="titleContainer" >
-<div class="title" ><?php echo __encode("Changement de mot de passe ...");?></div>
+<div class="title" ><?php echo "Changement de mot de passe ...";?></div>
 </div>
 
 <div id="containerError">
@@ -46,7 +46,7 @@ if ($_activationKey) {
 </div>
 
 <div class="content">
-<?php echo __encode("Pour une raison inconnue, votre mot de passe n'a pas pu �tre chang�, par cons�quent, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>, pour qu'il r�gle ce probl�me.")?>
+<?php echo "Pour une raison inconnue, votre mot de passe n'a pas pu être changé, par conséquent, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>, pour qu'il règle ce problème."?>
 </div>
 </div>
 <div id="containerSuccess">
@@ -57,7 +57,7 @@ if ($_activationKey) {
 </div>
 
 <div class="content">
-<?php echo __encode("Votre mot de passe a été changé, vous pouvez maintenant vous rendre sur la page d'accueil en cliquant <a href='".ROOT_SITE."'>ici</a>")?>
+<?php echo "Votre mot de passe a été changé, vous pouvez maintenant vous rendre sur la page d'accueil en cliquant <a href='".ROOT_SITE."'>ici</a>"?>
 </div>
 
 </div>
@@ -159,7 +159,7 @@ else {
 
 <div id="containerTitle">
 <div class="titleContainer">
-<div class="title" ><?php echo __encode("Changement de mot de passe ...");?></div>
+<div class="title" ><?php echo "Changement de mot de passe ...";?></div>
 </div>
 
 <div id="containerError">
@@ -170,7 +170,7 @@ else {
 </div>
 
 <div class="content">
-<?php echo __encode("Ce lien n'est plus valide, veuillez recommencer la proc�dure depuis le d�but en cliquant sur le lien <u>'Mot de passe oubli�?'</u>, de la fen�tre de connexion, ou bien, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>.")?>
+<?php echo "Ce lien n'est plus valide, veuillez recommencer la procédure depuis le début en cliquant sur le lien <u>'Mot de passe oublié?'</u>, de la fen�tre de connexion, ou bien, veuillez contacter l'administrateur du site directement par email <a href='mailto:admin@pronostics4fun.com'>admin@pronostics4fun.com</a>."?>
 </div>
 </div>
 
@@ -184,5 +184,3 @@ $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
 </script>
 
 <?php }?>
-
-
