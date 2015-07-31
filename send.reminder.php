@@ -44,9 +44,9 @@ WHERE PrimaryKey IN (" . $_playerKeys . ")";
   $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
   $mail->Port       = 465;                   // set the SMTP port for the GMAIL server
   $mail->Username   = "sebastien.dubuc@gmail.com";  // GMAIL username
-  $mail->Password   = "aurelie040697";            // GMAIL password
+  $mail->Password   = "xxxx";            // GMAIL password
 
-  $mail->AltBody    = "Pour visualiser le contenu de cet email, vous messagerie doit �tre permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+  $mail->AltBody    = "Pour visualiser le contenu de cet email, vous messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 
 
 

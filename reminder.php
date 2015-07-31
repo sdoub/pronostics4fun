@@ -38,6 +38,7 @@ AND EXISTS (
             )
 AND players.ReceiveAlert=1
 AND players.IsReminderEmailSent=0
+AND players.IsEmailValid=1
 ";
 
   $resultSet = $_databaseObject->queryPerf($query,"Get players with missing forecasts for tomorrow");

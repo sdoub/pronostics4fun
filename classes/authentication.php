@@ -583,7 +583,7 @@ class Authorization
     if($u)
     {
       $sql = "SELECT * FROM players WHERE ";
-      $sql .= "(NickName='".mysql_real_escape_string(__encode($u))."' OR EmailAddress='".mysql_real_escape_string(__encode($u))."')";
+      $sql .= "players.IsEmailValid=1 AND (NickName='".mysql_real_escape_string(__encode($u))."' OR EmailAddress='".mysql_real_escape_string(__encode($u))."')";
 
       $resultSet = $_databaseObject->queryPerf($sql,"Check if user exists or not");
 

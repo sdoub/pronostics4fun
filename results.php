@@ -27,6 +27,7 @@ players.NickName,
 FROM playersenabled players
 WHERE players.ReceiveResult=1
   AND players.IsResultEmailSent=0
+	AND players.IsEmailValid=1
   AND NOT EXISTS (
             SELECT 1
               FROM matches
