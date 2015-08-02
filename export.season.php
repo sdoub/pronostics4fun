@@ -1,6 +1,6 @@
 <?php
 require_once("begin.file.php");
-require_once(dirname(__FILE__)."/lib/p4fmailer.php");
+//require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 $host=SQL_HOST;
 $user=SQL_LOGIN;
@@ -43,7 +43,7 @@ $tables = array("competitions"=>"",
        
 $fileList = '';
 foreach($tables as $table=>$filter){
-	$dumpCommand="mysqldump -t -u $user -p $password --replace $db $table";
+	$dumpCommand="mysqldump -t --host=$host --user=$user --password=$password --replace $db $table";
 	//  --password=$password
 	if(!empty($filter)){
 		$dumpCommand.=" --where '$filter' ";
@@ -55,7 +55,7 @@ foreach($tables as $table=>$filter){
 	system($dumpCommand);
 }
 
-system("cat $fileList | gzip > dump.gz");
+system("cat $fileList | gzip > data/dump.season.$competitionKey.gz");
 
 foreach($tables as $table=>$filter){
 	if (file_exists("data/$table.sql")) {
@@ -66,9 +66,9 @@ foreach($tables as $table=>$filter){
 	}
 }
 
-if (file_exists("data/dump.gz")) {
+if (file_exists("data/dump.season.$competitionKey.gz")) {
 	echo '<br/>';
-	echo '<a href="/data/dump.gz">Dump</a>';
+	echo '<a href="/data/dump.season.'.$competitionKey.'.gz">Dump</a>';
 }
 
 require_once("end.file.php");
