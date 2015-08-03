@@ -2,7 +2,11 @@
 
 namespace Base;
 
+use \Matchstates as ChildMatchstates;
+use \MatchstatesQuery as ChildMatchstatesQuery;
 use \PlayermatchstatesQuery as ChildPlayermatchstatesQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
 use \Exception;
 use \PDO;
 use Map\PlayermatchstatesTableMap;
@@ -76,6 +80,16 @@ abstract class Playermatchstates implements ActiveRecordInterface
      * @var        int
      */
     protected $score;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aPlayerMatchState;
+
+    /**
+     * @var        ChildMatchstates
+     */
+    protected $aMatchstates;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -349,6 +363,10 @@ abstract class Playermatchstates implements ActiveRecordInterface
             $this->modifiedColumns[PlayermatchstatesTableMap::COL_PLAYERKEY] = true;
         }
 
+        if ($this->aPlayerMatchState !== null && $this->aPlayerMatchState->getPlayerPK() !== $v) {
+            $this->aPlayerMatchState = null;
+        }
+
         return $this;
     } // setPlayerkey()
 
@@ -367,6 +385,10 @@ abstract class Playermatchstates implements ActiveRecordInterface
         if ($this->matchstatekey !== $v) {
             $this->matchstatekey = $v;
             $this->modifiedColumns[PlayermatchstatesTableMap::COL_MATCHSTATEKEY] = true;
+        }
+
+        if ($this->aMatchstates !== null && $this->aMatchstates->getMatchStatePK() !== $v) {
+            $this->aMatchstates = null;
         }
 
         return $this;
@@ -466,6 +488,12 @@ abstract class Playermatchstates implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aPlayerMatchState !== null && $this->playerkey !== $this->aPlayerMatchState->getPlayerPK()) {
+            $this->aPlayerMatchState = null;
+        }
+        if ($this->aMatchstates !== null && $this->matchstatekey !== $this->aMatchstates->getMatchStatePK()) {
+            $this->aMatchstates = null;
+        }
     } // ensureConsistency
 
     /**
@@ -505,6 +533,8 @@ abstract class Playermatchstates implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aPlayerMatchState = null;
+            $this->aMatchstates = null;
         } // if (deep)
     }
 
@@ -603,6 +633,25 @@ abstract class Playermatchstates implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aPlayerMatchState !== null) {
+                if ($this->aPlayerMatchState->isModified() || $this->aPlayerMatchState->isNew()) {
+                    $affectedRows += $this->aPlayerMatchState->save($con);
+                }
+                $this->setPlayerMatchState($this->aPlayerMatchState);
+            }
+
+            if ($this->aMatchstates !== null) {
+                if ($this->aMatchstates->isModified() || $this->aMatchstates->isNew()) {
+                    $affectedRows += $this->aMatchstates->save($con);
+                }
+                $this->setMatchstates($this->aMatchstates);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -747,10 +796,11 @@ abstract class Playermatchstates implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Playermatchstates'][$this->hashCode()])) {
@@ -768,6 +818,38 @@ abstract class Playermatchstates implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aPlayerMatchState) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aPlayerMatchState->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aMatchstates) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'matchstates';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'matchstates';
+                        break;
+                    default:
+                        $key = 'Matchstates';
+                }
+
+                $result[$key] = $this->aMatchstates->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -929,8 +1011,22 @@ abstract class Playermatchstates implements ActiveRecordInterface
         $validPk = null !== $this->getPlayerkey() &&
             null !== $this->getMatchstatekey();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation playermatchstates_fk_d784ed to table players
+        if ($this->aPlayerMatchState && $hash = spl_object_hash($this->aPlayerMatchState)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation playermatchstates_fk_209873 to table matchstates
+        if ($this->aMatchstates && $hash = spl_object_hash($this->aMatchstates)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1020,12 +1116,120 @@ abstract class Playermatchstates implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playermatchstates The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPlayerMatchState(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerkey(NULL);
+        } else {
+            $this->setPlayerkey($v->getPlayerPK());
+        }
+
+        $this->aPlayerMatchState = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayermatchstates($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getPlayerMatchState(ConnectionInterface $con = null)
+    {
+        if ($this->aPlayerMatchState === null && ($this->playerkey !== null)) {
+            $this->aPlayerMatchState = ChildPlayersQuery::create()->findPk($this->playerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPlayerMatchState->addPlayermatchstatess($this);
+             */
+        }
+
+        return $this->aPlayerMatchState;
+    }
+
+    /**
+     * Declares an association between this object and a ChildMatchstates object.
+     *
+     * @param  ChildMatchstates $v
+     * @return $this|\Playermatchstates The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setMatchstates(ChildMatchstates $v = null)
+    {
+        if ($v === null) {
+            $this->setMatchstatekey(NULL);
+        } else {
+            $this->setMatchstatekey($v->getMatchStatePK());
+        }
+
+        $this->aMatchstates = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildMatchstates object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayermatchstates($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildMatchstates object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildMatchstates The associated ChildMatchstates object.
+     * @throws PropelException
+     */
+    public function getMatchstates(ConnectionInterface $con = null)
+    {
+        if ($this->aMatchstates === null && ($this->matchstatekey !== null)) {
+            $this->aMatchstates = ChildMatchstatesQuery::create()->findPk($this->matchstatekey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aMatchstates->addPlayermatchstatess($this);
+             */
+        }
+
+        return $this->aMatchstates;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aPlayerMatchState) {
+            $this->aPlayerMatchState->removePlayermatchstates($this);
+        }
+        if (null !== $this->aMatchstates) {
+            $this->aMatchstates->removePlayermatchstates($this);
+        }
         $this->playerkey = null;
         $this->matchstatekey = null;
         $this->score = null;
@@ -1049,6 +1253,8 @@ abstract class Playermatchstates implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aPlayerMatchState = null;
+        $this->aMatchstates = null;
     }
 
     /**

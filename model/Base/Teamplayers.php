@@ -2,6 +2,11 @@
 
 namespace Base;
 
+use \Events as ChildEvents;
+use \EventsQuery as ChildEventsQuery;
+use \Lineups as ChildLineups;
+use \LineupsQuery as ChildLineupsQuery;
+use \Teamplayers as ChildTeamplayers;
 use \TeamplayersQuery as ChildTeamplayersQuery;
 use \Exception;
 use \PDO;
@@ -11,6 +16,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -72,12 +78,36 @@ abstract class Teamplayers implements ActiveRecordInterface
     protected $fullname;
 
     /**
+     * @var        ObjectCollection|ChildEvents[] Collection to store aggregation of ChildEvents objects.
+     */
+    protected $collEventss;
+    protected $collEventssPartial;
+
+    /**
+     * @var        ObjectCollection|ChildLineups[] Collection to store aggregation of ChildLineups objects.
+     */
+    protected $collLineupss;
+    protected $collLineupssPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildEvents[]
+     */
+    protected $eventssScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildLineups[]
+     */
+    protected $lineupssScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Teamplayers object.
@@ -466,6 +496,10 @@ abstract class Teamplayers implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collEventss = null;
+
+            $this->collLineupss = null;
+
         } // if (deep)
     }
 
@@ -574,6 +608,40 @@ abstract class Teamplayers implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->eventssScheduledForDeletion !== null) {
+                if (!$this->eventssScheduledForDeletion->isEmpty()) {
+                    \EventsQuery::create()
+                        ->filterByPrimaryKeys($this->eventssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->eventssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collEventss !== null) {
+                foreach ($this->collEventss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->lineupssScheduledForDeletion !== null) {
+                if (!$this->lineupssScheduledForDeletion->isEmpty()) {
+                    \LineupsQuery::create()
+                        ->filterByPrimaryKeys($this->lineupssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->lineupssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collLineupss !== null) {
+                foreach ($this->collLineupss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -710,10 +778,11 @@ abstract class Teamplayers implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Teamplayers'][$this->hashCode()])) {
@@ -730,6 +799,38 @@ abstract class Teamplayers implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collEventss) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'eventss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'eventss';
+                        break;
+                    default:
+                        $key = 'Eventss';
+                }
+
+                $result[$key] = $this->collEventss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collLineupss) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'lineupss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'lineupss';
+                        break;
+                    default:
+                        $key = 'Lineupss';
+                }
+
+                $result[$key] = $this->collLineupss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -935,6 +1036,26 @@ abstract class Teamplayers implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setFullname($this->getFullname());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getEventss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addEvents($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getLineupss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addLineups($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setTeamPlayerPK(NULL); // this is a auto-increment column, so set to default value
@@ -961,6 +1082,564 @@ abstract class Teamplayers implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Events' == $relationName) {
+            return $this->initEventss();
+        }
+        if ('Lineups' == $relationName) {
+            return $this->initLineupss();
+        }
+    }
+
+    /**
+     * Clears out the collEventss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addEventss()
+     */
+    public function clearEventss()
+    {
+        $this->collEventss = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collEventss collection loaded partially.
+     */
+    public function resetPartialEventss($v = true)
+    {
+        $this->collEventssPartial = $v;
+    }
+
+    /**
+     * Initializes the collEventss collection.
+     *
+     * By default this just sets the collEventss collection to an empty array (like clearcollEventss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initEventss($overrideExisting = true)
+    {
+        if (null !== $this->collEventss && !$overrideExisting) {
+            return;
+        }
+        $this->collEventss = new ObjectCollection();
+        $this->collEventss->setModel('\Events');
+    }
+
+    /**
+     * Gets an array of ChildEvents objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildTeamplayers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildEvents[] List of ChildEvents objects
+     * @throws PropelException
+     */
+    public function getEventss(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collEventssPartial && !$this->isNew();
+        if (null === $this->collEventss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collEventss) {
+                // return empty collection
+                $this->initEventss();
+            } else {
+                $collEventss = ChildEventsQuery::create(null, $criteria)
+                    ->filterByTeamplayers($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collEventssPartial && count($collEventss)) {
+                        $this->initEventss(false);
+
+                        foreach ($collEventss as $obj) {
+                            if (false == $this->collEventss->contains($obj)) {
+                                $this->collEventss->append($obj);
+                            }
+                        }
+
+                        $this->collEventssPartial = true;
+                    }
+
+                    return $collEventss;
+                }
+
+                if ($partial && $this->collEventss) {
+                    foreach ($this->collEventss as $obj) {
+                        if ($obj->isNew()) {
+                            $collEventss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collEventss = $collEventss;
+                $this->collEventssPartial = false;
+            }
+        }
+
+        return $this->collEventss;
+    }
+
+    /**
+     * Sets a collection of ChildEvents objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $eventss A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildTeamplayers The current object (for fluent API support)
+     */
+    public function setEventss(Collection $eventss, ConnectionInterface $con = null)
+    {
+        /** @var ChildEvents[] $eventssToDelete */
+        $eventssToDelete = $this->getEventss(new Criteria(), $con)->diff($eventss);
+
+
+        $this->eventssScheduledForDeletion = $eventssToDelete;
+
+        foreach ($eventssToDelete as $eventsRemoved) {
+            $eventsRemoved->setTeamplayers(null);
+        }
+
+        $this->collEventss = null;
+        foreach ($eventss as $events) {
+            $this->addEvents($events);
+        }
+
+        $this->collEventss = $eventss;
+        $this->collEventssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Events objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Events objects.
+     * @throws PropelException
+     */
+    public function countEventss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collEventssPartial && !$this->isNew();
+        if (null === $this->collEventss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collEventss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getEventss());
+            }
+
+            $query = ChildEventsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByTeamplayers($this)
+                ->count($con);
+        }
+
+        return count($this->collEventss);
+    }
+
+    /**
+     * Method called to associate a ChildEvents object to this object
+     * through the ChildEvents foreign key attribute.
+     *
+     * @param  ChildEvents $l ChildEvents
+     * @return $this|\Teamplayers The current object (for fluent API support)
+     */
+    public function addEvents(ChildEvents $l)
+    {
+        if ($this->collEventss === null) {
+            $this->initEventss();
+            $this->collEventssPartial = true;
+        }
+
+        if (!$this->collEventss->contains($l)) {
+            $this->doAddEvents($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildEvents $events The ChildEvents object to add.
+     */
+    protected function doAddEvents(ChildEvents $events)
+    {
+        $this->collEventss[]= $events;
+        $events->setTeamplayers($this);
+    }
+
+    /**
+     * @param  ChildEvents $events The ChildEvents object to remove.
+     * @return $this|ChildTeamplayers The current object (for fluent API support)
+     */
+    public function removeEvents(ChildEvents $events)
+    {
+        if ($this->getEventss()->contains($events)) {
+            $pos = $this->collEventss->search($events);
+            $this->collEventss->remove($pos);
+            if (null === $this->eventssScheduledForDeletion) {
+                $this->eventssScheduledForDeletion = clone $this->collEventss;
+                $this->eventssScheduledForDeletion->clear();
+            }
+            $this->eventssScheduledForDeletion[]= clone $events;
+            $events->setTeamplayers(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Teamplayers is new, it will return
+     * an empty collection; or if this Teamplayers has previously
+     * been saved, it will retrieve related Eventss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Teamplayers.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildEvents[] List of ChildEvents objects
+     */
+    public function getEventssJoinResults(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildEventsQuery::create(null, $criteria);
+        $query->joinWith('Results', $joinBehavior);
+
+        return $this->getEventss($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Teamplayers is new, it will return
+     * an empty collection; or if this Teamplayers has previously
+     * been saved, it will retrieve related Eventss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Teamplayers.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildEvents[] List of ChildEvents objects
+     */
+    public function getEventssJoinTeams(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildEventsQuery::create(null, $criteria);
+        $query->joinWith('Teams', $joinBehavior);
+
+        return $this->getEventss($query, $con);
+    }
+
+    /**
+     * Clears out the collLineupss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addLineupss()
+     */
+    public function clearLineupss()
+    {
+        $this->collLineupss = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collLineupss collection loaded partially.
+     */
+    public function resetPartialLineupss($v = true)
+    {
+        $this->collLineupssPartial = $v;
+    }
+
+    /**
+     * Initializes the collLineupss collection.
+     *
+     * By default this just sets the collLineupss collection to an empty array (like clearcollLineupss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initLineupss($overrideExisting = true)
+    {
+        if (null !== $this->collLineupss && !$overrideExisting) {
+            return;
+        }
+        $this->collLineupss = new ObjectCollection();
+        $this->collLineupss->setModel('\Lineups');
+    }
+
+    /**
+     * Gets an array of ChildLineups objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildTeamplayers is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildLineups[] List of ChildLineups objects
+     * @throws PropelException
+     */
+    public function getLineupss(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLineupssPartial && !$this->isNew();
+        if (null === $this->collLineupss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collLineupss) {
+                // return empty collection
+                $this->initLineupss();
+            } else {
+                $collLineupss = ChildLineupsQuery::create(null, $criteria)
+                    ->filterByLineUpTeamPlayer($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collLineupssPartial && count($collLineupss)) {
+                        $this->initLineupss(false);
+
+                        foreach ($collLineupss as $obj) {
+                            if (false == $this->collLineupss->contains($obj)) {
+                                $this->collLineupss->append($obj);
+                            }
+                        }
+
+                        $this->collLineupssPartial = true;
+                    }
+
+                    return $collLineupss;
+                }
+
+                if ($partial && $this->collLineupss) {
+                    foreach ($this->collLineupss as $obj) {
+                        if ($obj->isNew()) {
+                            $collLineupss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collLineupss = $collLineupss;
+                $this->collLineupssPartial = false;
+            }
+        }
+
+        return $this->collLineupss;
+    }
+
+    /**
+     * Sets a collection of ChildLineups objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $lineupss A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildTeamplayers The current object (for fluent API support)
+     */
+    public function setLineupss(Collection $lineupss, ConnectionInterface $con = null)
+    {
+        /** @var ChildLineups[] $lineupssToDelete */
+        $lineupssToDelete = $this->getLineupss(new Criteria(), $con)->diff($lineupss);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->lineupssScheduledForDeletion = clone $lineupssToDelete;
+
+        foreach ($lineupssToDelete as $lineupsRemoved) {
+            $lineupsRemoved->setLineUpTeamPlayer(null);
+        }
+
+        $this->collLineupss = null;
+        foreach ($lineupss as $lineups) {
+            $this->addLineups($lineups);
+        }
+
+        $this->collLineupss = $lineupss;
+        $this->collLineupssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Lineups objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Lineups objects.
+     * @throws PropelException
+     */
+    public function countLineupss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collLineupssPartial && !$this->isNew();
+        if (null === $this->collLineupss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collLineupss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getLineupss());
+            }
+
+            $query = ChildLineupsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByLineUpTeamPlayer($this)
+                ->count($con);
+        }
+
+        return count($this->collLineupss);
+    }
+
+    /**
+     * Method called to associate a ChildLineups object to this object
+     * through the ChildLineups foreign key attribute.
+     *
+     * @param  ChildLineups $l ChildLineups
+     * @return $this|\Teamplayers The current object (for fluent API support)
+     */
+    public function addLineups(ChildLineups $l)
+    {
+        if ($this->collLineupss === null) {
+            $this->initLineupss();
+            $this->collLineupssPartial = true;
+        }
+
+        if (!$this->collLineupss->contains($l)) {
+            $this->doAddLineups($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildLineups $lineups The ChildLineups object to add.
+     */
+    protected function doAddLineups(ChildLineups $lineups)
+    {
+        $this->collLineupss[]= $lineups;
+        $lineups->setLineUpTeamPlayer($this);
+    }
+
+    /**
+     * @param  ChildLineups $lineups The ChildLineups object to remove.
+     * @return $this|ChildTeamplayers The current object (for fluent API support)
+     */
+    public function removeLineups(ChildLineups $lineups)
+    {
+        if ($this->getLineupss()->contains($lineups)) {
+            $pos = $this->collLineupss->search($lineups);
+            $this->collLineupss->remove($pos);
+            if (null === $this->lineupssScheduledForDeletion) {
+                $this->lineupssScheduledForDeletion = clone $this->collLineupss;
+                $this->lineupssScheduledForDeletion->clear();
+            }
+            $this->lineupssScheduledForDeletion[]= clone $lineups;
+            $lineups->setLineUpTeamPlayer(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Teamplayers is new, it will return
+     * an empty collection; or if this Teamplayers has previously
+     * been saved, it will retrieve related Lineupss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Teamplayers.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLineups[] List of ChildLineups objects
+     */
+    public function getLineupssJoinLineUpMatch(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLineupsQuery::create(null, $criteria);
+        $query->joinWith('LineUpMatch', $joinBehavior);
+
+        return $this->getLineupss($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Teamplayers is new, it will return
+     * an empty collection; or if this Teamplayers has previously
+     * been saved, it will retrieve related Lineupss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Teamplayers.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildLineups[] List of ChildLineups objects
+     */
+    public function getLineupssJoinLineUpTeam(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildLineupsQuery::create(null, $criteria);
+        $query->joinWith('LineUpTeam', $joinBehavior);
+
+        return $this->getLineupss($query, $con);
     }
 
     /**
@@ -990,8 +1669,20 @@ abstract class Teamplayers implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collEventss) {
+                foreach ($this->collEventss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collLineupss) {
+                foreach ($this->collLineupss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collEventss = null;
+        $this->collLineupss = null;
     }
 
     /**

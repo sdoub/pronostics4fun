@@ -151,9 +151,9 @@ class LineupsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('TeamKey', 'Teamkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('TeamPlayerKey', 'Teamplayerkey', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('MatchKey', 'Matchkey', 'INTEGER' , 'matches', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('TeamKey', 'Teamkey', 'INTEGER' , 'teams', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('TeamPlayerKey', 'Teamplayerkey', 'INTEGER' , 'teamplayers', 'PrimaryKey', true, null, null);
         $this->addColumn('IsSubstitute', 'Issubstitute', 'BOOLEAN', true, 1, false);
         $this->addColumn('TimeIn', 'Timein', 'INTEGER', false, null, null);
         $this->addColumn('TeamPlayerReplacedKey', 'Teamplayerreplacedkey', 'INTEGER', false, null, null);
@@ -164,6 +164,27 @@ class LineupsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('LineUpMatch', '\\Matches', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('LineUpTeam', '\\Teams', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':TeamKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('LineUpTeamPlayer', '\\Teamplayers', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':TeamPlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

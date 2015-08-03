@@ -2,7 +2,11 @@
 
 namespace Base;
 
+use \Groups as ChildGroups;
+use \GroupsQuery as ChildGroupsQuery;
 use \PlayergroupresultsQuery as ChildPlayergroupresultsQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
 use \Exception;
 use \PDO;
 use Map\PlayergroupresultsTableMap;
@@ -76,6 +80,16 @@ abstract class Playergroupresults implements ActiveRecordInterface
      * @var        int
      */
     protected $score;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aPlayerResult;
+
+    /**
+     * @var        ChildGroups
+     */
+    protected $aGroupResult;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -349,6 +363,10 @@ abstract class Playergroupresults implements ActiveRecordInterface
             $this->modifiedColumns[PlayergroupresultsTableMap::COL_PLAYERKEY] = true;
         }
 
+        if ($this->aPlayerResult !== null && $this->aPlayerResult->getPlayerPK() !== $v) {
+            $this->aPlayerResult = null;
+        }
+
         return $this;
     } // setPlayerkey()
 
@@ -367,6 +385,10 @@ abstract class Playergroupresults implements ActiveRecordInterface
         if ($this->groupkey !== $v) {
             $this->groupkey = $v;
             $this->modifiedColumns[PlayergroupresultsTableMap::COL_GROUPKEY] = true;
+        }
+
+        if ($this->aGroupResult !== null && $this->aGroupResult->getGroupPK() !== $v) {
+            $this->aGroupResult = null;
         }
 
         return $this;
@@ -466,6 +488,12 @@ abstract class Playergroupresults implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aPlayerResult !== null && $this->playerkey !== $this->aPlayerResult->getPlayerPK()) {
+            $this->aPlayerResult = null;
+        }
+        if ($this->aGroupResult !== null && $this->groupkey !== $this->aGroupResult->getGroupPK()) {
+            $this->aGroupResult = null;
+        }
     } // ensureConsistency
 
     /**
@@ -505,6 +533,8 @@ abstract class Playergroupresults implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aPlayerResult = null;
+            $this->aGroupResult = null;
         } // if (deep)
     }
 
@@ -603,6 +633,25 @@ abstract class Playergroupresults implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aPlayerResult !== null) {
+                if ($this->aPlayerResult->isModified() || $this->aPlayerResult->isNew()) {
+                    $affectedRows += $this->aPlayerResult->save($con);
+                }
+                $this->setPlayerResult($this->aPlayerResult);
+            }
+
+            if ($this->aGroupResult !== null) {
+                if ($this->aGroupResult->isModified() || $this->aGroupResult->isNew()) {
+                    $affectedRows += $this->aGroupResult->save($con);
+                }
+                $this->setGroupResult($this->aGroupResult);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -747,10 +796,11 @@ abstract class Playergroupresults implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Playergroupresults'][$this->hashCode()])) {
@@ -768,6 +818,38 @@ abstract class Playergroupresults implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aPlayerResult) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aPlayerResult->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aGroupResult) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'groups';
+                        break;
+                    default:
+                        $key = 'Groups';
+                }
+
+                $result[$key] = $this->aGroupResult->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -929,8 +1011,22 @@ abstract class Playergroupresults implements ActiveRecordInterface
         $validPk = null !== $this->getPlayerkey() &&
             null !== $this->getGroupkey();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation playergroupresults_fk_d784ed to table players
+        if ($this->aPlayerResult && $hash = spl_object_hash($this->aPlayerResult)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation playergroupresults_fk_0d5692 to table groups
+        if ($this->aGroupResult && $hash = spl_object_hash($this->aGroupResult)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1020,12 +1116,120 @@ abstract class Playergroupresults implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playergroupresults The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPlayerResult(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerkey(NULL);
+        } else {
+            $this->setPlayerkey($v->getPlayerPK());
+        }
+
+        $this->aPlayerResult = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayergroupresults($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getPlayerResult(ConnectionInterface $con = null)
+    {
+        if ($this->aPlayerResult === null && ($this->playerkey !== null)) {
+            $this->aPlayerResult = ChildPlayersQuery::create()->findPk($this->playerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPlayerResult->addPlayergroupresultss($this);
+             */
+        }
+
+        return $this->aPlayerResult;
+    }
+
+    /**
+     * Declares an association between this object and a ChildGroups object.
+     *
+     * @param  ChildGroups $v
+     * @return $this|\Playergroupresults The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setGroupResult(ChildGroups $v = null)
+    {
+        if ($v === null) {
+            $this->setGroupkey(NULL);
+        } else {
+            $this->setGroupkey($v->getGroupPK());
+        }
+
+        $this->aGroupResult = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildGroups object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayergroupresults($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildGroups object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildGroups The associated ChildGroups object.
+     * @throws PropelException
+     */
+    public function getGroupResult(ConnectionInterface $con = null)
+    {
+        if ($this->aGroupResult === null && ($this->groupkey !== null)) {
+            $this->aGroupResult = ChildGroupsQuery::create()->findPk($this->groupkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aGroupResult->addPlayergroupresultss($this);
+             */
+        }
+
+        return $this->aGroupResult;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aPlayerResult) {
+            $this->aPlayerResult->removePlayergroupresults($this);
+        }
+        if (null !== $this->aGroupResult) {
+            $this->aGroupResult->removePlayergroupresults($this);
+        }
         $this->playerkey = null;
         $this->groupkey = null;
         $this->score = null;
@@ -1049,6 +1253,8 @@ abstract class Playergroupresults implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aPlayerResult = null;
+        $this->aGroupResult = null;
     }
 
     /**

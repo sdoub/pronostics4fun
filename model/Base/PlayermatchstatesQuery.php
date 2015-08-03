@@ -10,6 +10,7 @@ use Map\PlayermatchstatesTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -30,6 +31,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayermatchstatesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPlayermatchstatesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildPlayermatchstatesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildPlayermatchstatesQuery leftJoinPlayerMatchState($relationAlias = null) Adds a LEFT JOIN clause to the query using the PlayerMatchState relation
+ * @method     ChildPlayermatchstatesQuery rightJoinPlayerMatchState($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PlayerMatchState relation
+ * @method     ChildPlayermatchstatesQuery innerJoinPlayerMatchState($relationAlias = null) Adds a INNER JOIN clause to the query using the PlayerMatchState relation
+ *
+ * @method     ChildPlayermatchstatesQuery leftJoinMatchstates($relationAlias = null) Adds a LEFT JOIN clause to the query using the Matchstates relation
+ * @method     ChildPlayermatchstatesQuery rightJoinMatchstates($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Matchstates relation
+ * @method     ChildPlayermatchstatesQuery innerJoinMatchstates($relationAlias = null) Adds a INNER JOIN clause to the query using the Matchstates relation
+ *
+ * @method     \PlayersQuery|\MatchstatesQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayermatchstates findOne(ConnectionInterface $con = null) Return the first ChildPlayermatchstates matching the query
  * @method     ChildPlayermatchstates findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayermatchstates matching the query, or a new ChildPlayermatchstates object populated from the query conditions when no match is found
@@ -253,6 +264,8 @@ abstract class PlayermatchstatesQuery extends ModelCriteria
      * $query->filterByPlayerkey(array('min' => 12)); // WHERE PlayerKey > 12
      * </code>
      *
+     * @see       filterByPlayerMatchState()
+     *
      * @param     mixed $playerkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -293,6 +306,8 @@ abstract class PlayermatchstatesQuery extends ModelCriteria
      * $query->filterByMatchstatekey(array(12, 34)); // WHERE MatchStateKey IN (12, 34)
      * $query->filterByMatchstatekey(array('min' => 12)); // WHERE MatchStateKey > 12
      * </code>
+     *
+     * @see       filterByMatchstates()
      *
      * @param     mixed $matchstatekey The value to use as filter.
      *              Use scalar values for equality.
@@ -364,6 +379,160 @@ abstract class PlayermatchstatesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PlayermatchstatesTableMap::COL_SCORE, $score, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Players object
+     *
+     * @param \Players|ObjectCollection $players The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayermatchstatesQuery The current query, for fluid interface
+     */
+    public function filterByPlayerMatchState($players, $comparison = null)
+    {
+        if ($players instanceof \Players) {
+            return $this
+                ->addUsingAlias(PlayermatchstatesTableMap::COL_PLAYERKEY, $players->getPlayerPK(), $comparison);
+        } elseif ($players instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayermatchstatesTableMap::COL_PLAYERKEY, $players->toKeyValue('PrimaryKey', 'PlayerPK'), $comparison);
+        } else {
+            throw new PropelException('filterByPlayerMatchState() only accepts arguments of type \Players or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PlayerMatchState relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayermatchstatesQuery The current query, for fluid interface
+     */
+    public function joinPlayerMatchState($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PlayerMatchState');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PlayerMatchState');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PlayerMatchState relation Players object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \PlayersQuery A secondary query class using the current class as primary query
+     */
+    public function usePlayerMatchStateQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPlayerMatchState($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PlayerMatchState', '\PlayersQuery');
+    }
+
+    /**
+     * Filter the query by a related \Matchstates object
+     *
+     * @param \Matchstates|ObjectCollection $matchstates The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayermatchstatesQuery The current query, for fluid interface
+     */
+    public function filterByMatchstates($matchstates, $comparison = null)
+    {
+        if ($matchstates instanceof \Matchstates) {
+            return $this
+                ->addUsingAlias(PlayermatchstatesTableMap::COL_MATCHSTATEKEY, $matchstates->getMatchStatePK(), $comparison);
+        } elseif ($matchstates instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayermatchstatesTableMap::COL_MATCHSTATEKEY, $matchstates->toKeyValue('PrimaryKey', 'MatchStatePK'), $comparison);
+        } else {
+            throw new PropelException('filterByMatchstates() only accepts arguments of type \Matchstates or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Matchstates relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayermatchstatesQuery The current query, for fluid interface
+     */
+    public function joinMatchstates($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Matchstates');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Matchstates');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Matchstates relation Matchstates object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \MatchstatesQuery A secondary query class using the current class as primary query
+     */
+    public function useMatchstatesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinMatchstates($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Matchstates', '\MatchstatesQuery');
     }
 
     /**

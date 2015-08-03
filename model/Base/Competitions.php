@@ -2,7 +2,14 @@
 
 namespace Base;
 
+use \Competitions as ChildCompetitions;
 use \CompetitionsQuery as ChildCompetitionsQuery;
+use \Groups as ChildGroups;
+use \GroupsQuery as ChildGroupsQuery;
+use \News as ChildNews;
+use \NewsQuery as ChildNewsQuery;
+use \Playerranking as ChildPlayerranking;
+use \PlayerrankingQuery as ChildPlayerrankingQuery;
 use \Exception;
 use \PDO;
 use Map\CompetitionsTableMap;
@@ -11,6 +18,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -72,12 +80,48 @@ abstract class Competitions implements ActiveRecordInterface
     protected $name;
 
     /**
+     * @var        ObjectCollection|ChildGroups[] Collection to store aggregation of ChildGroups objects.
+     */
+    protected $collGroupss;
+    protected $collGroupssPartial;
+
+    /**
+     * @var        ObjectCollection|ChildNews[] Collection to store aggregation of ChildNews objects.
+     */
+    protected $collNews;
+    protected $collNewsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayerranking[] Collection to store aggregation of ChildPlayerranking objects.
+     */
+    protected $collPlayerrankings;
+    protected $collPlayerrankingsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGroups[]
+     */
+    protected $groupssScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildNews[]
+     */
+    protected $newsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayerranking[]
+     */
+    protected $playerrankingsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Competitions object.
@@ -466,6 +510,12 @@ abstract class Competitions implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collGroupss = null;
+
+            $this->collNews = null;
+
+            $this->collPlayerrankings = null;
+
         } // if (deep)
     }
 
@@ -574,6 +624,57 @@ abstract class Competitions implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->groupssScheduledForDeletion !== null) {
+                if (!$this->groupssScheduledForDeletion->isEmpty()) {
+                    \GroupsQuery::create()
+                        ->filterByPrimaryKeys($this->groupssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->groupssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collGroupss !== null) {
+                foreach ($this->collGroupss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->newsScheduledForDeletion !== null) {
+                if (!$this->newsScheduledForDeletion->isEmpty()) {
+                    \NewsQuery::create()
+                        ->filterByPrimaryKeys($this->newsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->newsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collNews !== null) {
+                foreach ($this->collNews as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playerrankingsScheduledForDeletion !== null) {
+                if (!$this->playerrankingsScheduledForDeletion->isEmpty()) {
+                    \PlayerrankingQuery::create()
+                        ->filterByPrimaryKeys($this->playerrankingsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playerrankingsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayerrankings !== null) {
+                foreach ($this->collPlayerrankings as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -710,10 +811,11 @@ abstract class Competitions implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Competitions'][$this->hashCode()])) {
@@ -730,6 +832,53 @@ abstract class Competitions implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collGroupss) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groupss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'groupss';
+                        break;
+                    default:
+                        $key = 'Groupss';
+                }
+
+                $result[$key] = $this->collGroupss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collNews) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'news';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'news';
+                        break;
+                    default:
+                        $key = 'News';
+                }
+
+                $result[$key] = $this->collNews->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayerrankings) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playerrankings';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playerrankings';
+                        break;
+                    default:
+                        $key = 'Playerrankings';
+                }
+
+                $result[$key] = $this->collPlayerrankings->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -935,6 +1084,32 @@ abstract class Competitions implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getGroupss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addGroups($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getNews() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addNews($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayerrankings() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayerranking($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setCompetitionPK(NULL); // this is a auto-increment column, so set to default value
@@ -961,6 +1136,710 @@ abstract class Competitions implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Groups' == $relationName) {
+            return $this->initGroupss();
+        }
+        if ('News' == $relationName) {
+            return $this->initNews();
+        }
+        if ('Playerranking' == $relationName) {
+            return $this->initPlayerrankings();
+        }
+    }
+
+    /**
+     * Clears out the collGroupss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addGroupss()
+     */
+    public function clearGroupss()
+    {
+        $this->collGroupss = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collGroupss collection loaded partially.
+     */
+    public function resetPartialGroupss($v = true)
+    {
+        $this->collGroupssPartial = $v;
+    }
+
+    /**
+     * Initializes the collGroupss collection.
+     *
+     * By default this just sets the collGroupss collection to an empty array (like clearcollGroupss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initGroupss($overrideExisting = true)
+    {
+        if (null !== $this->collGroupss && !$overrideExisting) {
+            return;
+        }
+        $this->collGroupss = new ObjectCollection();
+        $this->collGroupss->setModel('\Groups');
+    }
+
+    /**
+     * Gets an array of ChildGroups objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCompetitions is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildGroups[] List of ChildGroups objects
+     * @throws PropelException
+     */
+    public function getGroupss(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupssPartial && !$this->isNew();
+        if (null === $this->collGroupss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collGroupss) {
+                // return empty collection
+                $this->initGroupss();
+            } else {
+                $collGroupss = ChildGroupsQuery::create(null, $criteria)
+                    ->filterByCompetitions($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collGroupssPartial && count($collGroupss)) {
+                        $this->initGroupss(false);
+
+                        foreach ($collGroupss as $obj) {
+                            if (false == $this->collGroupss->contains($obj)) {
+                                $this->collGroupss->append($obj);
+                            }
+                        }
+
+                        $this->collGroupssPartial = true;
+                    }
+
+                    return $collGroupss;
+                }
+
+                if ($partial && $this->collGroupss) {
+                    foreach ($this->collGroupss as $obj) {
+                        if ($obj->isNew()) {
+                            $collGroupss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collGroupss = $collGroupss;
+                $this->collGroupssPartial = false;
+            }
+        }
+
+        return $this->collGroupss;
+    }
+
+    /**
+     * Sets a collection of ChildGroups objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $groupss A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCompetitions The current object (for fluent API support)
+     */
+    public function setGroupss(Collection $groupss, ConnectionInterface $con = null)
+    {
+        /** @var ChildGroups[] $groupssToDelete */
+        $groupssToDelete = $this->getGroupss(new Criteria(), $con)->diff($groupss);
+
+
+        $this->groupssScheduledForDeletion = $groupssToDelete;
+
+        foreach ($groupssToDelete as $groupsRemoved) {
+            $groupsRemoved->setCompetitions(null);
+        }
+
+        $this->collGroupss = null;
+        foreach ($groupss as $groups) {
+            $this->addGroups($groups);
+        }
+
+        $this->collGroupss = $groupss;
+        $this->collGroupssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Groups objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Groups objects.
+     * @throws PropelException
+     */
+    public function countGroupss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGroupssPartial && !$this->isNew();
+        if (null === $this->collGroupss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGroupss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getGroupss());
+            }
+
+            $query = ChildGroupsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCompetitions($this)
+                ->count($con);
+        }
+
+        return count($this->collGroupss);
+    }
+
+    /**
+     * Method called to associate a ChildGroups object to this object
+     * through the ChildGroups foreign key attribute.
+     *
+     * @param  ChildGroups $l ChildGroups
+     * @return $this|\Competitions The current object (for fluent API support)
+     */
+    public function addGroups(ChildGroups $l)
+    {
+        if ($this->collGroupss === null) {
+            $this->initGroupss();
+            $this->collGroupssPartial = true;
+        }
+
+        if (!$this->collGroupss->contains($l)) {
+            $this->doAddGroups($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildGroups $groups The ChildGroups object to add.
+     */
+    protected function doAddGroups(ChildGroups $groups)
+    {
+        $this->collGroupss[]= $groups;
+        $groups->setCompetitions($this);
+    }
+
+    /**
+     * @param  ChildGroups $groups The ChildGroups object to remove.
+     * @return $this|ChildCompetitions The current object (for fluent API support)
+     */
+    public function removeGroups(ChildGroups $groups)
+    {
+        if ($this->getGroupss()->contains($groups)) {
+            $pos = $this->collGroupss->search($groups);
+            $this->collGroupss->remove($pos);
+            if (null === $this->groupssScheduledForDeletion) {
+                $this->groupssScheduledForDeletion = clone $this->collGroupss;
+                $this->groupssScheduledForDeletion->clear();
+            }
+            $this->groupssScheduledForDeletion[]= clone $groups;
+            $groups->setCompetitions(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collNews collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addNews()
+     */
+    public function clearNews()
+    {
+        $this->collNews = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collNews collection loaded partially.
+     */
+    public function resetPartialNews($v = true)
+    {
+        $this->collNewsPartial = $v;
+    }
+
+    /**
+     * Initializes the collNews collection.
+     *
+     * By default this just sets the collNews collection to an empty array (like clearcollNews());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initNews($overrideExisting = true)
+    {
+        if (null !== $this->collNews && !$overrideExisting) {
+            return;
+        }
+        $this->collNews = new ObjectCollection();
+        $this->collNews->setModel('\News');
+    }
+
+    /**
+     * Gets an array of ChildNews objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCompetitions is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildNews[] List of ChildNews objects
+     * @throws PropelException
+     */
+    public function getNews(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsPartial && !$this->isNew();
+        if (null === $this->collNews || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collNews) {
+                // return empty collection
+                $this->initNews();
+            } else {
+                $collNews = ChildNewsQuery::create(null, $criteria)
+                    ->filterByCompetitions($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collNewsPartial && count($collNews)) {
+                        $this->initNews(false);
+
+                        foreach ($collNews as $obj) {
+                            if (false == $this->collNews->contains($obj)) {
+                                $this->collNews->append($obj);
+                            }
+                        }
+
+                        $this->collNewsPartial = true;
+                    }
+
+                    return $collNews;
+                }
+
+                if ($partial && $this->collNews) {
+                    foreach ($this->collNews as $obj) {
+                        if ($obj->isNew()) {
+                            $collNews[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collNews = $collNews;
+                $this->collNewsPartial = false;
+            }
+        }
+
+        return $this->collNews;
+    }
+
+    /**
+     * Sets a collection of ChildNews objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $news A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCompetitions The current object (for fluent API support)
+     */
+    public function setNews(Collection $news, ConnectionInterface $con = null)
+    {
+        /** @var ChildNews[] $newsToDelete */
+        $newsToDelete = $this->getNews(new Criteria(), $con)->diff($news);
+
+
+        $this->newsScheduledForDeletion = $newsToDelete;
+
+        foreach ($newsToDelete as $newsRemoved) {
+            $newsRemoved->setCompetitions(null);
+        }
+
+        $this->collNews = null;
+        foreach ($news as $news) {
+            $this->addNews($news);
+        }
+
+        $this->collNews = $news;
+        $this->collNewsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related News objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related News objects.
+     * @throws PropelException
+     */
+    public function countNews(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNewsPartial && !$this->isNew();
+        if (null === $this->collNews || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collNews) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getNews());
+            }
+
+            $query = ChildNewsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCompetitions($this)
+                ->count($con);
+        }
+
+        return count($this->collNews);
+    }
+
+    /**
+     * Method called to associate a ChildNews object to this object
+     * through the ChildNews foreign key attribute.
+     *
+     * @param  ChildNews $l ChildNews
+     * @return $this|\Competitions The current object (for fluent API support)
+     */
+    public function addNews(ChildNews $l)
+    {
+        if ($this->collNews === null) {
+            $this->initNews();
+            $this->collNewsPartial = true;
+        }
+
+        if (!$this->collNews->contains($l)) {
+            $this->doAddNews($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildNews $news The ChildNews object to add.
+     */
+    protected function doAddNews(ChildNews $news)
+    {
+        $this->collNews[]= $news;
+        $news->setCompetitions($this);
+    }
+
+    /**
+     * @param  ChildNews $news The ChildNews object to remove.
+     * @return $this|ChildCompetitions The current object (for fluent API support)
+     */
+    public function removeNews(ChildNews $news)
+    {
+        if ($this->getNews()->contains($news)) {
+            $pos = $this->collNews->search($news);
+            $this->collNews->remove($pos);
+            if (null === $this->newsScheduledForDeletion) {
+                $this->newsScheduledForDeletion = clone $this->collNews;
+                $this->newsScheduledForDeletion->clear();
+            }
+            $this->newsScheduledForDeletion[]= clone $news;
+            $news->setCompetitions(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collPlayerrankings collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayerrankings()
+     */
+    public function clearPlayerrankings()
+    {
+        $this->collPlayerrankings = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayerrankings collection loaded partially.
+     */
+    public function resetPartialPlayerrankings($v = true)
+    {
+        $this->collPlayerrankingsPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayerrankings collection.
+     *
+     * By default this just sets the collPlayerrankings collection to an empty array (like clearcollPlayerrankings());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayerrankings($overrideExisting = true)
+    {
+        if (null !== $this->collPlayerrankings && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayerrankings = new ObjectCollection();
+        $this->collPlayerrankings->setModel('\Playerranking');
+    }
+
+    /**
+     * Gets an array of ChildPlayerranking objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCompetitions is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayerranking[] List of ChildPlayerranking objects
+     * @throws PropelException
+     */
+    public function getPlayerrankings(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayerrankingsPartial && !$this->isNew();
+        if (null === $this->collPlayerrankings || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayerrankings) {
+                // return empty collection
+                $this->initPlayerrankings();
+            } else {
+                $collPlayerrankings = ChildPlayerrankingQuery::create(null, $criteria)
+                    ->filterByCompetitionRanking($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayerrankingsPartial && count($collPlayerrankings)) {
+                        $this->initPlayerrankings(false);
+
+                        foreach ($collPlayerrankings as $obj) {
+                            if (false == $this->collPlayerrankings->contains($obj)) {
+                                $this->collPlayerrankings->append($obj);
+                            }
+                        }
+
+                        $this->collPlayerrankingsPartial = true;
+                    }
+
+                    return $collPlayerrankings;
+                }
+
+                if ($partial && $this->collPlayerrankings) {
+                    foreach ($this->collPlayerrankings as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayerrankings[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayerrankings = $collPlayerrankings;
+                $this->collPlayerrankingsPartial = false;
+            }
+        }
+
+        return $this->collPlayerrankings;
+    }
+
+    /**
+     * Sets a collection of ChildPlayerranking objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playerrankings A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCompetitions The current object (for fluent API support)
+     */
+    public function setPlayerrankings(Collection $playerrankings, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayerranking[] $playerrankingsToDelete */
+        $playerrankingsToDelete = $this->getPlayerrankings(new Criteria(), $con)->diff($playerrankings);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->playerrankingsScheduledForDeletion = clone $playerrankingsToDelete;
+
+        foreach ($playerrankingsToDelete as $playerrankingRemoved) {
+            $playerrankingRemoved->setCompetitionRanking(null);
+        }
+
+        $this->collPlayerrankings = null;
+        foreach ($playerrankings as $playerranking) {
+            $this->addPlayerranking($playerranking);
+        }
+
+        $this->collPlayerrankings = $playerrankings;
+        $this->collPlayerrankingsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playerranking objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playerranking objects.
+     * @throws PropelException
+     */
+    public function countPlayerrankings(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayerrankingsPartial && !$this->isNew();
+        if (null === $this->collPlayerrankings || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayerrankings) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayerrankings());
+            }
+
+            $query = ChildPlayerrankingQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCompetitionRanking($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayerrankings);
+    }
+
+    /**
+     * Method called to associate a ChildPlayerranking object to this object
+     * through the ChildPlayerranking foreign key attribute.
+     *
+     * @param  ChildPlayerranking $l ChildPlayerranking
+     * @return $this|\Competitions The current object (for fluent API support)
+     */
+    public function addPlayerranking(ChildPlayerranking $l)
+    {
+        if ($this->collPlayerrankings === null) {
+            $this->initPlayerrankings();
+            $this->collPlayerrankingsPartial = true;
+        }
+
+        if (!$this->collPlayerrankings->contains($l)) {
+            $this->doAddPlayerranking($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayerranking $playerranking The ChildPlayerranking object to add.
+     */
+    protected function doAddPlayerranking(ChildPlayerranking $playerranking)
+    {
+        $this->collPlayerrankings[]= $playerranking;
+        $playerranking->setCompetitionRanking($this);
+    }
+
+    /**
+     * @param  ChildPlayerranking $playerranking The ChildPlayerranking object to remove.
+     * @return $this|ChildCompetitions The current object (for fluent API support)
+     */
+    public function removePlayerranking(ChildPlayerranking $playerranking)
+    {
+        if ($this->getPlayerrankings()->contains($playerranking)) {
+            $pos = $this->collPlayerrankings->search($playerranking);
+            $this->collPlayerrankings->remove($pos);
+            if (null === $this->playerrankingsScheduledForDeletion) {
+                $this->playerrankingsScheduledForDeletion = clone $this->collPlayerrankings;
+                $this->playerrankingsScheduledForDeletion->clear();
+            }
+            $this->playerrankingsScheduledForDeletion[]= clone $playerranking;
+            $playerranking->setCompetitionRanking(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Competitions is new, it will return
+     * an empty collection; or if this Competitions has previously
+     * been saved, it will retrieve related Playerrankings from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Competitions.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerranking[] List of ChildPlayerranking objects
+     */
+    public function getPlayerrankingsJoinRankingPlayer(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerrankingQuery::create(null, $criteria);
+        $query->joinWith('RankingPlayer', $joinBehavior);
+
+        return $this->getPlayerrankings($query, $con);
     }
 
     /**
@@ -990,8 +1869,26 @@ abstract class Competitions implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collGroupss) {
+                foreach ($this->collGroupss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collNews) {
+                foreach ($this->collNews as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayerrankings) {
+                foreach ($this->collPlayerrankings as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collGroupss = null;
+        $this->collNews = null;
+        $this->collPlayerrankings = null;
     }
 
     /**

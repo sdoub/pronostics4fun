@@ -2,6 +2,10 @@
 
 namespace Base;
 
+use \Matches as ChildMatches;
+use \MatchesQuery as ChildMatchesQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
 use \VotesQuery as ChildVotesQuery;
 use \DateTime;
 use \Exception;
@@ -91,6 +95,16 @@ abstract class Votes implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $votedate;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aVotePlayer;
+
+    /**
+     * @var        ChildMatches
+     */
+    protected $aVoteMatch;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -436,6 +450,10 @@ abstract class Votes implements ActiveRecordInterface
             $this->modifiedColumns[VotesTableMap::COL_MATCHKEY] = true;
         }
 
+        if ($this->aVoteMatch !== null && $this->aVoteMatch->getMatchPK() !== $v) {
+            $this->aVoteMatch = null;
+        }
+
         return $this;
     } // setMatchkey()
 
@@ -454,6 +472,10 @@ abstract class Votes implements ActiveRecordInterface
         if ($this->playerkey !== $v) {
             $this->playerkey = $v;
             $this->modifiedColumns[VotesTableMap::COL_PLAYERKEY] = true;
+        }
+
+        if ($this->aVotePlayer !== null && $this->aVotePlayer->getPlayerPK() !== $v) {
+            $this->aVotePlayer = null;
         }
 
         return $this;
@@ -590,6 +612,12 @@ abstract class Votes implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aVoteMatch !== null && $this->matchkey !== $this->aVoteMatch->getMatchPK()) {
+            $this->aVoteMatch = null;
+        }
+        if ($this->aVotePlayer !== null && $this->playerkey !== $this->aVotePlayer->getPlayerPK()) {
+            $this->aVotePlayer = null;
+        }
     } // ensureConsistency
 
     /**
@@ -629,6 +657,8 @@ abstract class Votes implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aVotePlayer = null;
+            $this->aVoteMatch = null;
         } // if (deep)
     }
 
@@ -727,6 +757,25 @@ abstract class Votes implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aVotePlayer !== null) {
+                if ($this->aVotePlayer->isModified() || $this->aVotePlayer->isNew()) {
+                    $affectedRows += $this->aVotePlayer->save($con);
+                }
+                $this->setVotePlayer($this->aVotePlayer);
+            }
+
+            if ($this->aVoteMatch !== null) {
+                if ($this->aVoteMatch->isModified() || $this->aVoteMatch->isNew()) {
+                    $affectedRows += $this->aVoteMatch->save($con);
+                }
+                $this->setVoteMatch($this->aVoteMatch);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -900,10 +949,11 @@ abstract class Votes implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Votes'][$this->hashCode()])) {
@@ -931,6 +981,38 @@ abstract class Votes implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aVotePlayer) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aVotePlayer->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aVoteMatch) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'matches';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'matches';
+                        break;
+                    default:
+                        $key = 'Matches';
+                }
+
+                $result[$key] = $this->aVoteMatch->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1195,12 +1277,120 @@ abstract class Votes implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Votes The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setVotePlayer(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerkey(NULL);
+        } else {
+            $this->setPlayerkey($v->getPlayerPK());
+        }
+
+        $this->aVotePlayer = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addVotes($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getVotePlayer(ConnectionInterface $con = null)
+    {
+        if ($this->aVotePlayer === null && ($this->playerkey !== null)) {
+            $this->aVotePlayer = ChildPlayersQuery::create()->findPk($this->playerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aVotePlayer->addVotess($this);
+             */
+        }
+
+        return $this->aVotePlayer;
+    }
+
+    /**
+     * Declares an association between this object and a ChildMatches object.
+     *
+     * @param  ChildMatches $v
+     * @return $this|\Votes The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setVoteMatch(ChildMatches $v = null)
+    {
+        if ($v === null) {
+            $this->setMatchkey(NULL);
+        } else {
+            $this->setMatchkey($v->getMatchPK());
+        }
+
+        $this->aVoteMatch = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildMatches object, it will not be re-added.
+        if ($v !== null) {
+            $v->addVotes($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildMatches object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildMatches The associated ChildMatches object.
+     * @throws PropelException
+     */
+    public function getVoteMatch(ConnectionInterface $con = null)
+    {
+        if ($this->aVoteMatch === null && ($this->matchkey !== null)) {
+            $this->aVoteMatch = ChildMatchesQuery::create()->findPk($this->matchkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aVoteMatch->addVotess($this);
+             */
+        }
+
+        return $this->aVoteMatch;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aVotePlayer) {
+            $this->aVotePlayer->removeVotes($this);
+        }
+        if (null !== $this->aVoteMatch) {
+            $this->aVoteMatch->removeVotes($this);
+        }
         $this->primarykey = null;
         $this->matchkey = null;
         $this->playerkey = null;
@@ -1227,6 +1417,8 @@ abstract class Votes implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aVotePlayer = null;
+        $this->aVoteMatch = null;
     }
 
     /**

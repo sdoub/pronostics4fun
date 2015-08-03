@@ -248,6 +248,118 @@ class PlayersTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Connectedusers', '\\Connectedusers', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Connecteduserss', false);
+        $this->addRelation('Forecasts', '\\Forecasts', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Forecastss', false);
+        $this->addRelation('PlayercupmatchesRelatedByPlayerhomekey', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerHomeKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'PlayercupmatchessRelatedByPlayerhomekey', false);
+        $this->addRelation('PlayercupmatchesRelatedByPlayerawaykey', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerAwayKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'PlayercupmatchessRelatedByPlayerawaykey', false);
+        $this->addRelation('PlayercupmatchesRelatedByCuproundkey', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':CupRoundKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'PlayercupmatchessRelatedByCuproundkey', false);
+        $this->addRelation('PlayerdivisionmatchesRelatedByPlayerhomekey', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerHomeKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'PlayerdivisionmatchessRelatedByPlayerhomekey', false);
+        $this->addRelation('PlayerdivisionmatchesRelatedByPlayerawaykey', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerAwayKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'PlayerdivisionmatchessRelatedByPlayerawaykey', false);
+        $this->addRelation('PlayerdivisionmatchesRelatedByDivisionkey', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':DivisionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'PlayerdivisionmatchessRelatedByDivisionkey', false);
+        $this->addRelation('Playerdivisionranking', '\\Playerdivisionranking', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerdivisionrankings', false);
+        $this->addRelation('Playergroupranking', '\\Playergroupranking', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playergrouprankings', false);
+        $this->addRelation('Playergroupresults', '\\Playergroupresults', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playergroupresultss', false);
+        $this->addRelation('Playergroupstates', '\\Playergroupstates', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playergroupstatess', false);
+        $this->addRelation('Playermatchresults', '\\Playermatchresults', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playermatchresultss', false);
+        $this->addRelation('Playermatchstates', '\\Playermatchstates', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playermatchstatess', false);
+        $this->addRelation('Playerranking', '\\Playerranking', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerrankings', false);
+        $this->addRelation('Votes', '\\Votes', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Votess', false);
     } // buildRelations()
 
     /**

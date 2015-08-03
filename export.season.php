@@ -12,32 +12,55 @@ if (isset($_GET["Competition"])) {
   $competitionKey = $_GET["Competition"];
 }
 
+$groups = GroupsQuery::create()
+  ->filterByCompetitionkey($competitionKey)
+  ->find();
+
+$groupList = '';
+foreach ($groups as $group){
+	if (!empty($groupList))
+		$groupList.=',';	
+	$groupList.=$group->getGroupPK();
+}
+
+$matches = MatchesQuery::create()
+	->useGroupsQuery()
+  ->filterByCompetitionkey($competitionKey)
+  ->endUse()
+  ->find();
+$matchList = '';
+foreach ($matches as $match){
+	if (!empty($matchList))
+		$matchList.=',';	
+	$matchList.=$match->getMatchPK();
+}
+
 $tables = array("competitions"=>"", 
 								"cuprounds"=>"",
 							  "divisions"=>"",
-							  "events"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
-								"forecasts"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
+							  "events"=>"MatchKey IN ($matchList)",
+								"forecasts"=>"MatchKey IN ($matchList)",
 								"groups"=>"CompetitionKey=$competitionKey",
-								"lineups"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
-								"matches"=>"GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=$competitionKey)",
-								"matchstates"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
+								"lineups"=>"MatchKey IN ($matchList)",
+								"matches"=>"GroupKey IN ($groupList)",
+								"matchstates"=>"MatchKey IN ($matchList)",
 								"news"=>"CompetitionKey=$competitionKey",
-								"playercupmatches"=>"GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=$competitionKey)",
-								"playerdivisionmatches"=>"GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=$competitionKey)",
+								"playercupmatches"=>"GroupKey IN ($groupList)",
+								"playerdivisionmatches"=>"GroupKey IN ($groupList)",
 								"playerdivisionranking"=>"SeasonKey IN (SELECT seasons.PrimaryKey FROM seasons WHERE seasons.CompetitionKey=$competitionKey)",
-								"playergroupranking"=>"GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=$competitionKey)",
-								"playergroupresults"=>"GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=$competitionKey)",
-								"playergroupstates"=>"GroupKey IN (SELECT groups.PrimaryKey FROM groups WHERE groups.CompetitionKey=$competitionKey)",
-								"playermatchresults"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
-								"playermatchstates"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
+								"playergroupranking"=>"GroupKey IN ($groupList)",
+								"playergroupresults"=>"GroupKey IN ($groupList)",
+								"playergroupstates"=>"GroupKey IN ($groupList)",
+								"playermatchresults"=>"MatchKey IN ($matchList)",
+								"playermatchstates"=>"MatchKey IN ($matchList)",
 								"playerranking"=>"CompetitionKey=$competitionKey",
 								"players"=>"",
-								"results"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)",
+								"results"=>"MatchKey IN ($matchList)",
 								"seasons"=>"CompetitionKey=$competitionKey",
 								"surveys"=>"",
 								"teamplayers"=>"",
 								"teams"=>"",
-								"votes"=>"MatchKey IN (SELECT matches.PrimaryKey FROM matches INNER JOIN groups ON groups.MatchKey=matches.PrimaryKey AND groups.CompetitionKey=$competitionKey)"
+								"votes"=>"MatchKey IN ($matchList)"
 							 );
 //system("mysqldump -t -u $user -p $pssword --replace $db $table -wPrimaryKey=8");
        

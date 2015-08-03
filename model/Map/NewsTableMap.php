@@ -147,7 +147,7 @@ class NewsTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'NewsPK', 'INTEGER', true, null, null);
-        $this->addColumn('CompetitionKey', 'Competitionkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('CompetitionKey', 'Competitionkey', 'INTEGER', 'competitions', 'PrimaryKey', true, null, null);
         $this->addColumn('Information', 'Information', 'VARCHAR', true, 4000, null);
         $this->addColumn('InfoDate', 'Infodate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('InfoType', 'Infotype', 'BOOLEAN', true, 1, true);
@@ -158,6 +158,13 @@ class NewsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Competitions', '\\Competitions', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':CompetitionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

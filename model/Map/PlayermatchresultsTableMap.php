@@ -141,8 +141,8 @@ class PlayermatchresultsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER' , 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('MatchKey', 'Matchkey', 'INTEGER' , 'matches', 'PrimaryKey', true, null, null);
         $this->addColumn('Score', 'Score', 'INTEGER', false, null, null);
         $this->addColumn('IsPerfect', 'Isperfect', 'BOOLEAN', true, 1, false);
     } // initialize()
@@ -152,6 +152,20 @@ class PlayermatchresultsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('PlayerResult', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('MatchPlayerResult', '\\Matches', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

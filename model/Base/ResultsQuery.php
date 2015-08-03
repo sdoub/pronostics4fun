@@ -10,6 +10,7 @@ use Map\ResultsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -34,6 +35,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildResultsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildResultsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildResultsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildResultsQuery leftJoinMatches($relationAlias = null) Adds a LEFT JOIN clause to the query using the Matches relation
+ * @method     ChildResultsQuery rightJoinMatches($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Matches relation
+ * @method     ChildResultsQuery innerJoinMatches($relationAlias = null) Adds a INNER JOIN clause to the query using the Matches relation
+ *
+ * @method     ChildResultsQuery leftJoinEvents($relationAlias = null) Adds a LEFT JOIN clause to the query using the Events relation
+ * @method     ChildResultsQuery rightJoinEvents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Events relation
+ * @method     ChildResultsQuery innerJoinEvents($relationAlias = null) Adds a INNER JOIN clause to the query using the Events relation
+ *
+ * @method     \MatchesQuery|\EventsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildResults findOne(ConnectionInterface $con = null) Return the first ChildResults matching the query
  * @method     ChildResults findOneOrCreate(ConnectionInterface $con = null) Return the first ChildResults matching the query, or a new ChildResults object populated from the query conditions when no match is found
@@ -64,7 +75,20 @@ use Propel\Runtime\Exception\PropelException;
  */
 abstract class ResultsQuery extends ModelCriteria
 {
-    protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
+
+    // delegate behavior
+
+    protected $delegatedFields = [
+        'Groupkey' => 'Matches',
+        'Teamhomekey' => 'Matches',
+        'Teamawaykey' => 'Matches',
+        'Scheduledate' => 'Matches',
+        'Isbonusmatch' => 'Matches',
+        'Status' => 'Matches',
+        'Externalkey' => 'Matches',
+    ];
+
+protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
      * Initializes internal state of \Base\ResultsQuery object.
@@ -292,6 +316,8 @@ abstract class ResultsQuery extends ModelCriteria
      * $query->filterByMatchkey(array('min' => 12)); // WHERE MatchKey > 12
      * </code>
      *
+     * @see       filterByMatches()
+     *
      * @param     mixed $matchkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -449,6 +475,156 @@ abstract class ResultsQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \Matches object
+     *
+     * @param \Matches|ObjectCollection $matches The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildResultsQuery The current query, for fluid interface
+     */
+    public function filterByMatches($matches, $comparison = null)
+    {
+        if ($matches instanceof \Matches) {
+            return $this
+                ->addUsingAlias(ResultsTableMap::COL_MATCHKEY, $matches->getMatchPK(), $comparison);
+        } elseif ($matches instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ResultsTableMap::COL_MATCHKEY, $matches->toKeyValue('PrimaryKey', 'MatchPK'), $comparison);
+        } else {
+            throw new PropelException('filterByMatches() only accepts arguments of type \Matches or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Matches relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildResultsQuery The current query, for fluid interface
+     */
+    public function joinMatches($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Matches');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Matches');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Matches relation Matches object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \MatchesQuery A secondary query class using the current class as primary query
+     */
+    public function useMatchesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinMatches($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Matches', '\MatchesQuery');
+    }
+
+    /**
+     * Filter the query by a related \Events object
+     *
+     * @param \Events|ObjectCollection $events the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildResultsQuery The current query, for fluid interface
+     */
+    public function filterByEvents($events, $comparison = null)
+    {
+        if ($events instanceof \Events) {
+            return $this
+                ->addUsingAlias(ResultsTableMap::COL_PRIMARYKEY, $events->getResultkey(), $comparison);
+        } elseif ($events instanceof ObjectCollection) {
+            return $this
+                ->useEventsQuery()
+                ->filterByPrimaryKeys($events->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByEvents() only accepts arguments of type \Events or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Events relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildResultsQuery The current query, for fluid interface
+     */
+    public function joinEvents($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Events');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Events');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Events relation Events object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \EventsQuery A secondary query class using the current class as primary query
+     */
+    public function useEventsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinEvents($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Events', '\EventsQuery');
+    }
+
+    /**
      * Exclude object from result
      *
      * @param   ChildResults $results Object to remove from the list of results
@@ -523,6 +699,322 @@ abstract class ResultsQuery extends ModelCriteria
 
             return $affectedRows;
         });
+    }
+
+    // delegate behavior
+    /**
+    * Filter the query by GroupKey column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByGroupkey(1234); // WHERE GroupKey = 1234
+        * $query->filterByGroupkey(array(12, 34)); // WHERE GroupKey IN (12, 34)
+        * $query->filterByGroupkey(array('min' => 12)); // WHERE GroupKey > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByGroupkey($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByGroupkey($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByGroupkey($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByGroupkey($order)->endUse();
+    }
+    /**
+    * Filter the query by TeamHomeKey column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByTeamhomekey(1234); // WHERE TeamHomeKey = 1234
+        * $query->filterByTeamhomekey(array(12, 34)); // WHERE TeamHomeKey IN (12, 34)
+        * $query->filterByTeamhomekey(array('min' => 12)); // WHERE TeamHomeKey > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByTeamhomekey($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByTeamhomekey($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByTeamhomekey($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByTeamhomekey($order)->endUse();
+    }
+    /**
+    * Filter the query by TeamAwayKey column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByTeamawaykey(1234); // WHERE TeamAwayKey = 1234
+        * $query->filterByTeamawaykey(array(12, 34)); // WHERE TeamAwayKey IN (12, 34)
+        * $query->filterByTeamawaykey(array('min' => 12)); // WHERE TeamAwayKey > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByTeamawaykey($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByTeamawaykey($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByTeamawaykey($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByTeamawaykey($order)->endUse();
+    }
+    /**
+    * Filter the query by ScheduleDate column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByScheduledate(1234); // WHERE ScheduleDate = 1234
+        * $query->filterByScheduledate(array(12, 34)); // WHERE ScheduleDate IN (12, 34)
+        * $query->filterByScheduledate(array('min' => 12)); // WHERE ScheduleDate > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByScheduledate($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByScheduledate($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByScheduledate($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByScheduledate($order)->endUse();
+    }
+    /**
+    * Filter the query by IsBonusMatch column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByIsbonusmatch(1234); // WHERE IsBonusMatch = 1234
+        * $query->filterByIsbonusmatch(array(12, 34)); // WHERE IsBonusMatch IN (12, 34)
+        * $query->filterByIsbonusmatch(array('min' => 12)); // WHERE IsBonusMatch > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByIsbonusmatch($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByIsbonusmatch($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByIsbonusmatch($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByIsbonusmatch($order)->endUse();
+    }
+    /**
+    * Filter the query by Status column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByStatus(1234); // WHERE Status = 1234
+        * $query->filterByStatus(array(12, 34)); // WHERE Status IN (12, 34)
+        * $query->filterByStatus(array('min' => 12)); // WHERE Status > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByStatus($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByStatus($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByStatus($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByStatus($order)->endUse();
+    }
+    /**
+    * Filter the query by ExternalKey column
+    *
+    * Example usage:
+    * <code>
+        * $query->filterByExternalkey(1234); // WHERE ExternalKey = 1234
+        * $query->filterByExternalkey(array(12, 34)); // WHERE ExternalKey IN (12, 34)
+        * $query->filterByExternalkey(array('min' => 12)); // WHERE ExternalKey > 12
+        * </code>
+    *
+    * @param     mixed $value The value to use as filter.
+    *              Use scalar values for equality.
+    *              Use array values for in_array() equivalent.
+    *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+    * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+    *
+    * @return $this|ChildResultsQuery The current query, for fluid interface
+    */
+    public function filterByExternalkey($value = null, $comparison = null)
+    {
+        return $this->useMatchesQuery()->filterByExternalkey($value, $comparison)->endUse();
+    }
+
+    /**
+    * Adds an ORDER BY clause to the query
+    * Usability layer on top of Criteria::addAscendingOrderByColumn() and Criteria::addDescendingOrderByColumn()
+    * Infers $column and $order from $columnName and some optional arguments
+    * Examples:
+    *   $c->orderBy('Book.CreatedAt')
+    *    => $c->addAscendingOrderByColumn(BookTableMap::CREATED_AT)
+    *   $c->orderBy('Book.CategoryId', 'desc')
+    *    => $c->addDescendingOrderByColumn(BookTableMap::CATEGORY_ID)
+    *
+    * @param string $order      The sorting order. Criteria::ASC by default, also accepts Criteria::DESC
+    *
+    * @return $this|ModelCriteria The current object, for fluid interface
+    */
+    public function orderByExternalkey($order = Criteria::ASC)
+    {
+        return $this->useMatchesQuery()->orderByExternalkey($order)->endUse();
+    }
+
+    /**
+     * Adds a condition on a column based on a column phpName and a value
+     * Uses introspection to translate the column phpName into a fully qualified name
+     * Warning: recognizes only the phpNames of the main Model (not joined tables)
+     * <code>
+     * $c->filterBy('Title', 'foo');
+     * </code>
+     *
+     * @see Criteria::add()
+     *
+     * @param string $column     A string representing thecolumn phpName, e.g. 'AuthorId'
+     * @param mixed  $value      A value for the condition
+     * @param string $comparison What to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ModelCriteria The current object, for fluid interface
+     */
+    public function filterBy($column, $value, $comparison = Criteria::EQUAL)
+    {
+        if (isset($this->delegatedFields[$column])) {
+            $methodUse = "use{$this->delegatedFields[$column]}Query";
+
+            return $this->{$methodUse}()->filterBy($column, $value, $comparison)->endUse();
+        } else {
+            return $this->add($this->getRealColumnName($column), $value, $comparison);
+        }
     }
 
 } // ResultsQuery

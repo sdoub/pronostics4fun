@@ -146,6 +146,34 @@ class TeamsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Events', '\\Events', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':TeamKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Eventss', false);
+        $this->addRelation('Lineups', '\\Lineups', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':TeamKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Lineupss', false);
+        $this->addRelation('MatchesRelatedByTeamhomekey', '\\Matches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':TeamHomeKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'MatchessRelatedByTeamhomekey', false);
+        $this->addRelation('MatchesRelatedByTeamawaykey', '\\Matches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':TeamAwayKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'MatchessRelatedByTeamawaykey', false);
     } // buildRelations()
 
     /**

@@ -2,7 +2,13 @@
 
 namespace Base;
 
+use \Divisions as ChildDivisions;
+use \DivisionsQuery as ChildDivisionsQuery;
 use \PlayerdivisionrankingQuery as ChildPlayerdivisionrankingQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
+use \Seasons as ChildSeasons;
+use \SeasonsQuery as ChildSeasonsQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -133,6 +139,21 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
      * @var        int
      */
     protected $pointsdifference;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aDivisionRankingPlayer;
+
+    /**
+     * @var        ChildSeasons
+     */
+    protected $aDivisionRankingSeason;
+
+    /**
+     * @var        ChildDivisions
+     */
+    protected $aDivisionRankingDivision;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -518,6 +539,10 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
             $this->modifiedColumns[PlayerdivisionrankingTableMap::COL_PLAYERKEY] = true;
         }
 
+        if ($this->aDivisionRankingPlayer !== null && $this->aDivisionRankingPlayer->getPlayerPK() !== $v) {
+            $this->aDivisionRankingPlayer = null;
+        }
+
         return $this;
     } // setPlayerkey()
 
@@ -538,6 +563,10 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
             $this->modifiedColumns[PlayerdivisionrankingTableMap::COL_SEASONKEY] = true;
         }
 
+        if ($this->aDivisionRankingSeason !== null && $this->aDivisionRankingSeason->getSeasonPK() !== $v) {
+            $this->aDivisionRankingSeason = null;
+        }
+
         return $this;
     } // setSeasonkey()
 
@@ -556,6 +585,10 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
         if ($this->divisionkey !== $v) {
             $this->divisionkey = $v;
             $this->modifiedColumns[PlayerdivisionrankingTableMap::COL_DIVISIONKEY] = true;
+        }
+
+        if ($this->aDivisionRankingDivision !== null && $this->aDivisionRankingDivision->getDivisionPK() !== $v) {
+            $this->aDivisionRankingDivision = null;
         }
 
         return $this;
@@ -845,6 +878,15 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aDivisionRankingPlayer !== null && $this->playerkey !== $this->aDivisionRankingPlayer->getPlayerPK()) {
+            $this->aDivisionRankingPlayer = null;
+        }
+        if ($this->aDivisionRankingSeason !== null && $this->seasonkey !== $this->aDivisionRankingSeason->getSeasonPK()) {
+            $this->aDivisionRankingSeason = null;
+        }
+        if ($this->aDivisionRankingDivision !== null && $this->divisionkey !== $this->aDivisionRankingDivision->getDivisionPK()) {
+            $this->aDivisionRankingDivision = null;
+        }
     } // ensureConsistency
 
     /**
@@ -884,6 +926,9 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aDivisionRankingPlayer = null;
+            $this->aDivisionRankingSeason = null;
+            $this->aDivisionRankingDivision = null;
         } // if (deep)
     }
 
@@ -982,6 +1027,32 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aDivisionRankingPlayer !== null) {
+                if ($this->aDivisionRankingPlayer->isModified() || $this->aDivisionRankingPlayer->isNew()) {
+                    $affectedRows += $this->aDivisionRankingPlayer->save($con);
+                }
+                $this->setDivisionRankingPlayer($this->aDivisionRankingPlayer);
+            }
+
+            if ($this->aDivisionRankingSeason !== null) {
+                if ($this->aDivisionRankingSeason->isModified() || $this->aDivisionRankingSeason->isNew()) {
+                    $affectedRows += $this->aDivisionRankingSeason->save($con);
+                }
+                $this->setDivisionRankingSeason($this->aDivisionRankingSeason);
+            }
+
+            if ($this->aDivisionRankingDivision !== null) {
+                if ($this->aDivisionRankingDivision->isModified() || $this->aDivisionRankingDivision->isNew()) {
+                    $affectedRows += $this->aDivisionRankingDivision->save($con);
+                }
+                $this->setDivisionRankingDivision($this->aDivisionRankingDivision);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1207,10 +1278,11 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Playerdivisionranking'][$this->hashCode()])) {
@@ -1245,6 +1317,53 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aDivisionRankingPlayer) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aDivisionRankingPlayer->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aDivisionRankingSeason) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'seasons';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'seasons';
+                        break;
+                    default:
+                        $key = 'Seasons';
+                }
+
+                $result[$key] = $this->aDivisionRankingSeason->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aDivisionRankingDivision) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'divisions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'divisions';
+                        break;
+                    default:
+                        $key = 'Divisions';
+                }
+
+                $result[$key] = $this->aDivisionRankingDivision->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1491,8 +1610,29 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
             null !== $this->getDivisionkey() &&
             null !== $this->getRankdate();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 3;
         $primaryKeyFKs = [];
+
+        //relation playerdivisionranking_fk_d784ed to table players
+        if ($this->aDivisionRankingPlayer && $hash = spl_object_hash($this->aDivisionRankingPlayer)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation playerdivisionranking_fk_1a4951 to table seasons
+        if ($this->aDivisionRankingSeason && $hash = spl_object_hash($this->aDivisionRankingSeason)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation playerdivisionranking_fk_5dff2d to table divisions
+        if ($this->aDivisionRankingDivision && $hash = spl_object_hash($this->aDivisionRankingDivision)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1595,12 +1735,174 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playerdivisionranking The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionRankingPlayer(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerkey(NULL);
+        } else {
+            $this->setPlayerkey($v->getPlayerPK());
+        }
+
+        $this->aDivisionRankingPlayer = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayerdivisionranking($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getDivisionRankingPlayer(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionRankingPlayer === null && ($this->playerkey !== null)) {
+            $this->aDivisionRankingPlayer = ChildPlayersQuery::create()->findPk($this->playerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionRankingPlayer->addPlayerdivisionrankings($this);
+             */
+        }
+
+        return $this->aDivisionRankingPlayer;
+    }
+
+    /**
+     * Declares an association between this object and a ChildSeasons object.
+     *
+     * @param  ChildSeasons $v
+     * @return $this|\Playerdivisionranking The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionRankingSeason(ChildSeasons $v = null)
+    {
+        if ($v === null) {
+            $this->setSeasonkey(NULL);
+        } else {
+            $this->setSeasonkey($v->getSeasonPK());
+        }
+
+        $this->aDivisionRankingSeason = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildSeasons object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayerdivisionranking($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildSeasons object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildSeasons The associated ChildSeasons object.
+     * @throws PropelException
+     */
+    public function getDivisionRankingSeason(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionRankingSeason === null && ($this->seasonkey !== null)) {
+            $this->aDivisionRankingSeason = ChildSeasonsQuery::create()->findPk($this->seasonkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionRankingSeason->addPlayerdivisionrankings($this);
+             */
+        }
+
+        return $this->aDivisionRankingSeason;
+    }
+
+    /**
+     * Declares an association between this object and a ChildDivisions object.
+     *
+     * @param  ChildDivisions $v
+     * @return $this|\Playerdivisionranking The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionRankingDivision(ChildDivisions $v = null)
+    {
+        if ($v === null) {
+            $this->setDivisionkey(NULL);
+        } else {
+            $this->setDivisionkey($v->getDivisionPK());
+        }
+
+        $this->aDivisionRankingDivision = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildDivisions object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayerdivisionranking($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildDivisions object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildDivisions The associated ChildDivisions object.
+     * @throws PropelException
+     */
+    public function getDivisionRankingDivision(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionRankingDivision === null && ($this->divisionkey !== null)) {
+            $this->aDivisionRankingDivision = ChildDivisionsQuery::create()->findPk($this->divisionkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionRankingDivision->addPlayerdivisionrankings($this);
+             */
+        }
+
+        return $this->aDivisionRankingDivision;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aDivisionRankingPlayer) {
+            $this->aDivisionRankingPlayer->removePlayerdivisionranking($this);
+        }
+        if (null !== $this->aDivisionRankingSeason) {
+            $this->aDivisionRankingSeason->removePlayerdivisionranking($this);
+        }
+        if (null !== $this->aDivisionRankingDivision) {
+            $this->aDivisionRankingDivision->removePlayerdivisionranking($this);
+        }
         $this->playerkey = null;
         $this->seasonkey = null;
         $this->divisionkey = null;
@@ -1634,6 +1936,9 @@ abstract class Playerdivisionranking implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aDivisionRankingPlayer = null;
+        $this->aDivisionRankingSeason = null;
+        $this->aDivisionRankingDivision = null;
     }
 
     /**

@@ -2,7 +2,13 @@
 
 namespace Base;
 
+use \Groups as ChildGroups;
+use \GroupsQuery as ChildGroupsQuery;
 use \PlayercupmatchesQuery as ChildPlayercupmatchesQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
+use \Seasons as ChildSeasons;
+use \SeasonsQuery as ChildSeasonsQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -121,6 +127,31 @@ abstract class Playercupmatches implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $resultdate;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aDivisionMatchesPlayerHome;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aDivisionMatchesPlayerAway;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aDivisionMatchesCupRound;
+
+    /**
+     * @var        ChildGroups
+     */
+    protected $aDivisionMatchesGroup;
+
+    /**
+     * @var        ChildSeasons
+     */
+    protected $aDivisionMatchesSeason;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -516,6 +547,10 @@ abstract class Playercupmatches implements ActiveRecordInterface
             $this->modifiedColumns[PlayercupmatchesTableMap::COL_PLAYERHOMEKEY] = true;
         }
 
+        if ($this->aDivisionMatchesPlayerHome !== null && $this->aDivisionMatchesPlayerHome->getPlayerPK() !== $v) {
+            $this->aDivisionMatchesPlayerHome = null;
+        }
+
         return $this;
     } // setPlayerhomekey()
 
@@ -534,6 +569,10 @@ abstract class Playercupmatches implements ActiveRecordInterface
         if ($this->playerawaykey !== $v) {
             $this->playerawaykey = $v;
             $this->modifiedColumns[PlayercupmatchesTableMap::COL_PLAYERAWAYKEY] = true;
+        }
+
+        if ($this->aDivisionMatchesPlayerAway !== null && $this->aDivisionMatchesPlayerAway->getPlayerPK() !== $v) {
+            $this->aDivisionMatchesPlayerAway = null;
         }
 
         return $this;
@@ -556,6 +595,10 @@ abstract class Playercupmatches implements ActiveRecordInterface
             $this->modifiedColumns[PlayercupmatchesTableMap::COL_CUPROUNDKEY] = true;
         }
 
+        if ($this->aDivisionMatchesCupRound !== null && $this->aDivisionMatchesCupRound->getPlayerPK() !== $v) {
+            $this->aDivisionMatchesCupRound = null;
+        }
+
         return $this;
     } // setCuproundkey()
 
@@ -576,6 +619,10 @@ abstract class Playercupmatches implements ActiveRecordInterface
             $this->modifiedColumns[PlayercupmatchesTableMap::COL_SEASONKEY] = true;
         }
 
+        if ($this->aDivisionMatchesSeason !== null && $this->aDivisionMatchesSeason->getSeasonPK() !== $v) {
+            $this->aDivisionMatchesSeason = null;
+        }
+
         return $this;
     } // setSeasonkey()
 
@@ -594,6 +641,10 @@ abstract class Playercupmatches implements ActiveRecordInterface
         if ($this->groupkey !== $v) {
             $this->groupkey = $v;
             $this->modifiedColumns[PlayercupmatchesTableMap::COL_GROUPKEY] = true;
+        }
+
+        if ($this->aDivisionMatchesGroup !== null && $this->aDivisionMatchesGroup->getGroupPK() !== $v) {
+            $this->aDivisionMatchesGroup = null;
         }
 
         return $this;
@@ -780,6 +831,21 @@ abstract class Playercupmatches implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aDivisionMatchesPlayerHome !== null && $this->playerhomekey !== $this->aDivisionMatchesPlayerHome->getPlayerPK()) {
+            $this->aDivisionMatchesPlayerHome = null;
+        }
+        if ($this->aDivisionMatchesPlayerAway !== null && $this->playerawaykey !== $this->aDivisionMatchesPlayerAway->getPlayerPK()) {
+            $this->aDivisionMatchesPlayerAway = null;
+        }
+        if ($this->aDivisionMatchesCupRound !== null && $this->cuproundkey !== $this->aDivisionMatchesCupRound->getPlayerPK()) {
+            $this->aDivisionMatchesCupRound = null;
+        }
+        if ($this->aDivisionMatchesSeason !== null && $this->seasonkey !== $this->aDivisionMatchesSeason->getSeasonPK()) {
+            $this->aDivisionMatchesSeason = null;
+        }
+        if ($this->aDivisionMatchesGroup !== null && $this->groupkey !== $this->aDivisionMatchesGroup->getGroupPK()) {
+            $this->aDivisionMatchesGroup = null;
+        }
     } // ensureConsistency
 
     /**
@@ -819,6 +885,11 @@ abstract class Playercupmatches implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aDivisionMatchesPlayerHome = null;
+            $this->aDivisionMatchesPlayerAway = null;
+            $this->aDivisionMatchesCupRound = null;
+            $this->aDivisionMatchesGroup = null;
+            $this->aDivisionMatchesSeason = null;
         } // if (deep)
     }
 
@@ -917,6 +988,46 @@ abstract class Playercupmatches implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aDivisionMatchesPlayerHome !== null) {
+                if ($this->aDivisionMatchesPlayerHome->isModified() || $this->aDivisionMatchesPlayerHome->isNew()) {
+                    $affectedRows += $this->aDivisionMatchesPlayerHome->save($con);
+                }
+                $this->setDivisionMatchesPlayerHome($this->aDivisionMatchesPlayerHome);
+            }
+
+            if ($this->aDivisionMatchesPlayerAway !== null) {
+                if ($this->aDivisionMatchesPlayerAway->isModified() || $this->aDivisionMatchesPlayerAway->isNew()) {
+                    $affectedRows += $this->aDivisionMatchesPlayerAway->save($con);
+                }
+                $this->setDivisionMatchesPlayerAway($this->aDivisionMatchesPlayerAway);
+            }
+
+            if ($this->aDivisionMatchesCupRound !== null) {
+                if ($this->aDivisionMatchesCupRound->isModified() || $this->aDivisionMatchesCupRound->isNew()) {
+                    $affectedRows += $this->aDivisionMatchesCupRound->save($con);
+                }
+                $this->setDivisionMatchesCupRound($this->aDivisionMatchesCupRound);
+            }
+
+            if ($this->aDivisionMatchesGroup !== null) {
+                if ($this->aDivisionMatchesGroup->isModified() || $this->aDivisionMatchesGroup->isNew()) {
+                    $affectedRows += $this->aDivisionMatchesGroup->save($con);
+                }
+                $this->setDivisionMatchesGroup($this->aDivisionMatchesGroup);
+            }
+
+            if ($this->aDivisionMatchesSeason !== null) {
+                if ($this->aDivisionMatchesSeason->isModified() || $this->aDivisionMatchesSeason->isNew()) {
+                    $affectedRows += $this->aDivisionMatchesSeason->save($con);
+                }
+                $this->setDivisionMatchesSeason($this->aDivisionMatchesSeason);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1135,10 +1246,11 @@ abstract class Playercupmatches implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Playercupmatches'][$this->hashCode()])) {
@@ -1177,6 +1289,83 @@ abstract class Playercupmatches implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aDivisionMatchesPlayerHome) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aDivisionMatchesPlayerHome->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aDivisionMatchesPlayerAway) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aDivisionMatchesPlayerAway->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aDivisionMatchesCupRound) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aDivisionMatchesCupRound->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aDivisionMatchesGroup) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'groups';
+                        break;
+                    default:
+                        $key = 'Groups';
+                }
+
+                $result[$key] = $this->aDivisionMatchesGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aDivisionMatchesSeason) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'seasons';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'seasons';
+                        break;
+                    default:
+                        $key = 'Seasons';
+                }
+
+                $result[$key] = $this->aDivisionMatchesSeason->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1491,12 +1680,282 @@ abstract class Playercupmatches implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playercupmatches The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionMatchesPlayerHome(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerhomekey(NULL);
+        } else {
+            $this->setPlayerhomekey($v->getPlayerPK());
+        }
+
+        $this->aDivisionMatchesPlayerHome = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayercupmatchesRelatedByPlayerhomekey($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getDivisionMatchesPlayerHome(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionMatchesPlayerHome === null && ($this->playerhomekey !== null)) {
+            $this->aDivisionMatchesPlayerHome = ChildPlayersQuery::create()->findPk($this->playerhomekey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionMatchesPlayerHome->addPlayercupmatchessRelatedByPlayerhomekey($this);
+             */
+        }
+
+        return $this->aDivisionMatchesPlayerHome;
+    }
+
+    /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playercupmatches The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionMatchesPlayerAway(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerawaykey(NULL);
+        } else {
+            $this->setPlayerawaykey($v->getPlayerPK());
+        }
+
+        $this->aDivisionMatchesPlayerAway = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayercupmatchesRelatedByPlayerawaykey($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getDivisionMatchesPlayerAway(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionMatchesPlayerAway === null && ($this->playerawaykey !== null)) {
+            $this->aDivisionMatchesPlayerAway = ChildPlayersQuery::create()->findPk($this->playerawaykey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionMatchesPlayerAway->addPlayercupmatchessRelatedByPlayerawaykey($this);
+             */
+        }
+
+        return $this->aDivisionMatchesPlayerAway;
+    }
+
+    /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playercupmatches The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionMatchesCupRound(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setCuproundkey(NULL);
+        } else {
+            $this->setCuproundkey($v->getPlayerPK());
+        }
+
+        $this->aDivisionMatchesCupRound = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayercupmatchesRelatedByCuproundkey($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getDivisionMatchesCupRound(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionMatchesCupRound === null && ($this->cuproundkey !== null)) {
+            $this->aDivisionMatchesCupRound = ChildPlayersQuery::create()->findPk($this->cuproundkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionMatchesCupRound->addPlayercupmatchessRelatedByCuproundkey($this);
+             */
+        }
+
+        return $this->aDivisionMatchesCupRound;
+    }
+
+    /**
+     * Declares an association between this object and a ChildGroups object.
+     *
+     * @param  ChildGroups $v
+     * @return $this|\Playercupmatches The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionMatchesGroup(ChildGroups $v = null)
+    {
+        if ($v === null) {
+            $this->setGroupkey(NULL);
+        } else {
+            $this->setGroupkey($v->getGroupPK());
+        }
+
+        $this->aDivisionMatchesGroup = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildGroups object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayercupmatches($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildGroups object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildGroups The associated ChildGroups object.
+     * @throws PropelException
+     */
+    public function getDivisionMatchesGroup(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionMatchesGroup === null && ($this->groupkey !== null)) {
+            $this->aDivisionMatchesGroup = ChildGroupsQuery::create()->findPk($this->groupkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionMatchesGroup->addPlayercupmatchess($this);
+             */
+        }
+
+        return $this->aDivisionMatchesGroup;
+    }
+
+    /**
+     * Declares an association between this object and a ChildSeasons object.
+     *
+     * @param  ChildSeasons $v
+     * @return $this|\Playercupmatches The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDivisionMatchesSeason(ChildSeasons $v = null)
+    {
+        if ($v === null) {
+            $this->setSeasonkey(NULL);
+        } else {
+            $this->setSeasonkey($v->getSeasonPK());
+        }
+
+        $this->aDivisionMatchesSeason = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildSeasons object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayercupmatches($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildSeasons object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildSeasons The associated ChildSeasons object.
+     * @throws PropelException
+     */
+    public function getDivisionMatchesSeason(ConnectionInterface $con = null)
+    {
+        if ($this->aDivisionMatchesSeason === null && ($this->seasonkey !== null)) {
+            $this->aDivisionMatchesSeason = ChildSeasonsQuery::create()->findPk($this->seasonkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDivisionMatchesSeason->addPlayercupmatchess($this);
+             */
+        }
+
+        return $this->aDivisionMatchesSeason;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aDivisionMatchesPlayerHome) {
+            $this->aDivisionMatchesPlayerHome->removePlayercupmatchesRelatedByPlayerhomekey($this);
+        }
+        if (null !== $this->aDivisionMatchesPlayerAway) {
+            $this->aDivisionMatchesPlayerAway->removePlayercupmatchesRelatedByPlayerawaykey($this);
+        }
+        if (null !== $this->aDivisionMatchesCupRound) {
+            $this->aDivisionMatchesCupRound->removePlayercupmatchesRelatedByCuproundkey($this);
+        }
+        if (null !== $this->aDivisionMatchesGroup) {
+            $this->aDivisionMatchesGroup->removePlayercupmatches($this);
+        }
+        if (null !== $this->aDivisionMatchesSeason) {
+            $this->aDivisionMatchesSeason->removePlayercupmatches($this);
+        }
         $this->primarykey = null;
         $this->playerhomekey = null;
         $this->playerawaykey = null;
@@ -1528,6 +1987,11 @@ abstract class Playercupmatches implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aDivisionMatchesPlayerHome = null;
+        $this->aDivisionMatchesPlayerAway = null;
+        $this->aDivisionMatchesCupRound = null;
+        $this->aDivisionMatchesGroup = null;
+        $this->aDivisionMatchesSeason = null;
     }
 
     /**

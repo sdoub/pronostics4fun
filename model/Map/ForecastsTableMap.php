@@ -152,8 +152,8 @@ class ForecastsTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'ForecastPK', 'INTEGER', true, null, null);
-        $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
-        $this->addColumn('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('MatchKey', 'Matchkey', 'INTEGER', 'matches', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('PlayerKey', 'Playerkey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
         $this->addColumn('TeamHomeScore', 'Teamhomescore', 'INTEGER', true, null, null);
         $this->addColumn('TeamAwayScore', 'Teamawayscore', 'INTEGER', true, null, null);
         $this->addColumn('ForecastDate', 'Forecastdate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
@@ -164,6 +164,20 @@ class ForecastsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Matches', '\\Matches', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('ForecastPlayer', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

@@ -10,6 +10,7 @@ use Map\PlayerrankingTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -32,6 +33,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayerrankingQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPlayerrankingQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildPlayerrankingQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildPlayerrankingQuery leftJoinCompetitionRanking($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompetitionRanking relation
+ * @method     ChildPlayerrankingQuery rightJoinCompetitionRanking($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompetitionRanking relation
+ * @method     ChildPlayerrankingQuery innerJoinCompetitionRanking($relationAlias = null) Adds a INNER JOIN clause to the query using the CompetitionRanking relation
+ *
+ * @method     ChildPlayerrankingQuery leftJoinRankingPlayer($relationAlias = null) Adds a LEFT JOIN clause to the query using the RankingPlayer relation
+ * @method     ChildPlayerrankingQuery rightJoinRankingPlayer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RankingPlayer relation
+ * @method     ChildPlayerrankingQuery innerJoinRankingPlayer($relationAlias = null) Adds a INNER JOIN clause to the query using the RankingPlayer relation
+ *
+ * @method     \CompetitionsQuery|\PlayersQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayerranking findOne(ConnectionInterface $con = null) Return the first ChildPlayerranking matching the query
  * @method     ChildPlayerranking findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayerranking matching the query, or a new ChildPlayerranking object populated from the query conditions when no match is found
@@ -262,6 +273,8 @@ abstract class PlayerrankingQuery extends ModelCriteria
      * $query->filterByCompetitionkey(array('min' => 12)); // WHERE CompetitionKey > 12
      * </code>
      *
+     * @see       filterByCompetitionRanking()
+     *
      * @param     mixed $competitionkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -302,6 +315,8 @@ abstract class PlayerrankingQuery extends ModelCriteria
      * $query->filterByPlayerkey(array(12, 34)); // WHERE PlayerKey IN (12, 34)
      * $query->filterByPlayerkey(array('min' => 12)); // WHERE PlayerKey > 12
      * </code>
+     *
+     * @see       filterByRankingPlayer()
      *
      * @param     mixed $playerkey The value to use as filter.
      *              Use scalar values for equality.
@@ -416,6 +431,160 @@ abstract class PlayerrankingQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PlayerrankingTableMap::COL_RANK, $rank, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Competitions object
+     *
+     * @param \Competitions|ObjectCollection $competitions The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayerrankingQuery The current query, for fluid interface
+     */
+    public function filterByCompetitionRanking($competitions, $comparison = null)
+    {
+        if ($competitions instanceof \Competitions) {
+            return $this
+                ->addUsingAlias(PlayerrankingTableMap::COL_COMPETITIONKEY, $competitions->getCompetitionPK(), $comparison);
+        } elseif ($competitions instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayerrankingTableMap::COL_COMPETITIONKEY, $competitions->toKeyValue('PrimaryKey', 'CompetitionPK'), $comparison);
+        } else {
+            throw new PropelException('filterByCompetitionRanking() only accepts arguments of type \Competitions or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompetitionRanking relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayerrankingQuery The current query, for fluid interface
+     */
+    public function joinCompetitionRanking($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompetitionRanking');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompetitionRanking');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompetitionRanking relation Competitions object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \CompetitionsQuery A secondary query class using the current class as primary query
+     */
+    public function useCompetitionRankingQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCompetitionRanking($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompetitionRanking', '\CompetitionsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Players object
+     *
+     * @param \Players|ObjectCollection $players The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayerrankingQuery The current query, for fluid interface
+     */
+    public function filterByRankingPlayer($players, $comparison = null)
+    {
+        if ($players instanceof \Players) {
+            return $this
+                ->addUsingAlias(PlayerrankingTableMap::COL_PLAYERKEY, $players->getPlayerPK(), $comparison);
+        } elseif ($players instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayerrankingTableMap::COL_PLAYERKEY, $players->toKeyValue('PrimaryKey', 'PlayerPK'), $comparison);
+        } else {
+            throw new PropelException('filterByRankingPlayer() only accepts arguments of type \Players or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the RankingPlayer relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayerrankingQuery The current query, for fluid interface
+     */
+    public function joinRankingPlayer($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('RankingPlayer');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'RankingPlayer');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the RankingPlayer relation Players object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \PlayersQuery A secondary query class using the current class as primary query
+     */
+    public function useRankingPlayerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRankingPlayer($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'RankingPlayer', '\PlayersQuery');
     }
 
     /**

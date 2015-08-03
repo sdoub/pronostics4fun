@@ -138,7 +138,7 @@ class ConnectedusersTableMap extends TableMap
         // columns
         $this->addColumn('VisiteDate', 'Visitedate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addPrimaryKey('UserUniqueId', 'Useruniqueid', 'VARCHAR', true, 100, null);
-        $this->addColumn('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('PlayerKey', 'Playerkey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
     } // initialize()
 
     /**
@@ -146,6 +146,13 @@ class ConnectedusersTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Players', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

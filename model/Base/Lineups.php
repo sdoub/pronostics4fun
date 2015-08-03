@@ -3,6 +3,12 @@
 namespace Base;
 
 use \LineupsQuery as ChildLineupsQuery;
+use \Matches as ChildMatches;
+use \MatchesQuery as ChildMatchesQuery;
+use \Teamplayers as ChildTeamplayers;
+use \TeamplayersQuery as ChildTeamplayersQuery;
+use \Teams as ChildTeams;
+use \TeamsQuery as ChildTeamsQuery;
 use \Exception;
 use \PDO;
 use Map\LineupsTableMap;
@@ -95,6 +101,21 @@ abstract class Lineups implements ActiveRecordInterface
      * @var        int
      */
     protected $teamplayerreplacedkey;
+
+    /**
+     * @var        ChildMatches
+     */
+    protected $aLineUpMatch;
+
+    /**
+     * @var        ChildTeams
+     */
+    protected $aLineUpTeam;
+
+    /**
+     * @var        ChildTeamplayers
+     */
+    protected $aLineUpTeamPlayer;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -421,6 +442,10 @@ abstract class Lineups implements ActiveRecordInterface
             $this->modifiedColumns[LineupsTableMap::COL_MATCHKEY] = true;
         }
 
+        if ($this->aLineUpMatch !== null && $this->aLineUpMatch->getMatchPK() !== $v) {
+            $this->aLineUpMatch = null;
+        }
+
         return $this;
     } // setMatchkey()
 
@@ -441,6 +466,10 @@ abstract class Lineups implements ActiveRecordInterface
             $this->modifiedColumns[LineupsTableMap::COL_TEAMKEY] = true;
         }
 
+        if ($this->aLineUpTeam !== null && $this->aLineUpTeam->getTeamPK() !== $v) {
+            $this->aLineUpTeam = null;
+        }
+
         return $this;
     } // setTeamkey()
 
@@ -459,6 +488,10 @@ abstract class Lineups implements ActiveRecordInterface
         if ($this->teamplayerkey !== $v) {
             $this->teamplayerkey = $v;
             $this->modifiedColumns[LineupsTableMap::COL_TEAMPLAYERKEY] = true;
+        }
+
+        if ($this->aLineUpTeamPlayer !== null && $this->aLineUpTeamPlayer->getTeamPlayerPK() !== $v) {
+            $this->aLineUpTeamPlayer = null;
         }
 
         return $this;
@@ -619,6 +652,15 @@ abstract class Lineups implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aLineUpMatch !== null && $this->matchkey !== $this->aLineUpMatch->getMatchPK()) {
+            $this->aLineUpMatch = null;
+        }
+        if ($this->aLineUpTeam !== null && $this->teamkey !== $this->aLineUpTeam->getTeamPK()) {
+            $this->aLineUpTeam = null;
+        }
+        if ($this->aLineUpTeamPlayer !== null && $this->teamplayerkey !== $this->aLineUpTeamPlayer->getTeamPlayerPK()) {
+            $this->aLineUpTeamPlayer = null;
+        }
     } // ensureConsistency
 
     /**
@@ -658,6 +700,9 @@ abstract class Lineups implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aLineUpMatch = null;
+            $this->aLineUpTeam = null;
+            $this->aLineUpTeamPlayer = null;
         } // if (deep)
     }
 
@@ -756,6 +801,32 @@ abstract class Lineups implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aLineUpMatch !== null) {
+                if ($this->aLineUpMatch->isModified() || $this->aLineUpMatch->isNew()) {
+                    $affectedRows += $this->aLineUpMatch->save($con);
+                }
+                $this->setLineUpMatch($this->aLineUpMatch);
+            }
+
+            if ($this->aLineUpTeam !== null) {
+                if ($this->aLineUpTeam->isModified() || $this->aLineUpTeam->isNew()) {
+                    $affectedRows += $this->aLineUpTeam->save($con);
+                }
+                $this->setLineUpTeam($this->aLineUpTeam);
+            }
+
+            if ($this->aLineUpTeamPlayer !== null) {
+                if ($this->aLineUpTeamPlayer->isModified() || $this->aLineUpTeamPlayer->isNew()) {
+                    $affectedRows += $this->aLineUpTeamPlayer->save($con);
+                }
+                $this->setLineUpTeamPlayer($this->aLineUpTeamPlayer);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -927,10 +998,11 @@ abstract class Lineups implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Lineups'][$this->hashCode()])) {
@@ -951,6 +1023,53 @@ abstract class Lineups implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aLineUpMatch) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'matches';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'matches';
+                        break;
+                    default:
+                        $key = 'Matches';
+                }
+
+                $result[$key] = $this->aLineUpMatch->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aLineUpTeam) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'teams';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'teams';
+                        break;
+                    default:
+                        $key = 'Teams';
+                }
+
+                $result[$key] = $this->aLineUpTeam->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aLineUpTeamPlayer) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'teamplayers';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'teamplayers';
+                        break;
+                    default:
+                        $key = 'Teamplayers';
+                }
+
+                $result[$key] = $this->aLineUpTeamPlayer->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1141,8 +1260,29 @@ abstract class Lineups implements ActiveRecordInterface
             null !== $this->getTeamkey() &&
             null !== $this->getTeamplayerkey();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 3;
         $primaryKeyFKs = [];
+
+        //relation lineups_fk_0ba10f to table matches
+        if ($this->aLineUpMatch && $hash = spl_object_hash($this->aLineUpMatch)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation lineups_fk_33a421 to table teams
+        if ($this->aLineUpTeam && $hash = spl_object_hash($this->aLineUpTeam)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation lineups_fk_97ca7e to table teamplayers
+        if ($this->aLineUpTeamPlayer && $hash = spl_object_hash($this->aLineUpTeamPlayer)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1237,12 +1377,174 @@ abstract class Lineups implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildMatches object.
+     *
+     * @param  ChildMatches $v
+     * @return $this|\Lineups The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setLineUpMatch(ChildMatches $v = null)
+    {
+        if ($v === null) {
+            $this->setMatchkey(NULL);
+        } else {
+            $this->setMatchkey($v->getMatchPK());
+        }
+
+        $this->aLineUpMatch = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildMatches object, it will not be re-added.
+        if ($v !== null) {
+            $v->addLineups($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildMatches object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildMatches The associated ChildMatches object.
+     * @throws PropelException
+     */
+    public function getLineUpMatch(ConnectionInterface $con = null)
+    {
+        if ($this->aLineUpMatch === null && ($this->matchkey !== null)) {
+            $this->aLineUpMatch = ChildMatchesQuery::create()->findPk($this->matchkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aLineUpMatch->addLineupss($this);
+             */
+        }
+
+        return $this->aLineUpMatch;
+    }
+
+    /**
+     * Declares an association between this object and a ChildTeams object.
+     *
+     * @param  ChildTeams $v
+     * @return $this|\Lineups The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setLineUpTeam(ChildTeams $v = null)
+    {
+        if ($v === null) {
+            $this->setTeamkey(NULL);
+        } else {
+            $this->setTeamkey($v->getTeamPK());
+        }
+
+        $this->aLineUpTeam = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildTeams object, it will not be re-added.
+        if ($v !== null) {
+            $v->addLineups($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildTeams object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildTeams The associated ChildTeams object.
+     * @throws PropelException
+     */
+    public function getLineUpTeam(ConnectionInterface $con = null)
+    {
+        if ($this->aLineUpTeam === null && ($this->teamkey !== null)) {
+            $this->aLineUpTeam = ChildTeamsQuery::create()->findPk($this->teamkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aLineUpTeam->addLineupss($this);
+             */
+        }
+
+        return $this->aLineUpTeam;
+    }
+
+    /**
+     * Declares an association between this object and a ChildTeamplayers object.
+     *
+     * @param  ChildTeamplayers $v
+     * @return $this|\Lineups The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setLineUpTeamPlayer(ChildTeamplayers $v = null)
+    {
+        if ($v === null) {
+            $this->setTeamplayerkey(NULL);
+        } else {
+            $this->setTeamplayerkey($v->getTeamPlayerPK());
+        }
+
+        $this->aLineUpTeamPlayer = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildTeamplayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addLineups($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildTeamplayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildTeamplayers The associated ChildTeamplayers object.
+     * @throws PropelException
+     */
+    public function getLineUpTeamPlayer(ConnectionInterface $con = null)
+    {
+        if ($this->aLineUpTeamPlayer === null && ($this->teamplayerkey !== null)) {
+            $this->aLineUpTeamPlayer = ChildTeamplayersQuery::create()->findPk($this->teamplayerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aLineUpTeamPlayer->addLineupss($this);
+             */
+        }
+
+        return $this->aLineUpTeamPlayer;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aLineUpMatch) {
+            $this->aLineUpMatch->removeLineups($this);
+        }
+        if (null !== $this->aLineUpTeam) {
+            $this->aLineUpTeam->removeLineups($this);
+        }
+        if (null !== $this->aLineUpTeamPlayer) {
+            $this->aLineUpTeamPlayer->removeLineups($this);
+        }
         $this->matchkey = null;
         $this->teamkey = null;
         $this->teamplayerkey = null;
@@ -1270,6 +1572,9 @@ abstract class Lineups implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aLineUpMatch = null;
+        $this->aLineUpTeam = null;
+        $this->aLineUpTeamPlayer = null;
     }
 
     /**

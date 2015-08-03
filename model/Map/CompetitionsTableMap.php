@@ -140,6 +140,27 @@ class CompetitionsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Groups', '\\Groups', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':CompetitionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Groupss', false);
+        $this->addRelation('News', '\\News', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':CompetitionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'News', false);
+        $this->addRelation('Playerranking', '\\Playerranking', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':CompetitionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerrankings', false);
     } // buildRelations()
 
     /**

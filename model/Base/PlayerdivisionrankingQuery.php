@@ -10,6 +10,7 @@ use Map\PlayerdivisionrankingTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -48,6 +49,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayerdivisionrankingQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPlayerdivisionrankingQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildPlayerdivisionrankingQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildPlayerdivisionrankingQuery leftJoinDivisionRankingPlayer($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionRankingPlayer relation
+ * @method     ChildPlayerdivisionrankingQuery rightJoinDivisionRankingPlayer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionRankingPlayer relation
+ * @method     ChildPlayerdivisionrankingQuery innerJoinDivisionRankingPlayer($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionRankingPlayer relation
+ *
+ * @method     ChildPlayerdivisionrankingQuery leftJoinDivisionRankingSeason($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionRankingSeason relation
+ * @method     ChildPlayerdivisionrankingQuery rightJoinDivisionRankingSeason($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionRankingSeason relation
+ * @method     ChildPlayerdivisionrankingQuery innerJoinDivisionRankingSeason($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionRankingSeason relation
+ *
+ * @method     ChildPlayerdivisionrankingQuery leftJoinDivisionRankingDivision($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionRankingDivision relation
+ * @method     ChildPlayerdivisionrankingQuery rightJoinDivisionRankingDivision($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionRankingDivision relation
+ * @method     ChildPlayerdivisionrankingQuery innerJoinDivisionRankingDivision($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionRankingDivision relation
+ *
+ * @method     \PlayersQuery|\SeasonsQuery|\DivisionsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayerdivisionranking findOne(ConnectionInterface $con = null) Return the first ChildPlayerdivisionranking matching the query
  * @method     ChildPlayerdivisionranking findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayerdivisionranking matching the query, or a new ChildPlayerdivisionranking object populated from the query conditions when no match is found
@@ -306,6 +321,8 @@ abstract class PlayerdivisionrankingQuery extends ModelCriteria
      * $query->filterByPlayerkey(array('min' => 12)); // WHERE PlayerKey > 12
      * </code>
      *
+     * @see       filterByDivisionRankingPlayer()
+     *
      * @param     mixed $playerkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -347,6 +364,8 @@ abstract class PlayerdivisionrankingQuery extends ModelCriteria
      * $query->filterBySeasonkey(array('min' => 12)); // WHERE SeasonKey > 12
      * </code>
      *
+     * @see       filterByDivisionRankingSeason()
+     *
      * @param     mixed $seasonkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -387,6 +406,8 @@ abstract class PlayerdivisionrankingQuery extends ModelCriteria
      * $query->filterByDivisionkey(array(12, 34)); // WHERE DivisionKey IN (12, 34)
      * $query->filterByDivisionkey(array('min' => 12)); // WHERE DivisionKey > 12
      * </code>
+     *
+     * @see       filterByDivisionRankingDivision()
      *
      * @param     mixed $divisionkey The value to use as filter.
      *              Use scalar values for equality.
@@ -788,6 +809,237 @@ abstract class PlayerdivisionrankingQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PlayerdivisionrankingTableMap::COL_POINTSDIFFERENCE, $pointsdifference, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Players object
+     *
+     * @param \Players|ObjectCollection $players The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayerdivisionrankingQuery The current query, for fluid interface
+     */
+    public function filterByDivisionRankingPlayer($players, $comparison = null)
+    {
+        if ($players instanceof \Players) {
+            return $this
+                ->addUsingAlias(PlayerdivisionrankingTableMap::COL_PLAYERKEY, $players->getPlayerPK(), $comparison);
+        } elseif ($players instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayerdivisionrankingTableMap::COL_PLAYERKEY, $players->toKeyValue('PrimaryKey', 'PlayerPK'), $comparison);
+        } else {
+            throw new PropelException('filterByDivisionRankingPlayer() only accepts arguments of type \Players or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the DivisionRankingPlayer relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayerdivisionrankingQuery The current query, for fluid interface
+     */
+    public function joinDivisionRankingPlayer($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('DivisionRankingPlayer');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'DivisionRankingPlayer');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the DivisionRankingPlayer relation Players object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \PlayersQuery A secondary query class using the current class as primary query
+     */
+    public function useDivisionRankingPlayerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinDivisionRankingPlayer($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DivisionRankingPlayer', '\PlayersQuery');
+    }
+
+    /**
+     * Filter the query by a related \Seasons object
+     *
+     * @param \Seasons|ObjectCollection $seasons The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayerdivisionrankingQuery The current query, for fluid interface
+     */
+    public function filterByDivisionRankingSeason($seasons, $comparison = null)
+    {
+        if ($seasons instanceof \Seasons) {
+            return $this
+                ->addUsingAlias(PlayerdivisionrankingTableMap::COL_SEASONKEY, $seasons->getSeasonPK(), $comparison);
+        } elseif ($seasons instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayerdivisionrankingTableMap::COL_SEASONKEY, $seasons->toKeyValue('PrimaryKey', 'SeasonPK'), $comparison);
+        } else {
+            throw new PropelException('filterByDivisionRankingSeason() only accepts arguments of type \Seasons or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the DivisionRankingSeason relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayerdivisionrankingQuery The current query, for fluid interface
+     */
+    public function joinDivisionRankingSeason($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('DivisionRankingSeason');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'DivisionRankingSeason');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the DivisionRankingSeason relation Seasons object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \SeasonsQuery A secondary query class using the current class as primary query
+     */
+    public function useDivisionRankingSeasonQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinDivisionRankingSeason($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DivisionRankingSeason', '\SeasonsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Divisions object
+     *
+     * @param \Divisions|ObjectCollection $divisions The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildPlayerdivisionrankingQuery The current query, for fluid interface
+     */
+    public function filterByDivisionRankingDivision($divisions, $comparison = null)
+    {
+        if ($divisions instanceof \Divisions) {
+            return $this
+                ->addUsingAlias(PlayerdivisionrankingTableMap::COL_DIVISIONKEY, $divisions->getDivisionPK(), $comparison);
+        } elseif ($divisions instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(PlayerdivisionrankingTableMap::COL_DIVISIONKEY, $divisions->toKeyValue('PrimaryKey', 'DivisionPK'), $comparison);
+        } else {
+            throw new PropelException('filterByDivisionRankingDivision() only accepts arguments of type \Divisions or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the DivisionRankingDivision relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPlayerdivisionrankingQuery The current query, for fluid interface
+     */
+    public function joinDivisionRankingDivision($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('DivisionRankingDivision');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'DivisionRankingDivision');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the DivisionRankingDivision relation Divisions object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DivisionsQuery A secondary query class using the current class as primary query
+     */
+    public function useDivisionRankingDivisionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinDivisionRankingDivision($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DivisionRankingDivision', '\DivisionsQuery');
     }
 
     /**

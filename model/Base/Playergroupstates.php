@@ -2,7 +2,11 @@
 
 namespace Base;
 
+use \Groups as ChildGroups;
+use \GroupsQuery as ChildGroupsQuery;
 use \PlayergroupstatesQuery as ChildPlayergroupstatesQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -99,6 +103,16 @@ abstract class Playergroupstates implements ActiveRecordInterface
      * @var        int
      */
     protected $bonus;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aPlayerState;
+
+    /**
+     * @var        ChildGroups
+     */
+    protected $aGroupState;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -426,6 +440,10 @@ abstract class Playergroupstates implements ActiveRecordInterface
             $this->modifiedColumns[PlayergroupstatesTableMap::COL_PLAYERKEY] = true;
         }
 
+        if ($this->aPlayerState !== null && $this->aPlayerState->getPlayerPK() !== $v) {
+            $this->aPlayerState = null;
+        }
+
         return $this;
     } // setPlayerkey()
 
@@ -444,6 +462,10 @@ abstract class Playergroupstates implements ActiveRecordInterface
         if ($this->groupkey !== $v) {
             $this->groupkey = $v;
             $this->modifiedColumns[PlayergroupstatesTableMap::COL_GROUPKEY] = true;
+        }
+
+        if ($this->aGroupState !== null && $this->aGroupState->getGroupPK() !== $v) {
+            $this->aGroupState = null;
         }
 
         return $this;
@@ -623,6 +645,12 @@ abstract class Playergroupstates implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aPlayerState !== null && $this->playerkey !== $this->aPlayerState->getPlayerPK()) {
+            $this->aPlayerState = null;
+        }
+        if ($this->aGroupState !== null && $this->groupkey !== $this->aGroupState->getGroupPK()) {
+            $this->aGroupState = null;
+        }
     } // ensureConsistency
 
     /**
@@ -662,6 +690,8 @@ abstract class Playergroupstates implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aPlayerState = null;
+            $this->aGroupState = null;
         } // if (deep)
     }
 
@@ -760,6 +790,25 @@ abstract class Playergroupstates implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aPlayerState !== null) {
+                if ($this->aPlayerState->isModified() || $this->aPlayerState->isNew()) {
+                    $affectedRows += $this->aPlayerState->save($con);
+                }
+                $this->setPlayerState($this->aPlayerState);
+            }
+
+            if ($this->aGroupState !== null) {
+                if ($this->aGroupState->isModified() || $this->aGroupState->isNew()) {
+                    $affectedRows += $this->aGroupState->save($con);
+                }
+                $this->setGroupState($this->aGroupState);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -931,10 +980,11 @@ abstract class Playergroupstates implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Playergroupstates'][$this->hashCode()])) {
@@ -963,6 +1013,38 @@ abstract class Playergroupstates implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aPlayerState) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aPlayerState->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aGroupState) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'groups';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'groups';
+                        break;
+                    default:
+                        $key = 'Groups';
+                }
+
+                $result[$key] = $this->aGroupState->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1153,8 +1235,22 @@ abstract class Playergroupstates implements ActiveRecordInterface
             null !== $this->getGroupkey() &&
             null !== $this->getStatedate();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation playergroupstates_fk_d784ed to table players
+        if ($this->aPlayerState && $hash = spl_object_hash($this->aPlayerState)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation playergroupstates_fk_0d5692 to table groups
+        if ($this->aGroupState && $hash = spl_object_hash($this->aGroupState)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1249,12 +1345,120 @@ abstract class Playergroupstates implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Playergroupstates The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPlayerState(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerkey(NULL);
+        } else {
+            $this->setPlayerkey($v->getPlayerPK());
+        }
+
+        $this->aPlayerState = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayergroupstates($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getPlayerState(ConnectionInterface $con = null)
+    {
+        if ($this->aPlayerState === null && ($this->playerkey !== null)) {
+            $this->aPlayerState = ChildPlayersQuery::create()->findPk($this->playerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPlayerState->addPlayergroupstatess($this);
+             */
+        }
+
+        return $this->aPlayerState;
+    }
+
+    /**
+     * Declares an association between this object and a ChildGroups object.
+     *
+     * @param  ChildGroups $v
+     * @return $this|\Playergroupstates The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setGroupState(ChildGroups $v = null)
+    {
+        if ($v === null) {
+            $this->setGroupkey(NULL);
+        } else {
+            $this->setGroupkey($v->getGroupPK());
+        }
+
+        $this->aGroupState = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildGroups object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPlayergroupstates($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildGroups object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildGroups The associated ChildGroups object.
+     * @throws PropelException
+     */
+    public function getGroupState(ConnectionInterface $con = null)
+    {
+        if ($this->aGroupState === null && ($this->groupkey !== null)) {
+            $this->aGroupState = ChildGroupsQuery::create()->findPk($this->groupkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aGroupState->addPlayergroupstatess($this);
+             */
+        }
+
+        return $this->aGroupState;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aPlayerState) {
+            $this->aPlayerState->removePlayergroupstates($this);
+        }
+        if (null !== $this->aGroupState) {
+            $this->aGroupState->removePlayergroupstates($this);
+        }
         $this->playerkey = null;
         $this->groupkey = null;
         $this->statedate = null;
@@ -1282,6 +1486,8 @@ abstract class Playergroupstates implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aPlayerState = null;
+        $this->aGroupState = null;
     }
 
     /**

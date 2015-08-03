@@ -111,6 +111,73 @@ class EventsTableMap extends TableMap
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
+    /** A key representing a particular subclass */
+    const CLASSKEY_1 = '1';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_GOAL = '\\Goal';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_1 = '\\Goal';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_2 = '2';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PENALTY = '\\Penalty';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_2 = '\\Penalty';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_3 = '3';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_OWNGOAL = '\\OwnGoal';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_3 = '\\OwnGoal';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_4 = '4';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_YELLOWCARD = '\\YellowCard';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_4 = '\\YellowCard';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_5 = '5';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_REDCARD = '\\RedCard';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_5 = '\\RedCard';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_6 = '6';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_SUBSTITUTE = '\\Substitute';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_6 = '\\Substitute';
+
+    /** The enumerated values for the Half field */
+    const COL_HALF_NOTSTARTED = 'NotStarted';
+    const COL_HALF_FIRSTHALF = 'FirstHalf';
+    const COL_HALF_HALFTIME = 'HalfTime';
+    const COL_HALF_SECONDHALF = 'SecondHalf';
+    const COL_HALF_EXTENDEDTIME = 'ExtendedTime';
+    const COL_HALF_EXTENDEDTIMEFIRSTHALF = 'ExtendedTimeFirstHalf';
+    const COL_HALF_EXTENDEDTIMEHALFTIME = 'ExtendedTimeHalfTime';
+    const COL_HALF_EXTENDEDTIMESECONDHALF = 'ExtendedTimeSecondHalf';
+    const COL_HALF_PENALYTIME = 'PenalyTime';
+    const COL_HALF_NOTUSED = 'NotUsed';
+    const COL_HALF_ENDOFMATCH = 'EndOfMatch';
+
     /**
      * holds an array of fieldnames
      *
@@ -139,6 +206,44 @@ class EventsTableMap extends TableMap
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
+    /** The enumerated values for this table */
+    protected static $enumValueSets = array(
+                EventsTableMap::COL_HALF => array(
+                            self::COL_HALF_NOTSTARTED,
+            self::COL_HALF_FIRSTHALF,
+            self::COL_HALF_HALFTIME,
+            self::COL_HALF_SECONDHALF,
+            self::COL_HALF_EXTENDEDTIME,
+            self::COL_HALF_EXTENDEDTIMEFIRSTHALF,
+            self::COL_HALF_EXTENDEDTIMEHALFTIME,
+            self::COL_HALF_EXTENDEDTIMESECONDHALF,
+            self::COL_HALF_PENALYTIME,
+            self::COL_HALF_NOTUSED,
+            self::COL_HALF_ENDOFMATCH,
+        ),
+    );
+
+    /**
+     * Gets the list of values for all ENUM columns
+     * @return array
+     */
+    public static function getValueSets()
+    {
+      return static::$enumValueSets;
+    }
+
+    /**
+     * Gets the list of values for an ENUM column
+     * @param string $colname
+     * @return array list of possible values for the column
+     */
+    public static function getValueSet($colname)
+    {
+        $valueSets = self::getValueSets();
+
+        return $valueSets[$colname];
+    }
+
     /**
      * Initialize the table attributes and columns
      * Relations are not initialized by this method since they are lazy loaded
@@ -155,14 +260,28 @@ class EventsTableMap extends TableMap
         $this->setClassName('\\Events');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
+        $this->setSingleTableInheritance(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'EventPK', 'INTEGER', true, null, null);
-        $this->addColumn('ResultKey', 'Resultkey', 'INTEGER', true, null, null);
-        $this->addColumn('TeamPlayerKey', 'Teamplayerkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('ResultKey', 'Resultkey', 'INTEGER', 'results', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('TeamPlayerKey', 'Teamplayerkey', 'INTEGER', 'teamplayers', 'PrimaryKey', true, null, null);
         $this->addColumn('EventTime', 'Eventtime', 'INTEGER', true, null, null);
         $this->addColumn('EventType', 'Eventtype', 'INTEGER', true, null, null);
-        $this->addColumn('Half', 'Half', 'INTEGER', true, null, null);
-        $this->addColumn('TeamKey', 'Teamkey', 'INTEGER', true, null, null);
+        $this->addColumn('Half', 'Half', 'ENUM', true, null, null);
+        $this->getColumn('Half')->setValueSet(array (
+  0 => 'NotStarted',
+  1 => 'FirstHalf',
+  2 => 'HalfTime',
+  3 => 'SecondHalf',
+  4 => 'ExtendedTime',
+  5 => 'ExtendedTimeFirstHalf',
+  6 => 'ExtendedTimeHalfTime',
+  7 => 'ExtendedTimeSecondHalf',
+  8 => 'PenalyTime',
+  9 => 'NotUsed',
+  10 => 'EndOfMatch',
+));
+        $this->addForeignKey('TeamKey', 'Teamkey', 'INTEGER', 'teams', 'PrimaryKey', true, null, null);
     } // initialize()
 
     /**
@@ -170,6 +289,34 @@ class EventsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Results', '\\Results', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':ResultKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('Teamplayers', '\\Teamplayers', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':TeamPlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('Teams', '\\Teams', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':TeamKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('Matchstates', '\\Matchstates', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':EventKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Matchstatess', false);
     } // buildRelations()
 
     /**
@@ -217,19 +364,63 @@ class EventsTableMap extends TableMap
     }
 
     /**
-     * The class that the tableMap will make instances of.
+     * The returned Class will contain objects of the default type or
+     * objects that inherit from the default.
      *
-     * If $withPrefix is true, the returned path
-     * uses a dot-path notation which is translated into a path
-     * relative to a location on the PHP include_path.
-     * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
-     *
+     * @param array   $row ConnectionInterface result row.
+     * @param int     $colnum Column to examine for OM class information (first is 0).
      * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     *
+     * @return string The OM class
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass($row, $colnum, $withPrefix = true)
     {
-        return $withPrefix ? EventsTableMap::CLASS_DEFAULT : EventsTableMap::OM_CLASS;
+        try {
+
+            $omClass = null;
+            $classKey = $row[$colnum + 4];
+
+            switch ($classKey) {
+
+                case EventsTableMap::CLASSKEY_1:
+                    $omClass = EventsTableMap::CLASSNAME_1;
+                    break;
+
+                case EventsTableMap::CLASSKEY_2:
+                    $omClass = EventsTableMap::CLASSNAME_2;
+                    break;
+
+                case EventsTableMap::CLASSKEY_3:
+                    $omClass = EventsTableMap::CLASSNAME_3;
+                    break;
+
+                case EventsTableMap::CLASSKEY_4:
+                    $omClass = EventsTableMap::CLASSNAME_4;
+                    break;
+
+                case EventsTableMap::CLASSKEY_5:
+                    $omClass = EventsTableMap::CLASSNAME_5;
+                    break;
+
+                case EventsTableMap::CLASSKEY_6:
+                    $omClass = EventsTableMap::CLASSNAME_6;
+                    break;
+
+                default:
+                    $omClass = EventsTableMap::CLASS_DEFAULT;
+
+            } // switch
+            if (!$withPrefix) {
+                $omClass = preg_replace('#\.#', '\\', $omClass);
+            }
+
+        } catch (\Exception $e) {
+            throw new PropelException('Unable to get OM class.', $e);
+        }
+
+        return $omClass;
     }
 
     /**
@@ -254,7 +445,7 @@ class EventsTableMap extends TableMap
             // $obj->hydrate($row, $offset, true); // rehydrate
             $col = $offset + EventsTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = EventsTableMap::OM_CLASS;
+            $cls = static::getOMClass($row, $offset, false);
             /** @var Events $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
@@ -277,8 +468,6 @@ class EventsTableMap extends TableMap
     {
         $results = array();
 
-        // set the class once to avoid overhead in the loop
-        $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
             $key = EventsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
@@ -288,6 +477,9 @@ class EventsTableMap extends TableMap
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
+                // class must be set each time from the record row
+                $cls = static::getOMClass($row, 0);
+                $cls = preg_replace('#\.#', '\\', $cls);
                 /** @var Events $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);

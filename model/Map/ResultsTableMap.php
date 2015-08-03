@@ -147,7 +147,7 @@ class ResultsTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'ResultPK', 'INTEGER', true, null, null);
-        $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('MatchKey', 'Matchkey', 'INTEGER', 'matches', 'PrimaryKey', true, null, null);
         $this->addColumn('LiveStatus', 'Livestatus', 'INTEGER', true, null, null);
         $this->addColumn('ActualTime', 'Actualtime', 'INTEGER', true, null, null);
         $this->addColumn('ResultDate', 'Resultdate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
@@ -158,7 +158,34 @@ class ResultsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Matches', '\\Matches', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('Events', '\\Events', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':ResultKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Eventss', false);
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'delegate' => array('to' => 'matches', ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.

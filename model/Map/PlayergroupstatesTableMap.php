@@ -151,8 +151,8 @@ class PlayergroupstatesTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('GroupKey', 'Groupkey', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER' , 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('GroupKey', 'Groupkey', 'INTEGER' , 'groups', 'PrimaryKey', true, null, null);
         $this->addPrimaryKey('StateDate', 'Statedate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('Rank', 'Rank', 'INTEGER', true, null, 1);
         $this->addColumn('Score', 'Score', 'INTEGER', true, null, null);
@@ -164,6 +164,20 @@ class PlayergroupstatesTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('PlayerState', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('GroupState', '\\Groups', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

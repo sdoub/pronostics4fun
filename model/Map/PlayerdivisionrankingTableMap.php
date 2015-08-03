@@ -181,9 +181,9 @@ class PlayerdivisionrankingTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('SeasonKey', 'Seasonkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('DivisionKey', 'Divisionkey', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER' , 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('SeasonKey', 'Seasonkey', 'INTEGER' , 'seasons', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('DivisionKey', 'Divisionkey', 'INTEGER' , 'divisions', 'PrimaryKey', true, null, null);
         $this->addColumn('Score', 'Score', 'TINYINT', true, 2, null);
         $this->addPrimaryKey('RankDate', 'Rankdate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('Rank', 'Rank', 'TINYINT', true, 2, null);
@@ -200,6 +200,27 @@ class PlayerdivisionrankingTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('DivisionRankingPlayer', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('DivisionRankingSeason', '\\Seasons', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':SeasonKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('DivisionRankingDivision', '\\Divisions', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':DivisionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

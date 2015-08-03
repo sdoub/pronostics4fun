@@ -10,6 +10,7 @@ use Map\TeamplayersTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -28,6 +29,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTeamplayersQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildTeamplayersQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildTeamplayersQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildTeamplayersQuery leftJoinEvents($relationAlias = null) Adds a LEFT JOIN clause to the query using the Events relation
+ * @method     ChildTeamplayersQuery rightJoinEvents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Events relation
+ * @method     ChildTeamplayersQuery innerJoinEvents($relationAlias = null) Adds a INNER JOIN clause to the query using the Events relation
+ *
+ * @method     ChildTeamplayersQuery leftJoinLineups($relationAlias = null) Adds a LEFT JOIN clause to the query using the Lineups relation
+ * @method     ChildTeamplayersQuery rightJoinLineups($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Lineups relation
+ * @method     ChildTeamplayersQuery innerJoinLineups($relationAlias = null) Adds a INNER JOIN clause to the query using the Lineups relation
+ *
+ * @method     \EventsQuery|\LineupsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildTeamplayers findOne(ConnectionInterface $con = null) Return the first ChildTeamplayers matching the query
  * @method     ChildTeamplayers findOneOrCreate(ConnectionInterface $con = null) Return the first ChildTeamplayers matching the query, or a new ChildTeamplayers object populated from the query conditions when no match is found
@@ -294,6 +305,152 @@ abstract class TeamplayersQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(TeamplayersTableMap::COL_FULLNAME, $fullname, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Events object
+     *
+     * @param \Events|ObjectCollection $events the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildTeamplayersQuery The current query, for fluid interface
+     */
+    public function filterByEvents($events, $comparison = null)
+    {
+        if ($events instanceof \Events) {
+            return $this
+                ->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $events->getTeamplayerkey(), $comparison);
+        } elseif ($events instanceof ObjectCollection) {
+            return $this
+                ->useEventsQuery()
+                ->filterByPrimaryKeys($events->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByEvents() only accepts arguments of type \Events or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Events relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildTeamplayersQuery The current query, for fluid interface
+     */
+    public function joinEvents($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Events');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Events');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Events relation Events object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \EventsQuery A secondary query class using the current class as primary query
+     */
+    public function useEventsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinEvents($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Events', '\EventsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Lineups object
+     *
+     * @param \Lineups|ObjectCollection $lineups the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildTeamplayersQuery The current query, for fluid interface
+     */
+    public function filterByLineups($lineups, $comparison = null)
+    {
+        if ($lineups instanceof \Lineups) {
+            return $this
+                ->addUsingAlias(TeamplayersTableMap::COL_PRIMARYKEY, $lineups->getTeamplayerkey(), $comparison);
+        } elseif ($lineups instanceof ObjectCollection) {
+            return $this
+                ->useLineupsQuery()
+                ->filterByPrimaryKeys($lineups->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByLineups() only accepts arguments of type \Lineups or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Lineups relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildTeamplayersQuery The current query, for fluid interface
+     */
+    public function joinLineups($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Lineups');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Lineups');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Lineups relation Lineups object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \LineupsQuery A secondary query class using the current class as primary query
+     */
+    public function useLineupsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinLineups($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Lineups', '\LineupsQuery');
     }
 
     /**

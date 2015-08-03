@@ -3,6 +3,8 @@
 namespace Base;
 
 use \ConnectedusersQuery as ChildConnectedusersQuery;
+use \Players as ChildPlayers;
+use \PlayersQuery as ChildPlayersQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -79,6 +81,11 @@ abstract class Connectedusers implements ActiveRecordInterface
      * @var        int
      */
     protected $playerkey;
+
+    /**
+     * @var        ChildPlayers
+     */
+    protected $aPlayers;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -414,6 +421,10 @@ abstract class Connectedusers implements ActiveRecordInterface
             $this->modifiedColumns[ConnectedusersTableMap::COL_PLAYERKEY] = true;
         }
 
+        if ($this->aPlayers !== null && $this->aPlayers->getPlayerPK() !== $v) {
+            $this->aPlayers = null;
+        }
+
         return $this;
     } // setPlayerkey()
 
@@ -494,6 +505,9 @@ abstract class Connectedusers implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aPlayers !== null && $this->playerkey !== $this->aPlayers->getPlayerPK()) {
+            $this->aPlayers = null;
+        }
     } // ensureConsistency
 
     /**
@@ -533,6 +547,7 @@ abstract class Connectedusers implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aPlayers = null;
         } // if (deep)
     }
 
@@ -631,6 +646,18 @@ abstract class Connectedusers implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aPlayers !== null) {
+                if ($this->aPlayers->isModified() || $this->aPlayers->isNew()) {
+                    $affectedRows += $this->aPlayers->save($con);
+                }
+                $this->setPlayers($this->aPlayers);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -775,10 +802,11 @@ abstract class Connectedusers implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Connectedusers'][$this->hashCode()])) {
@@ -804,6 +832,23 @@ abstract class Connectedusers implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aPlayers) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'players';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'players';
+                        break;
+                    default:
+                        $key = 'Players';
+                }
+
+                $result[$key] = $this->aPlayers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1048,12 +1093,66 @@ abstract class Connectedusers implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildPlayers object.
+     *
+     * @param  ChildPlayers $v
+     * @return $this|\Connectedusers The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPlayers(ChildPlayers $v = null)
+    {
+        if ($v === null) {
+            $this->setPlayerkey(NULL);
+        } else {
+            $this->setPlayerkey($v->getPlayerPK());
+        }
+
+        $this->aPlayers = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        if ($v !== null) {
+            $v->addConnectedusers($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildPlayers object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildPlayers The associated ChildPlayers object.
+     * @throws PropelException
+     */
+    public function getPlayers(ConnectionInterface $con = null)
+    {
+        if ($this->aPlayers === null && ($this->playerkey !== null)) {
+            $this->aPlayers = ChildPlayersQuery::create()->findPk($this->playerkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPlayers->addConnecteduserss($this);
+             */
+        }
+
+        return $this->aPlayers;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aPlayers) {
+            $this->aPlayers->removeConnectedusers($this);
+        }
         $this->visitedate = null;
         $this->useruniqueid = null;
         $this->playerkey = null;
@@ -1078,6 +1177,7 @@ abstract class Connectedusers implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aPlayers = null;
     }
 
     /**

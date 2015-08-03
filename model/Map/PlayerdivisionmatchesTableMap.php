@@ -172,11 +172,11 @@ class PlayerdivisionmatchesTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'PlayerDivisionMatchPK', 'INTEGER', true, null, null);
-        $this->addColumn('PlayerHomeKey', 'Playerhomekey', 'INTEGER', true, null, null);
-        $this->addColumn('PlayerAwayKey', 'Playerawaykey', 'INTEGER', true, null, null);
-        $this->addColumn('SeasonKey', 'Seasonkey', 'INTEGER', true, null, null);
-        $this->addColumn('DivisionKey', 'Divisionkey', 'INTEGER', true, null, null);
-        $this->addColumn('GroupKey', 'Groupkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('PlayerHomeKey', 'Playerhomekey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('PlayerAwayKey', 'Playerawaykey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('SeasonKey', 'Seasonkey', 'INTEGER', 'seasons', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('DivisionKey', 'Divisionkey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('GroupKey', 'Groupkey', 'INTEGER', 'groups', 'PrimaryKey', true, null, null);
         $this->addColumn('HomeScore', 'Homescore', 'TINYINT', false, 3, null);
         $this->addColumn('AwayScore', 'Awayscore', 'TINYINT', false, 3, null);
         $this->addColumn('ScheduleDate', 'Scheduledate', 'TIMESTAMP', false, null, null);
@@ -188,6 +188,41 @@ class PlayerdivisionmatchesTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('DivisionMatchesPlayerHome', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerHomeKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('DivisionMatchesPlayerAway', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerAwayKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('DivisionMatchesDivision', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':DivisionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('DivisionMatchesGroup', '\\Groups', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('DivisionMatchesSeason', '\\Seasons', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':SeasonKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

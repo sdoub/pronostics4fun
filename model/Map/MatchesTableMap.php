@@ -162,9 +162,9 @@ class MatchesTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'MatchPK', 'INTEGER', true, null, null);
-        $this->addColumn('GroupKey', 'Groupkey', 'INTEGER', true, null, null);
-        $this->addColumn('TeamHomeKey', 'Teamhomekey', 'INTEGER', true, null, null);
-        $this->addColumn('TeamAwayKey', 'Teamawaykey', 'INTEGER', true, null, null);
+        $this->addForeignKey('GroupKey', 'Groupkey', 'INTEGER', 'groups', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('TeamHomeKey', 'Teamhomekey', 'INTEGER', 'teams', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('TeamAwayKey', 'Teamawaykey', 'INTEGER', 'teams', 'PrimaryKey', true, null, null);
         $this->addColumn('ScheduleDate', 'Scheduledate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('IsBonusMatch', 'Isbonusmatch', 'BOOLEAN', true, 1, false);
         $this->addColumn('Status', 'Status', 'INTEGER', true, null, 0);
@@ -176,6 +176,69 @@ class MatchesTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Groups', '\\Groups', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('TeamHome', '\\Teams', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':TeamHomeKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('TeamAway', '\\Teams', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':TeamAwayKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('Forecasts', '\\Forecasts', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Forecastss', false);
+        $this->addRelation('Lineups', '\\Lineups', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Lineupss', false);
+        $this->addRelation('Matchstates', '\\Matchstates', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Matchstatess', false);
+        $this->addRelation('Playermatchresults', '\\Playermatchresults', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playermatchresultss', false);
+        $this->addRelation('Results', '\\Results', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Resultss', false);
+        $this->addRelation('Votes', '\\Votes', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Votess', false);
     } // buildRelations()
 
     /**

@@ -10,6 +10,7 @@ use Map\CompetitionsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -28,6 +29,20 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCompetitionsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildCompetitionsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildCompetitionsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildCompetitionsQuery leftJoinGroups($relationAlias = null) Adds a LEFT JOIN clause to the query using the Groups relation
+ * @method     ChildCompetitionsQuery rightJoinGroups($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Groups relation
+ * @method     ChildCompetitionsQuery innerJoinGroups($relationAlias = null) Adds a INNER JOIN clause to the query using the Groups relation
+ *
+ * @method     ChildCompetitionsQuery leftJoinNews($relationAlias = null) Adds a LEFT JOIN clause to the query using the News relation
+ * @method     ChildCompetitionsQuery rightJoinNews($relationAlias = null) Adds a RIGHT JOIN clause to the query using the News relation
+ * @method     ChildCompetitionsQuery innerJoinNews($relationAlias = null) Adds a INNER JOIN clause to the query using the News relation
+ *
+ * @method     ChildCompetitionsQuery leftJoinPlayerranking($relationAlias = null) Adds a LEFT JOIN clause to the query using the Playerranking relation
+ * @method     ChildCompetitionsQuery rightJoinPlayerranking($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Playerranking relation
+ * @method     ChildCompetitionsQuery innerJoinPlayerranking($relationAlias = null) Adds a INNER JOIN clause to the query using the Playerranking relation
+ *
+ * @method     \GroupsQuery|\NewsQuery|\PlayerrankingQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildCompetitions findOne(ConnectionInterface $con = null) Return the first ChildCompetitions matching the query
  * @method     ChildCompetitions findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCompetitions matching the query, or a new ChildCompetitions object populated from the query conditions when no match is found
@@ -294,6 +309,225 @@ abstract class CompetitionsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CompetitionsTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Groups object
+     *
+     * @param \Groups|ObjectCollection $groups the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCompetitionsQuery The current query, for fluid interface
+     */
+    public function filterByGroups($groups, $comparison = null)
+    {
+        if ($groups instanceof \Groups) {
+            return $this
+                ->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $groups->getCompetitionkey(), $comparison);
+        } elseif ($groups instanceof ObjectCollection) {
+            return $this
+                ->useGroupsQuery()
+                ->filterByPrimaryKeys($groups->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByGroups() only accepts arguments of type \Groups or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Groups relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCompetitionsQuery The current query, for fluid interface
+     */
+    public function joinGroups($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Groups');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Groups');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Groups relation Groups object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \GroupsQuery A secondary query class using the current class as primary query
+     */
+    public function useGroupsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinGroups($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Groups', '\GroupsQuery');
+    }
+
+    /**
+     * Filter the query by a related \News object
+     *
+     * @param \News|ObjectCollection $news the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCompetitionsQuery The current query, for fluid interface
+     */
+    public function filterByNews($news, $comparison = null)
+    {
+        if ($news instanceof \News) {
+            return $this
+                ->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $news->getCompetitionkey(), $comparison);
+        } elseif ($news instanceof ObjectCollection) {
+            return $this
+                ->useNewsQuery()
+                ->filterByPrimaryKeys($news->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByNews() only accepts arguments of type \News or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the News relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCompetitionsQuery The current query, for fluid interface
+     */
+    public function joinNews($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('News');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'News');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the News relation News object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \NewsQuery A secondary query class using the current class as primary query
+     */
+    public function useNewsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinNews($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'News', '\NewsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Playerranking object
+     *
+     * @param \Playerranking|ObjectCollection $playerranking the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCompetitionsQuery The current query, for fluid interface
+     */
+    public function filterByPlayerranking($playerranking, $comparison = null)
+    {
+        if ($playerranking instanceof \Playerranking) {
+            return $this
+                ->addUsingAlias(CompetitionsTableMap::COL_PRIMARYKEY, $playerranking->getCompetitionkey(), $comparison);
+        } elseif ($playerranking instanceof ObjectCollection) {
+            return $this
+                ->usePlayerrankingQuery()
+                ->filterByPrimaryKeys($playerranking->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPlayerranking() only accepts arguments of type \Playerranking or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Playerranking relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCompetitionsQuery The current query, for fluid interface
+     */
+    public function joinPlayerranking($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Playerranking');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Playerranking');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Playerranking relation Playerranking object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \PlayerrankingQuery A secondary query class using the current class as primary query
+     */
+    public function usePlayerrankingQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPlayerranking($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Playerranking', '\PlayerrankingQuery');
     }
 
     /**

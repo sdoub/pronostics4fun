@@ -147,8 +147,8 @@ class VotesTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'VotePK', 'INTEGER', true, null, null);
-        $this->addColumn('MatchKey', 'Matchkey', 'INTEGER', true, null, null);
-        $this->addColumn('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('MatchKey', 'Matchkey', 'INTEGER', 'matches', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('PlayerKey', 'Playerkey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
         $this->addColumn('Value', 'Value', 'BOOLEAN', true, 1, null);
         $this->addColumn('VoteDate', 'Votedate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
     } // initialize()
@@ -158,6 +158,20 @@ class VotesTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('VotePlayer', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('VoteMatch', '\\Matches', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':MatchKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

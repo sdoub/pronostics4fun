@@ -169,7 +169,7 @@ class GroupsTableMap extends TableMap
         $this->addPrimaryKey('PrimaryKey', 'GroupPK', 'INTEGER', true, null, null);
         $this->addColumn('Description', 'Description', 'VARCHAR', true, 30, null);
         $this->addColumn('Code', 'Code', 'VARCHAR', true, 10, null);
-        $this->addColumn('CompetitionKey', 'Competitionkey', 'INTEGER', true, null, null);
+        $this->addForeignKey('CompetitionKey', 'Competitionkey', 'INTEGER', 'competitions', 'PrimaryKey', true, null, null);
         $this->addColumn('BeginDate', 'Begindate', 'TIMESTAMP', false, null, null);
         $this->addColumn('EndDate', 'Enddate', 'TIMESTAMP', false, null, null);
         $this->addColumn('Status', 'Status', 'BOOLEAN', true, 1, null);
@@ -182,6 +182,55 @@ class GroupsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Competitions', '\\Competitions', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':CompetitionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('Matches', '\\Matches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Matchess', false);
+        $this->addRelation('Playercupmatches', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playercupmatchess', false);
+        $this->addRelation('Playerdivisionmatches', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerdivisionmatchess', false);
+        $this->addRelation('Playergroupranking', '\\Playergroupranking', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playergrouprankings', false);
+        $this->addRelation('Playergroupresults', '\\Playergroupresults', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playergroupresultss', false);
+        $this->addRelation('Playergroupstates', '\\Playergroupstates', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playergroupstatess', false);
     } // buildRelations()
 
     /**

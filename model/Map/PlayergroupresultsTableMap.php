@@ -136,8 +136,8 @@ class PlayergroupresultsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('GroupKey', 'Groupkey', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER' , 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('GroupKey', 'Groupkey', 'INTEGER' , 'groups', 'PrimaryKey', true, null, null);
         $this->addColumn('Score', 'Score', 'INTEGER', false, null, null);
     } // initialize()
 
@@ -146,6 +146,20 @@ class PlayergroupresultsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('PlayerResult', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('GroupResult', '\\Groups', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':GroupKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

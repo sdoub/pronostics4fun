@@ -140,6 +140,20 @@ class TeamplayersTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Events', '\\Events', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':TeamPlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Eventss', false);
+        $this->addRelation('Lineups', '\\Lineups', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':TeamPlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Lineupss', false);
     } // buildRelations()
 
     /**

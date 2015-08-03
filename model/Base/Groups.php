@@ -2,7 +2,22 @@
 
 namespace Base;
 
+use \Competitions as ChildCompetitions;
+use \CompetitionsQuery as ChildCompetitionsQuery;
+use \Groups as ChildGroups;
 use \GroupsQuery as ChildGroupsQuery;
+use \Matches as ChildMatches;
+use \MatchesQuery as ChildMatchesQuery;
+use \Playercupmatches as ChildPlayercupmatches;
+use \PlayercupmatchesQuery as ChildPlayercupmatchesQuery;
+use \Playerdivisionmatches as ChildPlayerdivisionmatches;
+use \PlayerdivisionmatchesQuery as ChildPlayerdivisionmatchesQuery;
+use \Playergroupranking as ChildPlayergroupranking;
+use \PlayergrouprankingQuery as ChildPlayergrouprankingQuery;
+use \Playergroupresults as ChildPlayergroupresults;
+use \PlayergroupresultsQuery as ChildPlayergroupresultsQuery;
+use \Playergroupstates as ChildPlayergroupstates;
+use \PlayergroupstatesQuery as ChildPlayergroupstatesQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -12,6 +27,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -117,12 +133,89 @@ abstract class Groups implements ActiveRecordInterface
     protected $daykey;
 
     /**
+     * @var        ChildCompetitions
+     */
+    protected $aCompetitions;
+
+    /**
+     * @var        ObjectCollection|ChildMatches[] Collection to store aggregation of ChildMatches objects.
+     */
+    protected $collMatchess;
+    protected $collMatchessPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayercupmatches[] Collection to store aggregation of ChildPlayercupmatches objects.
+     */
+    protected $collPlayercupmatchess;
+    protected $collPlayercupmatchessPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayerdivisionmatches[] Collection to store aggregation of ChildPlayerdivisionmatches objects.
+     */
+    protected $collPlayerdivisionmatchess;
+    protected $collPlayerdivisionmatchessPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayergroupranking[] Collection to store aggregation of ChildPlayergroupranking objects.
+     */
+    protected $collPlayergrouprankings;
+    protected $collPlayergrouprankingsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayergroupresults[] Collection to store aggregation of ChildPlayergroupresults objects.
+     */
+    protected $collPlayergroupresultss;
+    protected $collPlayergroupresultssPartial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayergroupstates[] Collection to store aggregation of ChildPlayergroupstates objects.
+     */
+    protected $collPlayergroupstatess;
+    protected $collPlayergroupstatessPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildMatches[]
+     */
+    protected $matchessScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayercupmatches[]
+     */
+    protected $playercupmatchessScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayerdivisionmatches[]
+     */
+    protected $playerdivisionmatchessScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayergroupranking[]
+     */
+    protected $playergrouprankingsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayergroupresults[]
+     */
+    protected $playergroupresultssScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayergroupstates[]
+     */
+    protected $playergroupstatessScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -561,6 +654,10 @@ abstract class Groups implements ActiveRecordInterface
             $this->modifiedColumns[GroupsTableMap::COL_COMPETITIONKEY] = true;
         }
 
+        if ($this->aCompetitions !== null && $this->aCompetitions->getCompetitionPK() !== $v) {
+            $this->aCompetitions = null;
+        }
+
         return $this;
     } // setCompetitionkey()
 
@@ -782,6 +879,9 @@ abstract class Groups implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aCompetitions !== null && $this->competitionkey !== $this->aCompetitions->getCompetitionPK()) {
+            $this->aCompetitions = null;
+        }
     } // ensureConsistency
 
     /**
@@ -820,6 +920,19 @@ abstract class Groups implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
+
+            $this->aCompetitions = null;
+            $this->collMatchess = null;
+
+            $this->collPlayercupmatchess = null;
+
+            $this->collPlayerdivisionmatchess = null;
+
+            $this->collPlayergrouprankings = null;
+
+            $this->collPlayergroupresultss = null;
+
+            $this->collPlayergroupstatess = null;
 
         } // if (deep)
     }
@@ -920,6 +1033,18 @@ abstract class Groups implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCompetitions !== null) {
+                if ($this->aCompetitions->isModified() || $this->aCompetitions->isNew()) {
+                    $affectedRows += $this->aCompetitions->save($con);
+                }
+                $this->setCompetitions($this->aCompetitions);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -929,6 +1054,108 @@ abstract class Groups implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->matchessScheduledForDeletion !== null) {
+                if (!$this->matchessScheduledForDeletion->isEmpty()) {
+                    \MatchesQuery::create()
+                        ->filterByPrimaryKeys($this->matchessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->matchessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collMatchess !== null) {
+                foreach ($this->collMatchess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playercupmatchessScheduledForDeletion !== null) {
+                if (!$this->playercupmatchessScheduledForDeletion->isEmpty()) {
+                    \PlayercupmatchesQuery::create()
+                        ->filterByPrimaryKeys($this->playercupmatchessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playercupmatchessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayercupmatchess !== null) {
+                foreach ($this->collPlayercupmatchess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playerdivisionmatchessScheduledForDeletion !== null) {
+                if (!$this->playerdivisionmatchessScheduledForDeletion->isEmpty()) {
+                    \PlayerdivisionmatchesQuery::create()
+                        ->filterByPrimaryKeys($this->playerdivisionmatchessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playerdivisionmatchessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayerdivisionmatchess !== null) {
+                foreach ($this->collPlayerdivisionmatchess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playergrouprankingsScheduledForDeletion !== null) {
+                if (!$this->playergrouprankingsScheduledForDeletion->isEmpty()) {
+                    \PlayergrouprankingQuery::create()
+                        ->filterByPrimaryKeys($this->playergrouprankingsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playergrouprankingsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayergrouprankings !== null) {
+                foreach ($this->collPlayergrouprankings as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playergroupresultssScheduledForDeletion !== null) {
+                if (!$this->playergroupresultssScheduledForDeletion->isEmpty()) {
+                    \PlayergroupresultsQuery::create()
+                        ->filterByPrimaryKeys($this->playergroupresultssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playergroupresultssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayergroupresultss !== null) {
+                foreach ($this->collPlayergroupresultss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playergroupstatessScheduledForDeletion !== null) {
+                if (!$this->playergroupstatessScheduledForDeletion->isEmpty()) {
+                    \PlayergroupstatesQuery::create()
+                        ->filterByPrimaryKeys($this->playergroupstatessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playergroupstatessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayergroupstatess !== null) {
+                foreach ($this->collPlayergroupstatess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -1128,10 +1355,11 @@ abstract class Groups implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Groups'][$this->hashCode()])) {
@@ -1169,6 +1397,113 @@ abstract class Groups implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aCompetitions) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'competitions';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'competitions';
+                        break;
+                    default:
+                        $key = 'Competitions';
+                }
+
+                $result[$key] = $this->aCompetitions->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collMatchess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'matchess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'matchess';
+                        break;
+                    default:
+                        $key = 'Matchess';
+                }
+
+                $result[$key] = $this->collMatchess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayercupmatchess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playercupmatchess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playercupmatchess';
+                        break;
+                    default:
+                        $key = 'Playercupmatchess';
+                }
+
+                $result[$key] = $this->collPlayercupmatchess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayerdivisionmatchess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playerdivisionmatchess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playerdivisionmatchess';
+                        break;
+                    default:
+                        $key = 'Playerdivisionmatchess';
+                }
+
+                $result[$key] = $this->collPlayerdivisionmatchess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayergrouprankings) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playergrouprankings';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playergrouprankings';
+                        break;
+                    default:
+                        $key = 'Playergrouprankings';
+                }
+
+                $result[$key] = $this->collPlayergrouprankings->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayergroupresultss) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playergroupresultss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playergroupresultss';
+                        break;
+                    default:
+                        $key = 'Playergroupresultss';
+                }
+
+                $result[$key] = $this->collPlayergroupresultss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayergroupstatess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playergroupstatess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playergroupstatess';
+                        break;
+                    default:
+                        $key = 'Playergroupstatess';
+                }
+
+                $result[$key] = $this->collPlayergroupstatess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1444,6 +1779,50 @@ abstract class Groups implements ActiveRecordInterface
         $copyObj->setStatus($this->getStatus());
         $copyObj->setIscompleted($this->getIscompleted());
         $copyObj->setDaykey($this->getDaykey());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getMatchess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addMatches($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayercupmatchess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayercupmatches($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayerdivisionmatchess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayerdivisionmatches($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayergrouprankings() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayergroupranking($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayergroupresultss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayergroupresults($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayergroupstatess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayergroupstates($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setGroupPK(NULL); // this is a auto-increment column, so set to default value
@@ -1473,12 +1852,1739 @@ abstract class Groups implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildCompetitions object.
+     *
+     * @param  ChildCompetitions $v
+     * @return $this|\Groups The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCompetitions(ChildCompetitions $v = null)
+    {
+        if ($v === null) {
+            $this->setCompetitionkey(NULL);
+        } else {
+            $this->setCompetitionkey($v->getCompetitionPK());
+        }
+
+        $this->aCompetitions = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildCompetitions object, it will not be re-added.
+        if ($v !== null) {
+            $v->addGroups($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildCompetitions object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildCompetitions The associated ChildCompetitions object.
+     * @throws PropelException
+     */
+    public function getCompetitions(ConnectionInterface $con = null)
+    {
+        if ($this->aCompetitions === null && ($this->competitionkey !== null)) {
+            $this->aCompetitions = ChildCompetitionsQuery::create()->findPk($this->competitionkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCompetitions->addGroupss($this);
+             */
+        }
+
+        return $this->aCompetitions;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Matches' == $relationName) {
+            return $this->initMatchess();
+        }
+        if ('Playercupmatches' == $relationName) {
+            return $this->initPlayercupmatchess();
+        }
+        if ('Playerdivisionmatches' == $relationName) {
+            return $this->initPlayerdivisionmatchess();
+        }
+        if ('Playergroupranking' == $relationName) {
+            return $this->initPlayergrouprankings();
+        }
+        if ('Playergroupresults' == $relationName) {
+            return $this->initPlayergroupresultss();
+        }
+        if ('Playergroupstates' == $relationName) {
+            return $this->initPlayergroupstatess();
+        }
+    }
+
+    /**
+     * Clears out the collMatchess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addMatchess()
+     */
+    public function clearMatchess()
+    {
+        $this->collMatchess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collMatchess collection loaded partially.
+     */
+    public function resetPartialMatchess($v = true)
+    {
+        $this->collMatchessPartial = $v;
+    }
+
+    /**
+     * Initializes the collMatchess collection.
+     *
+     * By default this just sets the collMatchess collection to an empty array (like clearcollMatchess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initMatchess($overrideExisting = true)
+    {
+        if (null !== $this->collMatchess && !$overrideExisting) {
+            return;
+        }
+        $this->collMatchess = new ObjectCollection();
+        $this->collMatchess->setModel('\Matches');
+    }
+
+    /**
+     * Gets an array of ChildMatches objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildMatches[] List of ChildMatches objects
+     * @throws PropelException
+     */
+    public function getMatchess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collMatchessPartial && !$this->isNew();
+        if (null === $this->collMatchess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collMatchess) {
+                // return empty collection
+                $this->initMatchess();
+            } else {
+                $collMatchess = ChildMatchesQuery::create(null, $criteria)
+                    ->filterByGroups($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collMatchessPartial && count($collMatchess)) {
+                        $this->initMatchess(false);
+
+                        foreach ($collMatchess as $obj) {
+                            if (false == $this->collMatchess->contains($obj)) {
+                                $this->collMatchess->append($obj);
+                            }
+                        }
+
+                        $this->collMatchessPartial = true;
+                    }
+
+                    return $collMatchess;
+                }
+
+                if ($partial && $this->collMatchess) {
+                    foreach ($this->collMatchess as $obj) {
+                        if ($obj->isNew()) {
+                            $collMatchess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collMatchess = $collMatchess;
+                $this->collMatchessPartial = false;
+            }
+        }
+
+        return $this->collMatchess;
+    }
+
+    /**
+     * Sets a collection of ChildMatches objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $matchess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function setMatchess(Collection $matchess, ConnectionInterface $con = null)
+    {
+        /** @var ChildMatches[] $matchessToDelete */
+        $matchessToDelete = $this->getMatchess(new Criteria(), $con)->diff($matchess);
+
+
+        $this->matchessScheduledForDeletion = $matchessToDelete;
+
+        foreach ($matchessToDelete as $matchesRemoved) {
+            $matchesRemoved->setGroups(null);
+        }
+
+        $this->collMatchess = null;
+        foreach ($matchess as $matches) {
+            $this->addMatches($matches);
+        }
+
+        $this->collMatchess = $matchess;
+        $this->collMatchessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Matches objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Matches objects.
+     * @throws PropelException
+     */
+    public function countMatchess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collMatchessPartial && !$this->isNew();
+        if (null === $this->collMatchess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collMatchess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getMatchess());
+            }
+
+            $query = ChildMatchesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGroups($this)
+                ->count($con);
+        }
+
+        return count($this->collMatchess);
+    }
+
+    /**
+     * Method called to associate a ChildMatches object to this object
+     * through the ChildMatches foreign key attribute.
+     *
+     * @param  ChildMatches $l ChildMatches
+     * @return $this|\Groups The current object (for fluent API support)
+     */
+    public function addMatches(ChildMatches $l)
+    {
+        if ($this->collMatchess === null) {
+            $this->initMatchess();
+            $this->collMatchessPartial = true;
+        }
+
+        if (!$this->collMatchess->contains($l)) {
+            $this->doAddMatches($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildMatches $matches The ChildMatches object to add.
+     */
+    protected function doAddMatches(ChildMatches $matches)
+    {
+        $this->collMatchess[]= $matches;
+        $matches->setGroups($this);
+    }
+
+    /**
+     * @param  ChildMatches $matches The ChildMatches object to remove.
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function removeMatches(ChildMatches $matches)
+    {
+        if ($this->getMatchess()->contains($matches)) {
+            $pos = $this->collMatchess->search($matches);
+            $this->collMatchess->remove($pos);
+            if (null === $this->matchessScheduledForDeletion) {
+                $this->matchessScheduledForDeletion = clone $this->collMatchess;
+                $this->matchessScheduledForDeletion->clear();
+            }
+            $this->matchessScheduledForDeletion[]= clone $matches;
+            $matches->setGroups(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Matchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildMatches[] List of ChildMatches objects
+     */
+    public function getMatchessJoinTeamHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildMatchesQuery::create(null, $criteria);
+        $query->joinWith('TeamHome', $joinBehavior);
+
+        return $this->getMatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Matchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildMatches[] List of ChildMatches objects
+     */
+    public function getMatchessJoinTeamAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildMatchesQuery::create(null, $criteria);
+        $query->joinWith('TeamAway', $joinBehavior);
+
+        return $this->getMatchess($query, $con);
+    }
+
+    /**
+     * Clears out the collPlayercupmatchess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayercupmatchess()
+     */
+    public function clearPlayercupmatchess()
+    {
+        $this->collPlayercupmatchess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayercupmatchess collection loaded partially.
+     */
+    public function resetPartialPlayercupmatchess($v = true)
+    {
+        $this->collPlayercupmatchessPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayercupmatchess collection.
+     *
+     * By default this just sets the collPlayercupmatchess collection to an empty array (like clearcollPlayercupmatchess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayercupmatchess($overrideExisting = true)
+    {
+        if (null !== $this->collPlayercupmatchess && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayercupmatchess = new ObjectCollection();
+        $this->collPlayercupmatchess->setModel('\Playercupmatches');
+    }
+
+    /**
+     * Gets an array of ChildPlayercupmatches objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     * @throws PropelException
+     */
+    public function getPlayercupmatchess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayercupmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayercupmatchess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayercupmatchess) {
+                // return empty collection
+                $this->initPlayercupmatchess();
+            } else {
+                $collPlayercupmatchess = ChildPlayercupmatchesQuery::create(null, $criteria)
+                    ->filterByDivisionMatchesGroup($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayercupmatchessPartial && count($collPlayercupmatchess)) {
+                        $this->initPlayercupmatchess(false);
+
+                        foreach ($collPlayercupmatchess as $obj) {
+                            if (false == $this->collPlayercupmatchess->contains($obj)) {
+                                $this->collPlayercupmatchess->append($obj);
+                            }
+                        }
+
+                        $this->collPlayercupmatchessPartial = true;
+                    }
+
+                    return $collPlayercupmatchess;
+                }
+
+                if ($partial && $this->collPlayercupmatchess) {
+                    foreach ($this->collPlayercupmatchess as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayercupmatchess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayercupmatchess = $collPlayercupmatchess;
+                $this->collPlayercupmatchessPartial = false;
+            }
+        }
+
+        return $this->collPlayercupmatchess;
+    }
+
+    /**
+     * Sets a collection of ChildPlayercupmatches objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playercupmatchess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function setPlayercupmatchess(Collection $playercupmatchess, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayercupmatches[] $playercupmatchessToDelete */
+        $playercupmatchessToDelete = $this->getPlayercupmatchess(new Criteria(), $con)->diff($playercupmatchess);
+
+
+        $this->playercupmatchessScheduledForDeletion = $playercupmatchessToDelete;
+
+        foreach ($playercupmatchessToDelete as $playercupmatchesRemoved) {
+            $playercupmatchesRemoved->setDivisionMatchesGroup(null);
+        }
+
+        $this->collPlayercupmatchess = null;
+        foreach ($playercupmatchess as $playercupmatches) {
+            $this->addPlayercupmatches($playercupmatches);
+        }
+
+        $this->collPlayercupmatchess = $playercupmatchess;
+        $this->collPlayercupmatchessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playercupmatches objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playercupmatches objects.
+     * @throws PropelException
+     */
+    public function countPlayercupmatchess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayercupmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayercupmatchess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayercupmatchess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayercupmatchess());
+            }
+
+            $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByDivisionMatchesGroup($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayercupmatchess);
+    }
+
+    /**
+     * Method called to associate a ChildPlayercupmatches object to this object
+     * through the ChildPlayercupmatches foreign key attribute.
+     *
+     * @param  ChildPlayercupmatches $l ChildPlayercupmatches
+     * @return $this|\Groups The current object (for fluent API support)
+     */
+    public function addPlayercupmatches(ChildPlayercupmatches $l)
+    {
+        if ($this->collPlayercupmatchess === null) {
+            $this->initPlayercupmatchess();
+            $this->collPlayercupmatchessPartial = true;
+        }
+
+        if (!$this->collPlayercupmatchess->contains($l)) {
+            $this->doAddPlayercupmatches($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayercupmatches $playercupmatches The ChildPlayercupmatches object to add.
+     */
+    protected function doAddPlayercupmatches(ChildPlayercupmatches $playercupmatches)
+    {
+        $this->collPlayercupmatchess[]= $playercupmatches;
+        $playercupmatches->setDivisionMatchesGroup($this);
+    }
+
+    /**
+     * @param  ChildPlayercupmatches $playercupmatches The ChildPlayercupmatches object to remove.
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function removePlayercupmatches(ChildPlayercupmatches $playercupmatches)
+    {
+        if ($this->getPlayercupmatchess()->contains($playercupmatches)) {
+            $pos = $this->collPlayercupmatchess->search($playercupmatches);
+            $this->collPlayercupmatchess->remove($pos);
+            if (null === $this->playercupmatchessScheduledForDeletion) {
+                $this->playercupmatchessScheduledForDeletion = clone $this->collPlayercupmatchess;
+                $this->playercupmatchessScheduledForDeletion->clear();
+            }
+            $this->playercupmatchessScheduledForDeletion[]= clone $playercupmatches;
+            $playercupmatches->setDivisionMatchesGroup(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinDivisionMatchesPlayerHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesPlayerHome', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinDivisionMatchesPlayerAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesPlayerAway', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinDivisionMatchesCupRound(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesCupRound', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+    /**
+     * Clears out the collPlayerdivisionmatchess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayerdivisionmatchess()
+     */
+    public function clearPlayerdivisionmatchess()
+    {
+        $this->collPlayerdivisionmatchess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayerdivisionmatchess collection loaded partially.
+     */
+    public function resetPartialPlayerdivisionmatchess($v = true)
+    {
+        $this->collPlayerdivisionmatchessPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayerdivisionmatchess collection.
+     *
+     * By default this just sets the collPlayerdivisionmatchess collection to an empty array (like clearcollPlayerdivisionmatchess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayerdivisionmatchess($overrideExisting = true)
+    {
+        if (null !== $this->collPlayerdivisionmatchess && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayerdivisionmatchess = new ObjectCollection();
+        $this->collPlayerdivisionmatchess->setModel('\Playerdivisionmatches');
+    }
+
+    /**
+     * Gets an array of ChildPlayerdivisionmatches objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     * @throws PropelException
+     */
+    public function getPlayerdivisionmatchess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayerdivisionmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayerdivisionmatchess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayerdivisionmatchess) {
+                // return empty collection
+                $this->initPlayerdivisionmatchess();
+            } else {
+                $collPlayerdivisionmatchess = ChildPlayerdivisionmatchesQuery::create(null, $criteria)
+                    ->filterByDivisionMatchesGroup($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayerdivisionmatchessPartial && count($collPlayerdivisionmatchess)) {
+                        $this->initPlayerdivisionmatchess(false);
+
+                        foreach ($collPlayerdivisionmatchess as $obj) {
+                            if (false == $this->collPlayerdivisionmatchess->contains($obj)) {
+                                $this->collPlayerdivisionmatchess->append($obj);
+                            }
+                        }
+
+                        $this->collPlayerdivisionmatchessPartial = true;
+                    }
+
+                    return $collPlayerdivisionmatchess;
+                }
+
+                if ($partial && $this->collPlayerdivisionmatchess) {
+                    foreach ($this->collPlayerdivisionmatchess as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayerdivisionmatchess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayerdivisionmatchess = $collPlayerdivisionmatchess;
+                $this->collPlayerdivisionmatchessPartial = false;
+            }
+        }
+
+        return $this->collPlayerdivisionmatchess;
+    }
+
+    /**
+     * Sets a collection of ChildPlayerdivisionmatches objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playerdivisionmatchess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function setPlayerdivisionmatchess(Collection $playerdivisionmatchess, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayerdivisionmatches[] $playerdivisionmatchessToDelete */
+        $playerdivisionmatchessToDelete = $this->getPlayerdivisionmatchess(new Criteria(), $con)->diff($playerdivisionmatchess);
+
+
+        $this->playerdivisionmatchessScheduledForDeletion = $playerdivisionmatchessToDelete;
+
+        foreach ($playerdivisionmatchessToDelete as $playerdivisionmatchesRemoved) {
+            $playerdivisionmatchesRemoved->setDivisionMatchesGroup(null);
+        }
+
+        $this->collPlayerdivisionmatchess = null;
+        foreach ($playerdivisionmatchess as $playerdivisionmatches) {
+            $this->addPlayerdivisionmatches($playerdivisionmatches);
+        }
+
+        $this->collPlayerdivisionmatchess = $playerdivisionmatchess;
+        $this->collPlayerdivisionmatchessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playerdivisionmatches objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playerdivisionmatches objects.
+     * @throws PropelException
+     */
+    public function countPlayerdivisionmatchess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayerdivisionmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayerdivisionmatchess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayerdivisionmatchess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayerdivisionmatchess());
+            }
+
+            $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByDivisionMatchesGroup($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayerdivisionmatchess);
+    }
+
+    /**
+     * Method called to associate a ChildPlayerdivisionmatches object to this object
+     * through the ChildPlayerdivisionmatches foreign key attribute.
+     *
+     * @param  ChildPlayerdivisionmatches $l ChildPlayerdivisionmatches
+     * @return $this|\Groups The current object (for fluent API support)
+     */
+    public function addPlayerdivisionmatches(ChildPlayerdivisionmatches $l)
+    {
+        if ($this->collPlayerdivisionmatchess === null) {
+            $this->initPlayerdivisionmatchess();
+            $this->collPlayerdivisionmatchessPartial = true;
+        }
+
+        if (!$this->collPlayerdivisionmatchess->contains($l)) {
+            $this->doAddPlayerdivisionmatches($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayerdivisionmatches $playerdivisionmatches The ChildPlayerdivisionmatches object to add.
+     */
+    protected function doAddPlayerdivisionmatches(ChildPlayerdivisionmatches $playerdivisionmatches)
+    {
+        $this->collPlayerdivisionmatchess[]= $playerdivisionmatches;
+        $playerdivisionmatches->setDivisionMatchesGroup($this);
+    }
+
+    /**
+     * @param  ChildPlayerdivisionmatches $playerdivisionmatches The ChildPlayerdivisionmatches object to remove.
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function removePlayerdivisionmatches(ChildPlayerdivisionmatches $playerdivisionmatches)
+    {
+        if ($this->getPlayerdivisionmatchess()->contains($playerdivisionmatches)) {
+            $pos = $this->collPlayerdivisionmatchess->search($playerdivisionmatches);
+            $this->collPlayerdivisionmatchess->remove($pos);
+            if (null === $this->playerdivisionmatchessScheduledForDeletion) {
+                $this->playerdivisionmatchessScheduledForDeletion = clone $this->collPlayerdivisionmatchess;
+                $this->playerdivisionmatchessScheduledForDeletion->clear();
+            }
+            $this->playerdivisionmatchessScheduledForDeletion[]= clone $playerdivisionmatches;
+            $playerdivisionmatches->setDivisionMatchesGroup(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesPlayerHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesPlayerHome', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesPlayerAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesPlayerAway', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesDivision(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesDivision', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+    /**
+     * Clears out the collPlayergrouprankings collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayergrouprankings()
+     */
+    public function clearPlayergrouprankings()
+    {
+        $this->collPlayergrouprankings = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayergrouprankings collection loaded partially.
+     */
+    public function resetPartialPlayergrouprankings($v = true)
+    {
+        $this->collPlayergrouprankingsPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayergrouprankings collection.
+     *
+     * By default this just sets the collPlayergrouprankings collection to an empty array (like clearcollPlayergrouprankings());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayergrouprankings($overrideExisting = true)
+    {
+        if (null !== $this->collPlayergrouprankings && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayergrouprankings = new ObjectCollection();
+        $this->collPlayergrouprankings->setModel('\Playergroupranking');
+    }
+
+    /**
+     * Gets an array of ChildPlayergroupranking objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayergroupranking[] List of ChildPlayergroupranking objects
+     * @throws PropelException
+     */
+    public function getPlayergrouprankings(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayergrouprankingsPartial && !$this->isNew();
+        if (null === $this->collPlayergrouprankings || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayergrouprankings) {
+                // return empty collection
+                $this->initPlayergrouprankings();
+            } else {
+                $collPlayergrouprankings = ChildPlayergrouprankingQuery::create(null, $criteria)
+                    ->filterByGroupRanking($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayergrouprankingsPartial && count($collPlayergrouprankings)) {
+                        $this->initPlayergrouprankings(false);
+
+                        foreach ($collPlayergrouprankings as $obj) {
+                            if (false == $this->collPlayergrouprankings->contains($obj)) {
+                                $this->collPlayergrouprankings->append($obj);
+                            }
+                        }
+
+                        $this->collPlayergrouprankingsPartial = true;
+                    }
+
+                    return $collPlayergrouprankings;
+                }
+
+                if ($partial && $this->collPlayergrouprankings) {
+                    foreach ($this->collPlayergrouprankings as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayergrouprankings[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayergrouprankings = $collPlayergrouprankings;
+                $this->collPlayergrouprankingsPartial = false;
+            }
+        }
+
+        return $this->collPlayergrouprankings;
+    }
+
+    /**
+     * Sets a collection of ChildPlayergroupranking objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playergrouprankings A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function setPlayergrouprankings(Collection $playergrouprankings, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayergroupranking[] $playergrouprankingsToDelete */
+        $playergrouprankingsToDelete = $this->getPlayergrouprankings(new Criteria(), $con)->diff($playergrouprankings);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->playergrouprankingsScheduledForDeletion = clone $playergrouprankingsToDelete;
+
+        foreach ($playergrouprankingsToDelete as $playergrouprankingRemoved) {
+            $playergrouprankingRemoved->setGroupRanking(null);
+        }
+
+        $this->collPlayergrouprankings = null;
+        foreach ($playergrouprankings as $playergroupranking) {
+            $this->addPlayergroupranking($playergroupranking);
+        }
+
+        $this->collPlayergrouprankings = $playergrouprankings;
+        $this->collPlayergrouprankingsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playergroupranking objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playergroupranking objects.
+     * @throws PropelException
+     */
+    public function countPlayergrouprankings(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayergrouprankingsPartial && !$this->isNew();
+        if (null === $this->collPlayergrouprankings || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayergrouprankings) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayergrouprankings());
+            }
+
+            $query = ChildPlayergrouprankingQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGroupRanking($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayergrouprankings);
+    }
+
+    /**
+     * Method called to associate a ChildPlayergroupranking object to this object
+     * through the ChildPlayergroupranking foreign key attribute.
+     *
+     * @param  ChildPlayergroupranking $l ChildPlayergroupranking
+     * @return $this|\Groups The current object (for fluent API support)
+     */
+    public function addPlayergroupranking(ChildPlayergroupranking $l)
+    {
+        if ($this->collPlayergrouprankings === null) {
+            $this->initPlayergrouprankings();
+            $this->collPlayergrouprankingsPartial = true;
+        }
+
+        if (!$this->collPlayergrouprankings->contains($l)) {
+            $this->doAddPlayergroupranking($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayergroupranking $playergroupranking The ChildPlayergroupranking object to add.
+     */
+    protected function doAddPlayergroupranking(ChildPlayergroupranking $playergroupranking)
+    {
+        $this->collPlayergrouprankings[]= $playergroupranking;
+        $playergroupranking->setGroupRanking($this);
+    }
+
+    /**
+     * @param  ChildPlayergroupranking $playergroupranking The ChildPlayergroupranking object to remove.
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function removePlayergroupranking(ChildPlayergroupranking $playergroupranking)
+    {
+        if ($this->getPlayergrouprankings()->contains($playergroupranking)) {
+            $pos = $this->collPlayergrouprankings->search($playergroupranking);
+            $this->collPlayergrouprankings->remove($pos);
+            if (null === $this->playergrouprankingsScheduledForDeletion) {
+                $this->playergrouprankingsScheduledForDeletion = clone $this->collPlayergrouprankings;
+                $this->playergrouprankingsScheduledForDeletion->clear();
+            }
+            $this->playergrouprankingsScheduledForDeletion[]= clone $playergroupranking;
+            $playergroupranking->setGroupRanking(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playergrouprankings from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayergroupranking[] List of ChildPlayergroupranking objects
+     */
+    public function getPlayergrouprankingsJoinPlayerRanking(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayergrouprankingQuery::create(null, $criteria);
+        $query->joinWith('PlayerRanking', $joinBehavior);
+
+        return $this->getPlayergrouprankings($query, $con);
+    }
+
+    /**
+     * Clears out the collPlayergroupresultss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayergroupresultss()
+     */
+    public function clearPlayergroupresultss()
+    {
+        $this->collPlayergroupresultss = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayergroupresultss collection loaded partially.
+     */
+    public function resetPartialPlayergroupresultss($v = true)
+    {
+        $this->collPlayergroupresultssPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayergroupresultss collection.
+     *
+     * By default this just sets the collPlayergroupresultss collection to an empty array (like clearcollPlayergroupresultss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayergroupresultss($overrideExisting = true)
+    {
+        if (null !== $this->collPlayergroupresultss && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayergroupresultss = new ObjectCollection();
+        $this->collPlayergroupresultss->setModel('\Playergroupresults');
+    }
+
+    /**
+     * Gets an array of ChildPlayergroupresults objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayergroupresults[] List of ChildPlayergroupresults objects
+     * @throws PropelException
+     */
+    public function getPlayergroupresultss(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayergroupresultssPartial && !$this->isNew();
+        if (null === $this->collPlayergroupresultss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayergroupresultss) {
+                // return empty collection
+                $this->initPlayergroupresultss();
+            } else {
+                $collPlayergroupresultss = ChildPlayergroupresultsQuery::create(null, $criteria)
+                    ->filterByGroupResult($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayergroupresultssPartial && count($collPlayergroupresultss)) {
+                        $this->initPlayergroupresultss(false);
+
+                        foreach ($collPlayergroupresultss as $obj) {
+                            if (false == $this->collPlayergroupresultss->contains($obj)) {
+                                $this->collPlayergroupresultss->append($obj);
+                            }
+                        }
+
+                        $this->collPlayergroupresultssPartial = true;
+                    }
+
+                    return $collPlayergroupresultss;
+                }
+
+                if ($partial && $this->collPlayergroupresultss) {
+                    foreach ($this->collPlayergroupresultss as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayergroupresultss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayergroupresultss = $collPlayergroupresultss;
+                $this->collPlayergroupresultssPartial = false;
+            }
+        }
+
+        return $this->collPlayergroupresultss;
+    }
+
+    /**
+     * Sets a collection of ChildPlayergroupresults objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playergroupresultss A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function setPlayergroupresultss(Collection $playergroupresultss, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayergroupresults[] $playergroupresultssToDelete */
+        $playergroupresultssToDelete = $this->getPlayergroupresultss(new Criteria(), $con)->diff($playergroupresultss);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->playergroupresultssScheduledForDeletion = clone $playergroupresultssToDelete;
+
+        foreach ($playergroupresultssToDelete as $playergroupresultsRemoved) {
+            $playergroupresultsRemoved->setGroupResult(null);
+        }
+
+        $this->collPlayergroupresultss = null;
+        foreach ($playergroupresultss as $playergroupresults) {
+            $this->addPlayergroupresults($playergroupresults);
+        }
+
+        $this->collPlayergroupresultss = $playergroupresultss;
+        $this->collPlayergroupresultssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playergroupresults objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playergroupresults objects.
+     * @throws PropelException
+     */
+    public function countPlayergroupresultss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayergroupresultssPartial && !$this->isNew();
+        if (null === $this->collPlayergroupresultss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayergroupresultss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayergroupresultss());
+            }
+
+            $query = ChildPlayergroupresultsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGroupResult($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayergroupresultss);
+    }
+
+    /**
+     * Method called to associate a ChildPlayergroupresults object to this object
+     * through the ChildPlayergroupresults foreign key attribute.
+     *
+     * @param  ChildPlayergroupresults $l ChildPlayergroupresults
+     * @return $this|\Groups The current object (for fluent API support)
+     */
+    public function addPlayergroupresults(ChildPlayergroupresults $l)
+    {
+        if ($this->collPlayergroupresultss === null) {
+            $this->initPlayergroupresultss();
+            $this->collPlayergroupresultssPartial = true;
+        }
+
+        if (!$this->collPlayergroupresultss->contains($l)) {
+            $this->doAddPlayergroupresults($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayergroupresults $playergroupresults The ChildPlayergroupresults object to add.
+     */
+    protected function doAddPlayergroupresults(ChildPlayergroupresults $playergroupresults)
+    {
+        $this->collPlayergroupresultss[]= $playergroupresults;
+        $playergroupresults->setGroupResult($this);
+    }
+
+    /**
+     * @param  ChildPlayergroupresults $playergroupresults The ChildPlayergroupresults object to remove.
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function removePlayergroupresults(ChildPlayergroupresults $playergroupresults)
+    {
+        if ($this->getPlayergroupresultss()->contains($playergroupresults)) {
+            $pos = $this->collPlayergroupresultss->search($playergroupresults);
+            $this->collPlayergroupresultss->remove($pos);
+            if (null === $this->playergroupresultssScheduledForDeletion) {
+                $this->playergroupresultssScheduledForDeletion = clone $this->collPlayergroupresultss;
+                $this->playergroupresultssScheduledForDeletion->clear();
+            }
+            $this->playergroupresultssScheduledForDeletion[]= clone $playergroupresults;
+            $playergroupresults->setGroupResult(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playergroupresultss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayergroupresults[] List of ChildPlayergroupresults objects
+     */
+    public function getPlayergroupresultssJoinPlayerResult(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayergroupresultsQuery::create(null, $criteria);
+        $query->joinWith('PlayerResult', $joinBehavior);
+
+        return $this->getPlayergroupresultss($query, $con);
+    }
+
+    /**
+     * Clears out the collPlayergroupstatess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayergroupstatess()
+     */
+    public function clearPlayergroupstatess()
+    {
+        $this->collPlayergroupstatess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayergroupstatess collection loaded partially.
+     */
+    public function resetPartialPlayergroupstatess($v = true)
+    {
+        $this->collPlayergroupstatessPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayergroupstatess collection.
+     *
+     * By default this just sets the collPlayergroupstatess collection to an empty array (like clearcollPlayergroupstatess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayergroupstatess($overrideExisting = true)
+    {
+        if (null !== $this->collPlayergroupstatess && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayergroupstatess = new ObjectCollection();
+        $this->collPlayergroupstatess->setModel('\Playergroupstates');
+    }
+
+    /**
+     * Gets an array of ChildPlayergroupstates objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildGroups is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayergroupstates[] List of ChildPlayergroupstates objects
+     * @throws PropelException
+     */
+    public function getPlayergroupstatess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayergroupstatessPartial && !$this->isNew();
+        if (null === $this->collPlayergroupstatess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayergroupstatess) {
+                // return empty collection
+                $this->initPlayergroupstatess();
+            } else {
+                $collPlayergroupstatess = ChildPlayergroupstatesQuery::create(null, $criteria)
+                    ->filterByGroupState($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayergroupstatessPartial && count($collPlayergroupstatess)) {
+                        $this->initPlayergroupstatess(false);
+
+                        foreach ($collPlayergroupstatess as $obj) {
+                            if (false == $this->collPlayergroupstatess->contains($obj)) {
+                                $this->collPlayergroupstatess->append($obj);
+                            }
+                        }
+
+                        $this->collPlayergroupstatessPartial = true;
+                    }
+
+                    return $collPlayergroupstatess;
+                }
+
+                if ($partial && $this->collPlayergroupstatess) {
+                    foreach ($this->collPlayergroupstatess as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayergroupstatess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayergroupstatess = $collPlayergroupstatess;
+                $this->collPlayergroupstatessPartial = false;
+            }
+        }
+
+        return $this->collPlayergroupstatess;
+    }
+
+    /**
+     * Sets a collection of ChildPlayergroupstates objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playergroupstatess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function setPlayergroupstatess(Collection $playergroupstatess, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayergroupstates[] $playergroupstatessToDelete */
+        $playergroupstatessToDelete = $this->getPlayergroupstatess(new Criteria(), $con)->diff($playergroupstatess);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->playergroupstatessScheduledForDeletion = clone $playergroupstatessToDelete;
+
+        foreach ($playergroupstatessToDelete as $playergroupstatesRemoved) {
+            $playergroupstatesRemoved->setGroupState(null);
+        }
+
+        $this->collPlayergroupstatess = null;
+        foreach ($playergroupstatess as $playergroupstates) {
+            $this->addPlayergroupstates($playergroupstates);
+        }
+
+        $this->collPlayergroupstatess = $playergroupstatess;
+        $this->collPlayergroupstatessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playergroupstates objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playergroupstates objects.
+     * @throws PropelException
+     */
+    public function countPlayergroupstatess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayergroupstatessPartial && !$this->isNew();
+        if (null === $this->collPlayergroupstatess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayergroupstatess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayergroupstatess());
+            }
+
+            $query = ChildPlayergroupstatesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByGroupState($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayergroupstatess);
+    }
+
+    /**
+     * Method called to associate a ChildPlayergroupstates object to this object
+     * through the ChildPlayergroupstates foreign key attribute.
+     *
+     * @param  ChildPlayergroupstates $l ChildPlayergroupstates
+     * @return $this|\Groups The current object (for fluent API support)
+     */
+    public function addPlayergroupstates(ChildPlayergroupstates $l)
+    {
+        if ($this->collPlayergroupstatess === null) {
+            $this->initPlayergroupstatess();
+            $this->collPlayergroupstatessPartial = true;
+        }
+
+        if (!$this->collPlayergroupstatess->contains($l)) {
+            $this->doAddPlayergroupstates($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayergroupstates $playergroupstates The ChildPlayergroupstates object to add.
+     */
+    protected function doAddPlayergroupstates(ChildPlayergroupstates $playergroupstates)
+    {
+        $this->collPlayergroupstatess[]= $playergroupstates;
+        $playergroupstates->setGroupState($this);
+    }
+
+    /**
+     * @param  ChildPlayergroupstates $playergroupstates The ChildPlayergroupstates object to remove.
+     * @return $this|ChildGroups The current object (for fluent API support)
+     */
+    public function removePlayergroupstates(ChildPlayergroupstates $playergroupstates)
+    {
+        if ($this->getPlayergroupstatess()->contains($playergroupstates)) {
+            $pos = $this->collPlayergroupstatess->search($playergroupstates);
+            $this->collPlayergroupstatess->remove($pos);
+            if (null === $this->playergroupstatessScheduledForDeletion) {
+                $this->playergroupstatessScheduledForDeletion = clone $this->collPlayergroupstatess;
+                $this->playergroupstatessScheduledForDeletion->clear();
+            }
+            $this->playergroupstatessScheduledForDeletion[]= clone $playergroupstates;
+            $playergroupstates->setGroupState(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Groups is new, it will return
+     * an empty collection; or if this Groups has previously
+     * been saved, it will retrieve related Playergroupstatess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Groups.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayergroupstates[] List of ChildPlayergroupstates objects
+     */
+    public function getPlayergroupstatessJoinPlayerState(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayergroupstatesQuery::create(null, $criteria);
+        $query->joinWith('PlayerState', $joinBehavior);
+
+        return $this->getPlayergroupstatess($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aCompetitions) {
+            $this->aCompetitions->removeGroups($this);
+        }
         $this->primarykey = null;
         $this->description = null;
         $this->code = null;
@@ -1507,8 +3613,45 @@ abstract class Groups implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collMatchess) {
+                foreach ($this->collMatchess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayercupmatchess) {
+                foreach ($this->collPlayercupmatchess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayerdivisionmatchess) {
+                foreach ($this->collPlayerdivisionmatchess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayergrouprankings) {
+                foreach ($this->collPlayergrouprankings as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayergroupresultss) {
+                foreach ($this->collPlayergroupresultss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayergroupstatess) {
+                foreach ($this->collPlayergroupstatess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collMatchess = null;
+        $this->collPlayercupmatchess = null;
+        $this->collPlayerdivisionmatchess = null;
+        $this->collPlayergrouprankings = null;
+        $this->collPlayergroupresultss = null;
+        $this->collPlayergroupstatess = null;
+        $this->aCompetitions = null;
     }
 
     /**

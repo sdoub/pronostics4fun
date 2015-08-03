@@ -158,6 +158,27 @@ class SeasonsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Playercupmatches', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':SeasonKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playercupmatchess', false);
+        $this->addRelation('Playerdivisionmatches', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':SeasonKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerdivisionmatchess', false);
+        $this->addRelation('Playerdivisionranking', '\\Playerdivisionranking', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':SeasonKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerdivisionrankings', false);
     } // buildRelations()
 
     /**

@@ -141,8 +141,8 @@ class PlayerrankingTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('CompetitionKey', 'Competitionkey', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('CompetitionKey', 'Competitionkey', 'INTEGER' , 'competitions', 'PrimaryKey', true, null, null);
+        $this->addForeignPrimaryKey('PlayerKey', 'Playerkey', 'INTEGER' , 'players', 'PrimaryKey', true, null, null);
         $this->addPrimaryKey('RankDate', 'Rankdate', 'DATE', true, null, null);
         $this->addColumn('Rank', 'Rank', 'INTEGER', true, null, null);
     } // initialize()
@@ -152,6 +152,20 @@ class PlayerrankingTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('CompetitionRanking', '\\Competitions', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':CompetitionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('RankingPlayer', '\\Players', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PlayerKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

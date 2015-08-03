@@ -24,7 +24,10 @@
     <column name="VisiteDate" phpName="Visitedate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <column name="UserUniqueId" phpName="Useruniqueid" type="VARCHAR" size="100" primaryKey="true" required="true"/>
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
-    <vendor type="mysql">
+    <foreign-key foreignTable="players">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>    
+		<vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
   </table>
@@ -64,9 +67,25 @@
     <column name="ResultKey" phpName="Resultkey" type="INTEGER" required="true"/>
     <column name="TeamPlayerKey" phpName="Teamplayerkey" type="INTEGER" required="true"/>
     <column name="EventTime" phpName="Eventtime" type="INTEGER" required="true"/>
-    <column name="EventType" phpName="Eventtype" type="INTEGER" required="true"/>
-    <column name="Half" phpName="Half" type="INTEGER" required="true"/>
+    <column name="EventType" phpName="Eventtype" type="INTEGER" required="true" inheritance="single">
+      <inheritance key="1" class="Goal" extends="Event"/>
+      <inheritance key="2" class="Penalty" extends="Goal"/>
+      <inheritance key="3" class="OwnGoal" extends="Goal"/>
+      <inheritance key="4" class="YellowCard" extends="Event"/>
+      <inheritance key="5" class="RedCard" extends="Event"/>
+      <inheritance key="6" class="Substitute" extends="Event"/>
+    </column>
+    <column name="Half" phpName="Half" type="ENUM" valueSet="NotStarted,FirstHalf,HalfTime,SecondHalf,ExtendedTime,ExtendedTimeFirstHalf,ExtendedTimeHalfTime,ExtendedTimeSecondHalf,PenalyTime,NotUsed,EndOfMatch" required="true"/>
     <column name="TeamKey" phpName="Teamkey" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="results">
+      <reference local="ResultKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="teamplayers">
+      <reference local="TeamPlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="teams">
+      <reference local="TeamKey" foreign="PrimaryKey"/>
+    </foreign-key>    
     <index name="ResultKey_2">
       <index-column name="ResultKey"/>
     </index>
@@ -94,16 +113,22 @@
     <column name="TeamHomeScore" phpName="Teamhomescore" type="INTEGER" required="true"/>
     <column name="TeamAwayScore" phpName="Teamawayscore" type="INTEGER" required="true"/>
     <column name="ForecastDate" phpName="Forecastdate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <foreign-key foreignTable="matches">
+      <reference local="MatchKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="ForecastPlayer">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <unique name="MatchKey">
+      <unique-column name="MatchKey"/>
+      <unique-column name="PlayerKey"/>
+    </unique>
     <index name="PlayerKey">
       <index-column name="PlayerKey"/>
     </index>
     <index name="MatchKey_2">
       <index-column name="MatchKey"/>
     </index>
-    <unique name="MatchKey">
-      <unique-column name="MatchKey"/>
-      <unique-column name="PlayerKey"/>
-    </unique>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -118,6 +143,9 @@
     <column name="Status" phpName="Status" type="BOOLEAN" size="1" required="true"/>
     <column name="IsCompleted" phpName="Iscompleted" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <column name="DayKey" phpName="Daykey" type="INTEGER"/>
+    <foreign-key foreignTable="competitions">
+      <reference local="CompetitionKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <index name="CompetitionKey">
       <index-column name="CompetitionKey"/>
     </index>
@@ -140,6 +168,15 @@
     <column name="IsSubstitute" phpName="Issubstitute" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <column name="TimeIn" phpName="Timein" type="INTEGER"/>
     <column name="TeamPlayerReplacedKey" phpName="Teamplayerreplacedkey" type="INTEGER"/>
+    <foreign-key foreignTable="matches" phpName="LineUpMatch">
+      <reference local="MatchKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="teams" phpName="LineUpTeam">
+      <reference local="TeamKey" foreign="PrimaryKey"/>
+    </foreign-key>    
+    <foreign-key foreignTable="teamplayers" phpName="LineUpTeamPlayer">
+      <reference local="TeamPlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -153,6 +190,15 @@
     <column name="IsBonusMatch" phpName="Isbonusmatch" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <column name="Status" phpName="Status" type="INTEGER" required="true" defaultValue="0"/>
     <column name="ExternalKey" phpName="Externalkey" type="INTEGER"/>
+    <foreign-key foreignTable="groups">
+      <reference local="GroupKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="teams" phpName="TeamHome">
+      <reference local="TeamHomeKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="teams" phpName="TeamAway">
+      <reference local="TeamAwayKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <index name="ScheduleDate">
       <index-column name="ScheduleDate"/>
     </index>
@@ -175,6 +221,12 @@
     <column name="EventKey" phpName="Eventkey" type="INTEGER" required="true"/>
     <column name="TeamHomeScore" phpName="Teamhomescore" type="INTEGER" required="true"/>
     <column name="TeamAwayScore" phpName="Teamawayscore" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="matches" phpName="MatchState">
+      <reference local="MatchKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="events">
+      <reference local="EventKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <unique name="MatchKey">
       <unique-column name="MatchKey"/>
       <unique-column name="StateDate"/>
@@ -189,6 +241,9 @@
     <column name="Information" phpName="Information" type="VARCHAR" size="4000" required="true"/>
     <column name="InfoDate" phpName="Infodate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <column name="InfoType" phpName="Infotype" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <foreign-key foreignTable="competitions">
+      <reference local="CompetitionKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -204,6 +259,21 @@
     <column name="AwayScore" phpName="Awayscore" type="TINYINT" size="3"/>
     <column name="ScheduleDate" phpName="Scheduledate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <column name="ResultDate" phpName="Resultdate" type="DATE"/>
+    <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerHome">
+      <reference local="PlayerHomeKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerAway">
+      <reference local="PlayerAwayKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="DivisionMatchesCupRound">
+      <reference local="CupRoundKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="groups" phpName="DivisionMatchesGroup">
+      <reference local="GroupKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="seasons" phpName="DivisionMatchesSeason">
+      <reference local="SeasonKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -219,6 +289,21 @@
     <column name="AwayScore" phpName="Awayscore" type="TINYINT" size="3"/>
     <column name="ScheduleDate" phpName="Scheduledate" type="TIMESTAMP"/>
     <column name="ResultDate" phpName="Resultdate" type="DATE"/>
+    <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerHome">
+      <reference local="PlayerHomeKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerAway">
+      <reference local="PlayerAwayKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="DivisionMatchesDivision">
+      <reference local="DivisionKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="groups" phpName="DivisionMatchesGroup">
+      <reference local="GroupKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="seasons" phpName="DivisionMatchesSeason">
+      <reference local="SeasonKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <unique name="PlayerHomeKey">
       <unique-column name="PlayerHomeKey"/>
       <unique-column name="PlayerAwayKey"/>
@@ -243,6 +328,15 @@
     <column name="PointsFor" phpName="Pointsfor" type="SMALLINT" size="4" required="true"/>
     <column name="PointsAgainst" phpName="Pointsagainst" type="SMALLINT" size="4" required="true"/>
     <column name="PointsDifference" phpName="Pointsdifference" type="SMALLINT" size="4" required="true"/>
+    <foreign-key foreignTable="players" phpName="DivisionRankingPlayer">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="seasons" phpName="DivisionRankingSeason">
+      <reference local="SeasonKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="divisions" phpName="DivisionRankingDivision">
+      <reference local="DivisionKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -252,6 +346,12 @@
     <column name="GroupKey" phpName="Groupkey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="RankDate" phpName="Rankdate" type="DATE" primaryKey="true" required="true"/>
     <column name="Rank" phpName="Rank" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="players" phpName="PlayerRanking">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="groups" phpName="GroupRanking">
+      <reference local="GroupKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <index name="GroupKey">
       <index-column name="GroupKey"/>
     </index>
@@ -269,6 +369,12 @@
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="GroupKey" phpName="Groupkey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="Score" phpName="Score" type="INTEGER"/>
+    <foreign-key foreignTable="players" phpName="PlayerResult">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="groups" phpName="GroupResult">
+      <reference local="GroupKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -280,6 +386,12 @@
     <column name="Rank" phpName="Rank" type="INTEGER" required="true" defaultValue="1"/>
     <column name="Score" phpName="Score" type="INTEGER" required="true"/>
     <column name="Bonus" phpName="Bonus" type="INTEGER" required="true" defaultValue="0"/>
+    <foreign-key foreignTable="players" phpName="PlayerState">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="groups" phpName="GroupState">
+      <reference local="GroupKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -289,6 +401,12 @@
     <column name="MatchKey" phpName="Matchkey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="Score" phpName="Score" type="INTEGER"/>
     <column name="IsPerfect" phpName="Isperfect" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+    <foreign-key foreignTable="players" phpName="PlayerResult">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="matches" phpName="MatchPlayerResult">
+      <reference local="MatchKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <index name="MatchKey">
       <index-column name="MatchKey"/>
     </index>
@@ -300,6 +418,12 @@
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="MatchStateKey" phpName="Matchstatekey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="Score" phpName="Score" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="players" phpName="PlayerMatchState">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="matchstates">
+      <reference local="MatchStateKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -309,6 +433,12 @@
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" primaryKey="true" required="true"/>
     <column name="RankDate" phpName="Rankdate" type="DATE" primaryKey="true" required="true"/>
     <column name="Rank" phpName="Rank" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="competitions" phpName="CompetitionRanking">
+      <reference local="CompetitionKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="players" phpName="RankingPlayer">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <index name="PlayerKey">
       <index-column name="PlayerKey"/>
     </index>
@@ -359,6 +489,12 @@
     <column name="LiveStatus" phpName="Livestatus" type="INTEGER" required="true"/>
     <column name="ActualTime" phpName="Actualtime" type="INTEGER" required="true"/>
     <column name="ResultDate" phpName="Resultdate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <foreign-key foreignTable="matches">
+      <reference local="MatchKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <behavior name="delegate">
+      <parameter name="to" value="matches" />
+    </behavior>    
     <unique name="MatchKey">
       <unique-column name="MatchKey"/>
     </unique>
@@ -424,6 +560,12 @@
     <column name="PlayerKey" phpName="Playerkey" type="INTEGER" required="true"/>
     <column name="Value" phpName="Value" type="BOOLEAN" size="1" required="true"/>
     <column name="VoteDate" phpName="Votedate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <foreign-key foreignTable="players" phpName="VotePlayer">
+      <reference local="PlayerKey" foreign="PrimaryKey"/>
+    </foreign-key>
+    <foreign-key foreignTable="matches" phpName="VoteMatch">
+      <reference local="MatchKey" foreign="PrimaryKey"/>
+    </foreign-key>
     <unique name="MatchKey">
       <unique-column name="MatchKey"/>
       <unique-column name="PlayerKey"/>

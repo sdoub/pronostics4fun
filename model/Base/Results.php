@@ -2,6 +2,11 @@
 
 namespace Base;
 
+use \Events as ChildEvents;
+use \EventsQuery as ChildEventsQuery;
+use \Matches as ChildMatches;
+use \MatchesQuery as ChildMatchesQuery;
+use \Results as ChildResults;
 use \ResultsQuery as ChildResultsQuery;
 use \DateTime;
 use \Exception;
@@ -12,6 +17,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -93,12 +99,29 @@ abstract class Results implements ActiveRecordInterface
     protected $resultdate;
 
     /**
+     * @var        ChildMatches
+     */
+    protected $aMatches;
+
+    /**
+     * @var        ObjectCollection|ChildEvents[] Collection to store aggregation of ChildEvents objects.
+     */
+    protected $collEventss;
+    protected $collEventssPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildEvents[]
+     */
+    protected $eventssScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -426,6 +449,10 @@ abstract class Results implements ActiveRecordInterface
             $this->modifiedColumns[ResultsTableMap::COL_MATCHKEY] = true;
         }
 
+        if ($this->aMatches !== null && $this->aMatches->getMatchPK() !== $v) {
+            $this->aMatches = null;
+        }
+
         return $this;
     } // setMatchkey()
 
@@ -572,6 +599,9 @@ abstract class Results implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aMatches !== null && $this->matchkey !== $this->aMatches->getMatchPK()) {
+            $this->aMatches = null;
+        }
     } // ensureConsistency
 
     /**
@@ -610,6 +640,9 @@ abstract class Results implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
+
+            $this->aMatches = null;
+            $this->collEventss = null;
 
         } // if (deep)
     }
@@ -710,6 +743,18 @@ abstract class Results implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aMatches !== null) {
+                if ($this->aMatches->isModified() || $this->aMatches->isNew()) {
+                    $affectedRows += $this->aMatches->save($con);
+                }
+                $this->setMatches($this->aMatches);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -719,6 +764,23 @@ abstract class Results implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->eventssScheduledForDeletion !== null) {
+                if (!$this->eventssScheduledForDeletion->isEmpty()) {
+                    \EventsQuery::create()
+                        ->filterByPrimaryKeys($this->eventssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->eventssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collEventss !== null) {
+                foreach ($this->collEventss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -882,10 +944,11 @@ abstract class Results implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Results'][$this->hashCode()])) {
@@ -893,12 +956,21 @@ abstract class Results implements ActiveRecordInterface
         }
         $alreadyDumpedObjects['Results'][$this->hashCode()] = true;
         $keys = ResultsTableMap::getFieldNames($keyType);
+        $keys_matches = \Map\MatchesTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getResultPK(),
             $keys[1] => $this->getMatchkey(),
             $keys[2] => $this->getLivestatus(),
             $keys[3] => $this->getActualtime(),
             $keys[4] => $this->getResultdate(),
+            $keys_matches[1] => $this->getGroupkey(),
+            $keys_matches[2] => $this->getTeamhomekey(),
+            $keys_matches[3] => $this->getTeamawaykey(),
+            $keys_matches[4] => $this->getScheduledate(),
+            $keys_matches[5] => $this->getIsbonusmatch(),
+            $keys_matches[6] => $this->getStatus(),
+            $keys_matches[7] => $this->getExternalkey(),
+
         );
 
         $utc = new \DateTimeZone('utc');
@@ -913,6 +985,38 @@ abstract class Results implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aMatches) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'matches';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'matches';
+                        break;
+                    default:
+                        $key = 'Matches';
+                }
+
+                $result[$key] = $this->aMatches->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collEventss) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'eventss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'eventss';
+                        break;
+                    default:
+                        $key = 'Eventss';
+                }
+
+                $result[$key] = $this->collEventss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1148,6 +1252,20 @@ abstract class Results implements ActiveRecordInterface
         $copyObj->setLivestatus($this->getLivestatus());
         $copyObj->setActualtime($this->getActualtime());
         $copyObj->setResultdate($this->getResultdate());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getEventss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addEvents($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setResultPK(NULL); // this is a auto-increment column, so set to default value
@@ -1177,12 +1295,350 @@ abstract class Results implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildMatches object.
+     *
+     * @param  ChildMatches $v
+     * @return $this|\Results The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setMatches(ChildMatches $v = null)
+    {
+        if ($v === null) {
+            $this->setMatchkey(NULL);
+        } else {
+            $this->setMatchkey($v->getMatchPK());
+        }
+
+        $this->aMatches = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildMatches object, it will not be re-added.
+        if ($v !== null) {
+            $v->addResults($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildMatches object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildMatches The associated ChildMatches object.
+     * @throws PropelException
+     */
+    public function getMatches(ConnectionInterface $con = null)
+    {
+        if ($this->aMatches === null && ($this->matchkey !== null)) {
+            $this->aMatches = ChildMatchesQuery::create()->findPk($this->matchkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aMatches->addResultss($this);
+             */
+        }
+
+        return $this->aMatches;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Events' == $relationName) {
+            return $this->initEventss();
+        }
+    }
+
+    /**
+     * Clears out the collEventss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addEventss()
+     */
+    public function clearEventss()
+    {
+        $this->collEventss = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collEventss collection loaded partially.
+     */
+    public function resetPartialEventss($v = true)
+    {
+        $this->collEventssPartial = $v;
+    }
+
+    /**
+     * Initializes the collEventss collection.
+     *
+     * By default this just sets the collEventss collection to an empty array (like clearcollEventss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initEventss($overrideExisting = true)
+    {
+        if (null !== $this->collEventss && !$overrideExisting) {
+            return;
+        }
+        $this->collEventss = new ObjectCollection();
+        $this->collEventss->setModel('\Events');
+    }
+
+    /**
+     * Gets an array of ChildEvents objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildResults is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildEvents[] List of ChildEvents objects
+     * @throws PropelException
+     */
+    public function getEventss(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collEventssPartial && !$this->isNew();
+        if (null === $this->collEventss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collEventss) {
+                // return empty collection
+                $this->initEventss();
+            } else {
+                $collEventss = ChildEventsQuery::create(null, $criteria)
+                    ->filterByResults($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collEventssPartial && count($collEventss)) {
+                        $this->initEventss(false);
+
+                        foreach ($collEventss as $obj) {
+                            if (false == $this->collEventss->contains($obj)) {
+                                $this->collEventss->append($obj);
+                            }
+                        }
+
+                        $this->collEventssPartial = true;
+                    }
+
+                    return $collEventss;
+                }
+
+                if ($partial && $this->collEventss) {
+                    foreach ($this->collEventss as $obj) {
+                        if ($obj->isNew()) {
+                            $collEventss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collEventss = $collEventss;
+                $this->collEventssPartial = false;
+            }
+        }
+
+        return $this->collEventss;
+    }
+
+    /**
+     * Sets a collection of ChildEvents objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $eventss A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildResults The current object (for fluent API support)
+     */
+    public function setEventss(Collection $eventss, ConnectionInterface $con = null)
+    {
+        /** @var ChildEvents[] $eventssToDelete */
+        $eventssToDelete = $this->getEventss(new Criteria(), $con)->diff($eventss);
+
+
+        $this->eventssScheduledForDeletion = $eventssToDelete;
+
+        foreach ($eventssToDelete as $eventsRemoved) {
+            $eventsRemoved->setResults(null);
+        }
+
+        $this->collEventss = null;
+        foreach ($eventss as $events) {
+            $this->addEvents($events);
+        }
+
+        $this->collEventss = $eventss;
+        $this->collEventssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Events objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Events objects.
+     * @throws PropelException
+     */
+    public function countEventss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collEventssPartial && !$this->isNew();
+        if (null === $this->collEventss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collEventss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getEventss());
+            }
+
+            $query = ChildEventsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByResults($this)
+                ->count($con);
+        }
+
+        return count($this->collEventss);
+    }
+
+    /**
+     * Method called to associate a ChildEvents object to this object
+     * through the ChildEvents foreign key attribute.
+     *
+     * @param  ChildEvents $l ChildEvents
+     * @return $this|\Results The current object (for fluent API support)
+     */
+    public function addEvents(ChildEvents $l)
+    {
+        if ($this->collEventss === null) {
+            $this->initEventss();
+            $this->collEventssPartial = true;
+        }
+
+        if (!$this->collEventss->contains($l)) {
+            $this->doAddEvents($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildEvents $events The ChildEvents object to add.
+     */
+    protected function doAddEvents(ChildEvents $events)
+    {
+        $this->collEventss[]= $events;
+        $events->setResults($this);
+    }
+
+    /**
+     * @param  ChildEvents $events The ChildEvents object to remove.
+     * @return $this|ChildResults The current object (for fluent API support)
+     */
+    public function removeEvents(ChildEvents $events)
+    {
+        if ($this->getEventss()->contains($events)) {
+            $pos = $this->collEventss->search($events);
+            $this->collEventss->remove($pos);
+            if (null === $this->eventssScheduledForDeletion) {
+                $this->eventssScheduledForDeletion = clone $this->collEventss;
+                $this->eventssScheduledForDeletion->clear();
+            }
+            $this->eventssScheduledForDeletion[]= clone $events;
+            $events->setResults(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Results is new, it will return
+     * an empty collection; or if this Results has previously
+     * been saved, it will retrieve related Eventss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Results.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildEvents[] List of ChildEvents objects
+     */
+    public function getEventssJoinTeamplayers(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildEventsQuery::create(null, $criteria);
+        $query->joinWith('Teamplayers', $joinBehavior);
+
+        return $this->getEventss($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Results is new, it will return
+     * an empty collection; or if this Results has previously
+     * been saved, it will retrieve related Eventss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Results.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildEvents[] List of ChildEvents objects
+     */
+    public function getEventssJoinTeams(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildEventsQuery::create(null, $criteria);
+        $query->joinWith('Teams', $joinBehavior);
+
+        return $this->getEventss($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aMatches) {
+            $this->aMatches->removeResults($this);
+        }
         $this->primarykey = null;
         $this->matchkey = null;
         $this->livestatus = null;
@@ -1207,8 +1663,15 @@ abstract class Results implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collEventss) {
+                foreach ($this->collEventss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collEventss = null;
+        $this->aMatches = null;
     }
 
     /**
@@ -1299,7 +1762,7 @@ abstract class Results implements ActiveRecordInterface
 
 
     /**
-     * Derived method to catches calls to undefined methods.
+     * Catches calls to undefined methods.
      *
      * Provides magic import/export method support (fromXML()/toXML(), fromYAML()/toYAML(), etc.).
      * Allows to define default __call() behavior if you overwrite __call()
@@ -1310,6 +1773,33 @@ abstract class Results implements ActiveRecordInterface
      * @return array|string
      */
     public function __call($name, $params)
+    {
+
+    // delegate behavior
+
+    if (is_callable(array('\Matches', $name))) {
+        if (!$delegate = $this->getMatches()) {
+            $delegate = new ChildMatches();
+            $this->setMatches($delegate);
+        }
+
+        return call_user_func_array(array($delegate, $name), $params);
+    }
+        return $this->__parentCall($name, $params);
+    }
+
+    /**
+     * Derived method to catches calls to undefined methods.
+     *
+     * Provides magic import/export method support (fromXML()/toXML(), fromYAML()/toYAML(), etc.).
+     * Allows to define default __call() behavior if you overwrite __call()
+     *
+     * @param string $name
+     * @param mixed  $params
+     *
+     * @return array|string
+     */
+    public function __parentCall($name, $params)
     {
         if (0 === strpos($name, 'get')) {
             $virtualColumn = substr($name, 3);
