@@ -35,6 +35,15 @@ foreach ($matches as $match){
 	$matchList.=$match->getMatchPK();
 }
 
+$seasons = SeasonsQuery::create()
+  ->filterByCompetitionkey($competitionKey)
+  ->find();
+$seasonList = '';
+foreach ($seasons as $season){
+	if (!empty($seasonList))
+		$seasonList.=',';	
+	$seasonList.=$season->getSeasonPK();
+}
 $tables = array("competitions"=>"", 
 								"cuprounds"=>"",
 							  "divisions"=>"",
@@ -47,7 +56,7 @@ $tables = array("competitions"=>"",
 								"news"=>"CompetitionKey=$competitionKey",
 								"playercupmatches"=>"GroupKey IN ($groupList)",
 								"playerdivisionmatches"=>"GroupKey IN ($groupList)",
-								"playerdivisionranking"=>"SeasonKey IN (SELECT seasons.PrimaryKey FROM seasons WHERE seasons.CompetitionKey=$competitionKey)",
+								"playerdivisionranking"=>"SeasonKey IN ($seasonList)",
 								"playergroupranking"=>"GroupKey IN ($groupList)",
 								"playergroupresults"=>"GroupKey IN ($groupList)",
 								"playergroupstates"=>"GroupKey IN ($groupList)",
