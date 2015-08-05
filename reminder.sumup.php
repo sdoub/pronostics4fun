@@ -9,6 +9,13 @@ else
   $_playerKey = 19;
 }
 
+if (isset($_GET["Day"])) {
+  $_day = $_GET["Day"];
+}
+else
+{
+  $_day = 1;
+}
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -22,19 +29,19 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 ';
 
 
-$sql = "SELECT NickName, ActivationKey, UNIX_TIMESTAMP((CURDATE()+ INTERVAL 1 DAY)) tomorrowDate FROM playersenabled players WHERE PrimaryKey=$_playerKey";
-
-$resultSet = $_databaseObject->queryPerf($sql,"Get player information");
-$rowSet = $_databaseObject -> fetch_assoc ($resultSet);
-$activationKey = $rowSet["ActivationKey"];
+$player = PlayersQuery::Create()->findPK($_playerKey);
+//$sql = "SELECT NickName, ActivationKey, UNIX_TIMESTAMP((CURDATE()+ INTERVAL 1 DAY)) tomorrowDate FROM playersenabled players WHERE PrimaryKey=$_playerKey";
+$now = new DateTime('NOW');
+$now->add(new DateInterval('P'.$_day.'D'));
+//$resultSet = $_databaseObject->queryPerf($sql,"Get player information");
+//$rowSet = $_databaseObject -> fetch_assoc ($resultSet);
+$activationKey = $player->getActivationkey();
 echo "<p align='center'>Si ce message ne s'affiche pas correctement, visualisez-le <a href='".ROOT_SITE."/reminder.sumup.php?PlayerKey=$_playerKey'>ici</a></p><hr/>";
-
 echo "<div ><a style='border:0;' href='".ROOT_SITE."'><img style='border:0;' src='".ROOT_SITE . $_themePath ."/images/Logo.png' ></a></div><br>";
-
-echo '<p>Bonjour <strong>' . $rowSet["NickName"] . '</strong>,</p>';
-
-echo "<p>Vous recevez cet email, car le/les match(s) suivant se dérouleront demain, et vous n'avez pas validé vos pronostics.<br/>";
-$tomorrowFormattedDate = strftime("%A %d %B %Y",$rowSet['tomorrowDate']);
+echo '<p>Bonjour <strong>' . $player->getNickname() . '</strong>,</p>';
+echo "<p>Vous recevez cet email, car pour le/les match(s) suivant vous n'avez pas encore validé vos pronostics.<br/>";
+$tomorrowFormattedDate =$now->format("l j F Y");
+//strftime("%A %d %B %Y",$rowSet['tomorrowDate']);
 
 echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collapse:collapse">
 <tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
@@ -54,7 +61,7 @@ WHERE NOT EXISTS (SELECT 1 FROM
 forecasts
 WHERE matches.PrimaryKey=forecasts.MatchKey
 AND forecasts.PlayerKey=$_playerKey)
-AND DATE(matches.ScheduleDate)=(CURDATE()+ INTERVAL 1 DAY)
+AND DATE(matches.ScheduleDate)=(CURDATE()+ INTERVAL $_day DAY)
  ORDER BY  matches.ScheduleDate";
 
 $resultSet = $_databaseObject->queryPerf($query2,"Get matches linked to selected group");

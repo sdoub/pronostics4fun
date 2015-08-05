@@ -4,7 +4,7 @@ error_reporting(E_ALL | E_STRICT);
 
 date_default_timezone_set('Europe/Paris');
 
-require_once(dirname(__FILE__)."/lib/PHPMailer/class.phpmailer.php");
+require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 include_once (dirname(__FILE__)."/lib/safeIO.php");
 

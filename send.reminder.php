@@ -4,12 +4,11 @@ $_playerKeys = $_POST["PlayerKeys"];
 $_emailBody = $_POST["EmailBody"];
 $_emailsubject = $_POST["Subject"];
 
-
 error_reporting(E_STRICT);
 
 date_default_timezone_set('Europe/Paris');
 
-require_once("lib/PHPMailer/class.phpmailer.php");
+//require_once("lib/PHPMailer/class.phpmailer.php");
 
 //try {
 
