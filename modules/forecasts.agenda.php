@@ -3,8 +3,6 @@
 AddScriptReference("validate");
 AddScriptReference("cluetip");
 AddScriptReference("scrollpane");
-AddScriptReference("numberinput");
-AddScriptReference("spin");
 AddScriptReference("forecasts.agenda");
 AddScriptReference("ibutton");
 AddScriptReference("match.stats.detail");
@@ -55,8 +53,6 @@ LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
 WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
  ORDER BY matches.ScheduleDate,matches.PrimaryKey";
 
-
-//WHERE UNIX_TIMESTAMP(matches.ScheduleDate)>=" . time() . " AND matches.ScheduleDate<=NOW()+INTERVAL 20 DAY
 	$resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
 
 	$scheduleMonth = "00";
@@ -100,10 +96,10 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
       echo '<td class="forecastInput" >
 
 		<input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
-			type="text" class="textfield" id="TeamHomeScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
+			type="number" min="0" max="9" class="textfield" id="TeamHomeScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
 			name="TeamHomeScore" maxlength="1" size="3em" data-value="' .$rowSet["ForecastTeamHomeScore"] . '"/></td>
 		<td class="forecastInput"><input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
-			type="text" class="textfield" id="TeamAwayScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
+			type="number" min="0" max="9" class="textfield" id="TeamAwayScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
 			name="TeamAwayScore" maxlength="1"
 			size="3em" data-value="' .$rowSet["ForecastTeamAwayScore"] . '"/></td>
 			';
@@ -180,8 +176,8 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
   $(document).ready(function($) {
 
 	$('#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>').cookieBind();
-	$("input[type='text']").cookieBind().html (function () {
-	$("input[type='text']").each(function (index) {
+	$("input[type='number']").cookieBind().html (function () {
+	$("input[type='number']").each(function (index) {
 		$("#"+this.id).unbind('blur');
 		$("#"+this.id).bind ('blur', function () {
 		var tr = $(this).parent().parent();
@@ -296,11 +292,8 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 	})
 	});
 
-	$("input[name=TeamHomeScore]").numberInput();
-	$("input[name=TeamAwayScore]").numberInput();
   });
    $(document).ready(function($) {
-	   $.spin.imageBasePath = '<?php echo ROOT_SITE;?>/js/images/';
 
 	   $("div.flexcroll").jScrollPane({
 			showArrows: true,
@@ -318,21 +311,6 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 					topOffset: 30,
 					leftOffset: -250
 	});
-	   	$(":input[rel]").spin({
-		   	max:9,
-		   	min:-1,
-		   	btnCss: {cursor: 'pointer', padding: 0, margin: '5px 0px 0px 0px', verticalAlign: 'top'},
-		   	beforeChange : function (n,o){
-				//$('<div>'+o+' to '+n+'</div>').appendTo($('#console'));
-				//$('#console').text(o+' to '+n).show().fadeOut(400);
-				$(this).focus();
-				if (n==-1) {
-					$(this).val(0);
-					return false;
-				}
-		    }
-	   	});
-
 
 	   	$("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").iButton({
 	   	    labelOn: "Oui"
