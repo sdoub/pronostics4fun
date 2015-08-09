@@ -2,6 +2,7 @@
 <?php
 require_once(dirname(__FILE__)."/begin.file.php");
 require_once(BASE_PATH . "/lib/simple_html_dom.php");
+require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 
 $query = "SELECT PrimaryKey GroupKey, DayKey, IF (TIMEDIFF(BeginDate,(NOW()+ INTERVAL 1 HOUR))<0,1,0) isVoteClosed,
@@ -212,7 +213,22 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
         $rank++;
         $infonews .= '<div>'.$rank.'- <u>'.$rowSetVotes["TeamHomeName"].' - '.$rowSetVotes["TeamAwayName"].'</u> : '.$rowSetVotes["stars"].' étoile(s)</div>';
       }
-
+			$mail             = new P4FMailer();
+      try {
+        $mail->CharSet = 'UTF-8';
+        $mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+        $mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
+        $mail->Subject    = 'Résultat du vote pour le match bonus de la '.$rowSetAfter["Description"];
+        $mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
+        $mail->MsgHTML($infonews);
+        $mail->AddAddress("admin@pronostics4fun.com", "P4F Admin");
+				$mail->Send();
+      } catch (phpmailerException $e) {
+        echo $e->errorMessage(); //Pretty error messages from PHPMailer
+      } catch (Exception $e) {
+        echo $e->getMessage(); //Boring error messages from anything else!
+      }
+      unset($mail);
       $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
     }
 

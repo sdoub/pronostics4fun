@@ -176,6 +176,24 @@ class PlayersTableMap extends TableMap
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
 
+    /** A key representing a particular subclass */
+    const CLASSKEY_TRUE = 'true';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PLAYERSENABLED = '\\PlayersEnabled';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_TRUE = '\\PlayersEnabled';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_FALSE = 'false';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PLAYERSDISABLED = '\\PlayersDisabled';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_FALSE = '\\PlayersDisabled';
+
     /**
      * holds an array of fieldnames
      *
@@ -220,6 +238,7 @@ class PlayersTableMap extends TableMap
         $this->setClassName('\\Players');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
+        $this->setSingleTableInheritance(true);
         // columns
         $this->addPrimaryKey('PrimaryKey', 'PlayerPK', 'INTEGER', true, null, null);
         $this->addColumn('NickName', 'Nickname', 'VARCHAR', true, 20, null);
@@ -407,19 +426,47 @@ class PlayersTableMap extends TableMap
     }
 
     /**
-     * The class that the tableMap will make instances of.
+     * The returned Class will contain objects of the default type or
+     * objects that inherit from the default.
      *
-     * If $withPrefix is true, the returned path
-     * uses a dot-path notation which is translated into a path
-     * relative to a location on the PHP include_path.
-     * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
-     *
+     * @param array   $row ConnectionInterface result row.
+     * @param int     $colnum Column to examine for OM class information (first is 0).
      * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @throws PropelException Any exceptions caught during processing will be
+     *                         rethrown wrapped into a PropelException.
+     *
+     * @return string The OM class
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass($row, $colnum, $withPrefix = true)
     {
-        return $withPrefix ? PlayersTableMap::CLASS_DEFAULT : PlayersTableMap::OM_CLASS;
+        try {
+
+            $omClass = null;
+            $classKey = $row[$colnum + 8];
+
+            switch ($classKey) {
+
+                case PlayersTableMap::CLASSKEY_TRUE:
+                    $omClass = PlayersTableMap::CLASSNAME_TRUE;
+                    break;
+
+                case PlayersTableMap::CLASSKEY_FALSE:
+                    $omClass = PlayersTableMap::CLASSNAME_FALSE;
+                    break;
+
+                default:
+                    $omClass = PlayersTableMap::CLASS_DEFAULT;
+
+            } // switch
+            if (!$withPrefix) {
+                $omClass = preg_replace('#\.#', '\\', $omClass);
+            }
+
+        } catch (\Exception $e) {
+            throw new PropelException('Unable to get OM class.', $e);
+        }
+
+        return $omClass;
     }
 
     /**
@@ -444,7 +491,7 @@ class PlayersTableMap extends TableMap
             // $obj->hydrate($row, $offset, true); // rehydrate
             $col = $offset + PlayersTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PlayersTableMap::OM_CLASS;
+            $cls = static::getOMClass($row, $offset, false);
             /** @var Players $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
@@ -467,8 +514,6 @@ class PlayersTableMap extends TableMap
     {
         $results = array();
 
-        // set the class once to avoid overhead in the loop
-        $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
             $key = PlayersTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
@@ -478,6 +523,9 @@ class PlayersTableMap extends TableMap
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
+                // class must be set each time from the record row
+                $cls = static::getOMClass($row, 0);
+                $cls = preg_replace('#\.#', '\\', $cls);
                 /** @var Players $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);

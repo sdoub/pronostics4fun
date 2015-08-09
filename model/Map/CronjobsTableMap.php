@@ -9,7 +9,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -142,7 +141,7 @@ class CronjobsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addColumn('JobName', 'Jobname', 'VARCHAR', true, 30, null);
+        $this->addPrimaryKey('JobName', 'Jobname', 'VARCHAR', true, 30, null);
         $this->addColumn('LastExecution', 'Lastexecution', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('LastStatus', 'Laststatus', 'BOOLEAN', false, 1, false);
         $this->addColumn('LastExecutionInformation', 'Lastexecutioninformation', 'LONGVARCHAR', false, null, null);
@@ -170,7 +169,12 @@ class CronjobsTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return null;
+        // If the PK cannot be derived from the row, return NULL.
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Jobname', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+            return null;
+        }
+
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Jobname', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -187,7 +191,11 @@ class CronjobsTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return '';
+        return (string) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Jobname', TableMap::TYPE_PHPNAME, $indexType)
+        ];
     }
 
     /**
@@ -343,10 +351,11 @@ class CronjobsTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \Cronjobs) { // it's a model object
-            // create criteria based on pk value
-            $criteria = $values->buildCriteria();
+            // create criteria based on pk values
+            $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            throw new LogicException('The Cronjobs object has no primary key');
+            $criteria = new Criteria(CronjobsTableMap::DATABASE_NAME);
+            $criteria->add(CronjobsTableMap::COL_JOBNAME, (array) $values, Criteria::IN);
         }
 
         $query = CronjobsQuery::create()->mergeWith($criteria);

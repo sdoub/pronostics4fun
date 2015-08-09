@@ -304,8 +304,9 @@ abstract class PlayersQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            $cls = PlayersTableMap::getOMClass($row, 0, false);
             /** @var ChildPlayers $obj */
-            $obj = new ChildPlayers();
+            $obj = new $cls();
             $obj->hydrate($row);
             PlayersTableMap::addInstanceToPool($obj, (string) $key);
         }

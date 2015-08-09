@@ -12,6 +12,21 @@
                     }
                 }
             }
+        },
+        "runtime": {
+            "defaultConnection": "default",
+            "connections": ["default"],
+					"log": {
+                "defaultLogger": {
+                    "type": "stream",
+                    "path": "/home/cabox/workspace/log/propel.log",
+                    "level": 300
+                }
+					}
+        },
+        "generator": {
+            "defaultConnection": "default",
+            "connections": ["default"]
         }
     }
 }

@@ -32,7 +32,7 @@
     </vendor>
   </table>
   <table name="cronjobs" idMethod="native" phpName="Cronjobs">
-    <column name="JobName" phpName="Jobname" type="VARCHAR" size="30" required="true"/>
+    <column name="JobName" phpName="Jobname" type="VARCHAR" size="30" required="true" primaryKey="true"/>
     <column name="LastExecution" phpName="Lastexecution" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <column name="LastStatus" phpName="Laststatus" type="BOOLEAN" size="1" defaultValue="false"/>
     <column name="LastExecutionInformation" phpName="Lastexecutioninformation" type="LONGVARCHAR"/>
@@ -458,7 +458,10 @@
     <column name="Password" phpName="Password" type="VARCHAR" size="100" required="true"/>
     <column name="IsAdministrator" phpName="Isadministrator" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
     <column name="ActivationKey" phpName="Activationkey" type="VARCHAR" size="255"/>
-    <column name="IsEnabled" phpName="Isenabled" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="IsEnabled" phpName="Isenabled" type="BOOLEAN" size="1" required="true" defaultValue="true" inheritance="single">
+    	<inheritance key="true" class="PlayersEnabled" />
+			<inheritance key="false" class="PlayersDisabled"/>
+		</column>
     <column name="LastConnection" phpName="Lastconnection" type="DATE" required="true"/>
     <column name="Token" phpName="Token" type="VARCHAR" size="50"/>
     <column name="AvatarName" phpName="Avatarname" type="VARCHAR" size="20"/>

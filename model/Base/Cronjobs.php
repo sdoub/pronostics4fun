@@ -1029,7 +1029,8 @@ abstract class Cronjobs implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        throw new LogicException('The Cronjobs object has no primary key');
+        $criteria = ChildCronjobsQuery::create();
+        $criteria->add(CronjobsTableMap::COL_JOBNAME, $this->jobname);
 
         return $criteria;
     }
@@ -1042,7 +1043,7 @@ abstract class Cronjobs implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = false;
+        $validPk = null !== $this->getJobname();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1057,27 +1058,23 @@ abstract class Cronjobs implements ActiveRecordInterface
     }
 
     /**
-     * Returns NULL since this table doesn't have a primary key.
-     * This method exists only for BC and is deprecated!
-     * @return null
+     * Returns the primary key for this object (row).
+     * @return string
      */
     public function getPrimaryKey()
     {
-        return null;
+        return $this->getJobname();
     }
 
     /**
-     * Dummy primary key setter.
+     * Generic method to set the primary key (jobname column).
      *
-     * This function only exists to preserve backwards compatibility.  It is no longer
-     * needed or required by the Persistent interface.  It will be removed in next BC-breaking
-     * release of Propel.
-     *
-     * @deprecated
+     * @param       string $key Primary key.
+     * @return void
      */
-    public function setPrimaryKey($pk)
+    public function setPrimaryKey($key)
     {
-        // do nothing, because this object doesn't have any primary keys
+        $this->setJobname($key);
     }
 
     /**
@@ -1086,7 +1083,7 @@ abstract class Cronjobs implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return ;
+        return null === $this->getJobname();
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 require_once("begin.file.php");
+date_default_timezone_set('Europe/Paris');
 
 if (isset($_GET["PlayerKey"])) {
   $_playerKey = $_GET["PlayerKey"];
@@ -48,88 +49,96 @@ echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collaps
 <td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="4"><img src="' . ROOT_SITE . '/images/stadium.png" style="height:20px;width:20px;padding-right:15px;"/>Pronostics non validés pour le ' . $tomorrowFormattedDate . '</td>
 </tr>';
 
-$query2= "SELECT TeamHome.Name TeamHomeName,
-      TeamHome.PrimaryKey TeamHomeKey,
-TeamAway.Name TeamAwayName,
-TeamAway.PrimaryKey TeamAwayKey,
-UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
-matches.IsBonusMatch
-FROM matches
-INNER JOIN teams TeamHome ON TeamHome.PrimaryKey=matches.TeamHomeKey
-INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
-WHERE NOT EXISTS (SELECT 1 FROM
-forecasts
-WHERE matches.PrimaryKey=forecasts.MatchKey
-AND forecasts.PlayerKey=$_playerKey)
-AND DATE(matches.ScheduleDate)=(CURDATE()+ INTERVAL $_day DAY)
- ORDER BY  matches.ScheduleDate";
+$todayDate = new DateTime();
+$todayDate->setTime(0,0);
+$todayDate->add(new DateInterval('P'.$_day.'D'));
+$minScheduleDate = $todayDate->format("U");
+$todayDate->add(new DateInterval('P1D'));
+$maxScheduleDate = $todayDate->format("U");
 
-$resultSet = $_databaseObject->queryPerf($query2,"Get matches linked to selected group");
+$matches = MatchesQuery::Create()
+	->filterByScheduledate(array(
+    'min' => $minScheduleDate, 
+    'max' => $maxScheduleDate,
+  ))
+	->orderByScheduledate()
+	->orderByPrimarykey()
+	->find();
 
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-{
-
+foreach($matches as $match) {
+	$playerForecast=ForecastsQuery::Create()
+		->filterByMatchkey($match->getPrimarykey())
+		->filterByPlayerkey($_playerKey)
+		->findOne();
+	if (!$playerForecast) {
   echo '
 <tr style="border-bottom:1px solid #CCCCCC;">';
   $styleBonus = "";
 
-  if ($rowSet["IsBonusMatch"]==1) {
+  if ($match->getIsbonusmatch()==1) {
     $styleBonus = "background: url('".ROOT_SITE."/images/star_25.png') no-repeat scroll left center transparent;";
   }
 
-  echo '<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:right;'.$styleBonus.'">'.$rowSet["TeamHomeName"].'<img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamHomeKey"].'.png" width="25px" height="25px"/></td>
+  echo '<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:right;'.$styleBonus.'">
+	'.$match->getTeamhome()->getName().'<img src="'.ROOT_SITE.'/images/teamFlags/'.$match->getTeamhomekey().'.png" 
+	width="25px" height="25px"/></td>
 <td style="border-bottom:1px solid #CCCCCC;font-size:16px;vertical-align:bottom;width:50px;text-align:center;">&nbsp;-&nbsp;</td>
-<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:left;"><img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamAwayKey"].'.png" width="25px" height="25px"/>'.$rowSet["TeamAwayName"].'</td>';
-  $scheduleFormattedDate = strftime("%H:%M",$rowSet['ScheduleDate']);
-
+<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:left;">
+<img src="'.ROOT_SITE.'/images/teamFlags/'.$match->getTeamawaykey().'.png" width="25px" height="25px"/>'.$match->getTeamaway()->getName().'</td>';
+  $scheduleFormattedDate = $match->getScheduledate()->format("H:i");
+  //$scheduleFormattedDate = strftime("%H:%M",$match->getScheduledate()->format("U"));
   echo '<td style="border-bottom:1px solid #CCCCCC;">'.$scheduleFormattedDate.'</td>';
 
   echo '</tr>
-';
+';	
+	}
 }
-
 echo '</tr>';
 
-$query2= "SELECT TeamHome.Name TeamHomeName,
-      TeamHome.PrimaryKey TeamHomeKey,
-TeamAway.Name TeamAwayName,
-TeamAway.PrimaryKey TeamAwayKey,
-UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
-matches.IsBonusMatch
-FROM matches
-INNER JOIN teams TeamHome ON TeamHome.PrimaryKey=matches.TeamHomeKey
-INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
-WHERE NOT EXISTS (SELECT 1 FROM
-forecasts
-WHERE matches.PrimaryKey=forecasts.MatchKey
-AND forecasts.PlayerKey=$_playerKey)
-AND DATE(matches.ScheduleDate)=(CURDATE())
- ORDER BY  matches.ScheduleDate";
 
-$resultSet = $_databaseObject->queryPerf($query2,"Get matches linked to selected group");
+$todayDate = new DateTime();
+$todayDate->setTime(0,0);
+$minScheduleDate = $todayDate->format("U");
+$todayDate->add(new DateInterval('P1D'));
+$maxScheduleDate = $todayDate->format("U");
 
+$matches = MatchesQuery::Create()
+	->filterByScheduledate(array(
+    'min' => $minScheduleDate, 
+    'max' => $maxScheduleDate,
+  ))
+	->orderByScheduledate()
+	->orderByPrimarykey()
+	->find();
+$today='';
+foreach($matches as $match) {
+	$playerForecast=ForecastsQuery::Create()
+		->filterByMatchkey($match->getPrimarykey())
+		->filterByPlayerkey($_playerKey)
+		->findOne();
+	if (!$playerForecast) {
+		$today .= '<tr style="border-bottom:1px solid #CCCCCC;">';
+		$styleBonus = "";
 
-$today ="";
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
-{
+		if ($match->getIsbonusmatch()==1) {
+			$styleBonus = "background: url('".ROOT_SITE."/images/star_25.png') no-repeat scroll left center transparent;";
+		}
 
-  $today .= '<tr style="border-bottom:1px solid #CCCCCC;">';
-  $styleBonus = "";
+		$today .= '<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:right;'.$styleBonus.'">
+		'.$match->getTeamhome()->getName().'<img src="'.ROOT_SITE.'/images/teamFlags/'.$match->getTeamhomekey().'.png" width="25px" height="25px"/></td>
+	<td style="border-bottom:1px solid #CCCCCC;font-size:16px;vertical-align:bottom;width:50px;text-align:center;">&nbsp;-&nbsp;</td>
+	<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:left;">
+	<img src="'.ROOT_SITE.'/images/teamFlags/'.$match->getTeamawaykey().'.png" width="25px" height="25px"/>'.$match->getTeamaway()->getName().'</td>';
+		$scheduleFormattedDate = $match->getScheduledate()->format("H:i");
+		//$scheduleFormattedDate = strftime("%H:%M",$rowSet['ScheduleDate']);
 
-  if ($rowSet["IsBonusMatch"]==1) {
-    $styleBonus = "background: url('".ROOT_SITE."/images/star_25.png') no-repeat scroll left center transparent;";
-  }
+		$today .= '<td style="border-bottom:1px solid #CCCCCC;">'.$scheduleFormattedDate.'</td>';
 
-  $today .= '<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:right;'.$styleBonus.'">'.$rowSet["TeamHomeName"].'<img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamHomeKey"].'.png" width="25px" height="25px"/></td>
-<td style="border-bottom:1px solid #CCCCCC;font-size:16px;vertical-align:bottom;width:50px;text-align:center;">&nbsp;-&nbsp;</td>
-<td style="border-bottom:1px solid #CCCCCC;vertical-align:top;width:150px;text-align:left;"><img src="'.ROOT_SITE.'/images/teamFlags/'.$rowSet["TeamAwayKey"].'.png" width="25px" height="25px"/>'.$rowSet["TeamAwayName"].'</td>';
-  $scheduleFormattedDate = strftime("%H:%M",$rowSet['ScheduleDate']);
-
-  $today .= '<td style="border-bottom:1px solid #CCCCCC;">'.$scheduleFormattedDate.'</td>';
-
-  $today .= '</tr>
-';
+		$today .= '</tr>
+	';
+	}
 }
+
 if ($today) {
   echo '<tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">
 <td style="vertical-align: middle;font-size:14px;font-variant: small-caps ;" colspan="5"><img src="'.ROOT_SITE.'/images/warning.png" style="height:20px;width:20px;padding-right:15px;"/>Attention! Pronostics non validés pour aujourd\'hui</td>
@@ -149,8 +158,6 @@ echo "<p>L'administrateur de Pronostics4Fun.</p>
 <p style='font-size:12px;'>p.s. : Si vous ne souhaitez plus recevoir les résultats par emails, <a href='".ROOT_SITE."/unsubscribe.php?type=1&key=".$activationKey."'>cliquez ici</a></p>
 </body>
 </html>";
-
-//writePerfInfo();
 
 require_once("end.file.php");
 ?>
