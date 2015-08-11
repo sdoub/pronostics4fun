@@ -4,21 +4,29 @@ AddScriptReference("validate");
 AddScriptReference("cluetip");
 AddScriptReference("scrollpane");
 AddScriptReference("forecasts.agenda");
-AddScriptReference("ibutton");
+//AddScriptReference("ibutton");
 AddScriptReference("match.stats.detail");
 
 WriteScripts();
 if ($_competitionType==1) {
 ?>
-
 <center>
 <input type="submit"
 	value="Voter pour le match bonus" class="buttonfield" id="btnVote" name="btnVote">
 	<div class="divHeightSpace" >&nbsp;</div>
 </center>
 <div id="helpContainer">
-<label for="displayHelp" class="help"><?php echo __encode("Afficher l'aide aux pronostics : ")?></label>
-<input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?>></input>
+	<div class="help">Afficher l'aide aux pronostics : </div>
+	<div class="onoffswitchcontainer">	
+		<div class="onoffswitch">
+        <input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?> class="onoffswitch-checkbox">
+        <label class="onoffswitch-label" for="displayHelp">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+        </label>
+    </div>
+	</div>
+	<!--input type="checkbox" id="displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>" name="displayHelp" <?php if (isset($_COOKIE["displayHelp"]) && $_COOKIE["displayHelp"]=="1") echo 'checked="checked"';?>></input-->
 <span class="autosave_saving" >Sauvegarde...</span>
 </div>
 
@@ -96,10 +104,10 @@ WHERE (matches.ScheduleDate>=NOW() OR matches.Status=1)
       echo '<td class="forecastInput" >
 
 		<input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
-			type="number" min="0" max="9" class="textfield" id="TeamHomeScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
+			type="number" min="0" max="9" step="1" maxlength="1" minlength="1" class="textfield" id="TeamHomeScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamHomeScore"] . '"
 			name="TeamHomeScore" maxlength="1" size="3em" data-value="' .$rowSet["ForecastTeamHomeScore"] . '"/></td>
 		<td class="forecastInput"><input rel="get.match.stats.detail.php?MatchKey='. $rowSet['MatchKey'] .'"
-			type="number" min="0" max="9" class="textfield" id="TeamAwayScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
+			type="number" min="0" max="9" step="1" maxlength="1" minlength="1" class="textfield" id="TeamAwayScore' . $rowSet['MatchKey'] .'_'.$_authorisation->getConnectedUserKey(). '" value="' .$rowSet["ForecastTeamAwayScore"] . '"
 			name="TeamAwayScore" maxlength="1"
 			size="3em" data-value="' .$rowSet["ForecastTeamAwayScore"] . '"/></td>
 			';
@@ -173,6 +181,7 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 
   <script>
 		var _matchKey="";
+		var reg = new RegExp('[0-9]');
   $(document).ready(function($) {
 
 	$('#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>').cookieBind();
@@ -186,14 +195,21 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 			_matchKey =matchKey;
 			$(tr).find("input[name=TeamHomeScore]").each (function (index) {
 				teamHomeScore= $(this).val();
+				if (!reg.test(teamHomeScore) || teamHomeScore.length>1)
+					$(this).val('');
 				teamHomeScoreSavedValue= $(this).attr('data-value');
 			});
 			$(tr).find("input[name=TeamAwayScore]").each (function (index) {
 				teamAwayScore= $(this).val();
+				if (!reg.test(teamAwayScore) || teamAwayScore.length>1)
+					$(this).val('');
 				teamAwayScoreSavedValue= $(this).attr('data-value');
 			});
 
-			if (teamHomeScore!="" && teamAwayScore && (teamAwayScore!=teamAwayScoreSavedValue || teamHomeScore!=teamHomeScoreSavedValue)){
+			if (teamHomeScore!="" 
+					&& teamAwayScore 
+					&& (teamAwayScore!=teamAwayScoreSavedValue || teamHomeScore!=teamHomeScoreSavedValue)
+				 ){
 				$(tr).find("td:eq(0)").html("<img style='width:20px;height:20px;' title=\"Votre pronostic n'est pas sauvegard&eacute;!\nCliquer pour sauvegarder\" src='<?php echo ROOT_SITE;?>/images/warning.32px.png' />").unbind('click').bind('click', function () {
 					SaveForecast (matchKey);
 					$(this).unbind('click')
@@ -202,7 +218,10 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 				SaveForecast (matchKey);
 
 			} else {
-				if (teamHomeScore!="" && teamAwayScore!="" &&  teamAwayScore==teamAwayScoreSavedValue && teamHomeScore==teamHomeScoreSavedValue)
+				if (teamHomeScore!="" 
+						&& teamAwayScore!="" 
+						&& teamAwayScore==teamAwayScoreSavedValue 
+						&& teamHomeScore==teamHomeScoreSavedValue)
 					$(tr).find("td:eq(0)").html("<img title='Votre pronostic est sauvegard&eacute;!' style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/ok.2.png' />");
 				else if (teamHomeScore!="" || teamAwayScore!="")
 					$(tr).find("td:eq(0)").html("<img title=\"Vous devez saisir un score pour les 2 équipes!\" style='width:20px;height:20px;' src='<?php echo ROOT_SITE;?>/images/error.png' />");
@@ -311,19 +330,20 @@ WHERE MatchKey=" . $rowSet['MatchKey'];
 					topOffset: 30,
 					leftOffset: -250
 	});
-
-	   	$("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").iButton({
-	   	    labelOn: "Oui"
-	   	     , labelOff: "Non",
-	   	  change : function ($input){
-	   		if($input.is(":checked")) {
-				attachToolTip ();
-			}
-			else {
-				$(":input[rel]").cluetip('destroy');
-			}
-	   	}
-	   	   });
+	$("div.onoffswitch").click(function() {
+		var displayElement = $("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>");
+		displayElement.prop('checked', function (i, value) {return !value;}).change();
+		displayHelp();
+	});
+  function displayHelp() {
+		var displayElement = $("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>");
+		if(displayElement.is(":checked")) {
+			attachToolTip ();
+		}
+		else {
+			$(":input[rel]").cluetip('destroy');
+		}
+	}
 	function attachToolTip () {
 		if($("#displayHelp_<?php echo $_authorisation->getConnectedUserKey()?>").is(":checked")) {
 		$(":input[rel]").cluetip(

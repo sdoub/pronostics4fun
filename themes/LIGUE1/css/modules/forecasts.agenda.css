@@ -143,7 +143,7 @@ table {
 	background: #b3a58f;
 	border: solid 1px #D7E1F6;
 	padding: 3px;
-	margin: 4px 0px 4px 0px;
+	margin: 4px 0 4px 0;
 	width: 30px;
 	_height: 22px;
 	text-align: center;
@@ -225,10 +225,22 @@ input,select {
 	margin-left: 40px;
 }
 
-#helpContainer label.help {
+.help {
 	font-weight: bold;
 	color: #FFFFFF;
-	float: left;
+	margin-bottom: 10px;
+}
+
+.help {
+	font-weight: bold;
+	color: #FFFFFF;
+	margin-bottom: 10px;
+}
+
+.onoffswitchcontainer {
+	position: absolute;
+	left: 24%;
+	top: 10%;
 }
 
 #helpContainer span.autosave_saving {
@@ -251,4 +263,50 @@ input,select {
 	margin-right: 10px;
 	font-size: 10px;
 	background: #365F89;
+}
+
+.onoffswitch {
+	position: relative; width: 70px;
+	-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+	display: none;
+}
+.onoffswitch-label {
+	display: block; overflow: hidden; cursor: pointer;
+	border: 1px solid #365F89; border-radius: 5px;
+}
+.onoffswitch-inner {
+	display: block; width: 200%; margin-left: -100%;
+	transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+	display: block; float: left; width: 50%; height: 25px; padding: 0; line-height: 25px;
+	font-size: 13px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+	box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+	content: "OUI";
+	padding-left: 10px;
+	background-color: #6D8AA8; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+	content: "NON";
+	padding-right: 10px;
+	background-color: #D7E1F6; color: #365F89;
+	text-align: right;
+}
+.onoffswitch-switch {
+	display: block; width: 5px; margin: 10px;
+	background: #FFFFFF;
+	position: absolute; top: 0; bottom: 0;
+	right: 41px;
+	border: 2px solid #999999; border-radius: 5px;
+	transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+	margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+	right: 0; 
 }
