@@ -119,12 +119,29 @@ if ($_isAuthenticated)
 
       break;
     case "9":
+			$seasons = SeasonsQuery::create()->filterByCompetitionkey(COMPETITION)->orderByPrimaryKey()->find();
       $submenu = '<ul id="navMenu2">';
       $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Championship" ><span>Championnat</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup" ><span>Coupe S1</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=6" ><span>Coupe S2</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=7" ><span>Coupe S3</span></a></li>';
-      $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey=8" ><span>Coupe S4</span></a></li>';
+			if (count($seasons)>0 ){
+				$seasonMatches = PlayercupmatchesQuery::create()->filterBySeasonkey($seasons[0]->getPrimarykey())->count();
+				if ($seasonMatches>0)  
+					$submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey='.$seasons[0]->getPrimarykey().'" ><span>Coupe S1</span></a></li>';
+			}
+      if (count($seasons)>1){
+				$seasonMatches = PlayercupmatchesQuery::create()->filterBySeasonkey($seasons[1]->getPrimarykey())->count();
+				if ($seasonMatches>0)  
+					$submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey='.$seasons[1]->getPrimarykey().'" ><span>Coupe S2</span></a></li>';
+			}
+      if (count($seasons)>2){
+				$seasonMatches = PlayercupmatchesQuery::create()->filterBySeasonkey($seasons[2]->getPrimarykey())->count();
+				if ($seasonMatches>0)
+	      	$submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey='.$seasons[2]->getPrimarykey().'" ><span>Coupe S3</span></a></li>';
+			}
+      if (count($seasons)>2){
+				$seasonMatches = PlayercupmatchesQuery::create()->filterBySeasonkey($seasons[3]>getPrimarykey())->count();
+				if ($seasonMatches>0)
+		 	    $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey='.$seasons[3]->getPrimarykey().'" ><span>Coupe S4</span></a></li>';
+			}
       $submenu .= '</ul>';
       echo $submenu;
 

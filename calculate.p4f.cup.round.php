@@ -14,8 +14,8 @@ else if (isset($_POST['CupRoundKey']))
 }
 else
 {
-  //exit ("The matchKey is required!");
-  $_cupRoundKey =1;
+  exit ("The CupRoundKey is required!");
+  //$_cupRoundKey =1;
 }
 
 if (isset($_GET['GroupKey']))

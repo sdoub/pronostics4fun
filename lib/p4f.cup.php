@@ -5,12 +5,16 @@ function CreateCup () {
   $matches = array();
 // Get Competitors for divisions
   $seasonKey = "";
-  $query= "SELECT seasons.PrimaryKey FROM seasons WHERE CompetitionKey=".COMPETITION." ORDER BY seasons.Order";
+  $seasonOrder = "";
+	$query= "SELECT seasons.PrimaryKey, seasons.Order FROM seasons WHERE CompetitionKey=".COMPETITION." ORDER BY seasons.Order";
   $resultSet = $_databaseObject->queryPerf($query,"Get season");
   while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   {
     $seasonKey=$rowSet["PrimaryKey"];
+		$seasonOrder=$rowSet["Order"];
   }
+  $queryCupRounds= "SELECT PrimaryKey FROM cuprounds ORDER BY PrimaryKey";
+  $rowSetCupRounds = $_databaseObject->queryGetFullArray($queryCupRounds,"Get Cup Rounds");
 
   $competitors = array();
   $queryPlayers= "SELECT PrimaryKey PlayerKey FROM playersenabled players WHERE  `LastConnection` > NOW( ) - INTERVAL 1 YEAR";
@@ -29,12 +33,29 @@ function CreateCup () {
 //  $cup2 = new Cup($competitors);
 //  $cup2->setBracket($bracket);
 //  $matches[]=$cup2->ToArray();
-
-  $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN 3 AND 10 ORDER BY DayKey ASC";
+  $dayStart = 3;
+	$dayEnd = 10;
+	switch ($seasonOrder) {
+		case 1:
+			$dayStart = 3;
+			$dayEnd = 10;
+			break;
+		case 2:
+			$dayStart = 12;
+			$dayEnd = 19;
+			break;
+		case 3:
+			$dayStart = 21;
+			$dayEnd = 28;
+			break;
+		case 4:
+			$dayStart = 30;
+			$dayEnd = 37;
+			break;
+		
+	}
+  $queryGroups= "SELECT PrimaryKey, EndDate, DayKey FROM groups WHERE CompetitionKey=".COMPETITION." AND DayKey BETWEEN $dayStart AND $dayEnd ORDER BY DayKey ASC";
   $rowSetGroups = $_databaseObject->queryGetFullArray($queryGroups,"Get Groups");
-
-  $queryCupRounds= "SELECT PrimaryKey FROM cuprounds ORDER BY PrimaryKey";
-  $rowSetCupRounds = $_databaseObject->queryGetFullArray($queryCupRounds,"Get Cup Rounds");
 
   $rounds = $cup->getBracket();
 
