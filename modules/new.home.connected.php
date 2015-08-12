@@ -293,7 +293,13 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 		saving_image: "./images/wait.loader.gif",
 		use_html : true,
 		show_buttons : true,
-		success : function (html) {
+		success : function (data) {
+			$.log(data);
+			var dataJson = JSON.parse(data);
+			$.log($(this));
+			$.log(dataJson);
+			$(this).html(dataJson.Information);
+			$(this).prop("id","news."+dataJson.NewsPK)
 		},
 		delegate : {
 				// called while opening the editor.
@@ -554,7 +560,7 @@ if ($_competitionType==3) {
 </div>
 <div id="forecastsTitle" style="width:260px;">
 <div class="container" >
-	<div class="containerTitle"><?php echo __encode("Pronostics à venir ...");?></div>
+	<div class="containerTitle">Pronostics à venir ...</div>
 </div>
 <div class="container2 flexcroll" >
 <ul>
@@ -764,14 +770,13 @@ $(document).ready(function() {
 		$(this).append('<img id="DeleteNews" src="<?php echo ROOT_SITE;?>/images/delete.off.png" style="cursor:pointer;width:12px;height:12px;"/>').find('#DeleteNews').mouseenter(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.on.png');}).mouseleave(function() {$(this).attr('src','<?php echo ROOT_SITE;?>/images/delete.off.png');}).unbind('click').click(function () {
 			if (confirm('Voulez vous vraiment supprimer cette news ?'))
 			{
-				var currentNews = $(this).parent();
 				$.ajax({
 					  url: "save.news.php",
 					  dataType: 'json',
 					  data: {NewsKey:newsKey,ToBeDeleted:true},
 					  success: function (data){
-						if (!data.error)
-						  currentNews.slideUp();
+						  if (!data.error)
+								$('#newsList').find('li[player-key="'+newsKey+'"]').slideUp();
 						  },
 					  error: callbackPostError
 					});

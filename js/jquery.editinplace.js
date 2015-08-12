@@ -520,15 +520,15 @@ $.extend(InlineEditor.prototype, {
 	triggerDelegateCall: function(aDelegateMethodName, defaultReturnValue, optionalEvent) {
 		// REFACT: consider to trigger equivalent callbacks automatically via a mapping table?
 
-		$.log(aDelegateMethodName);
+		//$.log(aDelegateMethodName);
 		if ( ! this.settings.delegate
 			|| ! $.isFunction(this.settings.delegate[aDelegateMethodName])) {
-			$.log('defaultReturnValue'+defaultReturnValue);
+			//$.log('defaultReturnValue'+defaultReturnValue);
 			return defaultReturnValue;
 		}
 		
 		var delegateReturnValue =  this.settings.delegate[aDelegateMethodName](this.dom, this.settings, optionalEvent);
-		$.log('delegateReturnValue'+delegateReturnValue);
+		//$.log('delegateReturnValue'+delegateReturnValue);
 		return (undefined === delegateReturnValue)
 			? defaultReturnValue
 			: delegateReturnValue;

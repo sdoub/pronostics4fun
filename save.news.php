@@ -1,38 +1,37 @@
 <?php
 require_once("begin.file.php");
 
-
 if (isset($_GET["ToBeDeleted"])){
   $newsKey = $_GET["NewsKey"];
-
-  $query = "DELETE FROM news WHERE PrimaryKey=$newsKey";
+	$news = NewsQuery::create()->findPK($newsKey);
+	$news->delete();
   $arr = array();
-  if ($_databaseObject -> queryPerf ($query , "Delete News"))
-    $arr["error"] = false;
-  else
-    $arr["error"] = true;
-
+	$arr["error"] = !$news->isDeleted();
   writeJsonResponse($arr);
 } else {
   $newsId = explode('.',$_POST["element_id"]);
   $newsKey = $newsId[1];
 
-  //$newsInfo = mysql_real_escape_string(__encode(utf8_decode($_POST["update_value"])));
   $newsInfo = $_POST["update_value"];
   if ($newsKey=="newKey") {
-    $query = "INSERT INTO news (CompetitionKey, Information, InfoType) VALUE (".COMPETITION.",'".$newsInfo."', 4)";
+		$news = new News();
+		$news->setCompetitionkey(COMPETITION);
+		$news->setInformation($newsInfo);
+		$news->setInfotype(4);
+		$news->save();
   }
   else {
-    $query = "UPDATE news SET Information='".$newsInfo."' WHERE PrimaryKey=$newsKey";
+		$news = NewsQuery::create()->findPK($newsKey);
+		$news->setInformation($newsInfo);
+		$news->save();
   }
 
-  $_databaseObject -> queryPerf ($query , "Update News");
 
   if ($newsKey=="newKey") {
-    $newsKey = $_databaseObject -> insert_id();
+    $newsKey = $news->getPrimarykey();
   }
 
-  print(stripcslashes ($newsInfo));
+  writeJsonResponse($news->toArray());
 }
 require_once("end.file.php");
 
