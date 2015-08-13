@@ -200,14 +200,14 @@ else
 if ($_isAuthenticated)
 {
   $q = new PlayersQuery();
-$firstPlayer = $q->findPK($_authorisation->getConnectedUserKey());
+	$firstPlayer = $q->findPK($_authorisation->getConnectedUserKey());
 
 //$defaultLogger->addWarning($firstPlayer->getIsemailvalid());
 
 	if ($firstPlayer->getIsemailvalid())
 		echo '<h2><span style="font-size:14px;padding-right: 30px;">Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> Déconnexion</a></span></h2>';
 	else
-		echo '<h2><span style="font-size:14px;padding-right: 30px;"><img style="width:20px;height:20px;padding-right:5px;" title="Adresse email non valide, veuillez mettre à jour votre compte pour bénéficier des notifications (Alertes, Résultats, ...) de Pronostics4Fun" src="/images/warning.png"/>Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> Déconnexion</a></span></h2>';
+		echo '<h2><span style="font-size:14px;padding-right: 30px;"><img style="width:20px;height:20px;padding-right:5px;" title="Adresse email non vérifiée ! A l\'issue de votre inscription ou bien de votre changement d\'adresse email, vous avez reçu un email pour valider celle-ci. Une adresse email validée vous permet de recevoir des notifications/informations (Alertes, Résultats, ...) de Pronostics4Fun. En cas de problème, contactez l\'administrateur de P4F (admin@pronostics4fun.com)" src="/images/warning.png"/>Bienvenue  ' . $_authorisation->getConnectedUser() . ' | <a style="font-size:12px;padding-right: 120px;" href="index.php?logoff=1"> Déconnexion</a></span></h2>';
 }
 else
 {
