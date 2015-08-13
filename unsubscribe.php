@@ -19,8 +19,8 @@ $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
 <meta name="robots" content="index,follow"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Pronostics4fun - Ligue 1 - Saison 2010/2011</title>
-<meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnÈs de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journÈes de la ligue 1.
-Des classements et des statistiques sont Ètablis ‡ la fin de chaque journÈe de championnat. (Classement gÈnÈral, Classement par journÈe, ...).">
+<meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionn√© de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journ√©e de la ligue 1.
+Des classements et des statistiques sont √©tablis  √† la fin de chaque journ√©e de championnat. (Classement g√©n√©ral, Classement par journ√©e ...).">
 <meta name="keywords" content="pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
 <link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
@@ -51,11 +51,11 @@ Des classements et des statistiques sont Ètablis ‡ la fin de chaque journÈe de c
         	<div style="height:120px;border: solid 1px #365F89;background: #d6e1f5;">
             	<p style="color:#365F89;font-size:14px;margin-top:10px;margin-bottom:20px;">Bonjour <strong><?php echo $rowSet["NickName"];?></strong>,</p>
             	<?php if ($_GET["type"]==2) {?>
-            	<p style="color:#365F89;font-size:12px;"><?php echo __encode("Etes vous sur de ne plus vouloir recevoir les rÈsultats par email ?")?></p>
+            	<p style="color:#365F89;font-size:12px;">Etes vous sur de ne plus vouloir recevoir les r√©sultats par email ?</p>
             	<?php } else if ($_GET["type"]==1) {?>
-            	<p style="color:#365F89;font-size:12px;"><?php echo __encode("Etes vous sur de ne plus vouloir recevoir les alertes pour les matchs non pronostiquÈs ?")?></p>
+            	<p style="color:#365F89;font-size:12px;">Etes vous sur de ne plus vouloir recevoir les alertes pour les matchs non pronostiqu√©?</p>
             	<?php } ?>
-        		<p style="color:#365F89;font-size:10px; margin-top:30px;"><?php echo __encode("p.s. : Si vous vous dÈsabonnez, vous pourrez toujours rÈ-activer cette option ‡ partir de l'Ècran dÈtail de votre compte.")?></p>
+        		<p style="color:#365F89;font-size:10px; margin-top:30px;">p.s. : Si vous vous d√©sabonnez, vous pourrez toujours r√©activer cette option √† partir de l'√©cran d√©tail de votre compte.</p>
         	</div>
 			<input name="btn" id="btnYes" class="buttonfield" value="Oui" type="submit"/>
 			<input name="btn" id="btnNo" class="buttonfield" value="Non" type="submit"/>
@@ -64,12 +64,12 @@ Des classements et des statistiques sont Ètablis ‡ la fin de chaque journÈe de c
         	<div style="height:120px;border: solid 1px #365F89;background: #d6e1f5;">
             	<p style="color:#365F89;font-size:14px;margin-top:10px;margin-bottom:20px;"><strong><?php echo $rowSet["NickName"];?></strong>,</p>
             	<?php if ($_GET["type"]==2) {?>
-            	<p style="color:#365F89;font-size:12px;"><?php echo __encode("A partir de maintenant vous ne recevrez plus l'email vous informant des rÈsultats d'une journÈe de championnat.")?></p>
+            	<p style="color:#365F89;font-size:12px;">A partir de maintenant vous ne recevrez plus l'email vous informant des r√©sultats d'une journ√©e de championnat.</p>
             	<?php } else if ($_GET["type"]==1) {?>
-            	<p style="color:#365F89;font-size:12px;"><?php echo __encode("A partir de maintenant, vous ne recevrez plus l'email de rappel, 1 jour, avant un match non pronostiquÈ.")?></p>
+            	<p style="color:#365F89;font-size:12px;">A partir de maintenant, vous ne recevrez plus l'email de rappel, 1 jour, avant un match non pronostiqu√©</p>
             	<?php } ?>
 
-        		<p style="color:#365F89;font-size:10px; margin-top:25px;"><?php echo __encode("p.s. : Si vous changez d'avis, vous pourrez toujours rÈ-activer cette option ‡ partir de l'Ècran dÈtail de votre compte.")?></p>
+        		<p style="color:#365F89;font-size:10px; margin-top:25px;">p.s. : Si vous changez d'avis, vous pourrez toujours rÈ≠°ctiver cette option √† partir de l'√©cran d√©tail de votre compte.</p>
         	</div>
 			<input name="btn" id="btnOk" class="buttonfield" value="Ok" type="submit"/>
     	</div>
