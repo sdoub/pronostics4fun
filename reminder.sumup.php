@@ -41,8 +41,7 @@ echo "<p align='center'>Si ce message ne s'affiche pas correctement, visualisez-
 echo "<div ><a style='border:0;' href='".ROOT_SITE."'><img style='border:0;' src='".ROOT_SITE . $_themePath ."/images/Logo.png' ></a></div><br>";
 echo '<p>Bonjour <strong>' . $player->getNickname() . '</strong>,</p>';
 echo "<p>Vous recevez cet email, car pour le/les match(s) suivant vous n'avez pas encore validé vos pronostics.<br/>";
-$tomorrowFormattedDate =$now->format("l j F Y");
-//strftime("%A %d %B %Y",$rowSet['tomorrowDate']);
+$tomorrowFormattedDate =strftime("%A %d %B %Y",$now->format("U"));
 
 echo '<table style="width:500px;font-size:14px;border-spacing:0px;border-collapse:collapse">
 <tr style="background-color:#6d8aa8;color:#FFFFFF;font-weight:bold;">

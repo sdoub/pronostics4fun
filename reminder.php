@@ -58,8 +58,9 @@ if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d")){
 			->filterByPlayerkey($player->getPrimarykey())
 			->count();
 		if ($playerForecast!=count($matchlist)) {
-  	  $tomorrowFormattedDate = $reminderDate->format("l j F Y");
+			$tomorrowFormattedDate =strftime("%A %d %B %Y",$reminderDate->format("U"));
 
+			//$tomorrowFormattedDate = $reminderDate->format("l j F Y");
       $emailSent = true;
       echo "email to : ". $player->getNickname() ."<br/>";
       $mail             = new P4FMailer();
