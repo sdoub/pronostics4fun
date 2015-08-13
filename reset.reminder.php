@@ -1,18 +1,23 @@
 <?php
 require_once(dirname(__FILE__)."/begin.file.php");
 
-$query= "SELECT * FROM cronjobs
-WHERE DATE(NOW())!=DATE(cronjobs.LastExecution) AND JobName='ResetReminder'";
+date_default_timezone_set('Europe/Paris');
 
-$resultSet = $_databaseObject->queryPerf($query,"Get players for sending their results");
+$cronJob = CronjobsQuery::Create()->findOneByJobname('ResetReminder');
 
-while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
-
-  $sqlFixRank ="UPDATE players SET IsReminderEmailSent=0";
-  $_databaseObject->queryPerf($sqlFixRank,"Reset reminder information");
-
-  $sqlFixRank =" UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='Executed' WHERE JobName='ResetReminder'";
-  $_databaseObject->queryPerf($sqlFixRank,"Reset reminder information");
+$todayDate = new DateTime();
+// has already executed today?
+if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d")){
+	$nbUpdatedRows = PlayersQuery::create()
+  	->update(array('Isreminderemailsent' => 0));
+	echo "Executed - $nbUpdatedRows players updated";
+	$cronJob->setLastexecutioninformation("Executed - $nbUpdatedRows players updated");
+} else {
+	echo "Job has already been executed today";
 }
+
+$cronJob->setLaststatus(2);
+$cronJob->save();
+
 require_once(dirname(__FILE__)."/end.file.php");
 ?>
