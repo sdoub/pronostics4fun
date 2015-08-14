@@ -23,7 +23,7 @@ $emailSent = false;
 
 $todayDate = new DateTime();
 // has already executed today?
-if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d")){
+if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d") || $_test){
 
 	$players = PlayersQuery::Create()
 		->filterByReceivealert(true)
@@ -36,10 +36,12 @@ if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d")){
 	$todayDate->setTime(0,0);
 	$minScheduleDate = $todayDate->format("U");
 	$todayDate->add(new DateInterval('P'.$_day.'D'));
-	$reminderDate = $todayDate;
+	$reminderDate = $todayDate->format("U");
 	$todayDate->add(new DateInterval('P1D'));
 	$maxScheduleDate = $todayDate->format("U");
 
+  echo strftime("%A %d %B %Y",$reminderDate);
+	echo "<br/>";
 	$matches = MatchesQuery::Create()
 		->filterByScheduledate(array(
     	'min' => $minScheduleDate, 
@@ -57,12 +59,13 @@ if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d")){
 			->filterByMatchkey($matchlist)
 			->filterByPlayerkey($player->getPrimarykey())
 			->count();
+		echo $player->getNickname() ." number of forecasts : ".$playerForecast."<br/>";
 		if ($playerForecast!=count($matchlist)) {
-			$tomorrowFormattedDate =strftime("%A %d %B %Y",$reminderDate->format("U"));
-
+			$tomorrowFormattedDate =strftime("%A %d %B %Y",$reminderDate);
+			echo $tomorrowFormattedDate;
 			//$tomorrowFormattedDate = $reminderDate->format("l j F Y");
       $emailSent = true;
-      echo "email to : ". $player->getNickname() ."<br/>";
+      
       $mail             = new P4FMailer();
       try {
         $mail->CharSet = 'UTF-8';
@@ -104,6 +107,8 @@ if ($cronJob->getLastexecution()->format("Y-m-d")!=$todayDate->format("Y-m-d")){
       //$_databaseObject->queryPerf($query,"Reset reminder information");
     }
   }
+} else {
+	echo "Job has already been executed today";
 }
 if ($emailSent==false){
 	$logInfo = "Pas d'email a envoyé!";
