@@ -1,6 +1,10 @@
+#!/usr/local/bin/php
 <?php
 require_once(dirname(__FILE__)."/begin.file.php");
-//error_reporting(E_ALL | E_STRICT);
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 $_test=false;
 if (isset($_GET["Test"])) {
   $_test = true;

@@ -5,6 +5,9 @@ include_once(dirname(__FILE__). "/lib/ranking.php");
 include_once(dirname(__FILE__). "/lib/score.php");
 require_once(dirname(__FILE__). "/lib/http.php");
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 $_jobName='RefreshMatches';
 $_logInfo = "";
 $selectQuery = "SELECT LastStatus,TIME_TO_SEC(TIMEDIFF(NOW(),LastExecution)) LastExecution FROM cronjobs WHERE JobName='$_jobName'";

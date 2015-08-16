@@ -1,12 +1,13 @@
+#!/usr/local/bin/php
 <?php
 require_once(dirname(__FILE__)."/begin.file.php");
-error_reporting(E_ALL | E_STRICT);
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
 
 date_default_timezone_set('Europe/Paris');
 
 require_once(dirname(__FILE__)."/lib/p4fmailer.php");
-
-include_once (dirname(__FILE__)."/lib/safeIO.php");
 
 $currentTime = time();
 

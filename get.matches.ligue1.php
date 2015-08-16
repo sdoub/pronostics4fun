@@ -4,6 +4,8 @@ require_once(dirname(__FILE__)."/begin.file.php");
 require_once(BASE_PATH . "/lib/simple_html_dom.php");
 require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
 
 $query = "SELECT PrimaryKey GroupKey, DayKey, IF (TIMEDIFF(BeginDate,(NOW()+ INTERVAL 1 HOUR))<0,1,0) isVoteClosed,
 (SELECT COUNT(1) FROM matches WHERE matches.IsBonusMatch=1 AND matches.GroupKey=groups.PrimaryKey) IsBonusMatchValidated,
