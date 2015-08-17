@@ -2,6 +2,7 @@
 <?
 ini_set ("display_errors", "1");
 error_reporting(E_ALL);
+require_once(dirname(__FILE__)."/../begin.file.php");
 require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
 
 $currentDate = strftime("%d %b %Y",time());
@@ -62,5 +63,6 @@ if (file_exists($yesterdayFilename)) {
     echo "the file $yesterdayFilename was successfully deleted!";
   }
 }
+require_once(dirname(__FILE__)."/../end.file.php");
 
 ?>
