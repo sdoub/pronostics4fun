@@ -2,21 +2,21 @@
 <?php
 ini_set ("display_errors", "1");
 error_reporting(E_ALL);
-require_once(dirname(__FILE__)."/../begin.file.php");
-require_once(dirname(__FILE__)."/../lib/p4fmailer.php");
+require_once(dirname(__FILE__)."/begin.file.php");
+require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 $currentDate = strftime("%d %b %Y",time());
 $filename= strftime("pronostilxp4f-%Y%m%d",time()). ".sql";
-system("mysqldump --host=".SQL_HOST." --user=".SQL_LOGIN." --password=".SQL_PWD." --ignore-table=".SQL_DB.".connectedusers --ignore-table=".SQL_DB.".cronjobs ".SQL_DB." > " . $filename );
-system("gzip " . $filename);
+system("mysqldump --host=".SQL_HOST." --user=".SQL_LOGIN." --password=".SQL_PWD." --ignore-table=".SQL_DB.".connectedusers --ignore-table=".SQL_DB.".cronjobs ".SQL_DB." > data/" . $filename );
+system("gzip data/" . $filename);
 
-$currentFileSize = filesize($filename . ".gz");
+$currentFileSize = filesize("data/". $filename . ".gz");
 
 $yesterdayDate = strftime("%d %b %Y",time() - (60*60*24));
 $yesterdayFilename= strftime("pronostilxp4f-%Y%m%d",time()- (60*60*24)). ".sql.gz";
 $yesterdayFilesize= 0;
-if (file_exists($yesterdayFilename)) {
-  $yesterdayFilesize = filesize($yesterdayFilename);
+if (file_exists("data/".$yesterdayFilename)) {
+  $yesterdayFilesize = filesize("data/".$yesterdayFilename);
 }
 
 if (abs($yesterdayFilesize-$currentFileSize)>5) {
@@ -38,7 +38,7 @@ if (abs($yesterdayFilesize-$currentFileSize)>5) {
 
     $mail->AddAddress("sebastien.dubuc@gmail.com", "Sébastien Dubuc");
 
-    $mail->AddAttachment($filename . ".gz");
+    $mail->AddAttachment("data/".$filename . ".gz");
 
     $mail->Send();
   } catch (phpmailerException $e) {
@@ -57,12 +57,12 @@ if (abs($yesterdayFilesize-$currentFileSize)>5) {
   echo "$yesterdayFilename : $yesterdayFilesize";
 }
 
-if (file_exists($yesterdayFilename)) {
-  if (@unlink($yesterdayFilename) === true) {
+if (file_exists("data/".$yesterdayFilename)) {
+  if (@unlink("data/".$yesterdayFilename) === true) {
     echo "<br/>";
     echo "the file $yesterdayFilename was successfully deleted!";
   }
 }
-require_once(dirname(__FILE__)."/../end.file.php");
+require_once(dirname(__FILE__)."/end.file.php");
 
 ?>
