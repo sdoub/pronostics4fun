@@ -6,14 +6,14 @@ require_once(dirname(__FILE__)."/begin.file.php");
 require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 $currentDate = strftime("%d %b %Y",time());
-$filename= strftime("pronostilxp4f-%Y%m%d",time()). ".sql";
+$filename= strftime(SQL_DB".-%Y%m%d",time()). ".sql";
 system("mysqldump --host=".SQL_HOST." --user=".SQL_LOGIN." --password=".SQL_PWD." --ignore-table=".SQL_DB.".connectedusers --ignore-table=".SQL_DB.".cronjobs ".SQL_DB." > data/" . $filename );
 system("gzip data/" . $filename);
 
 $currentFileSize = filesize("data/". $filename . ".gz");
 
 $yesterdayDate = strftime("%d %b %Y",time() - (60*60*24));
-$yesterdayFilename= strftime("pronostilxp4f-%Y%m%d",time()- (60*60*24)). ".sql.gz";
+$yesterdayFilename= strftime(SQL_DB".-%Y%m%d",time()- (60*60*24)). ".sql.gz";
 $yesterdayFilesize= 0;
 if (file_exists("data/".$yesterdayFilename)) {
   $yesterdayFilesize = filesize("data/".$yesterdayFilename);
