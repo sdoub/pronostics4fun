@@ -90,7 +90,7 @@ function CreateCup () {
     if ($match["c1"]==null)
       $homePlayerKey = -1;
     $insertQuery = "INSERT IGNORE INTO playercupmatches (PlayerHomeKey, PlayerAwayKey, SeasonKey, CupRoundKey, GroupKey)
-    VALUES (".$homePlayerKey.", ".$awayPlayerKey.", $seasonKey, ".$rowSetCupRounds[1]["PrimaryKey"].", ".$groupKey.")";
+    VALUES (".$homePlayerKey.", ".$awayPlayerKey.", $seasonKey, ".$rowSetCupRounds[0]["PrimaryKey"].", ".$groupKey.")";
 
     $_databaseObject->queryPerf($insertQuery,"Added player match");
   }

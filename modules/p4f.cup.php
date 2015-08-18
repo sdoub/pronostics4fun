@@ -324,7 +324,7 @@ for ($roundIndex = 0; $roundIndex < count($rounds); $roundIndex++) {
 			$firstPlayerState = 'loser';
 			$secondPlayerState = '';
 		}
-		if ($cupRoundKey==1 && $firstPlayerScore==0 && $secondPlayerKey=-2)
+		if ($cupRoundKey==1 && $firstPlayerScore==0 && $secondPlayerKey=-2 && count($rounds)>1)
 			$firstPlayerName.="<sup>*</sup>";
 
 		$winner = '';
