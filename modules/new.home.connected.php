@@ -493,7 +493,25 @@ groups.Status,
 AND matches.GroupKey=groups.PrimaryKey)
 +(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey=".$_authorisation->getConnectedUserKey()."
 AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
-(SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank
+(SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank,
+(SELECT players.NickName
+   FROM playergroupranking
+  INNER JOIN players ON playergroupranking.PlayerKey=players.PrimaryKey 
+	WHERE playergroupranking.Rank=1 
+	  AND playergroupranking.GroupKey=groups.PrimaryKey
+		ORDER BY playergroupranking.RankDate DESC LIMIT 0,1) Winner,
+(SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
+   FROM playergroupranking
+	WHERE playergroupranking.Rank=1 
+	  AND playergroupranking.GroupKey=groups.PrimaryKey
+		AND playergroupranking.RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=playergroupranking.GroupKey)) 
+AND matches.GroupKey=groups.PrimaryKey)
++(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
+   FROM playergroupranking
+	WHERE playergroupranking.Rank=1 
+	  AND playergroupranking.GroupKey=groups.PrimaryKey
+		AND playergroupranking.RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=playergroupranking.GroupKey))
+AND playergroupresults.GroupKey=groups.PrimaryKey) WinnerScore
  FROM groups
 WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=1
 ORDER BY groups.EndDate DESC";
@@ -538,8 +556,10 @@ foreach ($rowsSet as $rowSet)
 	$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
   echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . $players .'</span><br/>';
   echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span>';
-  echo '</li>';
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span><br/>';
+  echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Vainqueur : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["Winner"].' ('.$rowSet["WinnerScore"].'pts)</span><br/>';
+	echo '</li>';
 	
 	
 	
