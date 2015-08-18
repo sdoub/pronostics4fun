@@ -494,6 +494,8 @@ AND matches.GroupKey=groups.PrimaryKey)
 +(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey=".$_authorisation->getConnectedUserKey()."
 AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
 (SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank,
+(SELECT Rank FROM playerranking WHERE RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=groups.PrimaryKey) AND
+PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) GlobalRank,
 (SELECT players.NickName
    FROM playergroupranking
   INNER JOIN players ON playergroupranking.PlayerKey=players.PrimaryKey 
@@ -519,6 +521,7 @@ ORDER BY groups.EndDate DESC";
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
 if (count($rowsSet)>0) {
 echo "<ul>";
+$previousGlobalRank=0;
 foreach ($rowsSet as $rowSet)
 {
 	
@@ -552,16 +555,43 @@ foreach ($rowsSet as $rowSet)
   if ($rowSet["unixBeginDate"]==0){
     $groupDateFormatted ="";
   }
+	$variationRank='';
+	$variation='';
+	if ($previousGlobalRank>0) {
+    if ($previousGlobalRank>$rowSet["GlobalRank"]) {
+      $variation = "up";
+    }
+    else if ($previousGlobalRank<$rowSet["GlobalRank"]) {
+      $variation = "down";
+    }
+    else {
+      $variation = "eq";
+    }
+		$variationRank = $previousGlobalRank - (int)$rowSet["GlobalRank"];
+		if ($variationRank>0)
+			$variationRank = '+'+$variationRank;
+	}
+	$rankWording = '<sup>';
+	if ($rowSet["GlobalRank"]==1)
+		$rankWording .='er';
+	else
+		$rankWording .='ème';
+	$rankWording .='</sup>';
+	
+	
   echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
 	$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
-  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . $players .'</span><br/>';
-  echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span><br/>';
-  echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Vainqueur : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["Winner"].' ('.$rowSet["WinnerScore"].'pts)</span><br/>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . $players .'</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Vainqueur : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["Winner"].' ('.$rowSet["WinnerScore"].'pts)</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
+	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
 	echo '</li>';
 	
-	
+  $previousGlobalRank = $rowSet["GlobalRank"];
 	
 }
 echo "</ul>";
