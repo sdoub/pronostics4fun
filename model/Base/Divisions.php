@@ -4,6 +4,8 @@ namespace Base;
 
 use \Divisions as ChildDivisions;
 use \DivisionsQuery as ChildDivisionsQuery;
+use \Playerdivisionmatches as ChildPlayerdivisionmatches;
+use \PlayerdivisionmatchesQuery as ChildPlayerdivisionmatchesQuery;
 use \Playerdivisionranking as ChildPlayerdivisionranking;
 use \PlayerdivisionrankingQuery as ChildPlayerdivisionrankingQuery;
 use \Exception;
@@ -89,6 +91,12 @@ abstract class Divisions implements ActiveRecordInterface
     protected $order;
 
     /**
+     * @var        ObjectCollection|ChildPlayerdivisionmatches[] Collection to store aggregation of ChildPlayerdivisionmatches objects.
+     */
+    protected $collPlayerdivisionmatchess;
+    protected $collPlayerdivisionmatchessPartial;
+
+    /**
      * @var        ObjectCollection|ChildPlayerdivisionranking[] Collection to store aggregation of ChildPlayerdivisionranking objects.
      */
     protected $collPlayerdivisionrankings;
@@ -101,6 +109,12 @@ abstract class Divisions implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayerdivisionmatches[]
+     */
+    protected $playerdivisionmatchessScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -578,6 +592,8 @@ abstract class Divisions implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collPlayerdivisionmatchess = null;
+
             $this->collPlayerdivisionrankings = null;
 
         } // if (deep)
@@ -688,6 +704,23 @@ abstract class Divisions implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->playerdivisionmatchessScheduledForDeletion !== null) {
+                if (!$this->playerdivisionmatchessScheduledForDeletion->isEmpty()) {
+                    \PlayerdivisionmatchesQuery::create()
+                        ->filterByPrimaryKeys($this->playerdivisionmatchessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playerdivisionmatchessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayerdivisionmatchess !== null) {
+                foreach ($this->collPlayerdivisionmatchess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->playerdivisionrankingsScheduledForDeletion !== null) {
@@ -883,6 +916,21 @@ abstract class Divisions implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collPlayerdivisionmatchess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playerdivisionmatchess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playerdivisionmatchess';
+                        break;
+                    default:
+                        $key = 'Playerdivisionmatchess';
+                }
+
+                $result[$key] = $this->collPlayerdivisionmatchess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collPlayerdivisionrankings) {
 
                 switch ($keyType) {
@@ -1130,6 +1178,12 @@ abstract class Divisions implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getPlayerdivisionmatchess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayerdivisionmatches($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getPlayerdivisionrankings() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPlayerdivisionranking($relObj->copy($deepCopy));
@@ -1177,9 +1231,330 @@ abstract class Divisions implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('Playerdivisionmatches' == $relationName) {
+            return $this->initPlayerdivisionmatchess();
+        }
         if ('Playerdivisionranking' == $relationName) {
             return $this->initPlayerdivisionrankings();
         }
+    }
+
+    /**
+     * Clears out the collPlayerdivisionmatchess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayerdivisionmatchess()
+     */
+    public function clearPlayerdivisionmatchess()
+    {
+        $this->collPlayerdivisionmatchess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayerdivisionmatchess collection loaded partially.
+     */
+    public function resetPartialPlayerdivisionmatchess($v = true)
+    {
+        $this->collPlayerdivisionmatchessPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayerdivisionmatchess collection.
+     *
+     * By default this just sets the collPlayerdivisionmatchess collection to an empty array (like clearcollPlayerdivisionmatchess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayerdivisionmatchess($overrideExisting = true)
+    {
+        if (null !== $this->collPlayerdivisionmatchess && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayerdivisionmatchess = new ObjectCollection();
+        $this->collPlayerdivisionmatchess->setModel('\Playerdivisionmatches');
+    }
+
+    /**
+     * Gets an array of ChildPlayerdivisionmatches objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildDivisions is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     * @throws PropelException
+     */
+    public function getPlayerdivisionmatchess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayerdivisionmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayerdivisionmatchess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayerdivisionmatchess) {
+                // return empty collection
+                $this->initPlayerdivisionmatchess();
+            } else {
+                $collPlayerdivisionmatchess = ChildPlayerdivisionmatchesQuery::create(null, $criteria)
+                    ->filterByDivisionMatchesDivision($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayerdivisionmatchessPartial && count($collPlayerdivisionmatchess)) {
+                        $this->initPlayerdivisionmatchess(false);
+
+                        foreach ($collPlayerdivisionmatchess as $obj) {
+                            if (false == $this->collPlayerdivisionmatchess->contains($obj)) {
+                                $this->collPlayerdivisionmatchess->append($obj);
+                            }
+                        }
+
+                        $this->collPlayerdivisionmatchessPartial = true;
+                    }
+
+                    return $collPlayerdivisionmatchess;
+                }
+
+                if ($partial && $this->collPlayerdivisionmatchess) {
+                    foreach ($this->collPlayerdivisionmatchess as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayerdivisionmatchess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayerdivisionmatchess = $collPlayerdivisionmatchess;
+                $this->collPlayerdivisionmatchessPartial = false;
+            }
+        }
+
+        return $this->collPlayerdivisionmatchess;
+    }
+
+    /**
+     * Sets a collection of ChildPlayerdivisionmatches objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playerdivisionmatchess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildDivisions The current object (for fluent API support)
+     */
+    public function setPlayerdivisionmatchess(Collection $playerdivisionmatchess, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayerdivisionmatches[] $playerdivisionmatchessToDelete */
+        $playerdivisionmatchessToDelete = $this->getPlayerdivisionmatchess(new Criteria(), $con)->diff($playerdivisionmatchess);
+
+
+        $this->playerdivisionmatchessScheduledForDeletion = $playerdivisionmatchessToDelete;
+
+        foreach ($playerdivisionmatchessToDelete as $playerdivisionmatchesRemoved) {
+            $playerdivisionmatchesRemoved->setDivisionMatchesDivision(null);
+        }
+
+        $this->collPlayerdivisionmatchess = null;
+        foreach ($playerdivisionmatchess as $playerdivisionmatches) {
+            $this->addPlayerdivisionmatches($playerdivisionmatches);
+        }
+
+        $this->collPlayerdivisionmatchess = $playerdivisionmatchess;
+        $this->collPlayerdivisionmatchessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playerdivisionmatches objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playerdivisionmatches objects.
+     * @throws PropelException
+     */
+    public function countPlayerdivisionmatchess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayerdivisionmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayerdivisionmatchess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayerdivisionmatchess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayerdivisionmatchess());
+            }
+
+            $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByDivisionMatchesDivision($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayerdivisionmatchess);
+    }
+
+    /**
+     * Method called to associate a ChildPlayerdivisionmatches object to this object
+     * through the ChildPlayerdivisionmatches foreign key attribute.
+     *
+     * @param  ChildPlayerdivisionmatches $l ChildPlayerdivisionmatches
+     * @return $this|\Divisions The current object (for fluent API support)
+     */
+    public function addPlayerdivisionmatches(ChildPlayerdivisionmatches $l)
+    {
+        if ($this->collPlayerdivisionmatchess === null) {
+            $this->initPlayerdivisionmatchess();
+            $this->collPlayerdivisionmatchessPartial = true;
+        }
+
+        if (!$this->collPlayerdivisionmatchess->contains($l)) {
+            $this->doAddPlayerdivisionmatches($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayerdivisionmatches $playerdivisionmatches The ChildPlayerdivisionmatches object to add.
+     */
+    protected function doAddPlayerdivisionmatches(ChildPlayerdivisionmatches $playerdivisionmatches)
+    {
+        $this->collPlayerdivisionmatchess[]= $playerdivisionmatches;
+        $playerdivisionmatches->setDivisionMatchesDivision($this);
+    }
+
+    /**
+     * @param  ChildPlayerdivisionmatches $playerdivisionmatches The ChildPlayerdivisionmatches object to remove.
+     * @return $this|ChildDivisions The current object (for fluent API support)
+     */
+    public function removePlayerdivisionmatches(ChildPlayerdivisionmatches $playerdivisionmatches)
+    {
+        if ($this->getPlayerdivisionmatchess()->contains($playerdivisionmatches)) {
+            $pos = $this->collPlayerdivisionmatchess->search($playerdivisionmatches);
+            $this->collPlayerdivisionmatchess->remove($pos);
+            if (null === $this->playerdivisionmatchessScheduledForDeletion) {
+                $this->playerdivisionmatchessScheduledForDeletion = clone $this->collPlayerdivisionmatchess;
+                $this->playerdivisionmatchessScheduledForDeletion->clear();
+            }
+            $this->playerdivisionmatchessScheduledForDeletion[]= clone $playerdivisionmatches;
+            $playerdivisionmatches->setDivisionMatchesDivision(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Divisions is new, it will return
+     * an empty collection; or if this Divisions has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Divisions.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesPlayerHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesPlayerHome', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Divisions is new, it will return
+     * an empty collection; or if this Divisions has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Divisions.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesPlayerAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesPlayerAway', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Divisions is new, it will return
+     * an empty collection; or if this Divisions has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Divisions.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesGroup', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Divisions is new, it will return
+     * an empty collection; or if this Divisions has previously
+     * been saved, it will retrieve related Playerdivisionmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Divisions.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayerdivisionmatches[] List of ChildPlayerdivisionmatches objects
+     */
+    public function getPlayerdivisionmatchessJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayerdivisionmatchesQuery::create(null, $criteria);
+        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
+
+        return $this->getPlayerdivisionmatchess($query, $con);
     }
 
     /**
@@ -1483,6 +1858,11 @@ abstract class Divisions implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collPlayerdivisionmatchess) {
+                foreach ($this->collPlayerdivisionmatchess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collPlayerdivisionrankings) {
                 foreach ($this->collPlayerdivisionrankings as $o) {
                     $o->clearAllReferences($deep);
@@ -1490,6 +1870,7 @@ abstract class Divisions implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collPlayerdivisionmatchess = null;
         $this->collPlayerdivisionrankings = null;
     }
 

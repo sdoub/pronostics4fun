@@ -152,6 +152,13 @@ class DivisionsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Playerdivisionmatches', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':DivisionKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playerdivisionmatchess', false);
         $this->addRelation('Playerdivisionranking', '\\Playerdivisionranking', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

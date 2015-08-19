@@ -175,7 +175,7 @@ class PlayerdivisionmatchesTableMap extends TableMap
         $this->addForeignKey('PlayerHomeKey', 'Playerhomekey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
         $this->addForeignKey('PlayerAwayKey', 'Playerawaykey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
         $this->addForeignKey('SeasonKey', 'Seasonkey', 'INTEGER', 'seasons', 'PrimaryKey', true, null, null);
-        $this->addForeignKey('DivisionKey', 'Divisionkey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('DivisionKey', 'Divisionkey', 'INTEGER', 'divisions', 'PrimaryKey', true, null, null);
         $this->addForeignKey('GroupKey', 'Groupkey', 'INTEGER', 'groups', 'PrimaryKey', true, null, null);
         $this->addColumn('HomeScore', 'Homescore', 'TINYINT', false, 3, null);
         $this->addColumn('AwayScore', 'Awayscore', 'TINYINT', false, 3, null);
@@ -202,7 +202,7 @@ class PlayerdivisionmatchesTableMap extends TableMap
     1 => ':PrimaryKey',
   ),
 ), null, null, null, false);
-        $this->addRelation('DivisionMatchesDivision', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('DivisionMatchesDivision', '\\Divisions', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':DivisionKey',

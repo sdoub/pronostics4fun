@@ -523,29 +523,70 @@ if (count($rowsSet)>0) {
 echo "<ul>";
 $previousGlobalRank=0;
   
-	/*
-	echo '<li  style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
-  echo "<div class='status'>";
-  echo "Classement D1 : 1<sup>er</sup>";
-  echo "</div>";
-
-  echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel P4F - D1</span><br/>';
-	//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
-  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : 2<sup>ème</sup> journée</span>';
-  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">Alexdu27 (81 pts)</span>';
-  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">81 pts</span>
-	<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:10px;">-> Match nul</span>';
-  //echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
-	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
-	echo '</li>';
-	*/
-	
-	
 foreach ($rowsSet as $rowSet)
 {
+	$match = PlayerdivisionmatchesQuery::Create()
+		->filterByResultDate(array(
+    	'min' => $rowSet['unixBeginDate'], 
+    	'max' => $rowSet['unixEndDate'],
+  	))
+		->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
+		->_or()   
+		->filterByPlayerawaykey($_authorisation->getConnectedUserKey())
+		->orderByResultdate()
+		->findOne();
+	
+	
+	if ($match) {
+
+	$divisionRanking = PlayerdivisionrankingQuery::Create()
+		->where('DATE(playerdivisionranking.RankDate)=?',$match->getResultDate())
+		->filterByPlayerKey($_authorisation->getConnectedUserKey())
+		->findOne();
+
+		$division =	DivisionsQuery::create()->filterByPrimaryKey($match->getDivisionkey())->findOne();
+	$rank = "";
+	if ($divisionRanking->getRank()==1)
+		$rank = "1<sup>er</sup>";
+	else
+		$rank = $divisionRanking->getRank()."<sup>ème</sup>";
+
+	echo '<li  style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
+  echo "<div class='status'>";
+  echo "Classement ".$division->getCode()." : ".$rank;
+  echo "</div>";
+  if ($match->getDivisionMatchesPlayerHome()->getPrimarykey()==$_authorisation->getConnectedUserKey()) {
+		$opponent = $match->getDivisionMatchesPlayerAway()->getNickname();
+		$opponentScore = $match->getAwayscore();
+		$playerScore = $match->getHomescore();
+	}
+	else {
+		$opponent = $match->getDivisionMatchesPlayerHome()->getNickname();
+		$opponentScore = $match->getHomescore();
+		$playerScore = $match->getAwayscore();
+	}
+		
+	if ($playerScore>$opponentScore) {
+		$matchResult = "Victoire";
+	} else if ($playerScore<$opponentScore) {
+		$matchResult = "Défaite";
+	} else {
+		$matchResult = "Match nul";
+	}
+  echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel P4F - '.$division->getCode().'</span><br/>';
+	//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : '.$match->getDivisionMatchesGroup()->getDescription().'</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playerScore.' pts</span>
+	<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:10px;">-> '.$matchResult.'</span>';
+  //echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
+  //<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
+	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
+	echo '</li>';
+	
+	}
 	
 	$rank = "";
 	if ($rowSet["Rank"]==1)

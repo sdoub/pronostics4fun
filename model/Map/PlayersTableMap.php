@@ -316,13 +316,6 @@ class PlayersTableMap extends TableMap
     1 => ':PrimaryKey',
   ),
 ), null, null, 'PlayerdivisionmatchessRelatedByPlayerawaykey', false);
-        $this->addRelation('PlayerdivisionmatchesRelatedByDivisionkey', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':DivisionKey',
-    1 => ':PrimaryKey',
-  ),
-), null, null, 'PlayerdivisionmatchessRelatedByDivisionkey', false);
         $this->addRelation('Playerdivisionranking', '\\Playerdivisionranking', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

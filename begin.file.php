@@ -15,6 +15,7 @@ $serviceContainer->setLogger('defaultLogger', $defaultLogger);
 
 //$con = \Propel\Runtime\Propel::getWriteConnection('default');
 //$con->useDebug(true);
+//	echo \Propel\Runtime\Propel::getConnection()->getLastExecutedQuery();
 
 //include_once(BASE_PATH . "/lib/mobile.detect.php");
 //$uagent_info = new uagent_info();

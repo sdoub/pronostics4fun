@@ -295,7 +295,7 @@
     <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerAway">
       <reference local="PlayerAwayKey" foreign="PrimaryKey"/>
     </foreign-key>
-    <foreign-key foreignTable="players" phpName="DivisionMatchesDivision">
+    <foreign-key foreignTable="divisions" phpName="DivisionMatchesDivision">
       <reference local="DivisionKey" foreign="PrimaryKey"/>
     </foreign-key>
     <foreign-key foreignTable="groups" phpName="DivisionMatchesGroup">

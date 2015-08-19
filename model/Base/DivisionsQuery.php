@@ -34,11 +34,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDivisionsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildDivisionsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     ChildDivisionsQuery leftJoinPlayerdivisionmatches($relationAlias = null) Adds a LEFT JOIN clause to the query using the Playerdivisionmatches relation
+ * @method     ChildDivisionsQuery rightJoinPlayerdivisionmatches($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Playerdivisionmatches relation
+ * @method     ChildDivisionsQuery innerJoinPlayerdivisionmatches($relationAlias = null) Adds a INNER JOIN clause to the query using the Playerdivisionmatches relation
+ *
  * @method     ChildDivisionsQuery leftJoinPlayerdivisionranking($relationAlias = null) Adds a LEFT JOIN clause to the query using the Playerdivisionranking relation
  * @method     ChildDivisionsQuery rightJoinPlayerdivisionranking($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Playerdivisionranking relation
  * @method     ChildDivisionsQuery innerJoinPlayerdivisionranking($relationAlias = null) Adds a INNER JOIN clause to the query using the Playerdivisionranking relation
  *
- * @method     \PlayerdivisionrankingQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \PlayerdivisionmatchesQuery|\PlayerdivisionrankingQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildDivisions findOne(ConnectionInterface $con = null) Return the first ChildDivisions matching the query
  * @method     ChildDivisions findOneOrCreate(ConnectionInterface $con = null) Return the first ChildDivisions matching the query, or a new ChildDivisions object populated from the query conditions when no match is found
@@ -381,6 +385,79 @@ abstract class DivisionsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DivisionsTableMap::COL_ORDER, $order, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Playerdivisionmatches object
+     *
+     * @param \Playerdivisionmatches|ObjectCollection $playerdivisionmatches the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildDivisionsQuery The current query, for fluid interface
+     */
+    public function filterByPlayerdivisionmatches($playerdivisionmatches, $comparison = null)
+    {
+        if ($playerdivisionmatches instanceof \Playerdivisionmatches) {
+            return $this
+                ->addUsingAlias(DivisionsTableMap::COL_PRIMARYKEY, $playerdivisionmatches->getDivisionkey(), $comparison);
+        } elseif ($playerdivisionmatches instanceof ObjectCollection) {
+            return $this
+                ->usePlayerdivisionmatchesQuery()
+                ->filterByPrimaryKeys($playerdivisionmatches->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPlayerdivisionmatches() only accepts arguments of type \Playerdivisionmatches or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Playerdivisionmatches relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildDivisionsQuery The current query, for fluid interface
+     */
+    public function joinPlayerdivisionmatches($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Playerdivisionmatches');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Playerdivisionmatches');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Playerdivisionmatches relation Playerdivisionmatches object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \PlayerdivisionmatchesQuery A secondary query class using the current class as primary query
+     */
+    public function usePlayerdivisionmatchesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPlayerdivisionmatches($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Playerdivisionmatches', '\PlayerdivisionmatchesQuery');
     }
 
     /**

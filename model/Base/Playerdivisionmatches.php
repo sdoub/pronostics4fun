@@ -2,6 +2,8 @@
 
 namespace Base;
 
+use \Divisions as ChildDivisions;
+use \DivisionsQuery as ChildDivisionsQuery;
 use \Groups as ChildGroups;
 use \GroupsQuery as ChildGroupsQuery;
 use \PlayerdivisionmatchesQuery as ChildPlayerdivisionmatchesQuery;
@@ -138,7 +140,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
     protected $aDivisionMatchesPlayerAway;
 
     /**
-     * @var        ChildPlayers
+     * @var        ChildDivisions
      */
     protected $aDivisionMatchesDivision;
 
@@ -606,7 +608,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
             $this->modifiedColumns[PlayerdivisionmatchesTableMap::COL_DIVISIONKEY] = true;
         }
 
-        if ($this->aDivisionMatchesDivision !== null && $this->aDivisionMatchesDivision->getPlayerPK() !== $v) {
+        if ($this->aDivisionMatchesDivision !== null && $this->aDivisionMatchesDivision->getDivisionPK() !== $v) {
             $this->aDivisionMatchesDivision = null;
         }
 
@@ -827,7 +829,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
         if ($this->aDivisionMatchesSeason !== null && $this->seasonkey !== $this->aDivisionMatchesSeason->getSeasonPK()) {
             $this->aDivisionMatchesSeason = null;
         }
-        if ($this->aDivisionMatchesDivision !== null && $this->divisionkey !== $this->aDivisionMatchesDivision->getPlayerPK()) {
+        if ($this->aDivisionMatchesDivision !== null && $this->divisionkey !== $this->aDivisionMatchesDivision->getDivisionPK()) {
             $this->aDivisionMatchesDivision = null;
         }
         if ($this->aDivisionMatchesGroup !== null && $this->groupkey !== $this->aDivisionMatchesGroup->getGroupPK()) {
@@ -1311,13 +1313,13 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'players';
+                        $key = 'divisions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'players';
+                        $key = 'divisions';
                         break;
                     default:
-                        $key = 'Players';
+                        $key = 'Divisions';
                 }
 
                 $result[$key] = $this->aDivisionMatchesDivision->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1769,26 +1771,26 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildPlayers object.
+     * Declares an association between this object and a ChildDivisions object.
      *
-     * @param  ChildPlayers $v
+     * @param  ChildDivisions $v
      * @return $this|\Playerdivisionmatches The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setDivisionMatchesDivision(ChildPlayers $v = null)
+    public function setDivisionMatchesDivision(ChildDivisions $v = null)
     {
         if ($v === null) {
             $this->setDivisionkey(NULL);
         } else {
-            $this->setDivisionkey($v->getPlayerPK());
+            $this->setDivisionkey($v->getDivisionPK());
         }
 
         $this->aDivisionMatchesDivision = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildPlayers object, it will not be re-added.
+        // If this object has already been added to the ChildDivisions object, it will not be re-added.
         if ($v !== null) {
-            $v->addPlayerdivisionmatchesRelatedByDivisionkey($this);
+            $v->addPlayerdivisionmatches($this);
         }
 
 
@@ -1797,22 +1799,22 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildPlayers object
+     * Get the associated ChildDivisions object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildPlayers The associated ChildPlayers object.
+     * @return ChildDivisions The associated ChildDivisions object.
      * @throws PropelException
      */
     public function getDivisionMatchesDivision(ConnectionInterface $con = null)
     {
         if ($this->aDivisionMatchesDivision === null && ($this->divisionkey !== null)) {
-            $this->aDivisionMatchesDivision = ChildPlayersQuery::create()->findPk($this->divisionkey, $con);
+            $this->aDivisionMatchesDivision = ChildDivisionsQuery::create()->findPk($this->divisionkey, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aDivisionMatchesDivision->addPlayerdivisionmatchessRelatedByDivisionkey($this);
+                $this->aDivisionMatchesDivision->addPlayerdivisionmatchess($this);
              */
         }
 
@@ -1935,7 +1937,7 @@ abstract class Playerdivisionmatches implements ActiveRecordInterface
             $this->aDivisionMatchesPlayerAway->removePlayerdivisionmatchesRelatedByPlayerawaykey($this);
         }
         if (null !== $this->aDivisionMatchesDivision) {
-            $this->aDivisionMatchesDivision->removePlayerdivisionmatchesRelatedByDivisionkey($this);
+            $this->aDivisionMatchesDivision->removePlayerdivisionmatches($this);
         }
         if (null !== $this->aDivisionMatchesGroup) {
             $this->aDivisionMatchesGroup->removePlayerdivisionmatches($this);
