@@ -522,6 +522,28 @@ $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the
 if (count($rowsSet)>0) {
 echo "<ul>";
 $previousGlobalRank=0;
+  
+	/*
+	echo '<li  style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
+  echo "<div class='status'>";
+  echo "Classement D1 : 1<sup>er</sup>";
+  echo "</div>";
+
+  echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel P4F - D1</span><br/>';
+	//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : 2<sup>ème</sup> journée</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">Alexdu27 (81 pts)</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">81 pts</span>
+	<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:10px;">-> Match nul</span>';
+  //echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
+	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
+	echo '</li>';
+	*/
+	
+	
 foreach ($rowsSet as $rowSet)
 {
 	

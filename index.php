@@ -120,7 +120,12 @@ if ($_isAuthenticated )
                          WHERE playergroupresults.PlayerKey=" . $_authorisation->getConnectedUserKey();
   $playerBonusScore = $_databaseObject -> queryGetFullArray($queryBonusScore, "Get Player Bonus Score");
 
-  $queryDivisionRanking = "SELECT DivisionKey, Rank FROM playerdivisionranking WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . " INNER JOIN seasons ON seasons.PrimaryKey=playerdivisionranking.SeasonKey AND seasons.CompetitionKey=".COMPETITION." ORDER BY RankDate DESC LIMIT 0,1";
+  $queryDivisionRanking = "SELECT DivisionKey, Rank 
+	                           FROM playerdivisionranking
+	                          INNER JOIN seasons ON seasons.PrimaryKey=playerdivisionranking.SeasonKey 
+														       AND seasons.CompetitionKey=".COMPETITION." 
+														WHERE PlayerKey=" . $_authorisation->getConnectedUserKey() . "
+													  ORDER BY RankDate DESC LIMIT 0,1";
   $playerDivisionRanking = $_databaseObject -> queryGetFullArray($queryDivisionRanking, "Get DivisionRanking");
 
   if ($playerRanking)
