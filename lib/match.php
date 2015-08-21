@@ -1,12 +1,12 @@
 <?php
-include_once(dirname(__FILE__). "/simple_html_dom.php");
+use Sunra\PhpSimple\HtmlDomParser;
 
 function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLive) {
 
   $queries = array();
   $objectReturn = array();
   $_error="";
-
+	global $defaultLogger;
   switch (COMPETITION){
     case 1:
       break;
@@ -18,10 +18,14 @@ function GetMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$isLi
       }
       break;
   }
+	$defaultLogger->addInfo($urlToGetMatchInfo);
+
   $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
   $homeId="";
   $awayId="";
-  if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
+  if ($htmlMatch = HtmlDomParser::file_get_html($urlToGetMatchInfo,false,stream_context_create(array('http' => array('header'=>'Connection: close'))))){
+
+		$defaultLogger->addInfo("GET:".$urlToGetMatchInfo);
 
     $homeId = $htmlMatch->getElementById('#dom_id_hidden')->getAttribute("value");
     $awayId = $htmlMatch->getElementById('#ext_id_hidden')->getAttribute("value");
@@ -1400,7 +1404,8 @@ function GetMatchsLineupsInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchK
       }
       break;
   }
-  if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
+	
+  if ($htmlMatch = HtmlDomParser::file_get_html($urlToGetMatchInfo,false,stream_context_create(array('http' => array('header'=>'Connection: close'))))){
 
     $currentDiv=0;
     foreach($htmlMatch->find('div.domicile') as $players) {

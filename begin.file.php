@@ -10,7 +10,8 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 $defaultLogger = new Logger('defaultLogger');
-$defaultLogger->pushHandler(new StreamHandler('log/app.log', Logger::DEBUG));
+$filedate=strftime("%Y%m%d",time());
+$defaultLogger->pushHandler(new StreamHandler('log/app-'.$filedate.'.log', Logger::DEBUG));
 $serviceContainer->setLogger('defaultLogger', $defaultLogger);
 
 //$con = \Propel\Runtime\Propel::getWriteConnection('default');

@@ -38,9 +38,18 @@ UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
 matches.TeamHomeKey,
 matches.TeamAwayKey,
 matches.ExternalKey,
-10 LiveStatus
+10 LiveStatus,
+(SELECT COUNT(1) FROM events eventsTeamHome
+  WHERE eventsTeamHome.ResultKey=results.PrimaryKey
+    AND matches.TeamHomeKey=eventsTeamHome.TeamKey
+    AND eventsTeamHome.EventType IN (1,2,3)) TeamHomeScore,
+(SELECT COUNT(1) FROM events eventsTeamAway
+  WHERE eventsTeamAway.ResultKey=results.PrimaryKey
+    AND matches.TeamAwayKey=eventsTeamAway.TeamKey
+    AND eventsTeamAway.EventType IN (1,2,3)) TeamAwayScore
  FROM matches
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
+LEFT JOIN results ON results.MatchKey=matches.PrimaryKey
 WHERE DATE(matches.ScheduleDate)=(CURDATE()$days)";
 
   }
@@ -52,15 +61,20 @@ UNIX_TIMESTAMP(matches.ScheduleDate) ScheduleDate,
 matches.TeamHomeKey,
 matches.TeamAwayKey,
 matches.ExternalKey,
-results.LiveStatus
+results.LiveStatus,
+(SELECT COUNT(1) FROM events eventsTeamHome
+  WHERE eventsTeamHome.ResultKey=results.PrimaryKey
+    AND matches.TeamHomeKey=eventsTeamHome.TeamKey
+    AND eventsTeamHome.EventType IN (1,2,3)) TeamHomeScore,
+(SELECT COUNT(1) FROM events eventsTeamAway
+  WHERE eventsTeamAway.ResultKey=results.PrimaryKey
+    AND matches.TeamAwayKey=eventsTeamAway.TeamKey
+    AND eventsTeamAway.EventType IN (1,2,3)) TeamAwayScore
  FROM matches
 INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey=" . COMPETITION . "
 LEFT JOIN results ON results.MatchKey=matches.PrimaryKey
 WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <= (UNIX_TIMESTAMP(matches.ScheduleDate)+11400) ORDER BY ResultDate ASC LIMIT 0,2";
-  }
-  $resultSetGroup = $_databaseObject->queryPerf($query,"Get matches to be refreshed");
-  $_databaseObject -> fetch_assoc ($resultSetGroup);
-
+	}
   $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
   $_databaseObject->close();
 
@@ -82,14 +96,13 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       } else {
         $isLive = 1;
       }
-
+			$defaultLogger->addInfo($matchKey . " -> ExternalKey:".$externalKey);
       switch ($_competitionType) {
         case 2:
           $matchInfo = GetFifaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
           foreach ($matchInfo["Queries"] as $query) {
             $_queries[] =$query;
           }
-
           break;
         case 3:
           $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
@@ -106,9 +119,9 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
           foreach ($matchInfo["Queries"] as $query) {
             $_queries[] =$query;
           }
-
           break;
       }
+			$defaultLogger->addInfo($matchKey . " -> ExternalKey:".$externalKey);
     }
     //    $http = Http::connect("pronostics4fun.com", 80);
     //    $http->silentMode();
@@ -150,110 +163,143 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   }
   foreach ($rowsSet as $rowSet)
   {
-    $_logInfo .= "<br/>Refresh match with key ".$rowSet["MatchKey"] ;
-    try {
+        $query = "
+SELECT
+(SELECT COUNT(1) FROM events eventsTeamHome
+  WHERE eventsTeamHome.ResultKey=results.PrimaryKey
+    AND matches.TeamHomeKey=eventsTeamHome.TeamKey
+    AND eventsTeamHome.EventType IN (1,2,3)) TeamHomeScore,
+(SELECT COUNT(1) FROM events eventsTeamAway
+  WHERE eventsTeamAway.ResultKey=results.PrimaryKey
+    AND matches.TeamAwayKey=eventsTeamAway.TeamKey
+    AND eventsTeamAway.EventType IN (1,2,3)) TeamAwayScore
+FROM results
+INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey=".$rowSet["MatchKey"];
 
-      ComputeScore($rowSet["MatchKey"]);
-      switch ($_competitionType) {
-        case 2:
-        case 3:
-          ComputeCoupeGroupScore($rowSet["GroupKey"]);
-          break;
-        default:
-          ComputeGroupScore($rowSet["GroupKey"]);
-          break;
-      }
+    $resultSetEvents = $_databaseObject -> queryPerf ($query, "Get match result");
+    $rowSetEvents = $_databaseObject -> fetch_assoc ($resultSetEvents);
+		
+		$playerScoreToBeRefreshed = false;
+		if ($rowSetEvents["TeamHomeScore"]!=$rowSet["TeamHomeScore"] || $rowSetEvents["TeamAwayScore"]!=$rowSet["TeamAwayScore"])
+		{
+		  $playerScoreToBeRefreshed = true;	
+		}
+		$defaultLogger->addInfo($rowSet["MatchKey"] . " -> ".$rowSetEvents["TeamHomeScore"] .":".$rowSetEvents["TeamAwayScore"]);
+		$defaultLogger->addInfo('playerScoreToBeRefreshed:'.$playerScoreToBeRefreshed);
+		if ($playerScoreToBeRefreshed){
+			$_logInfo .= "<br/>Compute data for match with key ".$rowSet["MatchKey"] ;
+			$defaultLogger->addInfo($_logInfo);
+			try {
 
-      CalculateRanking($rowSet["ScheduleDate"]);
-      CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
+				ComputeScore($rowSet["MatchKey"]);
+				switch ($_competitionType) {
+					case 2:
+					case 3:
+						ComputeCoupeGroupScore($rowSet["GroupKey"]);
+						break;
+					default:
+						ComputeGroupScore($rowSet["GroupKey"]);
+						break;
+				}
 
-      $_groupKey = $rowSet["GroupKey"];
-      GenerateMatchStates($_groupKey);
+				CalculateRanking($rowSet["ScheduleDate"]);
+				CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
 
-      $query = "SELECT PrimaryKey MatchStateKey, MatchKey, TeamHomeScore, TeamAwayScore, UNIX_TIMESTAMP(StateDate) StateDate
-    FROM matchstates WHERE MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)";
-      $resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
+				$_groupKey = $rowSet["GroupKey"];
+				GenerateMatchStates($_groupKey);
 
-      while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
-        ComputeScoreState ($rowSetState["MatchKey"], $rowSetState["TeamHomeScore"], $rowSetState["TeamAwayScore"], $rowSetState["MatchStateKey"]);
-      }
-      $query = "SELECT UNIX_TIMESTAMP(StateDate) StateDate
-    FROM matchstates WHERE MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)
-    GROUP BY StateDate ORDER BY StateDate";
-      $resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
+				$query = "SELECT PrimaryKey MatchStateKey, MatchKey, TeamHomeScore, TeamAwayScore, UNIX_TIMESTAMP(StateDate) StateDate
+			FROM matchstates WHERE MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)";
+				$resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
 
-      while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
-        switch ($_competitionType) {
-          case 2:
-          case 3:
-            ComputeCoupeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
-            break;
-          default:
-            ComputeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
-            break;
-        }
+				while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
+					ComputeScoreState ($rowSetState["MatchKey"], $rowSetState["TeamHomeScore"], $rowSetState["TeamAwayScore"], $rowSetState["MatchStateKey"]);
+				}
+				$query = "SELECT UNIX_TIMESTAMP(StateDate) StateDate
+			FROM matchstates WHERE MatchKey IN (SELECT matches.PrimaryKey FROM matches WHERE matches.GroupKey=$_groupKey)
+			GROUP BY StateDate ORDER BY StateDate";
+				$resultSetStates = $_databaseObject->queryPerf($query,"Get players and score");
 
-        CalculateGroupRankingState($_groupKey,$rowSetState["StateDate"]);
-      }
+				while ($rowSetState = $_databaseObject -> fetch_assoc ($resultSetStates)) {
+					switch ($_competitionType) {
+						case 2:
+						case 3:
+							ComputeCoupeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
+							break;
+						default:
+							ComputeGroupScoreState ($_groupKey,$rowSetState["StateDate"]);
+							break;
+					}
 
-      $isCompleted = 0;
-      $query = "SELECT IsCompleted FROM groups WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
-      $resultSetGroup = $_databaseObject->queryPerf($query,"update group");
-      $rowSetGroup = $_databaseObject -> fetch_assoc ($resultSetGroup);
-      $isCompleted += (int)$rowSetGroup["IsCompleted"];
+					CalculateGroupRankingState($_groupKey,$rowSetState["StateDate"]);
+				}
 
-      $query = "UPDATE groups SET groups.Status=2 WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
-      $_databaseObject->queryPerf($query,"update group");
+				$isCompleted = 0;
+				$query = "SELECT IsCompleted FROM groups WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
+				$resultSetGroup = $_databaseObject->queryPerf($query,"update group");
+				$rowSetGroup = $_databaseObject -> fetch_assoc ($resultSetGroup);
+				$isCompleted += (int)$rowSetGroup["IsCompleted"];
 
-      // If all matches have been played the group should be completed
-      $query = "UPDATE groups SET groups.IsCompleted=1, groups.Status=3 WHERE groups.PrimaryKey=" . $rowSet["GroupKey"] . "
-               AND NOT EXISTS (SELECT results.PrimaryKey
-							     FROM matches
-								 LEFT JOIN results ON results.MatchKey=matches.PrimaryKey
-								  AND results.LiveStatus=10
-								WHERE matches.GroupKey=groups.PrimaryKey
-								  AND results.PrimaryKey IS NULL)";
-      $_databaseObject->queryPerf($query,"update group");
+				$query = "UPDATE groups SET groups.Status=2 WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
+				$_databaseObject->queryPerf($query,"update group");
 
-      $query = "SELECT IsCompleted FROM groups WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
-      $resultSetGroup = $_databaseObject->queryPerf($query,"update group");
-      $rowSetGroup = $_databaseObject -> fetch_assoc ($resultSetGroup);
-      $isCompleted += (int)$rowSetGroup["IsCompleted"];
+				// If all matches have been played the group should be completed
+				$query = "UPDATE groups SET groups.IsCompleted=1, groups.Status=3 WHERE groups.PrimaryKey=" . $rowSet["GroupKey"] . "
+								 AND NOT EXISTS (SELECT results.PrimaryKey
+										 FROM matches
+									 LEFT JOIN results ON results.MatchKey=matches.PrimaryKey
+										AND results.LiveStatus=10
+									WHERE matches.GroupKey=groups.PrimaryKey
+										AND results.PrimaryKey IS NULL)";
+				$_databaseObject->queryPerf($query,"update group");
 
-      if ($isCompleted==1) {
-        // Reset field IsResultEmailSent to 0, once the group is completed
-        $query = "UPDATE players SET players.IsResultEmailSent=0 WHERE players.ReceiveResult=1
-                 AND EXISTS (SELECT 1 FROM groups WHERE IsCompleted=1 AND groups.PrimaryKey=" . $rowSet["GroupKey"] . ")";
-        $_databaseObject->queryPerf($query,"update group");
+				$query = "SELECT IsCompleted FROM groups WHERE groups.PrimaryKey=" . $rowSet["GroupKey"];
+				$resultSetGroup = $_databaseObject->queryPerf($query,"update group");
+				$rowSetGroup = $_databaseObject -> fetch_assoc ($resultSetGroup);
+				$isCompleted += (int)$rowSetGroup["IsCompleted"];
 
-        switch ($_competitionType) {
-          case 2:
-          case 3:
-            ComputeCoupeGroupScore($rowSet["GroupKey"]);
-            break;
-          default:
-            ComputeGroupScore($rowSet["GroupKey"]);
-            break;
-        }
+				if ($isCompleted==1) {
+					// Reset field IsResultEmailSent to 0, once the group is completed
+					$query = "UPDATE players SET players.IsResultEmailSent=0 WHERE players.ReceiveResult=1
+									 AND EXISTS (SELECT 1 FROM groups WHERE IsCompleted=1 AND groups.PrimaryKey=" . $rowSet["GroupKey"] . ")";
+					$_databaseObject->queryPerf($query,"update group");
 
-        CalculateRanking($rowSet["ScheduleDate"]);
-        CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
+					switch ($_competitionType) {
+						case 2:
+						case 3:
+							ComputeCoupeGroupScore($rowSet["GroupKey"]);
+							break;
+						default:
+							ComputeGroupScore($rowSet["GroupKey"]);
+							break;
+					}
 
-      }
+					CalculateRanking($rowSet["ScheduleDate"]);
+					CalculateGroupRanking($rowSet["GroupKey"],$rowSet["ScheduleDate"]);
 
-    }
-    catch (Exception $e) {
-      $_error=true;
-      $_errorMessage =$e;
+				}
+			}
+			catch (Exception $e) {
+				$_error=true;
+				$_errorMessage =$e;
 
-    }
-  }
+			}
+
+		} else {
+			$_logInfo .= "<br/>Compute data don't execute for match with key ".$rowSet["MatchKey"] ;
+			$defaultLogger->addInfo("Compute data don't execute for match with key ".$rowSet["MatchKey"]);
+		}
+	}
+  
 
   $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
   $arr["Queries"]=$_queries;
   $totaltime = getElapsedTime();
+	$defaultLogger->addInfo('totaltime:'.$totaltime);
+
   //$_logInfo .= implode(',',$arr["errorLog"]);
-  writeJsonResponse($arr);
+  //$defaultLogger->addInfo(var_export($arr, true));
+	writeJsonResponse($arr);
   $_logInfo .= "This page loaded in $totaltime seconds.";
   if (count($arr["errorLog"])>0) {
     if ($arr["errorLog"]!="") {
@@ -262,6 +308,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       print_r($arr["errorLog"]);
     }
   }
+	//$defaultLogger->addInfo($_logInfo);
 
   //    $script_tz = date_default_timezone_get();
   //
@@ -278,7 +325,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   $updateQuery = "UPDATE cronjobs SET LastStatus=2, LastExecutionInformation='" .str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($_logInfo))))."' WHERE JobName='$_jobName'";
   $_databaseObject -> queryPerf ($updateQuery , "Update cronjob information");
 } else {
-  echo "Un refresh est déjà en cours!";
+  echo "Refresh already in progress !";
 }
 require_once(dirname(__FILE__)."/end.file.php");
 ?>
