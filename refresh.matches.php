@@ -96,7 +96,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
       } else {
         $isLive = 1;
       }
-			$defaultLogger->addInfo($matchKey . " -> ExternalKey:".$externalKey);
+			$defaultLogger->addDebug("Begin: ".$matchKey . " -> ExternalKey:".$externalKey);
       switch ($_competitionType) {
         case 2:
           $matchInfo = GetFifaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
@@ -121,7 +121,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
           }
           break;
       }
-			$defaultLogger->addInfo($matchKey . " -> ExternalKey:".$externalKey);
+			$defaultLogger->addDebug("End: ".$matchKey . " -> ExternalKey:".$externalKey);
     }
     //    $http = Http::connect("pronostics4fun.com", 80);
     //    $http->silentMode();
@@ -172,7 +172,8 @@ SELECT
 (SELECT COUNT(1) FROM events eventsTeamAway
   WHERE eventsTeamAway.ResultKey=results.PrimaryKey
     AND matches.TeamAwayKey=eventsTeamAway.TeamKey
-    AND eventsTeamAway.EventType IN (1,2,3)) TeamAwayScore
+    AND eventsTeamAway.EventType IN (1,2,3)) TeamAwayScore,
+		results.LiveStatus
 FROM results
 INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey=".$rowSet["MatchKey"];
 
@@ -180,15 +181,17 @@ INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey
     $rowSetEvents = $_databaseObject -> fetch_assoc ($resultSetEvents);
 		
 		$playerScoreToBeRefreshed = false;
-		if ($rowSetEvents["TeamHomeScore"]!=$rowSet["TeamHomeScore"] || $rowSetEvents["TeamAwayScore"]!=$rowSet["TeamAwayScore"])
+		if ($rowSetEvents["TeamHomeScore"]!=$rowSet["TeamHomeScore"] || 
+				$rowSetEvents["TeamAwayScore"]!=$rowSet["TeamAwayScore"] ||
+				$rowSetEvents["LiveStatus"]!=$rowSet["LiveStatus"] )
 		{
 		  $playerScoreToBeRefreshed = true;	
 		}
-		$defaultLogger->addInfo($rowSet["MatchKey"] . " -> ".$rowSetEvents["TeamHomeScore"] .":".$rowSetEvents["TeamAwayScore"]);
-		$defaultLogger->addInfo('playerScoreToBeRefreshed:'.$playerScoreToBeRefreshed);
+		$defaultLogger->addDebug("Before: ".$rowSet["MatchKey"] . " (Status:".$rowSet["LiveStatus"].") -> ".$rowSet["TeamHomeScore"] .":".$rowSet["TeamAwayScore"]);
+		$defaultLogger->addDebug("After: ".$rowSet["MatchKey"] . " (Status:".$rowSetEvents["LiveStatus"].") -> ".$rowSetEvents["TeamHomeScore"] .":".$rowSetEvents["TeamAwayScore"]);
 		if ($playerScoreToBeRefreshed){
 			$_logInfo .= "<br/>Compute data for match with key ".$rowSet["MatchKey"] ;
-			$defaultLogger->addInfo($_logInfo);
+			$defaultLogger->addNotice("Compute data for match with key ".$rowSet["MatchKey"] );
 			try {
 
 				ComputeScore($rowSet["MatchKey"]);
@@ -282,12 +285,12 @@ INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey
 			catch (Exception $e) {
 				$_error=true;
 				$_errorMessage =$e;
-
+				$defaultLogger->addError($e);
 			}
 
 		} else {
 			$_logInfo .= "<br/>Compute data don't execute for match with key ".$rowSet["MatchKey"] ;
-			$defaultLogger->addInfo("Compute data don't execute for match with key ".$rowSet["MatchKey"]);
+			$defaultLogger->addNotice("Compute data don't execute for match with key ".$rowSet["MatchKey"]);
 		}
 	}
   
@@ -298,7 +301,6 @@ INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey
 	$defaultLogger->addInfo('totaltime:'.$totaltime);
 
   //$_logInfo .= implode(',',$arr["errorLog"]);
-  //$defaultLogger->addInfo(var_export($arr, true));
 	writeJsonResponse($arr);
   $_logInfo .= "This page loaded in $totaltime seconds.";
   if (count($arr["errorLog"])>0) {
@@ -306,6 +308,7 @@ INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey
       $_error = true;
       $_errorMessage="An error occured during queries execution";
       print_r($arr["errorLog"]);
+			$defaultLogger->addError(var_export($arr["errorLog"], true));
     }
   }
 	//$defaultLogger->addInfo($_logInfo);
@@ -326,6 +329,7 @@ INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey
   $_databaseObject -> queryPerf ($updateQuery , "Update cronjob information");
 } else {
   echo "Refresh already in progress !";
+	$defaultLogger->addNotice("Refresh already in progress !");
 }
 require_once(dirname(__FILE__)."/end.file.php");
 ?>
