@@ -556,7 +556,6 @@ foreach ($rowsSet as $rowSet)
 		$cupOpponentKey=$cupMatch->getPlayerhomekey;
 
 	}
-	$playerScore+=5;
 	if ($playerScore>$opponentScore) {
 		$isConnectedUserOut=false;
 	} else if ($playerScore<$opponentScore) {
