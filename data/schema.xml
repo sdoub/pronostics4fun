@@ -52,6 +52,12 @@
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
+		<foreign-key foreignTable="cuprounds" phpName="NextRound">
+      <reference local="NextRoundKey" foreign="PrimaryKey"/>
+    </foreign-key>
+		<foreign-key foreignTable="cuprounds" phpName="PreviousRound">
+      <reference local="PreviousRoundKey" foreign="PrimaryKey"/>
+    </foreign-key>
   </table>
   <table name="divisions" idMethod="native" phpName="Divisions">
     <column name="PrimaryKey" phpName="DivisionPK" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -259,19 +265,19 @@
     <column name="AwayScore" phpName="Awayscore" type="TINYINT" size="3"/>
     <column name="ScheduleDate" phpName="Scheduledate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <column name="ResultDate" phpName="Resultdate" type="DATE"/>
-    <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerHome">
+    <foreign-key foreignTable="players" phpName="CupMatchesPlayerHome">
       <reference local="PlayerHomeKey" foreign="PrimaryKey"/>
     </foreign-key>
-    <foreign-key foreignTable="players" phpName="DivisionMatchesPlayerAway">
+    <foreign-key foreignTable="players" phpName="CupMatchesPlayerAway">
       <reference local="PlayerAwayKey" foreign="PrimaryKey"/>
     </foreign-key>
-    <foreign-key foreignTable="players" phpName="DivisionMatchesCupRound">
+    <foreign-key foreignTable="cuprounds" phpName="CupMatchesCupRound">
       <reference local="CupRoundKey" foreign="PrimaryKey"/>
     </foreign-key>
-    <foreign-key foreignTable="groups" phpName="DivisionMatchesGroup">
+    <foreign-key foreignTable="groups" phpName="CupMatchesGroup">
       <reference local="GroupKey" foreign="PrimaryKey"/>
     </foreign-key>
-    <foreign-key foreignTable="seasons" phpName="DivisionMatchesSeason">
+    <foreign-key foreignTable="seasons" phpName="CupMatchesSeason">
       <reference local="SeasonKey" foreign="PrimaryKey"/>
     </foreign-key>
     <vendor type="mysql">

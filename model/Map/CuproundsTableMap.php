@@ -149,8 +149,8 @@ class CuproundsTableMap extends TableMap
         $this->addPrimaryKey('PrimaryKey', 'CupRoundPK', 'INTEGER', true, null, null);
         $this->addColumn('Description', 'Description', 'VARCHAR', true, 50, null);
         $this->addColumn('Code', 'Code', 'VARCHAR', true, 5, null);
-        $this->addColumn('NextRoundKey', 'Nextroundkey', 'INTEGER', false, null, null);
-        $this->addColumn('PreviousRoundKey', 'Previousroundkey', 'INTEGER', false, null, null);
+        $this->addForeignKey('NextRoundKey', 'Nextroundkey', 'INTEGER', 'cuprounds', 'PrimaryKey', false, null, null);
+        $this->addForeignKey('PreviousRoundKey', 'Previousroundkey', 'INTEGER', 'cuprounds', 'PrimaryKey', false, null, null);
     } // initialize()
 
     /**
@@ -158,6 +158,41 @@ class CuproundsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('NextRound', '\\Cuprounds', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':NextRoundKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('PreviousRound', '\\Cuprounds', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':PreviousRoundKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, null, false);
+        $this->addRelation('CuproundsRelatedByCupRoundPK0', '\\Cuprounds', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':NextRoundKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'CuproundssRelatedByCupRoundPK0', false);
+        $this->addRelation('CuproundsRelatedByCupRoundPK1', '\\Cuprounds', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':PreviousRoundKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'CuproundssRelatedByCupRoundPK1', false);
+        $this->addRelation('Playercupmatches', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':CupRoundKey',
+    1 => ':PrimaryKey',
+  ),
+), null, null, 'Playercupmatchess', false);
     } // buildRelations()
 
     /**

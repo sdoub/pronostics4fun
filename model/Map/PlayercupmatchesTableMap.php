@@ -174,7 +174,7 @@ class PlayercupmatchesTableMap extends TableMap
         $this->addPrimaryKey('PrimaryKey', 'PlayerCupMatchPK', 'INTEGER', true, null, null);
         $this->addForeignKey('PlayerHomeKey', 'Playerhomekey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
         $this->addForeignKey('PlayerAwayKey', 'Playerawaykey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
-        $this->addForeignKey('CupRoundKey', 'Cuproundkey', 'INTEGER', 'players', 'PrimaryKey', true, null, null);
+        $this->addForeignKey('CupRoundKey', 'Cuproundkey', 'INTEGER', 'cuprounds', 'PrimaryKey', true, null, null);
         $this->addForeignKey('SeasonKey', 'Seasonkey', 'INTEGER', 'seasons', 'PrimaryKey', true, null, null);
         $this->addForeignKey('GroupKey', 'Groupkey', 'INTEGER', 'groups', 'PrimaryKey', true, null, null);
         $this->addColumn('HomeScore', 'Homescore', 'TINYINT', false, 3, null);
@@ -188,35 +188,35 @@ class PlayercupmatchesTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('DivisionMatchesPlayerHome', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('CupMatchesPlayerHome', '\\Players', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':PlayerHomeKey',
     1 => ':PrimaryKey',
   ),
 ), null, null, null, false);
-        $this->addRelation('DivisionMatchesPlayerAway', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('CupMatchesPlayerAway', '\\Players', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':PlayerAwayKey',
     1 => ':PrimaryKey',
   ),
 ), null, null, null, false);
-        $this->addRelation('DivisionMatchesCupRound', '\\Players', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('CupMatchesCupRound', '\\Cuprounds', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':CupRoundKey',
     1 => ':PrimaryKey',
   ),
 ), null, null, null, false);
-        $this->addRelation('DivisionMatchesGroup', '\\Groups', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('CupMatchesGroup', '\\Groups', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':GroupKey',
     1 => ':PrimaryKey',
   ),
 ), null, null, null, false);
-        $this->addRelation('DivisionMatchesSeason', '\\Seasons', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('CupMatchesSeason', '\\Seasons', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':SeasonKey',

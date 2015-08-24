@@ -52,7 +52,7 @@ class LogFile {
 								$logFiles = scandir($folderPath,1);
                 $this->args['path'] = "$folderPath/".$logFiles[(int)$type[2]];
 								//throw new \InvalidArgumentException("Invalid log file type: \"" . $this->args['path']."\"");
-
+								$this->name = $logFiles[(int)$type[2]];
                 $this->filesystem = new Filesystem(new Local(dirname($this->args['path'])));
                 $this->args['path'] = basename($this->args['path']);
 								break;

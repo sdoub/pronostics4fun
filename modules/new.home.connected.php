@@ -525,6 +525,116 @@ $previousGlobalRank=0;
   
 foreach ($rowsSet as $rowSet)
 {
+		$cupMatch = PlayercupmatchesQuery::Create()
+		->filterByResultDate(array(
+    	'min' => $rowSet['unixBeginDate'], 
+    	'max' => $rowSet['unixEndDate'],
+  	))
+		->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
+		->_or()   
+		->filterByPlayerawaykey($_authorisation->getConnectedUserKey())
+		->orderByResultdate()
+		->findOne();
+	
+	
+	if ($cupMatch) {
+
+	$rank='';
+	echo '<li  style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
+  if ($cupMatch->getCupMatchesPlayerHome()->getPrimarykey()==$_authorisation->getConnectedUserKey()) {
+		$opponent = $cupMatch->getCupMatchesPlayerAway()->getNickname();
+		$opponentScore = $cupMatch->getAwayscore();
+		$playerScore = $cupMatch->getHomescore();
+		$cupPlayerKey=$cupMatch->getPlayerhomekey();
+		$cupOpponentKey=$cupMatch->getPlayerawaykey();
+	}
+	else {
+		$opponent = $cupMatch->getCupMatchesPlayerHome()->getNickname();
+		$opponentScore = $cupMatch->getHomescore();
+		$playerScore = $cupMatch->getAwayscore();
+		$cupPlayerKey=$cupMatch->getPlayerawaykey();
+		$cupOpponentKey=$cupMatch->getPlayerhomekey;
+
+	}
+	$playerScore+=5;
+	if ($playerScore>$opponentScore) {
+		$isConnectedUserOut=false;
+	} else if ($playerScore<$opponentScore) {
+		$isConnectedUserOut=true;
+	} else {
+		$forecast = ForecastsQuery::create()
+			->filterByPlayerkey($cupPlayerKey)
+			->useMatchesQuery() 
+    		->filterByGroupkey($cupMatch->getGroupkey()) 
+  		->endUse()
+			->orderByForecastdate()
+			->findOne();
+		$opponentForecast = ForecastsQuery::create()
+			->filterByPlayerkey($cupOpponentKey)
+			->useMatchesQuery() 
+    		->filterByGroupkey($cupMatch->getGroupkey()) 
+  		->endUse()
+			->orderByForecastdate()
+			->findOne();
+    if (($forecast == null && $opponentForecast != null) || ($forecast!=null && $forecast->getForecastdate()>$opponentForecast->getForecastdate())) {
+			$isConnectedUserOut=true;
+		} else {
+			$isConnectedUserOut=false;
+		}
+	}
+	if ($isConnectedUserOut)	{
+		if ($cupMatch->getCupMatchesCupRound()->getNextroundkey()==10) {
+			$matchResult = "2<sup>ème</sup> place";
+		} else {
+			$matchResult = "Eliminé";
+		}
+	} else {
+		if ($cupMatch->getCupMatchesCupRound()) {
+			$matchResult = "Qualifié pour {article} ".$cupMatch->getCupMatchesCupRound()->getNextRound()->getDescription();
+		
+			switch ($cupMatch->getCupMatchesCupRound()->getNextroundkey()){
+				case 2:
+					$article = "le";
+					break;
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+					$article = "les";
+					break;
+				case 7:
+				case 8:
+					$article = "la";
+					break;
+				case 9:
+					$matchResult = "3<sup>ème</sup> place";
+					break;
+				case 10:
+					$matchResult = "Vainqueur !";
+					break;
+			}
+			$matchResult = strtr($matchResult, array("{article}"=>$article));
+		}
+	}
+		
+			
+
+  echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel coupe P4F - '.$cupMatch->getCupMatchesCupRound()->getDescription().'</span><br/>';
+	//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
+  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : '.$cupMatch->getCupMatchesGroup()->getDescription().'</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
+  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playerScore.' pts</span><br/>
+	<span style="font-style:italic;color:#365F89;padding-left:15px;font-size:10px;">-> '.$matchResult.'</span>';
+  //echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
+  //<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
+	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
+	echo '</li>';
+	
+	}
+	
+	
 	$match = PlayerdivisionmatchesQuery::Create()
 		->filterByResultDate(array(
     	'min' => $rowSet['unixBeginDate'], 

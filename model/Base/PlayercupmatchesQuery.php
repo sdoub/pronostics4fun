@@ -46,27 +46,27 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayercupmatchesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildPlayercupmatchesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildPlayercupmatchesQuery leftJoinDivisionMatchesPlayerHome($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionMatchesPlayerHome relation
- * @method     ChildPlayercupmatchesQuery rightJoinDivisionMatchesPlayerHome($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionMatchesPlayerHome relation
- * @method     ChildPlayercupmatchesQuery innerJoinDivisionMatchesPlayerHome($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionMatchesPlayerHome relation
+ * @method     ChildPlayercupmatchesQuery leftJoinCupMatchesPlayerHome($relationAlias = null) Adds a LEFT JOIN clause to the query using the CupMatchesPlayerHome relation
+ * @method     ChildPlayercupmatchesQuery rightJoinCupMatchesPlayerHome($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CupMatchesPlayerHome relation
+ * @method     ChildPlayercupmatchesQuery innerJoinCupMatchesPlayerHome($relationAlias = null) Adds a INNER JOIN clause to the query using the CupMatchesPlayerHome relation
  *
- * @method     ChildPlayercupmatchesQuery leftJoinDivisionMatchesPlayerAway($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionMatchesPlayerAway relation
- * @method     ChildPlayercupmatchesQuery rightJoinDivisionMatchesPlayerAway($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionMatchesPlayerAway relation
- * @method     ChildPlayercupmatchesQuery innerJoinDivisionMatchesPlayerAway($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionMatchesPlayerAway relation
+ * @method     ChildPlayercupmatchesQuery leftJoinCupMatchesPlayerAway($relationAlias = null) Adds a LEFT JOIN clause to the query using the CupMatchesPlayerAway relation
+ * @method     ChildPlayercupmatchesQuery rightJoinCupMatchesPlayerAway($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CupMatchesPlayerAway relation
+ * @method     ChildPlayercupmatchesQuery innerJoinCupMatchesPlayerAway($relationAlias = null) Adds a INNER JOIN clause to the query using the CupMatchesPlayerAway relation
  *
- * @method     ChildPlayercupmatchesQuery leftJoinDivisionMatchesCupRound($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionMatchesCupRound relation
- * @method     ChildPlayercupmatchesQuery rightJoinDivisionMatchesCupRound($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionMatchesCupRound relation
- * @method     ChildPlayercupmatchesQuery innerJoinDivisionMatchesCupRound($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionMatchesCupRound relation
+ * @method     ChildPlayercupmatchesQuery leftJoinCupMatchesCupRound($relationAlias = null) Adds a LEFT JOIN clause to the query using the CupMatchesCupRound relation
+ * @method     ChildPlayercupmatchesQuery rightJoinCupMatchesCupRound($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CupMatchesCupRound relation
+ * @method     ChildPlayercupmatchesQuery innerJoinCupMatchesCupRound($relationAlias = null) Adds a INNER JOIN clause to the query using the CupMatchesCupRound relation
  *
- * @method     ChildPlayercupmatchesQuery leftJoinDivisionMatchesGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionMatchesGroup relation
- * @method     ChildPlayercupmatchesQuery rightJoinDivisionMatchesGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionMatchesGroup relation
- * @method     ChildPlayercupmatchesQuery innerJoinDivisionMatchesGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionMatchesGroup relation
+ * @method     ChildPlayercupmatchesQuery leftJoinCupMatchesGroup($relationAlias = null) Adds a LEFT JOIN clause to the query using the CupMatchesGroup relation
+ * @method     ChildPlayercupmatchesQuery rightJoinCupMatchesGroup($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CupMatchesGroup relation
+ * @method     ChildPlayercupmatchesQuery innerJoinCupMatchesGroup($relationAlias = null) Adds a INNER JOIN clause to the query using the CupMatchesGroup relation
  *
- * @method     ChildPlayercupmatchesQuery leftJoinDivisionMatchesSeason($relationAlias = null) Adds a LEFT JOIN clause to the query using the DivisionMatchesSeason relation
- * @method     ChildPlayercupmatchesQuery rightJoinDivisionMatchesSeason($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DivisionMatchesSeason relation
- * @method     ChildPlayercupmatchesQuery innerJoinDivisionMatchesSeason($relationAlias = null) Adds a INNER JOIN clause to the query using the DivisionMatchesSeason relation
+ * @method     ChildPlayercupmatchesQuery leftJoinCupMatchesSeason($relationAlias = null) Adds a LEFT JOIN clause to the query using the CupMatchesSeason relation
+ * @method     ChildPlayercupmatchesQuery rightJoinCupMatchesSeason($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CupMatchesSeason relation
+ * @method     ChildPlayercupmatchesQuery innerJoinCupMatchesSeason($relationAlias = null) Adds a INNER JOIN clause to the query using the CupMatchesSeason relation
  *
- * @method     \PlayersQuery|\GroupsQuery|\SeasonsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \PlayersQuery|\CuproundsQuery|\GroupsQuery|\SeasonsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPlayercupmatches findOne(ConnectionInterface $con = null) Return the first ChildPlayercupmatches matching the query
  * @method     ChildPlayercupmatches findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPlayercupmatches matching the query, or a new ChildPlayercupmatches object populated from the query conditions when no match is found
@@ -340,7 +340,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      * $query->filterByPlayerhomekey(array('min' => 12)); // WHERE PlayerHomeKey > 12
      * </code>
      *
-     * @see       filterByDivisionMatchesPlayerHome()
+     * @see       filterByCupMatchesPlayerHome()
      *
      * @param     mixed $playerhomekey The value to use as filter.
      *              Use scalar values for equality.
@@ -383,7 +383,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      * $query->filterByPlayerawaykey(array('min' => 12)); // WHERE PlayerAwayKey > 12
      * </code>
      *
-     * @see       filterByDivisionMatchesPlayerAway()
+     * @see       filterByCupMatchesPlayerAway()
      *
      * @param     mixed $playerawaykey The value to use as filter.
      *              Use scalar values for equality.
@@ -426,7 +426,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      * $query->filterByCuproundkey(array('min' => 12)); // WHERE CupRoundKey > 12
      * </code>
      *
-     * @see       filterByDivisionMatchesCupRound()
+     * @see       filterByCupMatchesCupRound()
      *
      * @param     mixed $cuproundkey The value to use as filter.
      *              Use scalar values for equality.
@@ -469,7 +469,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      * $query->filterBySeasonkey(array('min' => 12)); // WHERE SeasonKey > 12
      * </code>
      *
-     * @see       filterByDivisionMatchesSeason()
+     * @see       filterByCupMatchesSeason()
      *
      * @param     mixed $seasonkey The value to use as filter.
      *              Use scalar values for equality.
@@ -512,7 +512,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      * $query->filterByGroupkey(array('min' => 12)); // WHERE GroupKey > 12
      * </code>
      *
-     * @see       filterByDivisionMatchesGroup()
+     * @see       filterByCupMatchesGroup()
      *
      * @param     mixed $groupkey The value to use as filter.
      *              Use scalar values for equality.
@@ -723,7 +723,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function filterByDivisionMatchesPlayerHome($players, $comparison = null)
+    public function filterByCupMatchesPlayerHome($players, $comparison = null)
     {
         if ($players instanceof \Players) {
             return $this
@@ -736,22 +736,22 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(PlayercupmatchesTableMap::COL_PLAYERHOMEKEY, $players->toKeyValue('PrimaryKey', 'PlayerPK'), $comparison);
         } else {
-            throw new PropelException('filterByDivisionMatchesPlayerHome() only accepts arguments of type \Players or Collection');
+            throw new PropelException('filterByCupMatchesPlayerHome() only accepts arguments of type \Players or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the DivisionMatchesPlayerHome relation
+     * Adds a JOIN clause to the query using the CupMatchesPlayerHome relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function joinDivisionMatchesPlayerHome($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCupMatchesPlayerHome($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DivisionMatchesPlayerHome');
+        $relationMap = $tableMap->getRelation('CupMatchesPlayerHome');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -766,14 +766,14 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'DivisionMatchesPlayerHome');
+            $this->addJoinObject($join, 'CupMatchesPlayerHome');
         }
 
         return $this;
     }
 
     /**
-     * Use the DivisionMatchesPlayerHome relation Players object
+     * Use the CupMatchesPlayerHome relation Players object
      *
      * @see useQuery()
      *
@@ -783,11 +783,11 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return \PlayersQuery A secondary query class using the current class as primary query
      */
-    public function useDivisionMatchesPlayerHomeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCupMatchesPlayerHomeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinDivisionMatchesPlayerHome($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DivisionMatchesPlayerHome', '\PlayersQuery');
+            ->joinCupMatchesPlayerHome($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CupMatchesPlayerHome', '\PlayersQuery');
     }
 
     /**
@@ -800,7 +800,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function filterByDivisionMatchesPlayerAway($players, $comparison = null)
+    public function filterByCupMatchesPlayerAway($players, $comparison = null)
     {
         if ($players instanceof \Players) {
             return $this
@@ -813,22 +813,22 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(PlayercupmatchesTableMap::COL_PLAYERAWAYKEY, $players->toKeyValue('PrimaryKey', 'PlayerPK'), $comparison);
         } else {
-            throw new PropelException('filterByDivisionMatchesPlayerAway() only accepts arguments of type \Players or Collection');
+            throw new PropelException('filterByCupMatchesPlayerAway() only accepts arguments of type \Players or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the DivisionMatchesPlayerAway relation
+     * Adds a JOIN clause to the query using the CupMatchesPlayerAway relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function joinDivisionMatchesPlayerAway($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCupMatchesPlayerAway($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DivisionMatchesPlayerAway');
+        $relationMap = $tableMap->getRelation('CupMatchesPlayerAway');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -843,14 +843,14 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'DivisionMatchesPlayerAway');
+            $this->addJoinObject($join, 'CupMatchesPlayerAway');
         }
 
         return $this;
     }
 
     /**
-     * Use the DivisionMatchesPlayerAway relation Players object
+     * Use the CupMatchesPlayerAway relation Players object
      *
      * @see useQuery()
      *
@@ -860,52 +860,52 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return \PlayersQuery A secondary query class using the current class as primary query
      */
-    public function useDivisionMatchesPlayerAwayQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCupMatchesPlayerAwayQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinDivisionMatchesPlayerAway($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DivisionMatchesPlayerAway', '\PlayersQuery');
+            ->joinCupMatchesPlayerAway($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CupMatchesPlayerAway', '\PlayersQuery');
     }
 
     /**
-     * Filter the query by a related \Players object
+     * Filter the query by a related \Cuprounds object
      *
-     * @param \Players|ObjectCollection $players The related object(s) to use as filter
+     * @param \Cuprounds|ObjectCollection $cuprounds The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function filterByDivisionMatchesCupRound($players, $comparison = null)
+    public function filterByCupMatchesCupRound($cuprounds, $comparison = null)
     {
-        if ($players instanceof \Players) {
+        if ($cuprounds instanceof \Cuprounds) {
             return $this
-                ->addUsingAlias(PlayercupmatchesTableMap::COL_CUPROUNDKEY, $players->getPlayerPK(), $comparison);
-        } elseif ($players instanceof ObjectCollection) {
+                ->addUsingAlias(PlayercupmatchesTableMap::COL_CUPROUNDKEY, $cuprounds->getCupRoundPK(), $comparison);
+        } elseif ($cuprounds instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(PlayercupmatchesTableMap::COL_CUPROUNDKEY, $players->toKeyValue('PrimaryKey', 'PlayerPK'), $comparison);
+                ->addUsingAlias(PlayercupmatchesTableMap::COL_CUPROUNDKEY, $cuprounds->toKeyValue('PrimaryKey', 'CupRoundPK'), $comparison);
         } else {
-            throw new PropelException('filterByDivisionMatchesCupRound() only accepts arguments of type \Players or Collection');
+            throw new PropelException('filterByCupMatchesCupRound() only accepts arguments of type \Cuprounds or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the DivisionMatchesCupRound relation
+     * Adds a JOIN clause to the query using the CupMatchesCupRound relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function joinDivisionMatchesCupRound($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCupMatchesCupRound($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DivisionMatchesCupRound');
+        $relationMap = $tableMap->getRelation('CupMatchesCupRound');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -920,14 +920,14 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'DivisionMatchesCupRound');
+            $this->addJoinObject($join, 'CupMatchesCupRound');
         }
 
         return $this;
     }
 
     /**
-     * Use the DivisionMatchesCupRound relation Players object
+     * Use the CupMatchesCupRound relation Cuprounds object
      *
      * @see useQuery()
      *
@@ -935,13 +935,13 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \PlayersQuery A secondary query class using the current class as primary query
+     * @return \CuproundsQuery A secondary query class using the current class as primary query
      */
-    public function useDivisionMatchesCupRoundQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCupMatchesCupRoundQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinDivisionMatchesCupRound($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DivisionMatchesCupRound', '\PlayersQuery');
+            ->joinCupMatchesCupRound($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CupMatchesCupRound', '\CuproundsQuery');
     }
 
     /**
@@ -954,7 +954,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function filterByDivisionMatchesGroup($groups, $comparison = null)
+    public function filterByCupMatchesGroup($groups, $comparison = null)
     {
         if ($groups instanceof \Groups) {
             return $this
@@ -967,22 +967,22 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(PlayercupmatchesTableMap::COL_GROUPKEY, $groups->toKeyValue('PrimaryKey', 'GroupPK'), $comparison);
         } else {
-            throw new PropelException('filterByDivisionMatchesGroup() only accepts arguments of type \Groups or Collection');
+            throw new PropelException('filterByCupMatchesGroup() only accepts arguments of type \Groups or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the DivisionMatchesGroup relation
+     * Adds a JOIN clause to the query using the CupMatchesGroup relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function joinDivisionMatchesGroup($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCupMatchesGroup($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DivisionMatchesGroup');
+        $relationMap = $tableMap->getRelation('CupMatchesGroup');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -997,14 +997,14 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'DivisionMatchesGroup');
+            $this->addJoinObject($join, 'CupMatchesGroup');
         }
 
         return $this;
     }
 
     /**
-     * Use the DivisionMatchesGroup relation Groups object
+     * Use the CupMatchesGroup relation Groups object
      *
      * @see useQuery()
      *
@@ -1014,11 +1014,11 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return \GroupsQuery A secondary query class using the current class as primary query
      */
-    public function useDivisionMatchesGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCupMatchesGroupQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinDivisionMatchesGroup($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DivisionMatchesGroup', '\GroupsQuery');
+            ->joinCupMatchesGroup($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CupMatchesGroup', '\GroupsQuery');
     }
 
     /**
@@ -1031,7 +1031,7 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function filterByDivisionMatchesSeason($seasons, $comparison = null)
+    public function filterByCupMatchesSeason($seasons, $comparison = null)
     {
         if ($seasons instanceof \Seasons) {
             return $this
@@ -1044,22 +1044,22 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(PlayercupmatchesTableMap::COL_SEASONKEY, $seasons->toKeyValue('PrimaryKey', 'SeasonPK'), $comparison);
         } else {
-            throw new PropelException('filterByDivisionMatchesSeason() only accepts arguments of type \Seasons or Collection');
+            throw new PropelException('filterByCupMatchesSeason() only accepts arguments of type \Seasons or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the DivisionMatchesSeason relation
+     * Adds a JOIN clause to the query using the CupMatchesSeason relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPlayercupmatchesQuery The current query, for fluid interface
      */
-    public function joinDivisionMatchesSeason($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCupMatchesSeason($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DivisionMatchesSeason');
+        $relationMap = $tableMap->getRelation('CupMatchesSeason');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -1074,14 +1074,14 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'DivisionMatchesSeason');
+            $this->addJoinObject($join, 'CupMatchesSeason');
         }
 
         return $this;
     }
 
     /**
-     * Use the DivisionMatchesSeason relation Seasons object
+     * Use the CupMatchesSeason relation Seasons object
      *
      * @see useQuery()
      *
@@ -1091,11 +1091,11 @@ abstract class PlayercupmatchesQuery extends ModelCriteria
      *
      * @return \SeasonsQuery A secondary query class using the current class as primary query
      */
-    public function useDivisionMatchesSeasonQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCupMatchesSeasonQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinDivisionMatchesSeason($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DivisionMatchesSeason', '\SeasonsQuery');
+            ->joinCupMatchesSeason($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CupMatchesSeason', '\SeasonsQuery');
     }
 
     /**

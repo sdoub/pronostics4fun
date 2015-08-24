@@ -10,6 +10,7 @@ use Map\CuproundsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -34,6 +35,28 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCuproundsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildCuproundsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildCuproundsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     ChildCuproundsQuery leftJoinNextRound($relationAlias = null) Adds a LEFT JOIN clause to the query using the NextRound relation
+ * @method     ChildCuproundsQuery rightJoinNextRound($relationAlias = null) Adds a RIGHT JOIN clause to the query using the NextRound relation
+ * @method     ChildCuproundsQuery innerJoinNextRound($relationAlias = null) Adds a INNER JOIN clause to the query using the NextRound relation
+ *
+ * @method     ChildCuproundsQuery leftJoinPreviousRound($relationAlias = null) Adds a LEFT JOIN clause to the query using the PreviousRound relation
+ * @method     ChildCuproundsQuery rightJoinPreviousRound($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PreviousRound relation
+ * @method     ChildCuproundsQuery innerJoinPreviousRound($relationAlias = null) Adds a INNER JOIN clause to the query using the PreviousRound relation
+ *
+ * @method     ChildCuproundsQuery leftJoinCuproundsRelatedByCupRoundPK0($relationAlias = null) Adds a LEFT JOIN clause to the query using the CuproundsRelatedByCupRoundPK0 relation
+ * @method     ChildCuproundsQuery rightJoinCuproundsRelatedByCupRoundPK0($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CuproundsRelatedByCupRoundPK0 relation
+ * @method     ChildCuproundsQuery innerJoinCuproundsRelatedByCupRoundPK0($relationAlias = null) Adds a INNER JOIN clause to the query using the CuproundsRelatedByCupRoundPK0 relation
+ *
+ * @method     ChildCuproundsQuery leftJoinCuproundsRelatedByCupRoundPK1($relationAlias = null) Adds a LEFT JOIN clause to the query using the CuproundsRelatedByCupRoundPK1 relation
+ * @method     ChildCuproundsQuery rightJoinCuproundsRelatedByCupRoundPK1($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CuproundsRelatedByCupRoundPK1 relation
+ * @method     ChildCuproundsQuery innerJoinCuproundsRelatedByCupRoundPK1($relationAlias = null) Adds a INNER JOIN clause to the query using the CuproundsRelatedByCupRoundPK1 relation
+ *
+ * @method     ChildCuproundsQuery leftJoinPlayercupmatches($relationAlias = null) Adds a LEFT JOIN clause to the query using the Playercupmatches relation
+ * @method     ChildCuproundsQuery rightJoinPlayercupmatches($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Playercupmatches relation
+ * @method     ChildCuproundsQuery innerJoinPlayercupmatches($relationAlias = null) Adds a INNER JOIN clause to the query using the Playercupmatches relation
+ *
+ * @method     \CuproundsQuery|\PlayercupmatchesQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildCuprounds findOne(ConnectionInterface $con = null) Return the first ChildCuprounds matching the query
  * @method     ChildCuprounds findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCuprounds matching the query, or a new ChildCuprounds object populated from the query conditions when no match is found
@@ -350,6 +373,8 @@ abstract class CuproundsQuery extends ModelCriteria
      * $query->filterByNextroundkey(array('min' => 12)); // WHERE NextRoundKey > 12
      * </code>
      *
+     * @see       filterByNextRound()
+     *
      * @param     mixed $nextroundkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -391,6 +416,8 @@ abstract class CuproundsQuery extends ModelCriteria
      * $query->filterByPreviousroundkey(array('min' => 12)); // WHERE PreviousRoundKey > 12
      * </code>
      *
+     * @see       filterByPreviousRound()
+     *
      * @param     mixed $previousroundkey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -420,6 +447,379 @@ abstract class CuproundsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CuproundsTableMap::COL_PREVIOUSROUNDKEY, $previousroundkey, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Cuprounds object
+     *
+     * @param \Cuprounds|ObjectCollection $cuprounds The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function filterByNextRound($cuprounds, $comparison = null)
+    {
+        if ($cuprounds instanceof \Cuprounds) {
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_NEXTROUNDKEY, $cuprounds->getCupRoundPK(), $comparison);
+        } elseif ($cuprounds instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_NEXTROUNDKEY, $cuprounds->toKeyValue('PrimaryKey', 'CupRoundPK'), $comparison);
+        } else {
+            throw new PropelException('filterByNextRound() only accepts arguments of type \Cuprounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the NextRound relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function joinNextRound($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('NextRound');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'NextRound');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the NextRound relation Cuprounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \CuproundsQuery A secondary query class using the current class as primary query
+     */
+    public function useNextRoundQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinNextRound($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'NextRound', '\CuproundsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Cuprounds object
+     *
+     * @param \Cuprounds|ObjectCollection $cuprounds The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function filterByPreviousRound($cuprounds, $comparison = null)
+    {
+        if ($cuprounds instanceof \Cuprounds) {
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_PREVIOUSROUNDKEY, $cuprounds->getCupRoundPK(), $comparison);
+        } elseif ($cuprounds instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_PREVIOUSROUNDKEY, $cuprounds->toKeyValue('PrimaryKey', 'CupRoundPK'), $comparison);
+        } else {
+            throw new PropelException('filterByPreviousRound() only accepts arguments of type \Cuprounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PreviousRound relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function joinPreviousRound($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PreviousRound');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PreviousRound');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PreviousRound relation Cuprounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \CuproundsQuery A secondary query class using the current class as primary query
+     */
+    public function usePreviousRoundQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPreviousRound($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PreviousRound', '\CuproundsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Cuprounds object
+     *
+     * @param \Cuprounds|ObjectCollection $cuprounds the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function filterByCuproundsRelatedByCupRoundPK0($cuprounds, $comparison = null)
+    {
+        if ($cuprounds instanceof \Cuprounds) {
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cuprounds->getNextroundkey(), $comparison);
+        } elseif ($cuprounds instanceof ObjectCollection) {
+            return $this
+                ->useCuproundsRelatedByCupRoundPK0Query()
+                ->filterByPrimaryKeys($cuprounds->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCuproundsRelatedByCupRoundPK0() only accepts arguments of type \Cuprounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CuproundsRelatedByCupRoundPK0 relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function joinCuproundsRelatedByCupRoundPK0($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CuproundsRelatedByCupRoundPK0');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CuproundsRelatedByCupRoundPK0');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CuproundsRelatedByCupRoundPK0 relation Cuprounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \CuproundsQuery A secondary query class using the current class as primary query
+     */
+    public function useCuproundsRelatedByCupRoundPK0Query($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCuproundsRelatedByCupRoundPK0($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CuproundsRelatedByCupRoundPK0', '\CuproundsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Cuprounds object
+     *
+     * @param \Cuprounds|ObjectCollection $cuprounds the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function filterByCuproundsRelatedByCupRoundPK1($cuprounds, $comparison = null)
+    {
+        if ($cuprounds instanceof \Cuprounds) {
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $cuprounds->getPreviousroundkey(), $comparison);
+        } elseif ($cuprounds instanceof ObjectCollection) {
+            return $this
+                ->useCuproundsRelatedByCupRoundPK1Query()
+                ->filterByPrimaryKeys($cuprounds->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCuproundsRelatedByCupRoundPK1() only accepts arguments of type \Cuprounds or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CuproundsRelatedByCupRoundPK1 relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function joinCuproundsRelatedByCupRoundPK1($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CuproundsRelatedByCupRoundPK1');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CuproundsRelatedByCupRoundPK1');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CuproundsRelatedByCupRoundPK1 relation Cuprounds object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \CuproundsQuery A secondary query class using the current class as primary query
+     */
+    public function useCuproundsRelatedByCupRoundPK1Query($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCuproundsRelatedByCupRoundPK1($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CuproundsRelatedByCupRoundPK1', '\CuproundsQuery');
+    }
+
+    /**
+     * Filter the query by a related \Playercupmatches object
+     *
+     * @param \Playercupmatches|ObjectCollection $playercupmatches the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function filterByPlayercupmatches($playercupmatches, $comparison = null)
+    {
+        if ($playercupmatches instanceof \Playercupmatches) {
+            return $this
+                ->addUsingAlias(CuproundsTableMap::COL_PRIMARYKEY, $playercupmatches->getCuproundkey(), $comparison);
+        } elseif ($playercupmatches instanceof ObjectCollection) {
+            return $this
+                ->usePlayercupmatchesQuery()
+                ->filterByPrimaryKeys($playercupmatches->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPlayercupmatches() only accepts arguments of type \Playercupmatches or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Playercupmatches relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildCuproundsQuery The current query, for fluid interface
+     */
+    public function joinPlayercupmatches($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Playercupmatches');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Playercupmatches');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Playercupmatches relation Playercupmatches object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \PlayercupmatchesQuery A secondary query class using the current class as primary query
+     */
+    public function usePlayercupmatchesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPlayercupmatches($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Playercupmatches', '\PlayercupmatchesQuery');
     }
 
     /**

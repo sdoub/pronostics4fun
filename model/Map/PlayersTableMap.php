@@ -295,13 +295,6 @@ class PlayersTableMap extends TableMap
     1 => ':PrimaryKey',
   ),
 ), null, null, 'PlayercupmatchessRelatedByPlayerawaykey', false);
-        $this->addRelation('PlayercupmatchesRelatedByCuproundkey', '\\Playercupmatches', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':CupRoundKey',
-    1 => ':PrimaryKey',
-  ),
-), null, null, 'PlayercupmatchessRelatedByCuproundkey', false);
         $this->addRelation('PlayerdivisionmatchesRelatedByPlayerhomekey', '\\Playerdivisionmatches', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

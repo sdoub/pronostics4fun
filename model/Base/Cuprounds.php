@@ -2,7 +2,10 @@
 
 namespace Base;
 
+use \Cuprounds as ChildCuprounds;
 use \CuproundsQuery as ChildCuproundsQuery;
+use \Playercupmatches as ChildPlayercupmatches;
+use \PlayercupmatchesQuery as ChildPlayercupmatchesQuery;
 use \Exception;
 use \PDO;
 use Map\CuproundsTableMap;
@@ -11,6 +14,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -90,12 +94,58 @@ abstract class Cuprounds implements ActiveRecordInterface
     protected $previousroundkey;
 
     /**
+     * @var        ChildCuprounds
+     */
+    protected $aNextRound;
+
+    /**
+     * @var        ChildCuprounds
+     */
+    protected $aPreviousRound;
+
+    /**
+     * @var        ObjectCollection|ChildCuprounds[] Collection to store aggregation of ChildCuprounds objects.
+     */
+    protected $collCuproundssRelatedByCupRoundPK0;
+    protected $collCuproundssRelatedByCupRoundPK0Partial;
+
+    /**
+     * @var        ObjectCollection|ChildCuprounds[] Collection to store aggregation of ChildCuprounds objects.
+     */
+    protected $collCuproundssRelatedByCupRoundPK1;
+    protected $collCuproundssRelatedByCupRoundPK1Partial;
+
+    /**
+     * @var        ObjectCollection|ChildPlayercupmatches[] Collection to store aggregation of ChildPlayercupmatches objects.
+     */
+    protected $collPlayercupmatchess;
+    protected $collPlayercupmatchessPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildCuprounds[]
+     */
+    protected $cuproundssRelatedByCupRoundPK0ScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildCuprounds[]
+     */
+    protected $cuproundssRelatedByCupRoundPK1ScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPlayercupmatches[]
+     */
+    protected $playercupmatchessScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Cuprounds object.
@@ -441,6 +491,10 @@ abstract class Cuprounds implements ActiveRecordInterface
             $this->modifiedColumns[CuproundsTableMap::COL_NEXTROUNDKEY] = true;
         }
 
+        if ($this->aNextRound !== null && $this->aNextRound->getCupRoundPK() !== $v) {
+            $this->aNextRound = null;
+        }
+
         return $this;
     } // setNextroundkey()
 
@@ -459,6 +513,10 @@ abstract class Cuprounds implements ActiveRecordInterface
         if ($this->previousroundkey !== $v) {
             $this->previousroundkey = $v;
             $this->modifiedColumns[CuproundsTableMap::COL_PREVIOUSROUNDKEY] = true;
+        }
+
+        if ($this->aPreviousRound !== null && $this->aPreviousRound->getCupRoundPK() !== $v) {
+            $this->aPreviousRound = null;
         }
 
         return $this;
@@ -544,6 +602,12 @@ abstract class Cuprounds implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aNextRound !== null && $this->nextroundkey !== $this->aNextRound->getCupRoundPK()) {
+            $this->aNextRound = null;
+        }
+        if ($this->aPreviousRound !== null && $this->previousroundkey !== $this->aPreviousRound->getCupRoundPK()) {
+            $this->aPreviousRound = null;
+        }
     } // ensureConsistency
 
     /**
@@ -582,6 +646,14 @@ abstract class Cuprounds implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
+
+            $this->aNextRound = null;
+            $this->aPreviousRound = null;
+            $this->collCuproundssRelatedByCupRoundPK0 = null;
+
+            $this->collCuproundssRelatedByCupRoundPK1 = null;
+
+            $this->collPlayercupmatchess = null;
 
         } // if (deep)
     }
@@ -682,6 +754,25 @@ abstract class Cuprounds implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aNextRound !== null) {
+                if ($this->aNextRound->isModified() || $this->aNextRound->isNew()) {
+                    $affectedRows += $this->aNextRound->save($con);
+                }
+                $this->setNextRound($this->aNextRound);
+            }
+
+            if ($this->aPreviousRound !== null) {
+                if ($this->aPreviousRound->isModified() || $this->aPreviousRound->isNew()) {
+                    $affectedRows += $this->aPreviousRound->save($con);
+                }
+                $this->setPreviousRound($this->aPreviousRound);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -691,6 +782,59 @@ abstract class Cuprounds implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion !== null) {
+                if (!$this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion->isEmpty()) {
+                    foreach ($this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion as $cuproundsRelatedByCupRoundPK0) {
+                        // need to save related object because we set the relation to null
+                        $cuproundsRelatedByCupRoundPK0->save($con);
+                    }
+                    $this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCuproundssRelatedByCupRoundPK0 !== null) {
+                foreach ($this->collCuproundssRelatedByCupRoundPK0 as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion !== null) {
+                if (!$this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion->isEmpty()) {
+                    foreach ($this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion as $cuproundsRelatedByCupRoundPK1) {
+                        // need to save related object because we set the relation to null
+                        $cuproundsRelatedByCupRoundPK1->save($con);
+                    }
+                    $this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCuproundssRelatedByCupRoundPK1 !== null) {
+                foreach ($this->collCuproundssRelatedByCupRoundPK1 as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->playercupmatchessScheduledForDeletion !== null) {
+                if (!$this->playercupmatchessScheduledForDeletion->isEmpty()) {
+                    \PlayercupmatchesQuery::create()
+                        ->filterByPrimaryKeys($this->playercupmatchessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playercupmatchessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlayercupmatchess !== null) {
+                foreach ($this->collPlayercupmatchess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -854,10 +998,11 @@ abstract class Cuprounds implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Cuprounds'][$this->hashCode()])) {
@@ -877,6 +1022,83 @@ abstract class Cuprounds implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aNextRound) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'cuprounds';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'cuprounds';
+                        break;
+                    default:
+                        $key = 'Cuprounds';
+                }
+
+                $result[$key] = $this->aNextRound->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aPreviousRound) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'cuprounds';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'cuprounds';
+                        break;
+                    default:
+                        $key = 'Cuprounds';
+                }
+
+                $result[$key] = $this->aPreviousRound->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCuproundssRelatedByCupRoundPK0) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'cuproundss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'cuproundss';
+                        break;
+                    default:
+                        $key = 'Cuproundss';
+                }
+
+                $result[$key] = $this->collCuproundssRelatedByCupRoundPK0->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collCuproundssRelatedByCupRoundPK1) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'cuproundss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'cuproundss';
+                        break;
+                    default:
+                        $key = 'Cuproundss';
+                }
+
+                $result[$key] = $this->collCuproundssRelatedByCupRoundPK1->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPlayercupmatchess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'playercupmatchess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'playercupmatchess';
+                        break;
+                    default:
+                        $key = 'Playercupmatchess';
+                }
+
+                $result[$key] = $this->collPlayercupmatchess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1112,6 +1334,32 @@ abstract class Cuprounds implements ActiveRecordInterface
         $copyObj->setCode($this->getCode());
         $copyObj->setNextroundkey($this->getNextroundkey());
         $copyObj->setPreviousroundkey($this->getPreviousroundkey());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getCuproundssRelatedByCupRoundPK0() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCuproundsRelatedByCupRoundPK0($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getCuproundssRelatedByCupRoundPK1() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCuproundsRelatedByCupRoundPK1($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPlayercupmatchess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlayercupmatches($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setCupRoundPK(NULL); // this is a auto-increment column, so set to default value
@@ -1141,12 +1389,896 @@ abstract class Cuprounds implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildCuprounds object.
+     *
+     * @param  ChildCuprounds $v
+     * @return $this|\Cuprounds The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setNextRound(ChildCuprounds $v = null)
+    {
+        if ($v === null) {
+            $this->setNextroundkey(NULL);
+        } else {
+            $this->setNextroundkey($v->getCupRoundPK());
+        }
+
+        $this->aNextRound = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildCuprounds object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCuproundsRelatedByCupRoundPK0($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildCuprounds object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildCuprounds The associated ChildCuprounds object.
+     * @throws PropelException
+     */
+    public function getNextRound(ConnectionInterface $con = null)
+    {
+        if ($this->aNextRound === null && ($this->nextroundkey !== null)) {
+            $this->aNextRound = ChildCuproundsQuery::create()->findPk($this->nextroundkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aNextRound->addCuproundssRelatedByCupRoundPK0($this);
+             */
+        }
+
+        return $this->aNextRound;
+    }
+
+    /**
+     * Declares an association between this object and a ChildCuprounds object.
+     *
+     * @param  ChildCuprounds $v
+     * @return $this|\Cuprounds The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPreviousRound(ChildCuprounds $v = null)
+    {
+        if ($v === null) {
+            $this->setPreviousroundkey(NULL);
+        } else {
+            $this->setPreviousroundkey($v->getCupRoundPK());
+        }
+
+        $this->aPreviousRound = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildCuprounds object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCuproundsRelatedByCupRoundPK1($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildCuprounds object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildCuprounds The associated ChildCuprounds object.
+     * @throws PropelException
+     */
+    public function getPreviousRound(ConnectionInterface $con = null)
+    {
+        if ($this->aPreviousRound === null && ($this->previousroundkey !== null)) {
+            $this->aPreviousRound = ChildCuproundsQuery::create()->findPk($this->previousroundkey, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPreviousRound->addCuproundssRelatedByCupRoundPK1($this);
+             */
+        }
+
+        return $this->aPreviousRound;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('CuproundsRelatedByCupRoundPK0' == $relationName) {
+            return $this->initCuproundssRelatedByCupRoundPK0();
+        }
+        if ('CuproundsRelatedByCupRoundPK1' == $relationName) {
+            return $this->initCuproundssRelatedByCupRoundPK1();
+        }
+        if ('Playercupmatches' == $relationName) {
+            return $this->initPlayercupmatchess();
+        }
+    }
+
+    /**
+     * Clears out the collCuproundssRelatedByCupRoundPK0 collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCuproundssRelatedByCupRoundPK0()
+     */
+    public function clearCuproundssRelatedByCupRoundPK0()
+    {
+        $this->collCuproundssRelatedByCupRoundPK0 = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCuproundssRelatedByCupRoundPK0 collection loaded partially.
+     */
+    public function resetPartialCuproundssRelatedByCupRoundPK0($v = true)
+    {
+        $this->collCuproundssRelatedByCupRoundPK0Partial = $v;
+    }
+
+    /**
+     * Initializes the collCuproundssRelatedByCupRoundPK0 collection.
+     *
+     * By default this just sets the collCuproundssRelatedByCupRoundPK0 collection to an empty array (like clearcollCuproundssRelatedByCupRoundPK0());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCuproundssRelatedByCupRoundPK0($overrideExisting = true)
+    {
+        if (null !== $this->collCuproundssRelatedByCupRoundPK0 && !$overrideExisting) {
+            return;
+        }
+        $this->collCuproundssRelatedByCupRoundPK0 = new ObjectCollection();
+        $this->collCuproundssRelatedByCupRoundPK0->setModel('\Cuprounds');
+    }
+
+    /**
+     * Gets an array of ChildCuprounds objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCuprounds is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildCuprounds[] List of ChildCuprounds objects
+     * @throws PropelException
+     */
+    public function getCuproundssRelatedByCupRoundPK0(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCuproundssRelatedByCupRoundPK0Partial && !$this->isNew();
+        if (null === $this->collCuproundssRelatedByCupRoundPK0 || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCuproundssRelatedByCupRoundPK0) {
+                // return empty collection
+                $this->initCuproundssRelatedByCupRoundPK0();
+            } else {
+                $collCuproundssRelatedByCupRoundPK0 = ChildCuproundsQuery::create(null, $criteria)
+                    ->filterByNextRound($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCuproundssRelatedByCupRoundPK0Partial && count($collCuproundssRelatedByCupRoundPK0)) {
+                        $this->initCuproundssRelatedByCupRoundPK0(false);
+
+                        foreach ($collCuproundssRelatedByCupRoundPK0 as $obj) {
+                            if (false == $this->collCuproundssRelatedByCupRoundPK0->contains($obj)) {
+                                $this->collCuproundssRelatedByCupRoundPK0->append($obj);
+                            }
+                        }
+
+                        $this->collCuproundssRelatedByCupRoundPK0Partial = true;
+                    }
+
+                    return $collCuproundssRelatedByCupRoundPK0;
+                }
+
+                if ($partial && $this->collCuproundssRelatedByCupRoundPK0) {
+                    foreach ($this->collCuproundssRelatedByCupRoundPK0 as $obj) {
+                        if ($obj->isNew()) {
+                            $collCuproundssRelatedByCupRoundPK0[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCuproundssRelatedByCupRoundPK0 = $collCuproundssRelatedByCupRoundPK0;
+                $this->collCuproundssRelatedByCupRoundPK0Partial = false;
+            }
+        }
+
+        return $this->collCuproundssRelatedByCupRoundPK0;
+    }
+
+    /**
+     * Sets a collection of ChildCuprounds objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $cuproundssRelatedByCupRoundPK0 A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCuprounds The current object (for fluent API support)
+     */
+    public function setCuproundssRelatedByCupRoundPK0(Collection $cuproundssRelatedByCupRoundPK0, ConnectionInterface $con = null)
+    {
+        /** @var ChildCuprounds[] $cuproundssRelatedByCupRoundPK0ToDelete */
+        $cuproundssRelatedByCupRoundPK0ToDelete = $this->getCuproundssRelatedByCupRoundPK0(new Criteria(), $con)->diff($cuproundssRelatedByCupRoundPK0);
+
+
+        $this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion = $cuproundssRelatedByCupRoundPK0ToDelete;
+
+        foreach ($cuproundssRelatedByCupRoundPK0ToDelete as $cuproundsRelatedByCupRoundPK0Removed) {
+            $cuproundsRelatedByCupRoundPK0Removed->setNextRound(null);
+        }
+
+        $this->collCuproundssRelatedByCupRoundPK0 = null;
+        foreach ($cuproundssRelatedByCupRoundPK0 as $cuproundsRelatedByCupRoundPK0) {
+            $this->addCuproundsRelatedByCupRoundPK0($cuproundsRelatedByCupRoundPK0);
+        }
+
+        $this->collCuproundssRelatedByCupRoundPK0 = $cuproundssRelatedByCupRoundPK0;
+        $this->collCuproundssRelatedByCupRoundPK0Partial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Cuprounds objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Cuprounds objects.
+     * @throws PropelException
+     */
+    public function countCuproundssRelatedByCupRoundPK0(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCuproundssRelatedByCupRoundPK0Partial && !$this->isNew();
+        if (null === $this->collCuproundssRelatedByCupRoundPK0 || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCuproundssRelatedByCupRoundPK0) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCuproundssRelatedByCupRoundPK0());
+            }
+
+            $query = ChildCuproundsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByNextRound($this)
+                ->count($con);
+        }
+
+        return count($this->collCuproundssRelatedByCupRoundPK0);
+    }
+
+    /**
+     * Method called to associate a ChildCuprounds object to this object
+     * through the ChildCuprounds foreign key attribute.
+     *
+     * @param  ChildCuprounds $l ChildCuprounds
+     * @return $this|\Cuprounds The current object (for fluent API support)
+     */
+    public function addCuproundsRelatedByCupRoundPK0(ChildCuprounds $l)
+    {
+        if ($this->collCuproundssRelatedByCupRoundPK0 === null) {
+            $this->initCuproundssRelatedByCupRoundPK0();
+            $this->collCuproundssRelatedByCupRoundPK0Partial = true;
+        }
+
+        if (!$this->collCuproundssRelatedByCupRoundPK0->contains($l)) {
+            $this->doAddCuproundsRelatedByCupRoundPK0($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildCuprounds $cuproundsRelatedByCupRoundPK0 The ChildCuprounds object to add.
+     */
+    protected function doAddCuproundsRelatedByCupRoundPK0(ChildCuprounds $cuproundsRelatedByCupRoundPK0)
+    {
+        $this->collCuproundssRelatedByCupRoundPK0[]= $cuproundsRelatedByCupRoundPK0;
+        $cuproundsRelatedByCupRoundPK0->setNextRound($this);
+    }
+
+    /**
+     * @param  ChildCuprounds $cuproundsRelatedByCupRoundPK0 The ChildCuprounds object to remove.
+     * @return $this|ChildCuprounds The current object (for fluent API support)
+     */
+    public function removeCuproundsRelatedByCupRoundPK0(ChildCuprounds $cuproundsRelatedByCupRoundPK0)
+    {
+        if ($this->getCuproundssRelatedByCupRoundPK0()->contains($cuproundsRelatedByCupRoundPK0)) {
+            $pos = $this->collCuproundssRelatedByCupRoundPK0->search($cuproundsRelatedByCupRoundPK0);
+            $this->collCuproundssRelatedByCupRoundPK0->remove($pos);
+            if (null === $this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion) {
+                $this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion = clone $this->collCuproundssRelatedByCupRoundPK0;
+                $this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion->clear();
+            }
+            $this->cuproundssRelatedByCupRoundPK0ScheduledForDeletion[]= $cuproundsRelatedByCupRoundPK0;
+            $cuproundsRelatedByCupRoundPK0->setNextRound(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collCuproundssRelatedByCupRoundPK1 collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCuproundssRelatedByCupRoundPK1()
+     */
+    public function clearCuproundssRelatedByCupRoundPK1()
+    {
+        $this->collCuproundssRelatedByCupRoundPK1 = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCuproundssRelatedByCupRoundPK1 collection loaded partially.
+     */
+    public function resetPartialCuproundssRelatedByCupRoundPK1($v = true)
+    {
+        $this->collCuproundssRelatedByCupRoundPK1Partial = $v;
+    }
+
+    /**
+     * Initializes the collCuproundssRelatedByCupRoundPK1 collection.
+     *
+     * By default this just sets the collCuproundssRelatedByCupRoundPK1 collection to an empty array (like clearcollCuproundssRelatedByCupRoundPK1());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCuproundssRelatedByCupRoundPK1($overrideExisting = true)
+    {
+        if (null !== $this->collCuproundssRelatedByCupRoundPK1 && !$overrideExisting) {
+            return;
+        }
+        $this->collCuproundssRelatedByCupRoundPK1 = new ObjectCollection();
+        $this->collCuproundssRelatedByCupRoundPK1->setModel('\Cuprounds');
+    }
+
+    /**
+     * Gets an array of ChildCuprounds objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCuprounds is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildCuprounds[] List of ChildCuprounds objects
+     * @throws PropelException
+     */
+    public function getCuproundssRelatedByCupRoundPK1(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCuproundssRelatedByCupRoundPK1Partial && !$this->isNew();
+        if (null === $this->collCuproundssRelatedByCupRoundPK1 || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCuproundssRelatedByCupRoundPK1) {
+                // return empty collection
+                $this->initCuproundssRelatedByCupRoundPK1();
+            } else {
+                $collCuproundssRelatedByCupRoundPK1 = ChildCuproundsQuery::create(null, $criteria)
+                    ->filterByPreviousRound($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCuproundssRelatedByCupRoundPK1Partial && count($collCuproundssRelatedByCupRoundPK1)) {
+                        $this->initCuproundssRelatedByCupRoundPK1(false);
+
+                        foreach ($collCuproundssRelatedByCupRoundPK1 as $obj) {
+                            if (false == $this->collCuproundssRelatedByCupRoundPK1->contains($obj)) {
+                                $this->collCuproundssRelatedByCupRoundPK1->append($obj);
+                            }
+                        }
+
+                        $this->collCuproundssRelatedByCupRoundPK1Partial = true;
+                    }
+
+                    return $collCuproundssRelatedByCupRoundPK1;
+                }
+
+                if ($partial && $this->collCuproundssRelatedByCupRoundPK1) {
+                    foreach ($this->collCuproundssRelatedByCupRoundPK1 as $obj) {
+                        if ($obj->isNew()) {
+                            $collCuproundssRelatedByCupRoundPK1[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCuproundssRelatedByCupRoundPK1 = $collCuproundssRelatedByCupRoundPK1;
+                $this->collCuproundssRelatedByCupRoundPK1Partial = false;
+            }
+        }
+
+        return $this->collCuproundssRelatedByCupRoundPK1;
+    }
+
+    /**
+     * Sets a collection of ChildCuprounds objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $cuproundssRelatedByCupRoundPK1 A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCuprounds The current object (for fluent API support)
+     */
+    public function setCuproundssRelatedByCupRoundPK1(Collection $cuproundssRelatedByCupRoundPK1, ConnectionInterface $con = null)
+    {
+        /** @var ChildCuprounds[] $cuproundssRelatedByCupRoundPK1ToDelete */
+        $cuproundssRelatedByCupRoundPK1ToDelete = $this->getCuproundssRelatedByCupRoundPK1(new Criteria(), $con)->diff($cuproundssRelatedByCupRoundPK1);
+
+
+        $this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion = $cuproundssRelatedByCupRoundPK1ToDelete;
+
+        foreach ($cuproundssRelatedByCupRoundPK1ToDelete as $cuproundsRelatedByCupRoundPK1Removed) {
+            $cuproundsRelatedByCupRoundPK1Removed->setPreviousRound(null);
+        }
+
+        $this->collCuproundssRelatedByCupRoundPK1 = null;
+        foreach ($cuproundssRelatedByCupRoundPK1 as $cuproundsRelatedByCupRoundPK1) {
+            $this->addCuproundsRelatedByCupRoundPK1($cuproundsRelatedByCupRoundPK1);
+        }
+
+        $this->collCuproundssRelatedByCupRoundPK1 = $cuproundssRelatedByCupRoundPK1;
+        $this->collCuproundssRelatedByCupRoundPK1Partial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Cuprounds objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Cuprounds objects.
+     * @throws PropelException
+     */
+    public function countCuproundssRelatedByCupRoundPK1(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCuproundssRelatedByCupRoundPK1Partial && !$this->isNew();
+        if (null === $this->collCuproundssRelatedByCupRoundPK1 || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCuproundssRelatedByCupRoundPK1) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCuproundssRelatedByCupRoundPK1());
+            }
+
+            $query = ChildCuproundsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPreviousRound($this)
+                ->count($con);
+        }
+
+        return count($this->collCuproundssRelatedByCupRoundPK1);
+    }
+
+    /**
+     * Method called to associate a ChildCuprounds object to this object
+     * through the ChildCuprounds foreign key attribute.
+     *
+     * @param  ChildCuprounds $l ChildCuprounds
+     * @return $this|\Cuprounds The current object (for fluent API support)
+     */
+    public function addCuproundsRelatedByCupRoundPK1(ChildCuprounds $l)
+    {
+        if ($this->collCuproundssRelatedByCupRoundPK1 === null) {
+            $this->initCuproundssRelatedByCupRoundPK1();
+            $this->collCuproundssRelatedByCupRoundPK1Partial = true;
+        }
+
+        if (!$this->collCuproundssRelatedByCupRoundPK1->contains($l)) {
+            $this->doAddCuproundsRelatedByCupRoundPK1($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildCuprounds $cuproundsRelatedByCupRoundPK1 The ChildCuprounds object to add.
+     */
+    protected function doAddCuproundsRelatedByCupRoundPK1(ChildCuprounds $cuproundsRelatedByCupRoundPK1)
+    {
+        $this->collCuproundssRelatedByCupRoundPK1[]= $cuproundsRelatedByCupRoundPK1;
+        $cuproundsRelatedByCupRoundPK1->setPreviousRound($this);
+    }
+
+    /**
+     * @param  ChildCuprounds $cuproundsRelatedByCupRoundPK1 The ChildCuprounds object to remove.
+     * @return $this|ChildCuprounds The current object (for fluent API support)
+     */
+    public function removeCuproundsRelatedByCupRoundPK1(ChildCuprounds $cuproundsRelatedByCupRoundPK1)
+    {
+        if ($this->getCuproundssRelatedByCupRoundPK1()->contains($cuproundsRelatedByCupRoundPK1)) {
+            $pos = $this->collCuproundssRelatedByCupRoundPK1->search($cuproundsRelatedByCupRoundPK1);
+            $this->collCuproundssRelatedByCupRoundPK1->remove($pos);
+            if (null === $this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion) {
+                $this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion = clone $this->collCuproundssRelatedByCupRoundPK1;
+                $this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion->clear();
+            }
+            $this->cuproundssRelatedByCupRoundPK1ScheduledForDeletion[]= $cuproundsRelatedByCupRoundPK1;
+            $cuproundsRelatedByCupRoundPK1->setPreviousRound(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collPlayercupmatchess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPlayercupmatchess()
+     */
+    public function clearPlayercupmatchess()
+    {
+        $this->collPlayercupmatchess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPlayercupmatchess collection loaded partially.
+     */
+    public function resetPartialPlayercupmatchess($v = true)
+    {
+        $this->collPlayercupmatchessPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlayercupmatchess collection.
+     *
+     * By default this just sets the collPlayercupmatchess collection to an empty array (like clearcollPlayercupmatchess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlayercupmatchess($overrideExisting = true)
+    {
+        if (null !== $this->collPlayercupmatchess && !$overrideExisting) {
+            return;
+        }
+        $this->collPlayercupmatchess = new ObjectCollection();
+        $this->collPlayercupmatchess->setModel('\Playercupmatches');
+    }
+
+    /**
+     * Gets an array of ChildPlayercupmatches objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCuprounds is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     * @throws PropelException
+     */
+    public function getPlayercupmatchess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayercupmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayercupmatchess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlayercupmatchess) {
+                // return empty collection
+                $this->initPlayercupmatchess();
+            } else {
+                $collPlayercupmatchess = ChildPlayercupmatchesQuery::create(null, $criteria)
+                    ->filterByCupMatchesCupRound($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPlayercupmatchessPartial && count($collPlayercupmatchess)) {
+                        $this->initPlayercupmatchess(false);
+
+                        foreach ($collPlayercupmatchess as $obj) {
+                            if (false == $this->collPlayercupmatchess->contains($obj)) {
+                                $this->collPlayercupmatchess->append($obj);
+                            }
+                        }
+
+                        $this->collPlayercupmatchessPartial = true;
+                    }
+
+                    return $collPlayercupmatchess;
+                }
+
+                if ($partial && $this->collPlayercupmatchess) {
+                    foreach ($this->collPlayercupmatchess as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlayercupmatchess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlayercupmatchess = $collPlayercupmatchess;
+                $this->collPlayercupmatchessPartial = false;
+            }
+        }
+
+        return $this->collPlayercupmatchess;
+    }
+
+    /**
+     * Sets a collection of ChildPlayercupmatches objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $playercupmatchess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCuprounds The current object (for fluent API support)
+     */
+    public function setPlayercupmatchess(Collection $playercupmatchess, ConnectionInterface $con = null)
+    {
+        /** @var ChildPlayercupmatches[] $playercupmatchessToDelete */
+        $playercupmatchessToDelete = $this->getPlayercupmatchess(new Criteria(), $con)->diff($playercupmatchess);
+
+
+        $this->playercupmatchessScheduledForDeletion = $playercupmatchessToDelete;
+
+        foreach ($playercupmatchessToDelete as $playercupmatchesRemoved) {
+            $playercupmatchesRemoved->setCupMatchesCupRound(null);
+        }
+
+        $this->collPlayercupmatchess = null;
+        foreach ($playercupmatchess as $playercupmatches) {
+            $this->addPlayercupmatches($playercupmatches);
+        }
+
+        $this->collPlayercupmatchess = $playercupmatchess;
+        $this->collPlayercupmatchessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Playercupmatches objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Playercupmatches objects.
+     * @throws PropelException
+     */
+    public function countPlayercupmatchess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPlayercupmatchessPartial && !$this->isNew();
+        if (null === $this->collPlayercupmatchess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlayercupmatchess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlayercupmatchess());
+            }
+
+            $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCupMatchesCupRound($this)
+                ->count($con);
+        }
+
+        return count($this->collPlayercupmatchess);
+    }
+
+    /**
+     * Method called to associate a ChildPlayercupmatches object to this object
+     * through the ChildPlayercupmatches foreign key attribute.
+     *
+     * @param  ChildPlayercupmatches $l ChildPlayercupmatches
+     * @return $this|\Cuprounds The current object (for fluent API support)
+     */
+    public function addPlayercupmatches(ChildPlayercupmatches $l)
+    {
+        if ($this->collPlayercupmatchess === null) {
+            $this->initPlayercupmatchess();
+            $this->collPlayercupmatchessPartial = true;
+        }
+
+        if (!$this->collPlayercupmatchess->contains($l)) {
+            $this->doAddPlayercupmatches($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPlayercupmatches $playercupmatches The ChildPlayercupmatches object to add.
+     */
+    protected function doAddPlayercupmatches(ChildPlayercupmatches $playercupmatches)
+    {
+        $this->collPlayercupmatchess[]= $playercupmatches;
+        $playercupmatches->setCupMatchesCupRound($this);
+    }
+
+    /**
+     * @param  ChildPlayercupmatches $playercupmatches The ChildPlayercupmatches object to remove.
+     * @return $this|ChildCuprounds The current object (for fluent API support)
+     */
+    public function removePlayercupmatches(ChildPlayercupmatches $playercupmatches)
+    {
+        if ($this->getPlayercupmatchess()->contains($playercupmatches)) {
+            $pos = $this->collPlayercupmatchess->search($playercupmatches);
+            $this->collPlayercupmatchess->remove($pos);
+            if (null === $this->playercupmatchessScheduledForDeletion) {
+                $this->playercupmatchessScheduledForDeletion = clone $this->collPlayercupmatchess;
+                $this->playercupmatchessScheduledForDeletion->clear();
+            }
+            $this->playercupmatchessScheduledForDeletion[]= clone $playercupmatches;
+            $playercupmatches->setCupMatchesCupRound(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Cuprounds is new, it will return
+     * an empty collection; or if this Cuprounds has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Cuprounds.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinCupMatchesPlayerHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('CupMatchesPlayerHome', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Cuprounds is new, it will return
+     * an empty collection; or if this Cuprounds has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Cuprounds.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinCupMatchesPlayerAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('CupMatchesPlayerAway', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Cuprounds is new, it will return
+     * an empty collection; or if this Cuprounds has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Cuprounds.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinCupMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('CupMatchesGroup', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Cuprounds is new, it will return
+     * an empty collection; or if this Cuprounds has previously
+     * been saved, it will retrieve related Playercupmatchess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Cuprounds.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessJoinCupMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('CupMatchesSeason', $joinBehavior);
+
+        return $this->getPlayercupmatchess($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aNextRound) {
+            $this->aNextRound->removeCuproundsRelatedByCupRoundPK0($this);
+        }
+        if (null !== $this->aPreviousRound) {
+            $this->aPreviousRound->removeCuproundsRelatedByCupRoundPK1($this);
+        }
         $this->primarykey = null;
         $this->description = null;
         $this->code = null;
@@ -1170,8 +2302,28 @@ abstract class Cuprounds implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collCuproundssRelatedByCupRoundPK0) {
+                foreach ($this->collCuproundssRelatedByCupRoundPK0 as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collCuproundssRelatedByCupRoundPK1) {
+                foreach ($this->collCuproundssRelatedByCupRoundPK1 as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPlayercupmatchess) {
+                foreach ($this->collPlayercupmatchess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collCuproundssRelatedByCupRoundPK0 = null;
+        $this->collCuproundssRelatedByCupRoundPK1 = null;
+        $this->collPlayercupmatchess = null;
+        $this->aNextRound = null;
+        $this->aPreviousRound = null;
     }
 
     /**

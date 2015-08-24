@@ -241,12 +241,6 @@ abstract class Players implements ActiveRecordInterface
     protected $collPlayercupmatchessRelatedByPlayerawaykeyPartial;
 
     /**
-     * @var        ObjectCollection|ChildPlayercupmatches[] Collection to store aggregation of ChildPlayercupmatches objects.
-     */
-    protected $collPlayercupmatchessRelatedByCuproundkey;
-    protected $collPlayercupmatchessRelatedByCuproundkeyPartial;
-
-    /**
      * @var        ObjectCollection|ChildPlayerdivisionmatches[] Collection to store aggregation of ChildPlayerdivisionmatches objects.
      */
     protected $collPlayerdivisionmatchessRelatedByPlayerhomekey;
@@ -337,12 +331,6 @@ abstract class Players implements ActiveRecordInterface
      * @var ObjectCollection|ChildPlayercupmatches[]
      */
     protected $playercupmatchessRelatedByPlayerawaykeyScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildPlayercupmatches[]
-     */
-    protected $playercupmatchessRelatedByCuproundkeyScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -1638,8 +1626,6 @@ abstract class Players implements ActiveRecordInterface
 
             $this->collPlayercupmatchessRelatedByPlayerawaykey = null;
 
-            $this->collPlayercupmatchessRelatedByCuproundkey = null;
-
             $this->collPlayerdivisionmatchessRelatedByPlayerhomekey = null;
 
             $this->collPlayerdivisionmatchessRelatedByPlayerawaykey = null;
@@ -1832,23 +1818,6 @@ abstract class Players implements ActiveRecordInterface
 
             if ($this->collPlayercupmatchessRelatedByPlayerawaykey !== null) {
                 foreach ($this->collPlayercupmatchessRelatedByPlayerawaykey as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion !== null) {
-                if (!$this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion->isEmpty()) {
-                    \PlayercupmatchesQuery::create()
-                        ->filterByPrimaryKeys($this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collPlayercupmatchessRelatedByCuproundkey !== null) {
-                foreach ($this->collPlayercupmatchessRelatedByCuproundkey as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -2435,21 +2404,6 @@ abstract class Players implements ActiveRecordInterface
 
                 $result[$key] = $this->collPlayercupmatchessRelatedByPlayerawaykey->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collPlayercupmatchessRelatedByCuproundkey) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'playercupmatchess';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'playercupmatchess';
-                        break;
-                    default:
-                        $key = 'Playercupmatchess';
-                }
-
-                $result[$key] = $this->collPlayercupmatchessRelatedByCuproundkey->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collPlayerdivisionmatchessRelatedByPlayerhomekey) {
 
                 switch ($keyType) {
@@ -3016,12 +2970,6 @@ abstract class Players implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getPlayercupmatchessRelatedByCuproundkey() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addPlayercupmatchesRelatedByCuproundkey($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getPlayerdivisionmatchessRelatedByPlayerhomekey() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPlayerdivisionmatchesRelatedByPlayerhomekey($relObj->copy($deepCopy));
@@ -3134,9 +3082,6 @@ abstract class Players implements ActiveRecordInterface
         }
         if ('PlayercupmatchesRelatedByPlayerawaykey' == $relationName) {
             return $this->initPlayercupmatchessRelatedByPlayerawaykey();
-        }
-        if ('PlayercupmatchesRelatedByCuproundkey' == $relationName) {
-            return $this->initPlayercupmatchessRelatedByCuproundkey();
         }
         if ('PlayerdivisionmatchesRelatedByPlayerhomekey' == $relationName) {
             return $this->initPlayerdivisionmatchessRelatedByPlayerhomekey();
@@ -3697,7 +3642,7 @@ abstract class Players implements ActiveRecordInterface
                 $this->initPlayercupmatchessRelatedByPlayerhomekey();
             } else {
                 $collPlayercupmatchessRelatedByPlayerhomekey = ChildPlayercupmatchesQuery::create(null, $criteria)
-                    ->filterByDivisionMatchesPlayerHome($this)
+                    ->filterByCupMatchesPlayerHome($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -3751,7 +3696,7 @@ abstract class Players implements ActiveRecordInterface
         $this->playercupmatchessRelatedByPlayerhomekeyScheduledForDeletion = $playercupmatchessRelatedByPlayerhomekeyToDelete;
 
         foreach ($playercupmatchessRelatedByPlayerhomekeyToDelete as $playercupmatchesRelatedByPlayerhomekeyRemoved) {
-            $playercupmatchesRelatedByPlayerhomekeyRemoved->setDivisionMatchesPlayerHome(null);
+            $playercupmatchesRelatedByPlayerhomekeyRemoved->setCupMatchesPlayerHome(null);
         }
 
         $this->collPlayercupmatchessRelatedByPlayerhomekey = null;
@@ -3792,7 +3737,7 @@ abstract class Players implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByDivisionMatchesPlayerHome($this)
+                ->filterByCupMatchesPlayerHome($this)
                 ->count($con);
         }
 
@@ -3826,7 +3771,7 @@ abstract class Players implements ActiveRecordInterface
     protected function doAddPlayercupmatchesRelatedByPlayerhomekey(ChildPlayercupmatches $playercupmatchesRelatedByPlayerhomekey)
     {
         $this->collPlayercupmatchessRelatedByPlayerhomekey[]= $playercupmatchesRelatedByPlayerhomekey;
-        $playercupmatchesRelatedByPlayerhomekey->setDivisionMatchesPlayerHome($this);
+        $playercupmatchesRelatedByPlayerhomekey->setCupMatchesPlayerHome($this);
     }
 
     /**
@@ -3843,7 +3788,7 @@ abstract class Players implements ActiveRecordInterface
                 $this->playercupmatchessRelatedByPlayerhomekeyScheduledForDeletion->clear();
             }
             $this->playercupmatchessRelatedByPlayerhomekeyScheduledForDeletion[]= clone $playercupmatchesRelatedByPlayerhomekey;
-            $playercupmatchesRelatedByPlayerhomekey->setDivisionMatchesPlayerHome(null);
+            $playercupmatchesRelatedByPlayerhomekey->setCupMatchesPlayerHome(null);
         }
 
         return $this;
@@ -3866,10 +3811,10 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessRelatedByPlayerhomekeyJoinDivisionMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessRelatedByPlayerhomekeyJoinCupMatchesCupRound(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesGroup', $joinBehavior);
+        $query->joinWith('CupMatchesCupRound', $joinBehavior);
 
         return $this->getPlayercupmatchessRelatedByPlayerhomekey($query, $con);
     }
@@ -3891,10 +3836,35 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessRelatedByPlayerhomekeyJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessRelatedByPlayerhomekeyJoinCupMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
+        $query->joinWith('CupMatchesGroup', $joinBehavior);
+
+        return $this->getPlayercupmatchessRelatedByPlayerhomekey($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Players is new, it will return
+     * an empty collection; or if this Players has previously
+     * been saved, it will retrieve related PlayercupmatchessRelatedByPlayerhomekey from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Players.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
+     */
+    public function getPlayercupmatchessRelatedByPlayerhomekeyJoinCupMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
+        $query->joinWith('CupMatchesSeason', $joinBehavior);
 
         return $this->getPlayercupmatchessRelatedByPlayerhomekey($query, $con);
     }
@@ -3965,7 +3935,7 @@ abstract class Players implements ActiveRecordInterface
                 $this->initPlayercupmatchessRelatedByPlayerawaykey();
             } else {
                 $collPlayercupmatchessRelatedByPlayerawaykey = ChildPlayercupmatchesQuery::create(null, $criteria)
-                    ->filterByDivisionMatchesPlayerAway($this)
+                    ->filterByCupMatchesPlayerAway($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -4019,7 +3989,7 @@ abstract class Players implements ActiveRecordInterface
         $this->playercupmatchessRelatedByPlayerawaykeyScheduledForDeletion = $playercupmatchessRelatedByPlayerawaykeyToDelete;
 
         foreach ($playercupmatchessRelatedByPlayerawaykeyToDelete as $playercupmatchesRelatedByPlayerawaykeyRemoved) {
-            $playercupmatchesRelatedByPlayerawaykeyRemoved->setDivisionMatchesPlayerAway(null);
+            $playercupmatchesRelatedByPlayerawaykeyRemoved->setCupMatchesPlayerAway(null);
         }
 
         $this->collPlayercupmatchessRelatedByPlayerawaykey = null;
@@ -4060,7 +4030,7 @@ abstract class Players implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByDivisionMatchesPlayerAway($this)
+                ->filterByCupMatchesPlayerAway($this)
                 ->count($con);
         }
 
@@ -4094,7 +4064,7 @@ abstract class Players implements ActiveRecordInterface
     protected function doAddPlayercupmatchesRelatedByPlayerawaykey(ChildPlayercupmatches $playercupmatchesRelatedByPlayerawaykey)
     {
         $this->collPlayercupmatchessRelatedByPlayerawaykey[]= $playercupmatchesRelatedByPlayerawaykey;
-        $playercupmatchesRelatedByPlayerawaykey->setDivisionMatchesPlayerAway($this);
+        $playercupmatchesRelatedByPlayerawaykey->setCupMatchesPlayerAway($this);
     }
 
     /**
@@ -4111,7 +4081,7 @@ abstract class Players implements ActiveRecordInterface
                 $this->playercupmatchessRelatedByPlayerawaykeyScheduledForDeletion->clear();
             }
             $this->playercupmatchessRelatedByPlayerawaykeyScheduledForDeletion[]= clone $playercupmatchesRelatedByPlayerawaykey;
-            $playercupmatchesRelatedByPlayerawaykey->setDivisionMatchesPlayerAway(null);
+            $playercupmatchesRelatedByPlayerawaykey->setCupMatchesPlayerAway(null);
         }
 
         return $this;
@@ -4134,10 +4104,10 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessRelatedByPlayerawaykeyJoinDivisionMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessRelatedByPlayerawaykeyJoinCupMatchesCupRound(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesGroup', $joinBehavior);
+        $query->joinWith('CupMatchesCupRound', $joinBehavior);
 
         return $this->getPlayercupmatchessRelatedByPlayerawaykey($query, $con);
     }
@@ -4159,239 +4129,21 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessRelatedByPlayerawaykeyJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessRelatedByPlayerawaykeyJoinCupMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
+        $query->joinWith('CupMatchesGroup', $joinBehavior);
 
         return $this->getPlayercupmatchessRelatedByPlayerawaykey($query, $con);
     }
 
-    /**
-     * Clears out the collPlayercupmatchessRelatedByCuproundkey collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addPlayercupmatchessRelatedByCuproundkey()
-     */
-    public function clearPlayercupmatchessRelatedByCuproundkey()
-    {
-        $this->collPlayercupmatchessRelatedByCuproundkey = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collPlayercupmatchessRelatedByCuproundkey collection loaded partially.
-     */
-    public function resetPartialPlayercupmatchessRelatedByCuproundkey($v = true)
-    {
-        $this->collPlayercupmatchessRelatedByCuproundkeyPartial = $v;
-    }
-
-    /**
-     * Initializes the collPlayercupmatchessRelatedByCuproundkey collection.
-     *
-     * By default this just sets the collPlayercupmatchessRelatedByCuproundkey collection to an empty array (like clearcollPlayercupmatchessRelatedByCuproundkey());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initPlayercupmatchessRelatedByCuproundkey($overrideExisting = true)
-    {
-        if (null !== $this->collPlayercupmatchessRelatedByCuproundkey && !$overrideExisting) {
-            return;
-        }
-        $this->collPlayercupmatchessRelatedByCuproundkey = new ObjectCollection();
-        $this->collPlayercupmatchessRelatedByCuproundkey->setModel('\Playercupmatches');
-    }
-
-    /**
-     * Gets an array of ChildPlayercupmatches objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildPlayers is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
-     * @throws PropelException
-     */
-    public function getPlayercupmatchessRelatedByCuproundkey(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPlayercupmatchessRelatedByCuproundkeyPartial && !$this->isNew();
-        if (null === $this->collPlayercupmatchessRelatedByCuproundkey || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collPlayercupmatchessRelatedByCuproundkey) {
-                // return empty collection
-                $this->initPlayercupmatchessRelatedByCuproundkey();
-            } else {
-                $collPlayercupmatchessRelatedByCuproundkey = ChildPlayercupmatchesQuery::create(null, $criteria)
-                    ->filterByDivisionMatchesCupRound($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collPlayercupmatchessRelatedByCuproundkeyPartial && count($collPlayercupmatchessRelatedByCuproundkey)) {
-                        $this->initPlayercupmatchessRelatedByCuproundkey(false);
-
-                        foreach ($collPlayercupmatchessRelatedByCuproundkey as $obj) {
-                            if (false == $this->collPlayercupmatchessRelatedByCuproundkey->contains($obj)) {
-                                $this->collPlayercupmatchessRelatedByCuproundkey->append($obj);
-                            }
-                        }
-
-                        $this->collPlayercupmatchessRelatedByCuproundkeyPartial = true;
-                    }
-
-                    return $collPlayercupmatchessRelatedByCuproundkey;
-                }
-
-                if ($partial && $this->collPlayercupmatchessRelatedByCuproundkey) {
-                    foreach ($this->collPlayercupmatchessRelatedByCuproundkey as $obj) {
-                        if ($obj->isNew()) {
-                            $collPlayercupmatchessRelatedByCuproundkey[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collPlayercupmatchessRelatedByCuproundkey = $collPlayercupmatchessRelatedByCuproundkey;
-                $this->collPlayercupmatchessRelatedByCuproundkeyPartial = false;
-            }
-        }
-
-        return $this->collPlayercupmatchessRelatedByCuproundkey;
-    }
-
-    /**
-     * Sets a collection of ChildPlayercupmatches objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $playercupmatchessRelatedByCuproundkey A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildPlayers The current object (for fluent API support)
-     */
-    public function setPlayercupmatchessRelatedByCuproundkey(Collection $playercupmatchessRelatedByCuproundkey, ConnectionInterface $con = null)
-    {
-        /** @var ChildPlayercupmatches[] $playercupmatchessRelatedByCuproundkeyToDelete */
-        $playercupmatchessRelatedByCuproundkeyToDelete = $this->getPlayercupmatchessRelatedByCuproundkey(new Criteria(), $con)->diff($playercupmatchessRelatedByCuproundkey);
-
-
-        $this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion = $playercupmatchessRelatedByCuproundkeyToDelete;
-
-        foreach ($playercupmatchessRelatedByCuproundkeyToDelete as $playercupmatchesRelatedByCuproundkeyRemoved) {
-            $playercupmatchesRelatedByCuproundkeyRemoved->setDivisionMatchesCupRound(null);
-        }
-
-        $this->collPlayercupmatchessRelatedByCuproundkey = null;
-        foreach ($playercupmatchessRelatedByCuproundkey as $playercupmatchesRelatedByCuproundkey) {
-            $this->addPlayercupmatchesRelatedByCuproundkey($playercupmatchesRelatedByCuproundkey);
-        }
-
-        $this->collPlayercupmatchessRelatedByCuproundkey = $playercupmatchessRelatedByCuproundkey;
-        $this->collPlayercupmatchessRelatedByCuproundkeyPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Playercupmatches objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Playercupmatches objects.
-     * @throws PropelException
-     */
-    public function countPlayercupmatchessRelatedByCuproundkey(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPlayercupmatchessRelatedByCuproundkeyPartial && !$this->isNew();
-        if (null === $this->collPlayercupmatchessRelatedByCuproundkey || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collPlayercupmatchessRelatedByCuproundkey) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getPlayercupmatchessRelatedByCuproundkey());
-            }
-
-            $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByDivisionMatchesCupRound($this)
-                ->count($con);
-        }
-
-        return count($this->collPlayercupmatchessRelatedByCuproundkey);
-    }
-
-    /**
-     * Method called to associate a ChildPlayercupmatches object to this object
-     * through the ChildPlayercupmatches foreign key attribute.
-     *
-     * @param  ChildPlayercupmatches $l ChildPlayercupmatches
-     * @return $this|\Players The current object (for fluent API support)
-     */
-    public function addPlayercupmatchesRelatedByCuproundkey(ChildPlayercupmatches $l)
-    {
-        if ($this->collPlayercupmatchessRelatedByCuproundkey === null) {
-            $this->initPlayercupmatchessRelatedByCuproundkey();
-            $this->collPlayercupmatchessRelatedByCuproundkeyPartial = true;
-        }
-
-        if (!$this->collPlayercupmatchessRelatedByCuproundkey->contains($l)) {
-            $this->doAddPlayercupmatchesRelatedByCuproundkey($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildPlayercupmatches $playercupmatchesRelatedByCuproundkey The ChildPlayercupmatches object to add.
-     */
-    protected function doAddPlayercupmatchesRelatedByCuproundkey(ChildPlayercupmatches $playercupmatchesRelatedByCuproundkey)
-    {
-        $this->collPlayercupmatchessRelatedByCuproundkey[]= $playercupmatchesRelatedByCuproundkey;
-        $playercupmatchesRelatedByCuproundkey->setDivisionMatchesCupRound($this);
-    }
-
-    /**
-     * @param  ChildPlayercupmatches $playercupmatchesRelatedByCuproundkey The ChildPlayercupmatches object to remove.
-     * @return $this|ChildPlayers The current object (for fluent API support)
-     */
-    public function removePlayercupmatchesRelatedByCuproundkey(ChildPlayercupmatches $playercupmatchesRelatedByCuproundkey)
-    {
-        if ($this->getPlayercupmatchessRelatedByCuproundkey()->contains($playercupmatchesRelatedByCuproundkey)) {
-            $pos = $this->collPlayercupmatchessRelatedByCuproundkey->search($playercupmatchesRelatedByCuproundkey);
-            $this->collPlayercupmatchessRelatedByCuproundkey->remove($pos);
-            if (null === $this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion) {
-                $this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion = clone $this->collPlayercupmatchessRelatedByCuproundkey;
-                $this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion->clear();
-            }
-            $this->playercupmatchessRelatedByCuproundkeyScheduledForDeletion[]= clone $playercupmatchesRelatedByCuproundkey;
-            $playercupmatchesRelatedByCuproundkey->setDivisionMatchesCupRound(null);
-        }
-
-        return $this;
-    }
-
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
      * Otherwise if this Players is new, it will return
      * an empty collection; or if this Players has previously
-     * been saved, it will retrieve related PlayercupmatchessRelatedByCuproundkey from storage.
+     * been saved, it will retrieve related PlayercupmatchessRelatedByPlayerawaykey from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -4402,37 +4154,12 @@ abstract class Players implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessRelatedByCuproundkeyJoinDivisionMatchesGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessRelatedByPlayerawaykeyJoinCupMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesGroup', $joinBehavior);
+        $query->joinWith('CupMatchesSeason', $joinBehavior);
 
-        return $this->getPlayercupmatchessRelatedByCuproundkey($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Players is new, it will return
-     * an empty collection; or if this Players has previously
-     * been saved, it will retrieve related PlayercupmatchessRelatedByCuproundkey from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Players.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
-     */
-    public function getPlayercupmatchessRelatedByCuproundkeyJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
-
-        return $this->getPlayercupmatchessRelatedByCuproundkey($query, $con);
+        return $this->getPlayercupmatchessRelatedByPlayerawaykey($query, $con);
     }
 
     /**
@@ -7077,11 +6804,6 @@ abstract class Players implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collPlayercupmatchessRelatedByCuproundkey) {
-                foreach ($this->collPlayercupmatchessRelatedByCuproundkey as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collPlayerdivisionmatchessRelatedByPlayerhomekey) {
                 foreach ($this->collPlayerdivisionmatchessRelatedByPlayerhomekey as $o) {
                     $o->clearAllReferences($deep);
@@ -7138,7 +6860,6 @@ abstract class Players implements ActiveRecordInterface
         $this->collForecastss = null;
         $this->collPlayercupmatchessRelatedByPlayerhomekey = null;
         $this->collPlayercupmatchessRelatedByPlayerawaykey = null;
-        $this->collPlayercupmatchessRelatedByCuproundkey = null;
         $this->collPlayerdivisionmatchessRelatedByPlayerhomekey = null;
         $this->collPlayerdivisionmatchessRelatedByPlayerawaykey = null;
         $this->collPlayerdivisionrankings = null;

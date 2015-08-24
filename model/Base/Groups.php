@@ -2267,7 +2267,7 @@ abstract class Groups implements ActiveRecordInterface
                 $this->initPlayercupmatchess();
             } else {
                 $collPlayercupmatchess = ChildPlayercupmatchesQuery::create(null, $criteria)
-                    ->filterByDivisionMatchesGroup($this)
+                    ->filterByCupMatchesGroup($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -2321,7 +2321,7 @@ abstract class Groups implements ActiveRecordInterface
         $this->playercupmatchessScheduledForDeletion = $playercupmatchessToDelete;
 
         foreach ($playercupmatchessToDelete as $playercupmatchesRemoved) {
-            $playercupmatchesRemoved->setDivisionMatchesGroup(null);
+            $playercupmatchesRemoved->setCupMatchesGroup(null);
         }
 
         $this->collPlayercupmatchess = null;
@@ -2362,7 +2362,7 @@ abstract class Groups implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByDivisionMatchesGroup($this)
+                ->filterByCupMatchesGroup($this)
                 ->count($con);
         }
 
@@ -2396,7 +2396,7 @@ abstract class Groups implements ActiveRecordInterface
     protected function doAddPlayercupmatches(ChildPlayercupmatches $playercupmatches)
     {
         $this->collPlayercupmatchess[]= $playercupmatches;
-        $playercupmatches->setDivisionMatchesGroup($this);
+        $playercupmatches->setCupMatchesGroup($this);
     }
 
     /**
@@ -2413,7 +2413,7 @@ abstract class Groups implements ActiveRecordInterface
                 $this->playercupmatchessScheduledForDeletion->clear();
             }
             $this->playercupmatchessScheduledForDeletion[]= clone $playercupmatches;
-            $playercupmatches->setDivisionMatchesGroup(null);
+            $playercupmatches->setCupMatchesGroup(null);
         }
 
         return $this;
@@ -2436,10 +2436,10 @@ abstract class Groups implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessJoinDivisionMatchesPlayerHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessJoinCupMatchesPlayerHome(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesPlayerHome', $joinBehavior);
+        $query->joinWith('CupMatchesPlayerHome', $joinBehavior);
 
         return $this->getPlayercupmatchess($query, $con);
     }
@@ -2461,10 +2461,10 @@ abstract class Groups implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessJoinDivisionMatchesPlayerAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessJoinCupMatchesPlayerAway(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesPlayerAway', $joinBehavior);
+        $query->joinWith('CupMatchesPlayerAway', $joinBehavior);
 
         return $this->getPlayercupmatchess($query, $con);
     }
@@ -2486,10 +2486,10 @@ abstract class Groups implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessJoinDivisionMatchesCupRound(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessJoinCupMatchesCupRound(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesCupRound', $joinBehavior);
+        $query->joinWith('CupMatchesCupRound', $joinBehavior);
 
         return $this->getPlayercupmatchess($query, $con);
     }
@@ -2511,10 +2511,10 @@ abstract class Groups implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildPlayercupmatches[] List of ChildPlayercupmatches objects
      */
-    public function getPlayercupmatchessJoinDivisionMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getPlayercupmatchessJoinCupMatchesSeason(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildPlayercupmatchesQuery::create(null, $criteria);
-        $query->joinWith('DivisionMatchesSeason', $joinBehavior);
+        $query->joinWith('CupMatchesSeason', $joinBehavior);
 
         return $this->getPlayercupmatchess($query, $con);
     }

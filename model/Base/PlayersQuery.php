@@ -82,10 +82,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPlayersQuery rightJoinPlayercupmatchesRelatedByPlayerawaykey($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PlayercupmatchesRelatedByPlayerawaykey relation
  * @method     ChildPlayersQuery innerJoinPlayercupmatchesRelatedByPlayerawaykey($relationAlias = null) Adds a INNER JOIN clause to the query using the PlayercupmatchesRelatedByPlayerawaykey relation
  *
- * @method     ChildPlayersQuery leftJoinPlayercupmatchesRelatedByCuproundkey($relationAlias = null) Adds a LEFT JOIN clause to the query using the PlayercupmatchesRelatedByCuproundkey relation
- * @method     ChildPlayersQuery rightJoinPlayercupmatchesRelatedByCuproundkey($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PlayercupmatchesRelatedByCuproundkey relation
- * @method     ChildPlayersQuery innerJoinPlayercupmatchesRelatedByCuproundkey($relationAlias = null) Adds a INNER JOIN clause to the query using the PlayercupmatchesRelatedByCuproundkey relation
- *
  * @method     ChildPlayersQuery leftJoinPlayerdivisionmatchesRelatedByPlayerhomekey($relationAlias = null) Adds a LEFT JOIN clause to the query using the PlayerdivisionmatchesRelatedByPlayerhomekey relation
  * @method     ChildPlayersQuery rightJoinPlayerdivisionmatchesRelatedByPlayerhomekey($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PlayerdivisionmatchesRelatedByPlayerhomekey relation
  * @method     ChildPlayersQuery innerJoinPlayerdivisionmatchesRelatedByPlayerhomekey($relationAlias = null) Adds a INNER JOIN clause to the query using the PlayerdivisionmatchesRelatedByPlayerhomekey relation
@@ -1272,79 +1268,6 @@ abstract class PlayersQuery extends ModelCriteria
         return $this
             ->joinPlayercupmatchesRelatedByPlayerawaykey($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PlayercupmatchesRelatedByPlayerawaykey', '\PlayercupmatchesQuery');
-    }
-
-    /**
-     * Filter the query by a related \Playercupmatches object
-     *
-     * @param \Playercupmatches|ObjectCollection $playercupmatches the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildPlayersQuery The current query, for fluid interface
-     */
-    public function filterByPlayercupmatchesRelatedByCuproundkey($playercupmatches, $comparison = null)
-    {
-        if ($playercupmatches instanceof \Playercupmatches) {
-            return $this
-                ->addUsingAlias(PlayersTableMap::COL_PRIMARYKEY, $playercupmatches->getCuproundkey(), $comparison);
-        } elseif ($playercupmatches instanceof ObjectCollection) {
-            return $this
-                ->usePlayercupmatchesRelatedByCuproundkeyQuery()
-                ->filterByPrimaryKeys($playercupmatches->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByPlayercupmatchesRelatedByCuproundkey() only accepts arguments of type \Playercupmatches or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the PlayercupmatchesRelatedByCuproundkey relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildPlayersQuery The current query, for fluid interface
-     */
-    public function joinPlayercupmatchesRelatedByCuproundkey($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('PlayercupmatchesRelatedByCuproundkey');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'PlayercupmatchesRelatedByCuproundkey');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the PlayercupmatchesRelatedByCuproundkey relation Playercupmatches object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \PlayercupmatchesQuery A secondary query class using the current class as primary query
-     */
-    public function usePlayercupmatchesRelatedByCuproundkeyQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinPlayercupmatchesRelatedByCuproundkey($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'PlayercupmatchesRelatedByCuproundkey', '\PlayercupmatchesQuery');
     }
 
     /**
