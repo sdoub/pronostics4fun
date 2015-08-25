@@ -14,6 +14,9 @@ $filedate=strftime("%Y%m%d",time());
 $defaultLogger->pushHandler(new StreamHandler('log/app-'.$filedate.'.log', Logger::DEBUG));
 $serviceContainer->setLogger('defaultLogger', $defaultLogger);
 
+if ($_SERVER['PHP_SELF']!="/index.php")
+	$defaultLogger->addInfo('Page: '.$_SERVER['PHP_SELF']);
+
 //$con = \Propel\Runtime\Propel::getWriteConnection('default');
 //$con->useDebug(true);
 //	echo \Propel\Runtime\Propel::getConnection()->getLastExecutedQuery();

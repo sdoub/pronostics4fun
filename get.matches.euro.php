@@ -1,7 +1,8 @@
 #!/usr/local/bin/php
 <?php
+use Sunra\PhpSimple\HtmlDomParser;
+
 require_once(dirname(__FILE__)."/begin.file.php");
-require_once(BASE_PATH . "/lib/simple_html_dom.php");
 
 
 $query = "SELECT PrimaryKey GroupKey,DayKey,Status
@@ -28,7 +29,7 @@ foreach ($rowsSet as $rowSet)
   $url = "http://fr.uefa.com/uefaeuro/season=2012/standings/round=15172/group=$dayKey/index.html";
 
   print($url);
-  if ($html = file_get_html($url))
+  if ($html = HtmlDomParser::file_get_html($url))
   {
     {
       //      $scheduleDates = array();

@@ -1,7 +1,8 @@
 #!/usr/local/bin/php
 <?php
+use Sunra\PhpSimple\HtmlDomParser;
+
 require_once(dirname(__FILE__)."/begin.file.php");
-require_once(BASE_PATH . "/lib/simple_html_dom.php");
 require_once(dirname(__FILE__)."/lib/p4fmailer.php");
 
 error_reporting(E_ALL);
@@ -39,7 +40,8 @@ foreach ($rowsSet as $rowSet)
   }
 
   print($url);
-  if ($html = file_get_html($url))
+	$defaultLogger->addInfo($url);
+  if ($html = HtmlDomParser::file_get_html($url))
   {
     {
       $scheduleDates = array();
@@ -54,12 +56,12 @@ foreach ($rowsSet as $rowSet)
           if ($rows->find('td',0)){
             $isMatchReported = false;
             // Get "Feuille de match Id
-            $lfpUrl = split('/',$rows->find('td',0)->first_child ()->getAttribute("href"));
+            $lfpUrl = explode ('/',$rows->find('td',0)->first_child ()->getAttribute("href"));
             $lfpMatchKey = $lfpUrl[3];
 
-            $dateMatchArray = split('/',$scheduleDates[$currentTable]);
+            $dateMatchArray = explode('/',$scheduleDates[$currentTable]);
             if (strpos($rows->find('td',0)->plaintext,":")!==false ) {
-              $hourMatchArray = split(':',$rows->find('td',0)->plaintext);
+              $hourMatchArray = explode(':',$rows->find('td',0)->plaintext);
             } else {
               echo "<br/>". $rows->find('td',0)->plaintext;
               if (strpos($rows->find('td',0)->plaintext,"Reporté")!==false ) {
@@ -76,17 +78,17 @@ foreach ($rowsSet as $rowSet)
             $scheduleDate = mktime((int)$hours, (int)$minutes, 0, (int)$dateMatchArray[1], (int)$dateMatchArray[0], (int)$dateMatchArray[2]);
 
             if ($rows->find('td',2)->first_child()->hasAttribute("src")) {
-              $lfpTeamHome = split('/',$rows->find('td',2)->first_child()->getAttribute("src"));
+              $lfpTeamHome = explode('/',$rows->find('td',2)->first_child()->getAttribute("src"));
             } else {
-              $lfpTeamHome = split('/',$rows->find('td',2)->first_child()->first_child()->getAttribute("src"));
+              $lfpTeamHome = explode('/',$rows->find('td',2)->first_child()->first_child()->getAttribute("src"));
             }
             $lfpTeamHomeKey = substr($lfpTeamHome[6], 0, -4);
             $teamHomeKey = ConvertLfpKeyToP4F ($lfpTeamHomeKey);
 
             if ($rows->find('td',4)->first_child()->hasAttribute("src")) {
-              $lfpTeamAway = split('/',$rows->find('td',4)->first_child()->getAttribute("src"));
+              $lfpTeamAway = explode('/',$rows->find('td',4)->first_child()->getAttribute("src"));
             } else {
-              $lfpTeamAway = split('/',$rows->find('td',4)->first_child()->first_child()->getAttribute("src"));
+              $lfpTeamAway = explode('/',$rows->find('td',4)->first_child()->first_child()->getAttribute("src"));
             }
             $lfpTeamAwayKey = substr($lfpTeamAway[6], 0, -4);
 
@@ -125,7 +127,8 @@ foreach ($rowsSet as $rowSet)
     unset($html);
   }
   else {
-    $_error = $_error . "<error>Erreur lors de l'analyse du document HTML</error>";
+    $defaultLogger->addError("Erreur lors de l'analyse du document HTML");
+		$_error = $_error . "<error>Erreur lors de l'analyse du document HTML</error>";
   }
 
   if ($isGroupScheduled) {
@@ -226,12 +229,15 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
         $mail->AddAddress("admin@pronostics4fun.com", "P4F Admin");
 				$mail->Send();
       } catch (phpmailerException $e) {
-        echo $e->errorMessage(); //Pretty error messages from PHPMailer
+        $defaultLogger->addError($e);
+				echo $e->errorMessage(); //Pretty error messages from PHPMailer
       } catch (Exception $e) {
-        echo $e->getMessage(); //Boring error messages from anything else!
+        $defaultLogger->addError($e->getMessage());
+				echo $e->getMessage(); //Boring error messages from anything else!
       }
       unset($mail);
       $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
+			$defaultLogger->addNotice("Vote is completed for the group: ". $rowSetAfter["Description"]. " (".$rowSetAfter["GroupKey"].")");
     }
 
     // If a group is opened for giving pronostics
@@ -240,13 +246,15 @@ INNER JOIN teams TeamAway ON TeamAway.PrimaryKey=matches.TeamAwayKey
       $infonews = '<img class="news" src="images/calendar.png">La programmation des matchs de la '.$rowSetAfter["Description"].' est définitive, par conséquent les pronostics sont ouverts !';
 
       $_databaseObject->queryPerf("INSERT INTO news (CompetitionKey, Information, InfoType) VALUES (".COMPETITION.",'".__encode($infonews)."',4)","insert news for ending vote");
+			$defaultLogger->addNotice("Group: ". $rowSetAfter["Description"]. " (".$rowSetAfter["GroupKey"].") is now opened");
     }
 
   }
 }
 
-
-
+$totaltime = getElapsedTime();
+$defaultLogger->addInfo('totaltime:'.$totaltime);
+$_errorMessage= '';
 
 $arrDatabaseInfo = $_databaseObject -> get ('xmlQueryPerf', 'xmlErrorLog', '_totalTime','errorLog');
 if (sizeOf($arrDatabaseInfo["errorLog"])>0) {
@@ -254,6 +262,7 @@ if (sizeOf($arrDatabaseInfo["errorLog"])>0) {
     $_error = true;
     $_errorMessage="An error occured during queries execution";
     print_r($arrDatabaseInfo["errorLog"]);
+		$defaultLogger->addError(var_export($arr["errorLog"], true));
   }
 }
 

@@ -473,14 +473,14 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
                   $events = $peoples->find('td.w155',0);
                   if ($events->innertext!=null){
                     foreach ($events->find('div') as $event) {
-                      $evtType = split("/",$event->find('img',0)->getAttribute("src"));
+                      $evtType = explode("/",$event->find('img',0)->getAttribute("src"));
                       $eventType = str_replace(".gif","",$evtType[4]);
                       $eventTime = $event->find('span',0)->innertext;
 
                       if ($eventType=="goals" || $eventType=="goals_P" || $eventType=="goals_O") {
                         $eventTime = str_replace("Prol.","",$eventTime);
                         if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = split("+",trim($eventTime));
+                          $eventAddTime = explode("+",trim($eventTime));
                           $eventAdditionalTime = $eventAddTime[1];
                         }
                         else {
@@ -534,7 +534,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
                       if ($eventType=="yells" || $eventType=="yell_reds" || $eventType=="reds") {
                         $eventTime = str_replace("Prol.","",$eventTime);
                         if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = split("+",trim($eventTime));
+                          $eventAddTime = explode("+",trim($eventTime));
                           $eventAdditionalTime = $eventAddTime[1];
                         }
                         else {
@@ -607,14 +607,14 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
                   $events = $peoples->find('td.w155',1);
                   if ($events->innertext!=null){
                     foreach ($events->find('div') as $event) {
-                      $evtType = split("/",$event->find('img',0)->getAttribute("src"));
+                      $evtType = explode("/",$event->find('img',0)->getAttribute("src"));
                       $eventType = str_replace(".gif","",$evtType[4]);
                       $eventTime = $event->find('span',0)->innertext;
 
                       if ($eventType=="goals" || $eventType=="goals_P" || $eventType=="goals_O") {
                         $eventTime = str_replace("Prol.","",$eventTime);
                         if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = split("+",trim($eventTime));
+                          $eventAddTime = explode("+",trim($eventTime));
                           $eventAdditionalTime = $eventAddTime[1];
                         }
                         else {
@@ -667,7 +667,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
                       if ($eventType=="yells" || $eventType=="yell_reds" || $eventType=="reds") {
                         $eventTime = str_replace("Prol.","",$eventTime);
                         if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = split("+",trim($eventTime));
+                          $eventAddTime = explode("+",trim($eventTime));
                           $eventAdditionalTime = $eventAddTime[1];
                         }
                         else {
