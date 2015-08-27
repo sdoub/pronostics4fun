@@ -170,3 +170,129 @@ color:#cccccc;
 	text-decoration: none;
 	float: left;
 }
+
+	#cupContainer {
+		background-color:#D7E1F6;
+		width:940px;
+		height:550px;
+	}
+	#cupHeader {
+		background-color:#6D8AA8;
+		color:#ffffff;
+		font-weight:bold;
+		width:940px;
+		height:40px;
+		margin-top:5px;
+		/*margin-bottom:5px;*/
+		border-bottom:1px solid #365F89;
+	}
+	#cupHeader .disable {
+		color:#cccccc;
+	}
+	
+	#cupHeader a {
+		text-decoration:none;
+		color:#ffffff;
+	}
+	.prev {
+		padding-top:5px;float:left;width:150px;padding-left:20px;
+	}
+	.cupRoundTitle {
+		padding-top:5px;float:left;text-align:center;width:600px;
+	}
+	.next {
+		padding-top:5px;float:right;width:150px;text-align:right;padding-right:20px;
+	}
+	#cupContainer ul {
+		overflow:auto;height:508px;
+	}
+	
+	#cupContainer ul li {
+		padding-left:20px;padding-right:20px;
+	}
+	.player {
+		width:600px;height:30px;
+	}
+	.spacerRight {
+		width:285px;float:right;height:30px;
+	}
+	.noscrollbar {
+		width:300px;
+	}
+	.first {
+		padding-top:10px;
+	}
+	.second {
+		padding-top:10px;
+	}
+	.odd .first {
+		border-bottom:1px solid #cccccc;height: 35px;
+	}
+	.odd .second {
+		padding-top:10px;
+		border-bottom:0;
+	}
+	.player a{
+		text-decoration:none;font-size:14px;font-weight:bold;
+	}
+	.player a .avatar {
+		float:left;margin-right:15px;margin-left:15px;
+	}
+	.player a .avatar img {
+		width:25px;height:25px;
+	}
+	.player .score {
+		font-size:14px;font-weight:bold;float:right;margin-right:20px;
+	}
+	.opponent {
+		width:600px;border-top:1px solid #cccccc;height:35px;padding-top:5px;border-right:1px solid #cccccc;
+	}
+	.loser {
+		color:#848484;
+	}
+	.loser a {
+		color:#848484;
+	}
+	li {
+		margin-top:10px;
+	}
+	li.odd {
+		margin-top:0;
+	}
+
+	.odd .first {
+		border-right:1px solid #cccccc;
+	}
+	.odd .opponent {
+		border-right:0;
+		border-top:0;
+	}
+	.oneMatch .opponent {
+		border-right:0;
+	}
+
+	.winner {
+		padding-top: 10px;
+	}
+	.oneMatch .winner {
+		position: absolute;
+		right: 30px;
+		top: 117px;
+		padding-top: 0;
+	}
+	.oneMatch .winner a {
+		background-color: #D7E1F6;
+		padding: 5px 10px;
+	}
+	.odd .winner {
+		padding-top: 10px;
+		border-top: 1px solid #cccccc;
+	}
+	.oneMatch .spacerRight {
+		border-bottom: 1px solid #cccccc;
+		padding-top: 10px;
+	}
+	.oneMatch .winner {
+		border-bottom: 0;
+		padding-top: 0;
+	}

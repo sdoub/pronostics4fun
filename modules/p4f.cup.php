@@ -66,6 +66,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   $match[0]["id"] = $rowSet["PlayerHomeKey"];
   $match[0]["seed"] = $rowSet["PlayerHomeKey"];
   $match[0]["displaySeed"] = "";
+	$match[0]["score"]="";
   if ($rowSet["HomeScore"])
   {
     $match[0]["score"] = $rowSet["HomeScore"];
@@ -81,11 +82,13 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
     $match[1]["id"] = $rowSet["PlayerAwayKey"];
     $match[1]["seed"] = $rowSet["PlayerAwayKey"];
     $match[1]["displaySeed"] = "";
+		$match[1]["score"]="";
   } else {
     $match[1]["name"] = $rowSet["AwayNickName"];
     $match[1]["id"] = $rowSet["PlayerAwayKey"];
     $match[1]["seed"] = $rowSet["PlayerAwayKey"];
     $match[1]["displaySeed"] = "";
+		$match[1]["score"]="";
     if ($rowSet["AwayScore"])
     {
       $match[1]["score"] = $rowSet["AwayScore"];
@@ -104,179 +107,11 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 }
 $rounds[]=$matches;
-$nbrOfMatches = count($matches);
-while ($nbrOfMatches>1) {
-  $dummyMatches =  count($matches)/2;
-  $matches= array();
-  for ($i = 0; $i < $dummyMatches; $i++) {
-    $match = array();
-    $match[0]["name"] = "-";
-    $match[0]["id"] = -2;
-    $match[0]["seed"] = -2;
-    $match[0]["displaySeed"] = "";
-    $match[1]["name"] = "-";
-    $match[1]["id"] = -2;
-    $match[1]["seed"] = -2;
-    $match[1]["displaySeed"] = "";
-    $matches[] =$match;
-  }
-  //$rounds[]=$matches;
-  $nbrOfMatches = count($matches);
-}
-
-
-$nbrOfMatches = count($matches);
-while ($nbrOfMatches>1) {
-  $dummyMatches =  count($matches)/2;
-  $matches= array();
-  for ($i = 0; $i < $dummyMatches; $i++) {
-    $match = array();
-    $match[0]["name"] = "-";
-    $match[0]["id"] = -2;
-    $match[0]["seed"] = -2;
-    $match[0]["displaySeed"] = "";
-    $match[1]["name"] = "-";
-    $match[1]["id"] = -2;
-    $match[1]["seed"] = -2;
-    $match[1]["displaySeed"] = "";
-    $matches[] =$match;
-  }
-  $rounds[]=$matches;
-  $nbrOfMatches = count($matches);
-}
 
 echo '<div id="" style="color: #fff;font-size: xx-small;padding-bottom: 10px;">* : disqualifié au premier tour pour non participation</div>';
 echo '<div id="" style="width:940px;overflow:hidden;">
 <div id="cupDraw" ></div><div id="cupDraw3rd" ></div></div>';
 ?>
-<style>
-	#cupContainer {
-		background-color:#D7E1F6;
-		width:940px;
-		height:550px;
-	}
-	#cupHeader {
-		background-color:#6D8AA8;
-		color:#ffffff;
-		font-weight:bold;
-		width:940px;
-		height:40px;
-		margin-top:5px;
-		margin-bottom:5px;
-		border-bottom:1px solid #365F89;
-	}
-	#cupHeader a.disable {
-		color:#cccccc;
-	}
-	
-	#cupHeader a {
-		text-decoration:none;
-		color:#ffffff;
-	}
-	.prev {
-		padding-top:5px;float:left;width:150px;padding-left:20px;
-	}
-	.cupRoundTitle {
-		padding-top:5px;float:left;text-align:center;width:600px;
-	}
-	.next {
-		padding-top:5px;float:right;width:150px;text-align:right;padding-right:20px;
-	}
-	#cupContainer ul {
-		overflow:auto;height:510px;
-	}
-	
-	#cupContainer ul li {
-		padding-left:20px;padding-right:20px;
-	}
-	.player {
-		width:600px;height:30px;
-	}
-	.spacerRight {
-		width:285px;float:right;height:30px;
-	}
-	.noscrollbar {
-		width:300px;
-	}
-	.first {
-		padding-top:10px;
-	}
-	.second {
-		padding-top:10px;
-	}
-	.odd .first {
-		border-bottom:1px solid #cccccc;height: 35px;
-	}
-	.odd .second {
-		padding-top:10px;
-		border-bottom:0px;
-	}
-	.player a{
-		text-decoration:none;font-size:14px;font-weight:bold;
-	}
-	.player a .avatar {
-		float:left;margin-right:15px;margin-left:15px;
-	}
-	.player a .avatar img {
-		width:25px;height:25px;
-	}
-	.player .score {
-		font-size:14px;font-weight:bold;float:right;margin-right:20px;
-	}
-	.opponent {
-		width:600px;border-top:1px solid #cccccc;height:35px;padding-top:5px;border-right:1px solid #cccccc;
-	}
-	.loser {
-		color:#848484;
-	}
-	.loser a {
-		color:#848484;
-	}
-	li {
-		margin-top:10px;
-	}
-	li.odd {
-		margin-top:0px;
-	}
-
-	.odd .first {
-		border-right:1px solid #cccccc;
-	}
-	.odd .opponent {
-		border-right:0px;
-		border-top:0px;
-	}
-	.oneMatch .opponent {
-		border-right:0px;
-	}
-
-	.winner {
-		padding-top: 10px;
-	}
-	.oneMatch .winner {
-		position: absolute;
-		right: 30px;
-		top: 117px;
-		padding-top: 0;
-	}
-	.oneMatch .winner a {
-		background-color: #D7E1F6;
-		padding: 5px 10px;
-	}
-	.odd .winner {
-		padding-top: 10px;
-		border-top: 1px solid #cccccc;
-	}
-	.oneMatch .spacerRight {
-		border-bottom: 1px solid #cccccc;
-		padding-top: 10px;
-	}
-	.oneMatch .winner {
-		border-bottom: 0px;
-		padding-top: 0;
-	}
-
-</style>
 <div id="cupContainer">
 	<div id="cupHeader">
 		<div class="prev">

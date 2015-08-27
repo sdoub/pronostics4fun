@@ -88,7 +88,7 @@ LEFT JOIN votes ON matches.PrimaryKey = votes.MatchKey AND votes.PlayerKey=" . $
 LEFT JOIN results ON matches.PrimaryKey=results.MatchKey
 WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups.CompetitionKey=".COMPETITION." AND IsCompleted=0 AND BeginDate + INTERVAL 1 HOUR > NOW())
  ORDER BY matches.ScheduleDate,matches.PrimaryKey";
-  $resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
+  $rowSets = $_databaseObject->queryGetFullArray($sql,"Get matches linked to selected group");
 
   $scheduleMonth = "00";
   $scheduleDay = "00";
@@ -96,7 +96,8 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
 
   $html = "<form id='frmVote'> <table>";
   $html .= "<tr id='TooLateVoted' style='display:none;color:#f54949;background:#D7E1F6;font-size:11px;font-weight:bold;height:25px;'><td colspan='7' style='text-align:center;'>Il est trop tard! le vote est clos, vous ne pouvez plus voter!</td></tr>";
-  $html .= "<tr id='Voted' style='display:none;color:#f54949;background:#D7E1F6;font-size:11px;font-weight:bold;height:25px;'><td colspan='7' style='text-align:center;'>Vous avez déjà voté pour cette journée, vous ne pouvez pas le modifier!</td></tr>";
+  $html .= "<tr id='Voted' style='display:none;color:#f54949;background:#D7E1F6;font-size:11px;font-weight:bold;height:25px;'><td colspan='7' style='text-align:center;'>";
+	$html .= "Vote pris en compte pour la ".$rowSets[0]["GroupName"]." !</td></tr>";
   $html .= "<tr id='ToBeVoted' style='padding-bottom:20px;height:30px;'><td colspan='7' style='text-align:center;'><div id='voteRemaining' >";
   $html .= '<input type="radio" name="voteRemaining" value="1" checked="true" />
         <input type="radio" name="voteRemaining" value="2" checked="true" />
@@ -113,7 +114,7 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
   $displayGroup = false;
   $teamExcluded2 = "";
   $teamExcluded10 = "";
-  while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
+  foreach ($rowSets as $rowSet)
   {
 
     if (!$displayGroup)
@@ -215,7 +216,7 @@ WHERE matches.GroupKey = (SELECT MIN(groups.PrimaryKey) FROM groups WHERE groups
   </form>';
 
   if ($teamExcluded2!="") {
-    $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>Il n'est pas possible de voter pour le match de $teamExcluded2, <br/>car $teamExcluded2 a particpé au 2 précédents match Bonus</div>";
+    $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>Il n'est pas possible de voter pour le match de $teamExcluded2, <br/>car $teamExcluded2 a particpé aux 2 précédents match Bonus</div>";
   }
   if ($teamExcluded10!="") {
     $html .= "<div style='padding-left:20px;padding-top:3px;padding-right:3px;padding-bottom:3px;color:#365F89;font-size:10px;text-align:center;background:url(". ROOT_SITE . "/images/warning.32px.png) no-repeat scroll left top #D7E1F6;'>Il n'est plus possible de voter pour un match de $teamExcluded10, car $teamExcluded10 a/ont déjà particpé à 10 matchs Bonus</div>";
@@ -255,7 +256,7 @@ else
 </form>';
   } else {
     $arr["status"] = false;
-    $arr["message"] = 'Une erreur est survenue durant la sauvegarde!Veuillez réessayer';
+    $arr["message"] = 'Une erreur est survenue durant la sauvegarde ! Veuillez réessayer !';
 
   }
 
