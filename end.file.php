@@ -3,8 +3,10 @@
 unset($_authorisation);
 
 $dbErrors = $_databaseObject -> get ('errorLog');
-if (count($dbErrors['errorLog'])>0) {
-	$defaultLogger->addError(var_export($dbErrors['errorLog'], true));
+
+if (is_array($dbErrors['errorLog'])) {
+	foreach ($dbErrors['errorLog'] as $error)
+		$defaultLogger->addError($error);
 }
 
 $_databaseObject -> close ();

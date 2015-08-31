@@ -403,7 +403,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	var _totalNews = 1;
 	var _isNewsLoading = false;
 	function getNews () {
-		if (!_isNewsLoading && _newsPages * 10 < _totalNews) {
+		if (!_isNewsLoading && _newsPages * 30 < _totalNews) {
 			_isNewsLoading = true;
 			$('#WaitingLayer').fadeIn();
 			_newsPages++;
@@ -957,12 +957,6 @@ if ($_competitionType==3) {
 
 <script>
 
-$.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
-	/*$("div[name^='surveyTitle']").corner();
-	$("#newsTitle").corner();
-	$("#forecastsTitle").corner();
-	$("#globalRankingTitle").corner();
-  */
 	$("div.flexcroll").bind(
 		'jsp-scroll-y',
 		function(event, scrollPositionY, isAtTop, isAtBottom)
@@ -975,8 +969,15 @@ $.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
 		horizontalGutter: 10,
 		autoReinitialise: true
 	});
+//	$.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
+	/*$("div[name^='surveyTitle']").corner();
+	$("#newsTitle").corner();
+	$("#forecastsTitle").corner();
+	$("#globalRankingTitle").corner();
+  */
 
-});
+
+//});
 
 $("#forecastsTitle li").click(function() {
 	window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=1');

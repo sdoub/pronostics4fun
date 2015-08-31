@@ -1,7 +1,7 @@
 <?php
 require_once("begin.file.php");
 
-$rec_limit = 10;
+$rec_limit = 30;
 /* Get total number of records */
 $sql = "SELECT COUNT(NewsKey) NbrOfNews FROM (
 		SELECT news.PrimaryKey NewsKey, news.Information NewsInfos,InfoType, 
