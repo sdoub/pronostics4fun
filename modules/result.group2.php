@@ -84,7 +84,7 @@ function getGroupRanking (dayKey) {
                   if (ranking.BonusScore == 0) {
                 	elementToBeAdded += '<em>'+ ranking.Score + ' pts</em>';
                   } else {
-                	elementToBeAdded += '<em>'+ ranking.GlobalScore + ' pts <br/><sub style="padding-left:10px;font-size:9px;">dont '+ ranking.BonusScore + ' pts bonus</sub></em>';
+                	elementToBeAdded += '<em>'+ ranking.GlobalScore + ' pts</em><sub style="float:left;padding-left:62px;font-size:9px;">dont '+ ranking.BonusScore + ' pts bonus</sub>';
                   }
 
                   elementToBeAdded += '</p>';
