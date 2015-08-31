@@ -482,19 +482,7 @@ AND matches.GroupKey=groups.PrimaryKey)
 AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
 (SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank,
 (SELECT Rank FROM playerranking WHERE RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=groups.PrimaryKey) AND
-PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) GlobalRank,
-(SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
-   FROM playergroupranking
-	WHERE playergroupranking.Rank=1 
-	  AND playergroupranking.GroupKey=groups.PrimaryKey
-		AND playergroupranking.RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=playergroupranking.GroupKey)) 
-AND matches.GroupKey=groups.PrimaryKey)
-+(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
-   FROM playergroupranking
-	WHERE playergroupranking.Rank=1 
-	  AND playergroupranking.GroupKey=groups.PrimaryKey
-		AND playergroupranking.RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=playergroupranking.GroupKey))
-AND playergroupresults.GroupKey=groups.PrimaryKey) WinnerScore
+PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) GlobalRank
  FROM groups
 WHERE groups.CompetitionKey=" . COMPETITION . " AND IsCompleted=1
 ORDER BY groups.EndDate DESC";
