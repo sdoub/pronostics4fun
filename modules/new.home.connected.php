@@ -1,4 +1,5 @@
 <?php
+use Propel\Runtime\ActiveQuery\Criteria;
 
 AddScriptReference("scrollpane");
 AddScriptReference("new.home.connected");
@@ -475,20 +476,6 @@ groups.Status,
    FROM forecasts
   INNER JOIN matches ON matches.PrimaryKey=forecasts.MatchKey
   WHERE matches.GroupKey=groups.PrimaryKey) players,
-(SELECT COUNT(matches.PrimaryKey)
-   FROM matches
-   LEFT JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus<>10
-  WHERE matches.GroupKey=groups.PrimaryKey) OpenedMatch,
-(SELECT COUNT(matches.PrimaryKey)
-   FROM matches
-  INNER JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus=10
-  WHERE matches.GroupKey=groups.PrimaryKey) ClosedMatch,
-(SELECT COUNT(*)
-   FROM forecasts
-  INNER JOIN matches ON matches.PrimaryKey=forecasts.MatchKey
-   LEFT JOIN results ON results.MatchKey=matches.PrimaryKey AND results.LiveStatus<>10
-  WHERE matches.GroupKey=groups.PrimaryKey
-    AND forecasts.PlayerKey=".$_authorisation->getConnectedUserKey().") forecasts,
 (SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey=".$_authorisation->getConnectedUserKey()." 
 AND matches.GroupKey=groups.PrimaryKey)
 +(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey=".$_authorisation->getConnectedUserKey()."
@@ -496,12 +483,6 @@ AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
 (SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank,
 (SELECT Rank FROM playerranking WHERE RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=groups.PrimaryKey) AND
 PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) GlobalRank,
-(SELECT players.NickName
-   FROM playergroupranking
-  INNER JOIN players ON playergroupranking.PlayerKey=players.PrimaryKey 
-	WHERE playergroupranking.Rank=1 
-	  AND playergroupranking.GroupKey=groups.PrimaryKey
-		ORDER BY playergroupranking.RankDate DESC LIMIT 0,1) Winner,
 (SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
    FROM playergroupranking
 	WHERE playergroupranking.Rank=1 
@@ -697,6 +678,47 @@ foreach ($rowsSet as $rowSet)
 	
 	}
 	
+	/*
+	(SELECT players.NickName
+   FROM playergroupranking
+  INNER JOIN players ON playergroupranking.PlayerKey=players.PrimaryKey 
+	WHERE playergroupranking.Rank=1 
+	  AND playergroupranking.GroupKey=groups.PrimaryKey
+		ORDER BY playergroupranking.RankDate DESC LIMIT 0,1) Winner,
+		*/
+	$playergroupranking = PlayergrouprankingQuery::create()
+		->filterByRank(1)
+		->filterByGroupkey($rowSet["GroupKey"])
+		->orderByRankdate(Criteria::DESC)
+		->findOne();
+	/*
+	(SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
+   FROM playergroupranking
+	WHERE playergroupranking.Rank=1 
+	  AND playergroupranking.GroupKey=groups.PrimaryKey
+		AND playergroupranking.RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=playergroupranking.GroupKey)) 
+AND matches.GroupKey=groups.PrimaryKey)
++(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey IN (SELECT playergroupranking.PlayerKey
+   FROM playergroupranking
+	WHERE playergroupranking.Rank=1 
+	  AND playergroupranking.GroupKey=groups.PrimaryKey
+		AND playergroupranking.RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=playergroupranking.GroupKey))
+AND playergroupresults.GroupKey=groups.PrimaryKey) WinnerScore */
+	
+	$groupMatchesScore = PlayermatchresultsQuery::create()
+		->withColumn('SUM(playermatchresults.score)','sumscore')
+		->filterByPlayerkey($playergroupranking->getPlayerkey())
+		->useMatchPlayerResultQuery() 
+			->filterByGroupkey($playergroupranking->getGroupkey()) 
+		->endUse()
+		->groupByPlayerkey()
+		->find()->toArray();
+	$groupScore = PlayergroupresultsQuery::create()
+		->filterByPlayerkey($playergroupranking->getPlayerkey())
+		->filterByGroupkey($playergroupranking->getGroupkey())
+		->findOne();
+	$winnerScore=$groupMatchesScore[0]["sumscore"] + $groupScore->getScore();
+	
 	$rank = "";
 	if ($rowSet["Rank"]==1)
 		$rank = "Rang : 1<sup>er</sup>";
@@ -757,7 +779,7 @@ foreach ($rowsSet as $rowSet)
   echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
   <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span>';
   echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Vainqueur : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["Winner"].' ('.$rowSet["WinnerScore"].'pts)</span>';
+  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playergroupranking->getPlayerRanking()->getNickName().' ('.$winnerScore.'pts)</span>';
   echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
   <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
 	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
