@@ -176,25 +176,25 @@ function callbackPost (data){
 }
 </script>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
+	style="margin-left: 15px; color: #ffffff; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
 <select id="ViewChoice" style="z-index: 999; display: none;">
-	<option selected="selected" value="Forecasts"><?php echo __encode("Pronostics");?></option>
-	<option value="Results"><?php echo __encode("Résultats");?></option>
-	<option value="Points"><?php echo __encode("Points");?></option>
+	<option selected="selected" value="Forecasts">Pronostics</option>
+	<option value="Results">Résultats</option>
+	<option value="Points">Points</option>
 </select>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;"><?php echo __encode("Journées : ");?></span>
+	style="margin-left: 15px; color: #ffffff; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Journées :</span>
 <?php
 $sql = "SELECT PrimaryKey GroupKey, Description FROM groups WHERE CompetitionKey=" . COMPETITION . " AND IsCompleted=1 ORDER BY groups.DayKey";
 $resultSet = $_databaseObject->queryPerf($sql,"Get groups");
 $content = "<select id='GroupChoice'  multiple='multiple' style='z-index:999;'>";
-$content .= "<option selected='selected' value='All'>".__encode("Toutes")."</option>";
+$content .= "<option selected='selected' value='All'>Toutes</option>";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   $content .= "<option value='".$rowSet["GroupKey"]."'>".$rowSet["Description"]."</option>";
 }
 $content .= "</select>";
-echo __encode($content);
+echo $content;
 ?>
 
  <input type="button" name="RefreshStats" id="RefreshStats"

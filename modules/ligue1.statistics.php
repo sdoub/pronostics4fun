@@ -174,7 +174,7 @@ function callbackPostStats (data){
 }
 </script>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;"><?php echo __encode("Journées : ");?></span>
+	style="margin-left: 15px; color: #ffffff; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Journées : </span>
 <?php
 $sql = "SELECT PrimaryKey GroupKey, Description FROM groups WHERE CompetitionKey=" . COMPETITION . " AND IsCompleted=1 ORDER BY groups.DayKey";
 $resultSet = $_databaseObject->queryPerf($sql,"Get groups");
@@ -188,7 +188,7 @@ $content .= "</select>";
 echo $content;
 ?>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;"><?php echo __encode("Club(s) : ");?></span>
+	style="margin-left: 15px; color: #ffffff; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Club(s) : </span>
 <?php
 $sql = "SELECT PrimaryKey TeamKey, Name TeamName FROM teams
 WHERE EXISTS (SELECT 1 FROM matches INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey AND groups.CompetitionKey = " . COMPETITION . " WHERE matches.TeamHomeKey=teams.PrimaryKey)

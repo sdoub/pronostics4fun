@@ -234,18 +234,17 @@ function callbackPost (data){
 }
 </script>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
+	style="margin-left: 15px; color: #ffffff; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Vue:</span>
 <select id="ValueChoice" style="z-index: 999; display: none;">
 	<option selected="selected" value="Global"><?php echo "général";?></option>
 	<option value="Group"><?php echo "par journée";?></option>
 </select>
 <span
-	style="margin-left: 15px; color: FFF; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Joueur(s):</span>
+	style="margin-left: 15px; color: #ffffff; font-weight: bold; vertical-align: middle; padding-top: 10px; padding-right: 3px;">Joueur(s):</span>
 <?php
 $sql = "SELECT PrimaryKey PlayerKey, NickName FROM playersenabled players ORDER BY NickName";
 $resultSet = $_databaseObject->queryPerf($sql,"Get matches linked to selected group");
 $content = "<select id='PlayerChoice'  multiple='multiple' style='z-index:999;display:none;'>";
-//$content .= "<option selected='selected' value='All'>".__encode("Tous")."</option>";
 while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
   if ($_authorisation->getConnectedUserKey() == $rowSet["PlayerKey"]) {
@@ -256,7 +255,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
   }
 }
 $content .= "</select>";
-echo __encode($content);
+echo $content;
 ?> <input type="button" name="RefreshStats" id="RefreshStats"
 	value="Actualiser" /></center>
 </div>

@@ -271,7 +271,7 @@ function CreateRankingChartWithTimeScale (ptitle, plotBands, fullDay)
 	         plotBands: plotBands
 	      },
 	      yAxis: [{
-			min:-60,
+			min:-100,
 			max:-1,
 	         title: {
 	            text: 'Classement',
@@ -541,7 +541,7 @@ function CreateRankingChart(ptitle, pcategories) {
 	         }
 		},
 		yAxis: {
-			min:-60,
+			min:-100,
 			max:-1,
 			title: {
 				text: 'Classement',
