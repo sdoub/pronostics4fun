@@ -9,6 +9,7 @@ WriteScripts();
 
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.editinplace.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jHtmlArea-0.7.0.min.js"></script>
+<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.visible.min.js"></script>
 <link rel="Stylesheet" type="text/css" href="<?php echo ROOT_SITE.$_themePath ; ?>/css/jHtmlArea.css" />
 
 <?php
@@ -403,7 +404,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 	var _totalNews = 1;
 	var _isNewsLoading = false;
 	function getNews () {
-		if (!_isNewsLoading && _newsPages * 30 < _totalNews) {
+		if (!_isNewsLoading && _newsPages * 10 < _totalNews) {
 			_isNewsLoading = true;
 			$('#WaitingLayer').fadeIn();
 			_newsPages++;
@@ -956,6 +957,7 @@ if ($_competitionType==3) {
 <div >
 
 <script>
+$(document).ready(function() {
 
 	$("div.flexcroll").bind(
 		'jsp-scroll-y',
@@ -969,25 +971,21 @@ if ($_competitionType==3) {
 		horizontalGutter: 10,
 		autoReinitialise: true
 	});
-//	$.requireScript('<?php echo ROOT_SITE; ?>/js/jquery.corner.js', function() {
-	/*$("div[name^='surveyTitle']").corner();
-	$("#newsTitle").corner();
-	$("#forecastsTitle").corner();
-	$("#globalRankingTitle").corner();
-  */
 
+	$("#news").scroll(function (){
+		if ($('#newsList li:last-child').visible( true ))
+			getNews();
+	})
 
-//});
+	$("#forecastsTitle li").click(function() {
+		window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=1');
+	});
 
-$("#forecastsTitle li").click(function() {
-	window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=1');
-});
-
-$("#resultsTitle li").click(function() {
-	var groupKey = $(this).attr('group-key');
-	window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=2&GroupKey='+groupKey);
+	$("#resultsTitle li").click(function() {
+		var groupKey = $(this).attr('group-key');
+		window.location.replace( '<?php echo ROOT_SITE;?>/index.php?Page=2&GroupKey='+groupKey);
+	});	
 });	
-	
 <?php
 	    if ($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) {
 ?>
