@@ -1,22 +1,28 @@
-#!/usr/local/bin/php
 <?php
 include_once(dirname(__FILE__)."/begin.file.php");
 include_once(dirname(__FILE__). "/lib/match.php");
-include_once(dirname(__FILE__). "/lib/ranking.php");
-include_once(dirname(__FILE__). "/lib/score.php");
-include_once(dirname(__FILE__). "/lib/p4fmailer.php");
 
 $_databaseObject->close();
 
 $_queries =array();
 $arr = array();
+  
 if (isset($_POST["TeamHomeKey"])) {
-  $teamHomeKey = $_POST["TeamHomeKey"];
+	$teamHomeKey = $_POST["TeamHomeKey"];
   $teamAwayKey = $_POST["TeamAwayKey"];
   $externalKey = $_POST["ExternalKey"];
   $matchKey = $_POST["MatchKey"];
   $isLive = $_POST["Live"];
-
+	$arr["Parameters"] = $_POST;
+} else if (isset($_GET["TeamHomeKey"])) {
+  $teamHomeKey = $_GET["TeamHomeKey"];
+  $teamAwayKey = $_GET["TeamAwayKey"];
+  $externalKey = $_GET["ExternalKey"];
+  $matchKey = $_GET["MatchKey"];
+  $isLive = $_GET["Live"];
+	$arr["Parameters"] = $_GET;
+}
+if ($teamHomeKey && $teamAwayKey && $externalKey && $matchKey) {
   switch ($_competitionType) {
     case 2:
       $matchInfo = GetFifaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
@@ -37,14 +43,11 @@ if (isset($_POST["TeamHomeKey"])) {
       }
       $matchInfo = GetMatchsLineupsInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1",$matchInfo["HomeId"],$matchInfo["AwayId"]);
       foreach ($matchInfo["Queries"] as $query) {
-        $_queries[] =$query;
+				$_queries[] =utf8_encode($query);
       }
 
       break;
   }
-
-
-  $arr["Parameters"] = $_POST;
   $arr["Status"] = "Success";
 } else
 {

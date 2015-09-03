@@ -1,10 +1,6 @@
-#!/usr/local/bin/php
 <?php
 include_once(dirname(__FILE__)."/begin.file.php");
 include_once(dirname(__FILE__). "/lib/match.php");
-include_once(dirname(__FILE__). "/lib/ranking.php");
-include_once(dirname(__FILE__). "/lib/score.php");
-include_once(dirname(__FILE__). "/lib/p4fmailer.php");
 require_once(dirname(__FILE__). "/lib/http.php");
 
 class Timer
@@ -67,7 +63,9 @@ $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get matches to be ref
 $_databaseObject->close();
 $_queries = array();
 Timer::start();
-$http = Http::connect("pronostics4fun.com", 80);
+//http://preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com/
+//pronostics4fun.com
+$http = Http::connect("preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com", 80);
 $http->silentMode();
 $arrMatches = array();
 foreach ($rowsSet as $rowSet)
@@ -78,43 +76,62 @@ foreach ($rowsSet as $rowSet)
   $parameter["ExternalKey"] = $rowSet["ExternalKey"];
   $parameter["MatchKey"] = $rowSet["MatchKey"];
   $parameter["Live"] = 0;
-  $http->post('refresh.match.php', $parameter);
+  print_r($parameter);
+	$http->post('refresh.match.php', $parameter);
   $arrMatches[]=$rowSet["MatchKey"];
-
 }
 
 
 $results = $http ->run();
-//print_r($results);
-echo '<p>Info was getting in ' . Timer::end() . ' seconds.</p>';
+echo '<p>Pages results</p>';
+print_r($results);
+$info = 'Info was getting in ' . Timer::end() . ' seconds.';
+echo '<p>' . $info . '</p>';
+$defaultLogger->addInfo($info);
 
 $arrMatchesRefreshed = array();
-foreach ($results as $result) {
-  $queries = json_decode(trim($result));
-  foreach ($queries->Queries as $query)
-  {
-    $_queries[] = $query;
-  }
+if (is_array($results)) {
+	foreach ($results as $result) {
+		$defaultLogger->addDebug($result);
+		$queries = json_decode(trim($result));
+		if (is_object($queries)){
+			foreach ($queries->Queries as $query)
+			{
+				$_queries[] = $query;
+			}
 
-  $arrMatchesRefreshed[]=$queries->Parameters->MatchKey;
+			$arrMatchesRefreshed[]=$queries->Parameters->MatchKey;
+		}
+	}
 }
 Timer::start();
-foreach ($arrMatches as $value) {
-  if (!array_value_exists2($arrMatchesRefreshed, $value)){
-    print ("<p>Match ($value) was not refreshed!</p>");
-  }
+if (is_array($arrMatches)) {
+	foreach ($arrMatches as $value) {
+		if (!array_value_exists2($arrMatchesRefreshed, $value)){
+			print ("<p>Match ($value) was not refreshed!</p>");
+			$defaultLogger->addInfo($info);
+		}
+	}
 }
 
 $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
-foreach ($_queries as $query) {
-  print($query);
-  $_databaseObject -> queryPerf ($query , "Execute query");
+$updatedInfo = 0;
+if (is_array($_queries)) {
+	foreach ($_queries as $query) {
+		print($query);
+		$updatedInfo++;
+		$defaultLogger->addDebug($query);
+		$_databaseObject -> queryPerf ($query , "Execute query");
+	}
+}
+if ($updatedInfo>0) {
+	$query = "UPDATE groups SET groups.Status=4 " . $whereClause;
+	$_databaseObject->queryPerf($query,"update group");
 }
 
-$query = "UPDATE groups SET groups.Status=4 " . $whereClause;
-$_databaseObject->queryPerf($query,"update group");
-
-echo '<p>Queries ('.sizeOf($_queries).') were executed in ' . Timer::end() . ' seconds.</p>';
+$info ='Queries ('.sizeOf($_queries).') were executed in ' . Timer::end() . ' seconds.';
+echo '<p>'.$info.'</p>';
+$defaultLogger->addDebug($info);
 
 
 $previousGroupKey = 0;
@@ -123,6 +140,7 @@ $arr = $_databaseObject -> get ('sQueryPerf', '_totalTime', 'errorLog');
 
 $totaltime = getElapsedTime();
 echo "<p>This page loaded in $totaltime seconds.</p>";
+$_errorMessage = "";
 if (count($arr["errorLog"])>0) {
   if ($arr["errorLog"]!="") {
     $_error = true;
