@@ -63,9 +63,7 @@ $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get matches to be ref
 $_databaseObject->close();
 $_queries = array();
 Timer::start();
-//http://preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com/
-//pronostics4fun.com
-$http = Http::connect("preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3r9hpvi.box.codeanywhere.com", 80);
+$http = Http::connect($_SERVER['SERVER_NAME'], 80);
 $http->silentMode();
 $arrMatches = array();
 foreach ($rowsSet as $rowSet)
