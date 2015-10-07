@@ -339,6 +339,6 @@ $previousRank=$rank;
 </div>
 
 <?php
-//writePerfInfo();
+writePerfInfo();
 require_once("end.file.php");
 ?>

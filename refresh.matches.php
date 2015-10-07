@@ -5,9 +5,6 @@ include_once(dirname(__FILE__). "/lib/ranking.php");
 include_once(dirname(__FILE__). "/lib/score.php");
 require_once(dirname(__FILE__). "/lib/http.php");
 
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
-
 $_jobName='RefreshMatches';
 $_logInfo = "";
 $selectQuery = "SELECT LastStatus,TIME_TO_SEC(TIMEDIFF(NOW(),LastExecution)) LastExecution FROM cronjobs WHERE JobName='$_jobName'";
@@ -301,7 +298,7 @@ INNER JOIN matches ON matches.PrimaryKey=results.MatchKey AND matches.PrimaryKey
 	$defaultLogger->addInfo('totaltime:'.$totaltime);
 
   //$_logInfo .= implode(',',$arr["errorLog"]);
-	writeJsonResponse($arr);
+	print_r($arr);
   $_logInfo .= "This page loaded in $totaltime seconds.";
   if (count($arr["errorLog"])>0) {
     if ($arr["errorLog"]!="") {

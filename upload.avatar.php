@@ -1,11 +1,5 @@
 <?php
-define('VALID_ACCESS_CONFIG_',		true);
-require_once("config/config.php");
-
-session_cache_expire(60*60*1); //1 hour
-session_set_cookie_params(60*60*1); //1 hour
-
-session_start();
+require_once("begin.file.php");
 
 /**
  * Handle file uploads via XMLHttpRequest
@@ -55,7 +49,7 @@ class QQUploadFileXhr {
   }
 
   function save($path){
-
+    
     $fp = fopen($path, "w");
     fseek( $this->tmp_fp , 0 , SEEK_SET );
 
@@ -183,13 +177,6 @@ class qqFileUploader {
   }
 }
 
-//@ validate inclusion
-define('VALID_ACCESS_AUTHENTICATION_',		true);
-
-//@ load dependency files
-require('classes/authentication.php');
-//@ new acl instance
-$_authorisation = new Authorization;
 
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")
 $allowedExtensions = array("jpeg","png","jpg","gif");
@@ -201,5 +188,5 @@ $result = $uploader->handleUpload('images/avatars/',true, $_authorisation->getCo
 // to pass data through iframe you will need to encode all html tags
 echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 unset ($uploader);
-unset ($_authorisation);
+require_once("end.file.php");
 ?>

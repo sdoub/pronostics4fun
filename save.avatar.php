@@ -123,10 +123,10 @@ require_once('begin.file.php');
  */
 
 
-require_once('lib/phpthumb/phpthumb.class.php');
+//require_once('lib/phpthumb/phpthumb.class.php');
 
 // create phpThumb object
-$phpThumb = new phpThumb();
+//$phpThumb = new phpThumb();
 
 //Get the new coordinates to crop the image.
 $x1 = $_POST["x1"];
@@ -138,46 +138,52 @@ $fileExt = $_POST["fileExt"];
 //$scale = $thumb_width/$w;
 
 // this is very important when using a single object to process multiple images
-$phpThumb->resetObject();
+//$phpThumb->resetObject();
 
 $destinationFileName = $_authorisation->getConnectedUserKey()."_".time().".".$fileExt;
 // set data source -- do this first, any settings must be made AFTER this call
-$phpThumb->setSourceFilename('images/avatars/'.$_authorisation->getConnectedUserKey()."original.".$fileExt);  // for static demo only
+$thumb = PhpThumbFactory::create('images/avatars/'.$_authorisation->getConnectedUserKey()."original.".$fileExt);
+
+//$phpThumb->setSourceFilename('images/avatars/'.$_authorisation->getConnectedUserKey()."original.".$fileExt);  // for static demo only
 
 //$phpThumb->setParameter('config_document_root', '/www');
 //$phpThumb->setParameter('config_cache_directory', '/www/cache/');
 
 // set parameters (see "URL Parameters" in phpthumb.readme.txt)
-$phpThumb->setParameter('w', 82);
+/*
 $phpThumb->setParameter('w', 82);
 $phpThumb->setParameter('sx', $x1);
 $phpThumb->setParameter('sy', $y1);
 $phpThumb->setParameter('sw', $w);
 $phpThumb->setParameter('sh', $h);
-
+*/
+$thumb->crop($x1, $y1, $w, $h)->adaptiveResize(82, 82);
 // set options (see phpThumb.config.php)
 // here you must preface each option with "config_"
-$phpThumb->setParameter('config_output_format', $fileExt);
+//$phpThumb->setParameter('config_output_format', $fileExt);
 $arr = array();
 // generate & output thumbnail
 $output_filename = 'images/avatars/'.$destinationFileName;
-if ($phpThumb->GenerateThumbnail()) { // this line is VERY important, do not remove it!
+//if ($phpThumb->GenerateThumbnail()) { // this line is VERY important, do not remove it!
   //$output_size_x = ImageSX($phpThumb->gdimg_output);
   //$output_size_y = ImageSY($phpThumb->gdimg_output);
   $arr["generated"]= true;
 
 
-  if ($output_filename || $capture_raw_data) {
-    $cropped= $phpThumb->RenderToFile($output_filename);
+  if ($output_filename) {
+    //$cropped= $phpThumb->RenderToFile($output_filename);
+		$cropped=$thumb->save($output_filename, $fileExt);
     $arr["rendered"]= true;
   }
 
+/*
 } else {
   $arr["generated"]= false;
 
   $cropped = false;
   $arr["error"] = $phpThumb->fatalerror;
 }
+*/
 //$cropped = resizeThumbnailImage('images/avatars/'.$_authorisation->getConnectedUserKey().'.'.$fileExt, 'images/avatars/'.$_authorisation->getConnectedUserKey()."original.".$fileExt,$w,$h,$x1,$y1,$scale);
 //Reload the page again to view the thumbnail
 

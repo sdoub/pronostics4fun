@@ -3,7 +3,8 @@
 		"monolog/monolog": "1.15.*",
 		"propel/propel": "2.0.0-alpha5",
 		"phpmailer/phpmailer":"5.2.10",
-		"sunra/php-simple-html-dom-parser": "v1.5.0"
+		"sunra/php-simple-html-dom-parser": "v1.5.0",
+		"weotch/phpthumb": "1.0.5"
 	},
 	"autoload": {
     "classmap": ["model/"]
