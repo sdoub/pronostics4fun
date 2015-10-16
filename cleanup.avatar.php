@@ -20,9 +20,14 @@ foreach($players as $player) {
 	}
 	echo "<br/>";
 }
-
-foreach ($files as $file){
-    unlink(__DIR__ . '/images/avatars/'.$file);
+if (isset($_GET["Delete"])) {
+	foreach ($files as $file){
+			unlink(__DIR__ . '/images/avatars/'.$file);
+	}
+} else {
+	foreach ($files as $file){
+			echo '<br/>File to be deleted: ' .__DIR__ . '/images/avatars/'.$file;
+	}
 }
 echo count($files);
 require_once("end.file.php");
