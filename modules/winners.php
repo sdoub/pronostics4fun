@@ -95,7 +95,7 @@ var transforms = {
     }}
 ]
 };
-	for (var competition = 8; competition > 0; competition--) {
+	for (var competition = 9; competition > 0; competition--) {
 		$.ajax({
 		dataType: "json",
 		async: true,

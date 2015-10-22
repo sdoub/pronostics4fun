@@ -1,0 +1,306 @@
+{ "competitionKey" : 8,
+	"competitionType" : "ligue1",
+  "season" : "Saison 2014/2015",
+  "winners" : [
+           ],
+        "winTitle" : "Classement général"
+      },
+      { "players" : [ { "day" : "10ème journée",
+              "name" : "Chatelin",
+              "score" : 132
+            },
+            { "day" : "3ème journée",
+              "name" : "DJUD27",
+              "score" : 127
+            },
+            { "day" : "6ème journée",
+              "name" : "francky27",
+              "score" : 127
+            } ],
+        "winTitle" : "Meilleur score"
+      }
+    ],
+  "winnersChp" : [ { "divisions" : [ { "division" : "Division 1",
+              "players" : [ { "name" : "Gigot",
+                    "pointsDifference" : "+58",
+                    "score" : 21,
+                    "winTitle" : "Division 1"
+                  },
+                  { "name" : "caoutchoutier",
+                    "pointsDifference" : "+57",
+                    "score" : 18,
+                    "winTitle" : "Division 1"
+                  },
+                  { "name" : "Arjulou",
+                    "pointsDifference" : "+33",
+                    "score" : 18,
+                    "winTitle" : "Division 1"
+                  }
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ { "name" : "Faom5",
+                    "pointsDifference" : "+65",
+                    "score" : 21,
+                    "winTitle" : "Division 2"
+                  },
+                  { "name" : "el muncho",
+                    "pointsDifference" : "+1",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  },
+                  { "name" : "celenord",
+                    "pointsDifference" : "+109",
+                    "score" : 15,
+                    "winTitle" : "Division 2"
+                  }
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ { "name" : "Laem16",
+                    "pointsDifference" : "+111",
+                    "score" : 21,
+                    "winTitle" : "Division 3"
+                  },
+                  { "name" : "greenangel",
+                    "pointsDifference" : "+96",
+                    "score" : 18,
+                    "winTitle" : "Division 3"
+                  },
+                  { "name" : "Loulou",
+                    "pointsDifference" : "+39",
+                    "score" : 15,
+                    "winTitle" : "Division 3"
+                  }
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ { "name" : "didounio",
+                    "pointsDifference" : "+148",
+                    "score" : 24,
+                    "winTitle" : "Division 4"
+                  },
+                  { "name" : "jujudu27",
+                    "pointsDifference" : "+64",
+                    "score" : 21,
+                    "winTitle" : "Division 4"
+                  },
+                  { "name" : "OPH27",
+                    "pointsDifference" : "+42",
+                    "score" : 15,
+                    "winTitle" : "Division 4"
+                  }
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ { "name" : "Micheline",
+                    "pointsDifference" : "+139",
+                    "score" : 24,
+                    "winTitle" : "Division 5"
+                  },
+                  { "name" : "marco22320",
+                    "pointsDifference" : "+237",
+                    "score" : 21,
+                    "winTitle" : "Division 5"
+                  },
+                  { "name" : "paulinio",
+                    "pointsDifference" : "+36",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  }
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ { "name" : "panpan",
+                    "pointsDifference" : "+225",
+                    "score" : 27,
+                    "winTitle" : "Division 6"
+                  },
+                  { "name" : "OliLeo",
+                    "pointsDifference" : "+85",
+                    "score" : 21,
+                    "winTitle" : "Division 6"
+                  },
+                  { "name" : "zinzin89",
+                    "pointsDifference" : "+47",
+                    "score" : 15,
+                    "winTitle" : "Division 6"
+                  }
+                ]
+            },
+            { "division" : "Division 7",
+              "players" : [ { "name" : "Mamychouette",
+                    "pointsDifference" : "+126",
+                    "score" : 21,
+                    "winTitle" : "Division 7"
+                  },
+                  { "name" : "idemath",
+                    "pointsDifference" : "+100",
+                    "score" : 18,
+                    "winTitle" : "Division 7"
+                  },
+                  { "name" : "ducobu",
+                    "pointsDifference" : "+21",
+                    "score" : 18,
+                    "winTitle" : "Division 7"
+                  }
+                ]
+            },
+            { "division" : "Division 8",
+              "players" : [ { "name" : "Thur27",
+                    "pointsDifference" : "+95",
+                    "score" : 21,
+                    "winTitle" : "Division 8"
+                  },
+                  { "name" : "Biblorange",
+                    "pointsDifference" : "+44",
+                    "score" : 21,
+                    "winTitle" : "Division 8"
+                  },
+                  { "name" : "akoma",
+                    "pointsDifference" : "+177",
+                    "score" : 18,
+                    "winTitle" : "Division 8"
+                  }
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 1 --",
+        "winTitle" : "Championnat"
+      },
+      { "divisions" : [ { "division" : "Division 1",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 7",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 8",
+              "players" : [ 
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 2 --",
+        "winTitle" : "Championnat"
+      },
+      { "divisions" : [ { "division" : "Division 1",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 7",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 8",
+              "players" : [ 
+                ]
+            }
+          ],
+        "seasonTitle" : "-- Saison 3 --",
+        "winTitle" : "Championnat"
+      },
+      { "divisions" : [ { "division" : "Division 1",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 2",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 3",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 4",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 5",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 6",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 7",
+              "players" : [ 
+                ]
+            },
+            { "division" : "Division 8",
+              "players" : [ 
+                ]
+            }
+          
+          ],
+        "seasonTitle" : "-- Saison 4 --",
+        "winTitle" : "Championnat"
+      }
+    ],
+  "winnersCup" : [ { "players" : [ { "name" : "didounio",
+              "score" : 57
+            },
+            { "name" : "marco22320",
+              "score" : 55
+            },
+            { "name" : "joélo",
+              "score" : 85
+            }
+          ],
+        "winTitle" : "Coupe P4F (Saison 1)"
+      },
+      { "players" : [ 
+          ],
+        "winTitle" : "Coupe P4F (Saison 2)"
+      },
+      { "players" : [ 
+          ],
+        "winTitle" : "Coupe P4F (Saison 3)"
+      },
+      { "players" : [ 
+          ],
+        "winTitle" : "Coupe P4F (Saison 4)"
+      }
+    ]
+}
