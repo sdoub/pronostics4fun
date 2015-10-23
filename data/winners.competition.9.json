@@ -1,7 +1,7 @@
 { "competitionKey" : 9,
 	"competitionType" : "ligue1",
   "season" : "Saison 2015/2016",
-  "winners" : [
+  "winners" : [{ "players" : [ 
            ],
         "winTitle" : "Classement général"
       },

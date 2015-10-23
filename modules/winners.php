@@ -95,12 +95,15 @@ var transforms = {
     }}
 ]
 };
-	for (var competition = 9; competition > 0; competition--) {
+	for (var competition = 9; competition > 8; competition--) {
 		$.ajax({
-		dataType: "json",
-		async: true,
-		url: "/data/winners.competition."+competition+".json",
-		success: function(season) {
+			dataType: "json",
+			async: true,
+			url: "/data/winners.competition."+competition+".json",
+			failed: function(data) {
+				console.log(data);
+			},
+			success: function(season) {
 				if (season) {
 					$('#winners').json2html(season, transforms.season);
 					// call sort function and get sorted list
@@ -123,15 +126,4 @@ var transforms = {
 			}
 		});
 	}
-$(document).ready(function() {
-
-/*	$('#winnersContainer').jScrollPane({
-		showArrows: true,
-		horizontalGutter: 10,
-		autoReinitialise: true
-	});*/
-/*$.each(winnersData,function (index,season){
-	$.log(season);
-});*/
-});
 </script>
