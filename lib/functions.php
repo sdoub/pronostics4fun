@@ -899,8 +899,8 @@ function getBrowser()
 //$yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
 //print_r($yourbrowser);
 
-function startswith($hay, $needle) {
-  return substr($hay, 0, strlen($needle)) === $needle;
+function startswith($haystack, $needle) {
+  return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
 }
 
 function endswith($hay, $needle) {

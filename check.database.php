@@ -4,7 +4,7 @@ ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
 DEFINE ('SQL_LOGIN','a6248919_p4f');
-DEFINE ('SQL_PWD','aurelie040697');
+DEFINE ('SQL_PWD','xxxxxxxx');
 DEFINE ('SQL_DB','a6248919_p4f');
 DEFINE ('SQL_HOST','mysql7.000webhost.com');
 DEFINE ('ROOT_SITE', "http://pronostics4fun.com");
