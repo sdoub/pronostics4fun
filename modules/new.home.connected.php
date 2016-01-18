@@ -512,7 +512,11 @@ foreach ($rowsSet as $rowSet)
 	$rank='';
 	echo '<li  style="cursor:pointer;padding-bottom:5px;border-bottom:1px solid #ffffff">';
   if ($cupMatch->getCupMatchesPlayerHome()->getPrimarykey()==$_authorisation->getConnectedUserKey()) {
-		$opponent = $cupMatch->getCupMatchesPlayerAway()->getNickname();
+		if ($cupMatch->getCupMatchesPlayerAway()!=null) {
+			$opponent = $cupMatch->getCupMatchesPlayerAway()->getNickname();
+		} else {
+			$opponent = "";
+		}
 		$opponentScore = $cupMatch->getAwayscore();
 		$playerScore = $cupMatch->getHomescore();
 		$cupPlayerKey=$cupMatch->getPlayerhomekey();
@@ -591,8 +595,13 @@ foreach ($rowsSet as $rowSet)
   echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel coupe P4F - '.$cupMatch->getCupMatchesCupRound()->getDescription().'</span><br/>';
 	//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
   echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : '.$cupMatch->getCupMatchesGroup()->getDescription().'</span>';
-  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
+  if ($opponent) {
+		echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
+		<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
+	} else {
+		echo "<br/><span style='color:#365F89;padding-left:5px;font-size:10px;'>Adversaire : </span>
+		<span style='font-size:10px;color:#365F89;font-weight:bold;'>Pas d'adversaire</span>";
+	}
   echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
   <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playerScore.' pts</span><br/>
 	<span style="font-style:italic;color:#365F89;padding-left:15px;font-size:10px;">-> '.$matchResult.'</span>';

@@ -20,7 +20,7 @@ class playersapi extends baseapi
 //             throw new Exception('Invalid User Token');
 //         }
 				if (array_key_exists('id', $this->args))
-        	$this->User = "sdoub".$this->args["id"];
+        	$this->User = $this->args["id"];
     }
 
     /**
