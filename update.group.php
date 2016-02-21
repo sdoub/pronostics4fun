@@ -8,8 +8,32 @@ ini_set('display_errors', 'on');
 if (isset($_GET["GroupKey"]) && $_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) {
   $_groupKey = $_GET["GroupKey"];
 } else {
-	exit("Group key is required, and only administrator can execute this process ! ");
+	if (($_isAuthenticated && $_authorisation->getConnectedUserInfo("IsAdministrator")==1) || isset($_GET["token"])) {
+		$groupToUpdate = GroupsQuery::Create()
+			->filterByCompetitionkey(COMPETITION)   
+			->filterByStatus(1)
+			->where('TIMEDIFF(groups.BeginDate,(NOW()+ INTERVAL 1 HOUR))<?', 0)
+			->where('DATE(groups.BeginDate)=(CURDATE() - INTERVAL ? DAY)', 0, PDO::PARAM_INT)
+			->orderByBegindate()
+			->findOne();
+		if ($groupToUpdate)
+			$_groupKey = $groupToUpdate->getGroupPK();
+		else
+			exit ("No group starts today");
+	} else {
+		exit("Group key is required, and only administrator can execute this process ! ");
+	}
 }
+
+$groupInfo = GroupsQuery::Create()->findPK($_groupKey);
+
+$matchBonus = MatchesQuery::Create()
+	->filterByGroupkey($_groupKey)
+	->filterByIsbonusmatch('true')
+	->count();
+if ($matchBonus>0) {
+	exit("Match bonus already setup for this group (".$groupInfo->getDescription()." - $_groupKey) ! ");
+} 
 $updateQuery = "UPDATE matches SET IsBonusMatch=1
 	WHERE PrimaryKey IN
 				(SELECT TMP2.MatchKey FROM (SELECT TMP.MatchKey,TMP.GlobalVoteValue  FROM
@@ -45,7 +69,7 @@ $queryVotes = "SELECT TMP.MatchKey, TeamHomeName, TeamAwayName,TMP.GlobalVoteVal
 
 $resultSet = $_databaseObject->queryPerf($queryVotes,"Get matches to be played by current day");
 
-$infonews = '<span><img class="news" src="images/star_48.png"></span><div>Résultat du vote pour le match bonus de la XXème journée:</div>';//'.$rowSetAfter["Description"].'
+$infonews = '<span><img class="news" src="images/star_48.png"></span><div>Résultat du vote pour le match bonus de la '.$groupInfo->getDescription().':</div>'; //'.$rowSetAfter["Description"].'
 
 $rank = 0;
 $realRank = 0;
@@ -59,7 +83,7 @@ try {
 	$mail->CharSet = 'UTF-8';
 	$mail->SetFrom('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
 	$mail->AddReplyTo('admin@pronostics4fun.com', 'Pronostics4Fun - Administrateur');
-	$mail->Subject    = 'Résultat du vote pour le match bonus de la '.$_groupKey;
+	$mail->Subject    = 'Résultat du vote pour le match bonus de la '.$groupInfo->getDescription();
 	$mail->AltBody    = "Pour visualiser le contenu de cet email, votre messagerie doit permettre la visualisation des emails au format HTML!"; // optional, comment out and test
 	$mail->MsgHTML($infonews);
 	$mail->AddAddress("admin@pronostics4fun.com", "P4F Admin");

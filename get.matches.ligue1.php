@@ -135,7 +135,8 @@ foreach ($rowsSet as $rowSet)
     $status="1";
   } else {
     // Specific test for Lille - evian moved due to Davis cup
-    if ($groupKey==195) {
+		// 246 - Specific test for Bastia - Nantes moved due to bad condition in Corse
+    if ($groupKey==195 || $groupKey==246) {
       $status="1";
     } else {
       $status="0";
