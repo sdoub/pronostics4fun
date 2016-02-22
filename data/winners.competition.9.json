@@ -414,7 +414,15 @@
           ],
         "winTitle" : "Coupe P4F (Saison 2)"
       },
-      { "players" : [ 
+      { "players" : [ { "name" : "Lenantais",
+              "score" : 65
+            },
+            { "name" : "manouche",
+              "score" : 58
+            },
+            { "name" : "DanJL",
+              "score" : 38
+            }
           ],
         "winTitle" : "Coupe P4F (Saison 3)"
       },
