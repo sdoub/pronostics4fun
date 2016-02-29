@@ -317,35 +317,147 @@
         "winTitle" : "Championnat"
       },
       { "divisions" : [ { "division" : "Division 1",
-              "players" : [ 
+              "players" : [ { "name" : "manouche",
+                    "pointsDifference" : "+101",
+                    "score" : 24,
+                    "winTitle" : "Division 1"
+                  },
+                  { "name" : "Ghostwriter",
+                    "pointsDifference" : "+45",
+                    "score" : 16,
+                    "winTitle" : "Division 1"
+                  },
+                  { "name" : "Arjulou",
+                    "pointsDifference" : "+33",
+                    "score" : 15,
+                    "winTitle" : "Division 1"
+                  }
                 ]
             },
             { "division" : "Division 2",
-              "players" : [ 
+              "players" : [ { "name" : "jean-pierre",
+                    "pointsDifference" : "+87",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  },
+                  { "name" : "didounio",
+                    "pointsDifference" : "+81",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  },
+                  { "name" : "Alexdu27",
+                    "pointsDifference" : "+37",
+                    "score" : 18,
+                    "winTitle" : "Division 2"
+                  }
                 ]
             },
             { "division" : "Division 3",
-              "players" : [ 
+              "players" : [ { "name" : "Djoninio",
+                    "pointsDifference" : "+154",
+                    "score" : 21,
+                    "winTitle" : "Division 3"
+                  },
+                  { "name" : "joélo",
+                    "pointsDifference" : "+82",
+                    "score" : 21,
+                    "winTitle" : "Division 3"
+                  },
+                  { "name" : "meilleur buteur",
+                    "pointsDifference" : "-8",
+                    "score" : 16,
+                    "winTitle" : "Division 3"
+                  }
                 ]
             },
             { "division" : "Division 4",
-              "players" : [ 
+              "players" : [ { "name" : "DUDU76",
+                    "pointsDifference" : "+81",
+                    "score" : 19,
+                    "winTitle" : "Division 4"
+                  },
+                  { "name" : "OPH27",
+                    "pointsDifference" : "+30",
+                    "score" : 18,
+                    "winTitle" : "Division 4"
+                  },
+                  { "name" : "jujudu27",
+                    "pointsDifference" : "+49",
+                    "score" : 15,
+                    "winTitle" : "Division 4"
+                  }
                 ]
             },
             { "division" : "Division 5",
-              "players" : [ 
+              "players" : [ { "name" : "eugene27",
+                    "pointsDifference" : "+54",
+                    "score" : 24,
+                    "winTitle" : "Division 5"
+                  },
+                  { "name" : "chris57280",
+                    "pointsDifference" : "+8",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  },
+                  { "name" : "DRAMATIK",
+                    "pointsDifference" : "-4",
+                    "score" : 18,
+                    "winTitle" : "Division 5"
+                  }
                 ]
             },
             { "division" : "Division 6",
-              "players" : [ 
+              "players" : [ { "name" : "idemath",
+                    "pointsDifference" : "+58",
+                    "score" : 21,
+                    "winTitle" : "Division 6"
+                  },
+                  { "name" : "tontonboubou",
+                    "pointsDifference" : "+47",
+                    "score" : 18,
+                    "winTitle" : "Division 6"
+                  },
+                  { "name" : "ducobu",
+                    "pointsDifference" : "+39",
+                    "score" : 18,
+                    "winTitle" : "Division 6"
+                  }
                 ]
             },
             { "division" : "Division 7",
-              "players" : [ 
+              "players" : [ { "name" : "Lenantais",
+                    "pointsDifference" : "+120",
+                    "score" : 21,
+                    "winTitle" : "Division 7"
+                  },
+                  { "name" : "JAV03",
+                    "pointsDifference" : "+138",
+                    "score" : 18,
+                    "winTitle" : "Division 7"
+                  },
+                  { "name" : "Zoulaloute",
+                    "pointsDifference" : "+32",
+                    "score" : 16,
+                    "winTitle" : "Division 7"
+                  }
                 ]
             },
             { "division" : "Division 8",
-              "players" : [ 
+              "players" : [ { "name" : "matthieu28.09",
+                    "pointsDifference" : "+121",
+                    "score" : 15,
+                    "winTitle" : "Division 8"
+                  },
+                  { "name" : "adrien76",
+                    "pointsDifference" : "+66",
+                    "score" : 12,
+                    "winTitle" : "Division 8"
+                  },
+                  { "name" : "simx76",
+                    "pointsDifference" : "+83",
+                    "score" : 9,
+                    "winTitle" : "Division 8"
+                  }
                 ]
             }
           ],

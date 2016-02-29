@@ -112,11 +112,10 @@ foreach ($rowsSet as $rowSet)
               $updateQuery .= "$groupKey AND TeamHomeKey=$teamHomeKey AND TeamAwayKey=$teamAwayKey";
               $queries[]=$updateQuery;
             } else {
-              echo "<br/>Impossible d'insérer le match car une des équipes n'a pas de correspondance sur p4fey";
-              echo "<br/>lfpTeamHomeKey -> $lfpTeamHomeKey";
-              echo "<br/>lfpTeamAwayKey -> $lfpTeamAwayKey";
+							$defaultLogger->addError("Impossible d'insérer le match car une des équipes n'a pas de correspondance sur p4fey");
+							$defaultLogger->addError("lfpTeamHomeKey -> $lfpTeamHomeKey");
+							$defaultLogger->addError("lfpTeamAwayKey -> $lfpTeamAwayKey");
             }
-
           }
         }
         $currentTable++;
@@ -139,7 +138,7 @@ foreach ($rowsSet as $rowSet)
     if ($groupKey==195 || $groupKey==246) {
       $status="1";
     } else {
-      $status="0";
+      $status="coalesce(SELECT g.Status FROM groups g WHERE g.PrimaryKey=$groupKey AND g.Status>0,0)";
     }
   }
 
