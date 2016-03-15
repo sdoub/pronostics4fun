@@ -1,0 +1,166 @@
+.day {
+	font-size: 14px;
+	text-align: center;
+	background-color: #465723;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.match {
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.match .detail2{
+	font-size: 9px; 
+	padding-left: 20px;
+}
+
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.equipeRankUp {
+	font-size: 12px;
+	color: #1B3D1C;
+	font-weight: bold;
+}
+
+.equipeRankDown {
+	font-size: 12px;
+	color: #1B3D1C;
+	font-weight: normal;
+}
+
+.teamAway {
+	text-align: left;
+	width: 150px;
+}
+
+.teamFlag {
+	width: 30px;
+}
+
+.teamFlag img {
+	width: 30px;
+	height: 30px;
+}
+
+.score {
+	width: 80px;
+	text-align: center;
+}
+
+.teamHome {
+	width: 150px;
+	_width: 130px;
+	text-align: right;
+}
+
+.time0 {
+	width: 40px;
+	padding-left: 20px;
+}
+.time1 {
+	width: 60px;
+	padding-left: 20px;
+	background: url('../../images/star_25.png') no-repeat scroll left center transparent;
+
+}
+
+#tendancyHearder {
+	text-align: center;
+}
+
+#tendancyContent {
+	padding-bottom: 15px;
+}
+
+#tendancyContent table {
+	font-size: 9px;
+	border: 0;
+	cellspacing: 0;
+	cellpadding: 0;
+	width: 200px;
+	text-align: center;
+}
+
+#tendancyContent td {
+	text-align: center;
+	height: 10px;
+}
+
+#tendancyHome {
+	background: url('../../images/green1px.gif') repeat-x scroll left center transparent;
+	/* background-color: #B3D207; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+
+#tendancyNull {
+	background: url('../../images/yellow1px.gif') repeat-x scroll left center transparent;
+	/* background-color: #2B9BC0; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+
+#tendancyAway {
+	background: url('../../images/red1px.gif') repeat-x scroll left center transparent;
+	/* background-color: #EF0000; */
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	text-align: center;
+}
+
+.textfield {
+	background: #b3a58f;
+	border: solid 1px #BECDB6;
+	padding: 3px;
+	margin: 4px 0px 4px 0px;
+	width: 30px;
+	_height: 22px;
+	text-align: center;
+	font-family: Arial;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.textfield:hover,.textfield:focus {
+	background: #1B3D1C;
+	border: solid 1px #1B3D1C;
+	color: #fff;
+}
+
+.buttonfield {
+	background: #1B3D1C;
+	border: solid 1px #BECDB6;
+	color: #FFFFFF;
+	font: bold 11px/ normal Tahoma, Verdana;
+	margin-top: 10px;
+	padding: 4px;
+}
+
+.buttonfield:hover,.buttonfield:focus {
+	background: #000;
+	border: solid 1px #fff;
+	color: #fff;
+	cursor: pointer;
+}
+
+input,select {
+	border: 1px solid #888;
+	background: #ffffff;
+	padding: 3px 4px;
+	color: #222;
+	margin: 0px 5px 0px 0px;
+	border-radius: 0px; 
+	-moz-border-radius: 0px; 
+}

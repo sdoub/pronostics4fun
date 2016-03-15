@@ -1,0 +1,271 @@
+/*   
+  SmartTab plugin v0.99
+  jQuery Tab Control Plugin
+  
+  http://tech-laboratory.blogspot.com
+  http://techlaboratory.wordpress.com
+*/
+.stContainer {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	left: 5%;
+	font: normal 12px Verdana, Arial, Helvetica, sans-serif;
+	color: #5A5655;
+	background-color: #F8F8F8;
+	border: 0px solid #CCC;
+	width: 500px;
+	-webkit-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 8px;
+	-moz-border-radius: 8px;
+}
+
+.stContainer.div { /* -webkit-border-radius: 5px; 
+    -webkit-border-top-left-radius
+    -webkit-border-top-right-radius */
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomleft: 8px;
+	-moz-border-radius-bottomright: 8px;
+	position: relative;
+	margin: 0;
+	border: 1px solid #CCC;
+	padding: 10px;
+	border-top-width: 0 !important;
+	/*height: 300px;     */
+	width: 474px;
+	font: normal 12px Verdana, Arial, Helvetica, sans-serif;
+	color: #5A5655;
+	background-color: #F8F8F8;
+	text-align: left;
+	overflow: show;
+}
+
+.stContainer ul.tabs {
+	display: block;
+	list-style: none;
+	position: relative;
+	padding: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-left: 5px;
+	margin: 0;
+	width: 494px;
+	height: 70px;
+	_height: 65px;
+	clear: both;
+	border: 1px solid #CCCCCC;
+	background: #465723;
+	-moz-border-radius-topleft: 8px;
+	-moz-border-radius-topright: 8px;
+	-moz-border-radius-bottomleft: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+}
+
+.stContainer ul.tabs li {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	border-bottom: 0px solid #E0E0E0 !important;
+	border-right: 1px solid #E0E0E0;
+	border-left: 1px solid #E0E0E0;
+	float: left;
+}
+
+.stContainer ul.tabs li a.tabs {
+	display: block;
+	margin: 0;
+	padding: 3px;
+	text-decoration: none;
+	height: 64px;
+	width: 220px;
+	color: #FFF;
+	outline-style: none;
+}
+
+.stContainer ul.tabs li a.tabs img {
+	display: block;
+	margin: 0;
+	padding: 3px;
+	height: 50px;
+	width: 50px;
+	float: left;
+}
+
+.stContainer ul.tabs li a.tabs span {
+	display: block;
+	font: bold 18px Verdana, Arial, Helvetica, sans-serif;
+	float: left;
+}
+
+.stContainer ul.tabs li a.tabs small {
+	font: normal 12px Verdana, Arial, Helvetica, sans-serif;
+	float: left;
+}
+
+.stContainer ul.tabs li a.tabs:hover {
+	color: #FFF;
+	background: #1B3D1C;
+}
+
+.stContainer ul.tabs li a.sel {
+	height: 65px;
+	color: #1B3D1C;
+	background: #BECDB6;
+	cursor: text;
+}
+
+.stContainer ul.tabs li a.dis {
+	color: #CCCCCC;
+	background: #F8F8F8;
+	cursor: text;
+}
+
+.stContainer #tabs-1 {
+	height: 365px;
+	background: #BECDB6;
+	/* url('../images/Logo2.png') no-repeat scroll right bottom */
+}
+
+.stContainer #tabs-1 li {
+	height: 50px;
+	_height: 58px;
+	border-bottom: 1px solid #1B3D1C;
+	padding: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	color: #1B3D1C;
+	vertical-align: top;
+	line-height: 14px;
+}
+
+.stContainer #tabs-1 li.bonus1 {
+	background: url("../images/star_48_110px.png") no-repeat scroll right
+		top transparent;
+}
+
+.stContainer #tabs-1 li:last-child,.stContainer #tabs-1 li.last {
+	border: 0;
+}
+
+.stContainer #tabs-1 li img {
+	width: 30px;
+	height: 30px;
+}
+
+.stContainer #tabs-1 li img.trophee {
+	width: 19px;
+	height: 50px;
+	position: absolute;
+	left: 360px;
+	margin-top: -10px;
+}
+
+.stContainer #tabs-1 li div.team {
+	float: left;
+	width: 320px;
+}
+
+.stContainer #tabs-1 li div.team img.home {
+	float: left;
+}
+
+.stContainer #tabs-1 li div.team img.away {
+	float: right;
+}
+
+.stContainer #tabs-1 li div.team span.home {
+	float: left;
+	padding: 10px 0px 0px 10px;
+}
+
+.stContainer #tabs-1 li div.team span.away {
+	float: right;
+	padding: 10px 10px 0px 0px;
+}
+
+.stContainer #tabs-1 li div.team span.sep {
+	position: absolute;
+	left: 180px;
+	padding-top: 10px;
+}
+
+.stContainer #tabs-1 li div.detail {
+	position: absolute;
+	left: 10px;
+	margin-top: 30px;
+	color: #FFF;
+	background-color: #1B3D1C;
+}
+
+.stContainer #tabs-1 li div.detail a,.stContainer #tabs-1 li div.detail a:active,.stContainer #tabs-1 li div.detail a:visited
+	{
+	color: #FFF;
+	text-decoration: none;
+}
+
+.stContainer #tabs-1 li div.detail2 {
+	position: absolute;
+	left: 380px;
+	color: #FFF;
+	background-color: #1B3D1C;
+	width: 100px;
+	text-align: right;
+	margin-top: 30px;
+}
+
+.stContainer #tabs-1 li div.detail3 {
+	position: absolute;
+	left: 250px;
+	color: #FFF;
+	background-color: #1B3D1C;
+	width: 230px;
+	text-align: right;
+	margin-top: 30px;
+}
+
+.stContainer #tabs-1 li h2 {
+	font-size: 14px;
+}
+
+.stContainer #tabs-2 {
+	height: 425px;
+	background: #BECDB6;
+}
+
+.stContainer #tabs-2 ul.news {
+	height: 425px;
+	overflow: auto; 
+}
+
+.stContainer #tabs-2 ul.news li {
+	height: 60px;
+	_height: 58px;
+	border-bottom: 1px solid #1B3D1C;
+	padding: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	color: #1B3D1C;
+	vertical-align: top;
+	line-height: 14px;
+}
+
+.stContainer #tabs-2 ul.news li.newsHidden {
+	display:none;
+}
+
+.stContainer #tabs-2 ul.news li:last-child,.stContainer #tabs-2 ul.news li.last {
+	border: 0;
+}
+
+.stContainer #tabs-2 ul.news li img {
+	width: 35px;
+	height: 35px;
+	padding-right: 20px;
+	float:left;
+}

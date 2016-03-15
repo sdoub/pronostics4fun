@@ -1,0 +1,319 @@
+.TeamStats {
+	margin-top: 10px;
+}
+
+.divPopup {
+	width: 560px;
+	height: 365px;
+	width: 560px;
+	padding-top: 20px;
+	background: url("../images/tooltipmatchbg.png") no-repeat scroll center
+		bottom transparent;
+}
+
+.divPopup .teams {
+	width: 560px;
+}
+
+.divPopup .teams .home {
+	float: left;
+	width: 100px;
+	text-align: center;
+}
+
+.divPopup .teams .home img {
+	width: 50px;
+	height: 50px;
+}
+
+.divPopup .teams .homeName {
+	white-space: nowrap;
+	color: #FFFFFF;
+	float: left;
+	text-align: center;
+	font-weight: bold;
+	font-size: 30px;
+	width: 180px;
+	height: 36px;
+	line-height: 33px;
+}
+
+.divPopup .teams .away {
+	float: right;
+	width: 100px;
+	text-align: center;
+}
+
+.divPopup .teams .away img {
+	width: 50px;
+	height: 50px;
+}
+
+.divPopup .teams .awayName {
+	white-space: nowrap;
+	color: #FFFFFF;
+	float: right;
+	width: 180px;
+	text-align: center;
+	font-size: 30px;
+	font-weight: bold;
+	height: 36px;
+	line-height: 33px;
+}
+
+.divPopup .teamRankings {
+	height: 80px;
+	padding-top: 60px;
+	_padding-top: 10px;
+}
+
+.divPopup .teamRankings .home {
+	background: url("../images/team.stats.bg.png") no-repeat scroll center
+		top transparent;
+	text-align: center;
+	font-family: Century Gothic, Trebuchet MS, Arial;
+	font-size: 12px;
+	font-weight: bolder;
+	color: #FFFFFF;
+	width: 200px;
+	height: 79px;
+	float: left;
+	margin-left: 50px;
+}
+
+.divPopup .teamRankings .home table {
+	height: 40px;
+	margin-top: 20px;
+	background: url("../images/stats.bg.png") no-repeat scroll left top
+		transparent;
+}
+
+.divPopup .teamRankings .home table .title {
+	text-align: center;
+	font-size: 12px;
+	color: #FFFFFF;
+}
+
+.divPopup .teamRankings .home table .rank {
+	font-size: 18px;
+	font-weight: bold;
+	width: 40px;
+}
+
+.divPopup .teamRankings .home table .points {
+	width: 25px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .home table .goals {
+	width: 25px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .home table .goalsAgainst {
+	width: 25px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .home table .goalsHome {
+	width: 40px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .home table .goalsAgainstHome {
+	width: 40px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .home table .content {
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-align: center;
+}
+
+.divPopup .teamRankings .home table .content td {
+	border-left: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .away {
+	background: url("../images/team.stats.bg.png") no-repeat scroll center
+		top transparent;
+	text-align: center;
+	font-family: Century Gothic, Trebuchet MS, Arial;
+	font-size: 12px;
+	font-weight: bolder;
+	color: #FFFFFF;
+	width: 200px;
+	height: 79px;
+	float: right;
+	margin-right: 50px;
+}
+
+.divPopup .teamRankings .away table {
+	height: 40px;
+	margin-top: 20px;
+	background: url("../images/stats.bg.png") no-repeat scroll left top
+		transparent;
+}
+
+.divPopup .teamRankings .away table .title {
+	text-align: center;
+	font-size: 12px;
+	color: #FFFFFF;
+}
+
+.divPopup .teamRankings .away table .rank {
+	font-size: 18px;
+	font-weight: bold;
+	width: 40px;
+}
+
+.divPopup .teamRankings .away table .points {
+	width: 25px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .away table .goals {
+	width: 25px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .away table .goalsAgainst {
+	width: 25px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .away table .goalsAway {
+	width: 40px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .away table .goalsAgainstAway {
+	width: 40px;
+	border-left: 1px solid #4F74A0;
+	border-bottom: 1px solid #4F74A0;
+}
+
+.divPopup .teamRankings .away table .content {
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-align: center;
+}
+
+.divPopup .teamRankings .away table .content td {
+	border-left: 1px solid #4F74A0;
+}
+
+.divPopup .previousMatch {
+	margin-top: 10px;
+	width: 560px;
+	text-align: center;
+	color: #1B3D1C;
+	font-size: 12px;
+}
+
+.divPopup .previousMatch .content {
+	margin-left: 20px;
+	margin-right: 25px;
+	text-align: center;
+	color: #1B3D1C;
+	font-size: 12px;
+	background-color: #BECDB6;
+	font-weight: bold;
+}
+
+.divPopup .historyTitle {
+	margin-top: 10px;
+	width: 560px;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 12px;
+}
+
+.divPopup .historyTitle .title-trigger {
+	margin-left: 20px;
+	margin-right: 25px;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.divPopup .container-history {
+	height: 140px;
+	overflow: hidden;
+}
+
+.divPopup .history {
+	padding-top: 0px;
+	text-align: left;
+	font-family: Century Gothic, Trebuchet MS, Arial;
+	font-size: 12px;
+	font-weight: bolder;
+	color: #FFFFFF;
+	width: 250px;
+	height: 79px;
+}
+
+.divPopup .history.teamHome {
+	float: left;
+	margin-left: 20px;
+}
+
+.divPopup .history.teamAway {
+	float: right;
+	margin-right: 20px;
+}
+
+.divPopup .history table {
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-align: center;
+}
+
+.divPopup .history table .title {
+	font-size: 12px;
+	text-align: center;
+	background-color: #BECDB6;
+	color: #1B3D1C;
+	font-weight: bold;
+}
+
+.divPopup .history table .title .homeAway {
+	width: 25px;
+}
+
+.divPopup .history table .title .team {
+	width: 120px;
+}
+
+.divPopup .history table .title .result {
+	width: 50px;
+}
+
+.divPopup .history table .title .score {
+	width: 50px;
+}
+
+.divPopup .history table .content {
+	height: 115px;
+	_height: 0px;
+	overflow: hidden;
+}
+
+.divPopup .history table .content .match {
+	height: 12px;
+	font-size: 11px;
+}
