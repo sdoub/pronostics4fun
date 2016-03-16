@@ -492,25 +492,15 @@ $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the
 if (count($rowsSet)>0) {
 echo "<ul>";
 $previousGlobalRank=0;
-$counter=0;  
+$counter=0;
+$previousDate;
 foreach ($rowsSet as $rowSet)
 {
-		$cupMatches = PlayercupmatchesQuery::Create()
-		->filterByResultDate(array(
-    	'min' => $rowSet['unixBeginDate'], 
-    	'max' => $rowSet['unixEndDate'],
-  	))
-		->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
-		->_or()   
-		->filterByPlayerawaykey($_authorisation->getConnectedUserKey())
-		->orderByResultdate('desc')
-		->find();
-	
-	if (count($cupMatches)==0 && $counter == 0) {
+	if ($counter == 0) {
 			$cupMatches = PlayercupmatchesQuery::Create()
 			->filterByResultDate(array(
 				'min' => $rowSet['unixEndDate'], 
-				'max' => $rowSet['unixNowDate'],
+				'max' => $rowSet['unixNowDate']
 			))
 			->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
 			->_or()   
@@ -518,8 +508,18 @@ foreach ($rowsSet as $rowSet)
 			->orderByResultdate('desc')
 			->find();
 			
+	} else {
+		$cupMatches = PlayercupmatchesQuery::Create()
+			->filterByResultDate(array(
+				'min' => $rowSet['unixEndDate'], 
+				'max' => $previousDate
+			))
+			->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
+			->_or()   
+			->filterByPlayerawaykey($_authorisation->getConnectedUserKey())
+			->orderByResultdate('desc')
+			->find();
 	}
-	
 	
 	foreach ($cupMatches as $cupMatch) {
 
@@ -627,22 +627,22 @@ foreach ($rowsSet as $rowSet)
 	}
 	
 	
-	$matches = PlayerdivisionmatchesQuery::Create()
-		->filterByResultDate(array(
-    	'min' => $rowSet['unixBeginDate'], 
-    	'max' => $rowSet['unixEndDate'],
-  	))
-		->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
-		->_or()   
-		->filterByPlayerawaykey($_authorisation->getConnectedUserKey())
-		->orderByResultdate('desc')
-		->find();
-	
-	if (count($matches)==0 && $counter == 0) {
+	if ($counter == 0) {
 		$matches = PlayerdivisionmatchesQuery::Create()
 			->filterByResultDate(array(
 				'min' => $rowSet['unixEndDate'], 
-				'max' => $rowSet['unixNowDate'],
+				'max' => $rowSet['unixNowDate']
+			))
+			->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
+			->_or()   
+			->filterByPlayerawaykey($_authorisation->getConnectedUserKey())
+			->orderByResultdate('desc')
+			->find();
+	} else {
+		$matches = PlayerdivisionmatchesQuery::Create()
+			->filterByResultDate(array(
+				'min' => $rowSet['unixEndDate'], 
+				'max' => $previousDate
 			))
 			->filterByPlayerhomekey($_authorisation->getConnectedUserKey())   
 			->_or()   
@@ -811,7 +811,7 @@ AND playergroupresults.GroupKey=groups.PrimaryKey) WinnerScore */
 	
   $previousGlobalRank = $rowSet["GlobalRank"];
 	$counter++;
-
+	$previousDate = $rowSet['unixEndDate'];
 }
 echo "</ul>";
 } else {

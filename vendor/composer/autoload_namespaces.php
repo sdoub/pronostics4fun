@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Sunra\\PhpSimple\\HtmlDomParser' => array($vendorDir . '/sunra/php-simple-html-dom-parser/Src'),
+    'Pushy' => array($vendorDir . '/sqmk/pushy/library'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Propel' => array($vendorDir . '/propel/propel/src'),
 );
