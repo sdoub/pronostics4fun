@@ -5,7 +5,8 @@
 		"phpmailer/phpmailer":"5.2.10",
 		"sunra/php-simple-html-dom-parser": "v1.5.0",
 		"weotch/phpthumb": "1.0.5",
-		"nikic/fast-route": "^0.6.0"
+		"nikic/fast-route": "^0.6.0",
+		"sqmk/pushy": "dev-master"
 	},
 	"autoload": {
     "classmap": ["model/"]

@@ -138,7 +138,7 @@ if ($_isAuthenticated)
 	      	$submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey='.$seasons[2]->getPrimarykey().'" ><span>Coupe S3</span></a></li>';
 			}
       if (count($seasons)>3){
-				$seasonMatches = PlayercupmatchesQuery::create()->filterBySeasonkey($seasons[3]>getPrimarykey())->count();
+				$seasonMatches = PlayercupmatchesQuery::create()->filterBySeasonkey($seasons[3]->getPrimarykey())->count();
 				if ($seasonMatches>0)
 		 	    $submenu .= '<li><a href="index.php?Page=' . $_currentPage . '&Competition=Cup&SeasonKey='.$seasons[3]->getPrimarykey().'" ><span>Coupe S4</span></a></li>';
 			}

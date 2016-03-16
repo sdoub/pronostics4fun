@@ -556,10 +556,10 @@ class Authorization
 
       unset($rowSet,$resultSet,$sql);
       if ($return) {
-        // D�finition du temps d'expiration des cookies
+        // Définition du temps d'expiration des cookies
         $expiration = $KeepConnection == "false" ? time() + 60*SESSION_DURATION : time() + 90 * 24 * 60 * 60;
         $keepConnection = $KeepConnection;
-        //   Cr�ation des cookies
+        //   Création des cookies
         $userToken = generatePassword(50,7);
         setcookie("UserToken", $userToken, $expiration, "/");
         setcookie("NickName", $this->getConnectedUser(), time() + 90 * 24 * 60 * 60, "/");
