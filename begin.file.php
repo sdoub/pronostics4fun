@@ -87,22 +87,19 @@ else
 
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
-DEFINE ('COMPETITION','9');
-$_themePath = "/themes/EURO2016";
-$_competitionType =3;
-$_competitionName="Euro";
+
 //TODO: Récupérer l'information de la base de données
 //TODO: Créer une session pour stocker la session courante
-/* if (isset($_GET["BetaCDM"])) {
-DEFINE ('COMPETITION','7');
-$_themePath = "/themes/CDM2014";
-$_competitionType =2;
-$_competitionName="Coupe du monde";
-} else {
-DEFINE ('COMPETITION','6');
-$_themePath = "/themes/LIGUE1";
-$_competitionType =1;
-$_competitionName="Ligue 1";
+//if (isset($_GET["BetaEuro"]) || isset($_GET["BetaCDM"])) {
+	DEFINE ('COMPETITION','9');
+	$_themePath = "/themes/EURO2016";
+	$_competitionType =3;
+	$_competitionName="Euro";
+/*} else {
+	DEFINE ('COMPETITION','9');
+	$_themePath = "/themes/LIGUE1";
+	$_competitionType =1;
+	$_competitionName="Ligue 1";
 } */
 
 //echo $_SESSION['exp_user']['expires'];
