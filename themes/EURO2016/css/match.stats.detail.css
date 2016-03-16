@@ -219,7 +219,7 @@
 	margin-top: 10px;
 	width: 560px;
 	text-align: center;
-	color: #1B3D1C;
+	color: #1d5886;
 	font-size: 12px;
 }
 
@@ -227,9 +227,9 @@
 	margin-left: 20px;
 	margin-right: 25px;
 	text-align: center;
-	color: #1B3D1C;
+	color: #1d5886;
 	font-size: 12px;
-	background-color: #BECDB6;
+	background-color: #aad7f1;
 	font-weight: bold;
 }
 
@@ -286,8 +286,8 @@
 .divPopup .history table .title {
 	font-size: 12px;
 	text-align: center;
-	background-color: #BECDB6;
-	color: #1B3D1C;
+	background-color: #aad7f1;
+	color: #1d5886;
 	font-weight: bold;
 }
 

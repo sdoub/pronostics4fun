@@ -1,7 +1,7 @@
 .day {
 	font-size: 14px;
 	text-align: center;
-	background-color: #465723;
+	background-color: #3c8bb9;
 	color: #FFFFFF;
 	font-weight: bold;
 }
@@ -25,13 +25,13 @@ table {
 
 .equipeRankUp {
 	font-size: 12px;
-	color: #1B3D1C;
+	color: #1d5886;
 	font-weight: bold;
 }
 
 .equipeRankDown {
 	font-size: 12px;
-	color: #1B3D1C;
+	color: #1d5886;
 	font-weight: normal;
 }
 
@@ -122,7 +122,7 @@ table {
 
 .textfield {
 	background: #b3a58f;
-	border: solid 1px #BECDB6;
+	border: solid 1px #aad7f1;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 30px;
@@ -134,14 +134,14 @@ table {
 }
 
 .textfield:hover,.textfield:focus {
-	background: #1B3D1C;
-	border: solid 1px #1B3D1C;
+	background: #1d5886;
+	border: solid 1px #1d5886;
 	color: #fff;
 }
 
 .buttonfield {
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 11px/ normal Tahoma, Verdana;
 	margin-top: 10px;

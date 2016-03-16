@@ -10,19 +10,19 @@ top: 0; left: 0;
 
 .vscrollerbase {
 width: 10px;
-background-color: #BECDB6;
+background-color: #aad7f1;
 }
 .vscrollerbar {
 width: 10px;
-background-color: #1B3D1C;
+background-color: #1d5886;
 }
 .hscrollerbase {
 height: 10px;
-background-color: #BECDB6;
+background-color: #aad7f1;
 }
 .hscrollerbar {
 height: 10px;
-background-color: #1B3D1C;
+background-color: #1d5886;
 }
 
 .scrollerjogbox {

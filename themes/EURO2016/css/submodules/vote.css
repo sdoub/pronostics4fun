@@ -6,7 +6,7 @@
 	width: 500px;
 	text-align: left;
 	padding: 25px;
-	background: #465723;
+	background: #3c8bb9;
 	/* border-top: 1px solid #1F0E1E; */
 	clear: both;
 	background-position: bottom;
@@ -29,19 +29,19 @@
 
 #msg {
 	text-align: center;
-	color: #465723;
+	color: #3c8bb9;
 	padding: 0px 0 3px 0;
 }
 
 #wrapper label {
-	color: #1B3D1C;
+	color: #1d5886;
 	font-weight: bold;
 	display: block;
 }
 
 .buttonfield {
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 11px/ normal Tahoma, Verdana;
 	margin-top: 10px;
@@ -58,10 +58,10 @@
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #465723;
+	background: #3c8bb9;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 500px;
-	background: #465723;
+	background: #3c8bb9;
 }
 

@@ -2,7 +2,7 @@
 
 #wrapper {
 	background: url('../../images/accountbg.png') no-repeat scroll center
-		top #465723;
+		top #3c8bb9;
 	border: solid 1px #fff;
 	margin: 0 auto;
 	width: 455px;
@@ -21,8 +21,8 @@
 	color: #000;
 	font-size:9px;
 	font-weight:normal;*/
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
@@ -44,8 +44,8 @@
 }
 
 #wrapper a.apply {
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding: 4px;
@@ -62,7 +62,7 @@
 }
 
 #wrapper form {
-	/* background: url('../../images/accountbg.png') no-repeat scroll center top #465723; */
+	/* background: url('../../images/accountbg.png') no-repeat scroll center top #3c8bb9; */
 	padding: 15px;
 	margin: 0;
 	height: 30px;
@@ -88,7 +88,7 @@
 }
 
 #wrapper label.read { /* background: #b3a58f; */
-	border: solid 1px #BECDB6;
+	border: solid 1px #aad7f1;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 87%;
@@ -99,7 +99,7 @@
 
 #frmAccount .textfield {
 	background: #b3a58f;
-	border: solid 1px #BECDB6;
+	border: solid 1px #aad7f1;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 90%;
@@ -107,14 +107,14 @@
 }
 
 #frmAccount .textfield:hover,#frmAccount .textfield:focus {
-	background: #1B3D1C;
-	border: solid 1px #1B3D1C;
+	background: #1d5886;
+	border: solid 1px #1d5886;
 	color: #fff;
 }
 
 #frmAccount .buttonfield {
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 11px/normal Tahoma, Verdana;
 	margin-top: 10px;
@@ -132,12 +132,12 @@
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #465723;
+	background: #3c8bb9;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 455px;
 	_width: 505px;
-	background: #465723;
+	background: #3c8bb9;
 }
 
 #footer {

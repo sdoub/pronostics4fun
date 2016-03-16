@@ -97,8 +97,8 @@
 		height: 24px;
 		width: 14px;
 		z-index: 900;
-		/* background: #465723 url(images/_fhbg.gif) repeat-x bottom; */
-		background-color: #465723;
+		/* background: #3c8bb9 url(images/_fhbg.gif) repeat-x bottom; */
+		background-color: #3c8bb9;
 		border: 0px solid #ccc;
 		border-left: 1px solid #ccc;
 		top: 0px;
@@ -128,7 +128,7 @@
 	/* background: url(images/_wbg.gif) repeat-x top; */
 	font-weight: bold;
 	font-size:16px;
-	color:#1B3D1C;
+	color:#1d5886;
 	text-align:center;
 	text-transform: uppercase;	
 	display: block;
@@ -198,7 +198,7 @@
 
 .flexigrid div.sDiv /*toolbar*/
 	{
-	background: #BECDB6;
+	background: #aad7f1;
 	position: relative;
 	border: 1px solid #ccc;
 	border-top: 0px;
@@ -270,7 +270,7 @@
 
 .flexigrid div.hDiv
 	{
-	background-color: #465723;
+	background-color: #3c8bb9;
 	position: relative;
 	left:0px;
 	top:0px;
@@ -284,7 +284,7 @@
 
  .flexigrid div.ghDiv
 	{
-	background-color: #465723;
+	background-color: #3c8bb9;
 	position: relative;
 	left:0px;
 	top:0px;
@@ -351,7 +351,7 @@
 	{
 	border: 1px solid #ccc;
 	border-top: 0px;
-	background: #BECDB6;
+	background: #aad7f1;
 	overflow: auto;
 	position: relative;
 	}
@@ -445,8 +445,8 @@ div.colCopy {
 
 .flexigrid div.hDiv th.sorted,.flexigrid div.ghDiv th.sorted
 	{
-	color: #BECDB6;
-	background-color: #1B3D1C;
+	color: #aad7f1;
+	background-color: #1d5886;
 	border-right: 1px solid #FFFFFF;
 	}
 	
@@ -500,7 +500,7 @@ div.colCopy {
 	vertical-align: top;
 	white-space: nowrap;
 	font-size:12px;
-    color:#1B3D1C;
+    color:#1d5886;
 	}
 	
 .flexigrid .avat{
@@ -665,7 +665,7 @@ div.colCopy {
 
 .flexigrid div.pDiv
 	{
-	background-color: #BECDB6;
+	background-color: #aad7f1;
 	border: 1px solid #ccc;
 	border-top: 0px;
 	overflow: hidden;
@@ -676,7 +676,7 @@ div.colCopy {
 
 .flexigrid div.pDiv div.pDiv2
 	{
-	background-color: #BECDB6;
+	background-color: #aad7f1;
 	margin: 3px;
 	margin-left: -2px;
 	float: left;
@@ -687,7 +687,7 @@ div.colCopy {
 	div.pGroup
 		{
 		float: left;
-		background-color: #BECDB6;
+		background-color: #aad7f1;
 		height: 24px;
 		margin: 0px 5px;
 		}

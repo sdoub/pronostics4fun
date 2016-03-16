@@ -12,7 +12,7 @@
     left:1%;     
     font: normal 12px Verdana, Arial, Helvetica, sans-serif; 
     color:              #5A5655;
-    background-color:   #BECDB6;
+    background-color:   #aad7f1;
     border:             0px solid #CCC;
     width:905px;
     _width:550px;
@@ -62,7 +62,7 @@
     height:500px; 
     clear: both;
     border: 1px solid #CCCCCC;    
-    background: #465723;
+    background: #3c8bb9;
     -moz-border-radius-topleft      : 8px;
     -moz-border-radius-bottomleft   : 8px;
     -webkit-border-top-left-radius: 5px;
@@ -110,12 +110,12 @@
 }
 .stContainer ul li a.tabs:hover {   
   color:#FFF; 
-  background: #1B3D1C; 
+  background: #1d5886; 
 }
 .stContainer ul li a.sel { 
   height:85px;
-  color:#1B3D1C;  
-  background: #BECDB6;  
+  color:#1d5886;  
+  background: #aad7f1;  
   cursor:text;   
 }
 .stContainer ul li a.dis {

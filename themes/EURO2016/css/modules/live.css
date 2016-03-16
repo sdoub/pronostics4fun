@@ -161,9 +161,9 @@
 }
 
 .StateListButton {
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
-	color: #1B3D1C;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
+	color: #1d5886;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
 	padding-bottom: 4px;
@@ -183,8 +183,8 @@
 }
 
 .StateListButtonDisabled {
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
 	color: #cccccc;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
@@ -197,8 +197,8 @@
 }
 
 .StateListButtonDisabled:hover {
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
 	color: #cccccc;
 	font: bold 9px/normal Tahoma, Verdana;
 }
@@ -287,7 +287,7 @@
 
 /*node2*/
 .node2 .head {
-	background-color: #465723;
+	background-color: #3c8bb9;
 	background-position: right -84px;
 }
 
@@ -427,8 +427,8 @@
 	color: #000;
 	font-size:9px;
 	font-weight:normal;*/
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
@@ -455,7 +455,7 @@
 
 #tabsRanking a.selected {
 	font-weight: bold;
-	background: #1B3D1C;
+	background: #1d5886;
 }
 
 .bsmList {
@@ -478,20 +478,20 @@
 }
 
 .resultRow {
-	background-color: #BECDB6;
-	color: #1B3D1C;
+	background-color: #aad7f1;
+	color: #1d5886;
 }
 
 .resultRowOdd {
-	background-color: #465723;
+	background-color: #3c8bb9;
 	color: #FFFFFF;
 }
 
 .liveStatusMatchDetail {
 	width: 79px;
 	height: 15px;
-	background: none repeat scroll 0 0 #1B3D1C;
-	border: 1px solid #BECDB6;
+	background: none repeat scroll 0 0 #1d5886;
+	border: 1px solid #aad7f1;
 	color: #FFFFFF;
 	font: bold 9px Tahoma, Verdana;
 	padding-top: 4px;

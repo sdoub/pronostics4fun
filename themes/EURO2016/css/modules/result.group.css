@@ -157,9 +157,9 @@ padding-top:19px;
 }
 
 .StateListButton {
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
-	color: #1B3D1C;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
+	color: #1d5886;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
 	padding-bottom: 4px;
@@ -179,8 +179,8 @@ padding-top:19px;
 }
 
 .StateListButtonDisabled {
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
 	color: #cccccc;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
@@ -193,8 +193,8 @@ padding-top:19px;
 }
 
 .StateListButtonDisabled:hover {
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
 	color: #cccccc;
 	font: bold 9px/normal Tahoma, Verdana;
 }
@@ -285,14 +285,14 @@ padding-top:19px;
 
 /*node2*/
 .node2 .head {
-	background-color: #465723;
+	background-color: #3c8bb9;
 	background-position: right -84px;
 }
 
 #mod-classements h4 {
 	font-size: 12px;
 	font-weight: bold;
-	background-color: #465723;
+	background-color: #3c8bb9;
 	padding: 10px 5px 0px 50px;
 	font-family: Georgia;
 	text-transform: uppercase;
@@ -397,7 +397,7 @@ padding-top:19px;
 }
 
 #rankSpan {
-	background-color: #1B3D1C;
+	background-color: #1d5886;
 	border: 1px solid #FFFFFF;
 	color: #FFFFFF;
 	float: left;
@@ -425,8 +425,8 @@ padding-top:19px;
 	color: #000;
 	font-size:9px;
 	font-weight:normal;*/
-	background: #BECDB6;
-	border: solid 1px #BECDB6;
+	background: #aad7f1;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
@@ -452,7 +452,7 @@ padding-top:19px;
 
 #tabsRanking a.selected {
 	font-weight: bold;
-	background: #1B3D1C;
+	background: #1d5886;
 }
 
 .bsmList {
@@ -475,20 +475,20 @@ padding-top:19px;
 }
 
 .resultRow {
-	background-color: #BECDB6;
-	color: #1B3D1C;
+	background-color: #aad7f1;
+	color: #1d5886;
 }
 
 .resultRowOdd {
-	background-color: #465723;
+	background-color: #3c8bb9;
 	color: #FFFFFF;
 }
 
 .liveStatusMatchDetail {
 	width: 79px;
 	height: 15px;
-	background: none repeat scroll 0 0 #1B3D1C;
-	border: 1px solid #BECDB6;
+	background: none repeat scroll 0 0 #1d5886;
+	border: 1px solid #aad7f1;
 	color: #FFFFFF;
 	font: bold 9px Tahoma, Verdana;
 	padding-top: 4px;

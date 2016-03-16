@@ -1,7 +1,7 @@
 .day {
 	font-size: 14px;
 	text-align: center;
-	background-color: #465723;
+	background-color: #3c8bb9;
 	color: #FFFFFF;
 	font-weight: bold;
 }
@@ -19,14 +19,14 @@ table {
 
 .teamRank
 {
-background: #BECDB6; 
+background: #aad7f1; 
 color: #FFF; 
 text-align: center
 }
 
 .equipeRankUp {
 	font-size: 12px;
-	color: #1B3D1C;
+	color: #1d5886;
 	
 	font-weight: bold;
 }
@@ -39,7 +39,7 @@ text-align: center
 
 .equipeRank {
 	font-size: 12px;
-	color: #1B3D1C;
+	color: #1d5886;
 	font-weight: normal;
 }
 .equipeRank .teamRank
@@ -51,7 +51,7 @@ text-align: center
 
 .equipeRankDown {
 	font-size: 12px;
-	color: #1B3D1C;
+	color: #1d5886;
 	font-weight: normal;
 }
 .equipeRankDown .teamRank

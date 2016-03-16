@@ -31,19 +31,19 @@
 
 #msg {
 	text-align: center;
-	color: #465723;
+	color: #3c8bb9;
 	padding: 0px 0 3px 0;
 }
 
 #wrapper label {
-	color: #1B3D1C;
+	color: #1d5886;
 	font-weight: bold;
 	display: block;
 }
 
 .textfield {
 	background: #b3a58f;
-	border: solid 1px #BECDB6;
+	border: solid 1px #aad7f1;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 50%;
@@ -55,14 +55,14 @@
 }
 
 .textfield:hover,.textfield:focus {
-	background: #1B3D1C;
-	border: solid 1px #1B3D1C;
+	background: #1d5886;
+	border: solid 1px #1d5886;
 	color: #fff;
 }
 
 .buttonfield {
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 11px/ normal Tahoma, Verdana;
 	margin-top: 10px;
@@ -79,11 +79,11 @@
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #465723;
+	background: #3c8bb9;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 350px;
-	background: #465723;
+	background: #3c8bb9;
 }
 
 #footerForecast {
@@ -131,7 +131,7 @@
 #scheduleDate0 label {
 	text-align: center;
 	font-size: 14px;
-	color: #1B3D1C;
+	color: #1d5886;
 	padding-bottom:10px;
 }
 
@@ -142,7 +142,7 @@
 #scheduleDate1 label {
 	text-align: center;
 	font-size: 14px;
-	color: #1B3D1C;
+	color: #1d5886;
 	background: url("../../images/star_25.png") no-repeat scroll left top transparent;
 	padding-bottom:10px;
 }

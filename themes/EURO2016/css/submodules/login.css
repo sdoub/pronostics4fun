@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 #wrapper {
-	background: url('../../images/loginbg.jpg') no-repeat scroll center top #BECDB6;
+	background: url('../../images/loginbg.jpg') no-repeat scroll center top #aad7f1;
 	border: solid 1px #fff;
 	margin: 0 auto;
 	width: 250px;
@@ -28,27 +28,27 @@
 
 #msg {
 	text-align: center;
-	color: #465723;
+	color: #3c8bb9;
 	padding: 0px 0 3px 0;
 }
 
 #wrapper label {
-	color: #465723;
+	color: #3c8bb9;
 	font-weight: bold;
 	display: block;
 }
 
 .textfield {
 	background: #b3a58f;
-	border: solid 1px #BECDB6;
+	border: solid 1px #aad7f1;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 90%;
 }
 
 .textfield:hover,.textfield:focus {
-	background: #1B3D1C;
-	border: solid 1px #1B3D1C;
+	background: #1d5886;
+	border: solid 1px #1d5886;
 	color: #fff;
 }
 
@@ -63,8 +63,8 @@
 }
 
 .buttonfield {
-	background: #1B3D1C;
-	border: solid 1px #BECDB6;
+	background: #1d5886;
+	border: solid 1px #aad7f1;
 	color: #FFFFFF;
 	font: bold 11px/ normal Tahoma, Verdana;
 	margin-top: 10px;
@@ -82,12 +82,12 @@
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #465723;
+	background: #3c8bb9;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 250px;
 	_width: 300px;
-	background: #465723;
+	background: #3c8bb9;
 }
 
 #footer {
