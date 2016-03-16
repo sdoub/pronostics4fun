@@ -5,52 +5,44 @@
 }
 
 /* - START -- ScrollBar color for Chrome, Safari ---- */
+::-webkit-scrollbar-corner {
+	background: transparent
+}
 
-::-webkit-scrollbar-corner{background:transparent}
-
-
-*::-webkit-scrollbar,
-*::-webkit-scrollbar-thumb textarea::-webkit-scrollbar,
-textarea::-webkit-scrollbar-thumb
+*::-webkit-scrollbar,*::-webkit-scrollbar-thumb textarea::-webkit-scrollbar,textarea::-webkit-scrollbar-thumb
 {
 	overflow:visible;
 	border-radius:0px
 }
 
-*::-webkit-scrollbar,
-textarea::-webkit-scrollbar
-{
+*::-webkit-scrollbar,textarea::-webkit-scrollbar {
 	width:15px;
 	height:15px;
-	background:-webkit-gradient(linear,left top,right top,color-stop(0%,rgba(190,205,182,1)),color-stop(100%,rgba(190,205,182,1)));
-	background:-webkit-linear-gradient(left,rgba(190,205,182,1) 0%,rgba(190,205,182,1) 100%);
-	background-color:#465723;
-	border:solid 1px #465723;
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(214,
+		225, 245, 1) ), color-stop(100%, rgba(214, 225, 245, 1) ) );
+	background: -webkit-linear-gradient(left, rgba(214, 225, 245, 1) 0%,
+		rgba(214, 225, 245, 1) 100% );
+	background-color: #6D8AA8;
+	border: solid 1px #6D8AA8;
 }
 
-*::-webkit-scrollbar-thumb,
-textarea::-webkit-scrollbar-thumb
-{
-	background-color:#465723;
+*::-webkit-scrollbar-thumb,textarea::-webkit-scrollbar-thumb {
+	background-color: #6D8AA8;
 }
 
-*::-webkit-scrollbar-thumb:hover,
-textarea::-webkit-scrollbar-thumb:hover
+*::-webkit-scrollbar-thumb:hover,textarea::-webkit-scrollbar-thumb:hover
 {
-	background-color:#1d5886;
+	background-color: #365F89;
 }
 
-*::-webkit-scrollbar-button,
-textarea::-webkit-scrollbar-button
-{
+*::-webkit-scrollbar-button,textarea::-webkit-scrollbar-button {
 	height:0;
 	width:0;
 	display:block;
 	background-color:transparent;
 }
 
-*::-webkit-scrollbar,
-textarea::-webkit-scrollbar,
+*::-webkit-scrollbar,textarea::-webkit-scrollbar
 {
 	border-radius:0
 }
@@ -112,7 +104,6 @@ body {
 	minwidth: 967px;
 	padding: 3px 0;
 	/*_width:967px;*/
-	
 }
 
 #top a,#top a:active,#top a:visited {
@@ -135,8 +126,7 @@ a,a:active,a:visited {
 	text-decoration: underline;
 }
 
-#container {
-	/* background-color: #1F0E1E; 
+#top { /* background-color: #1F0E1E; 
   border-color: #2F1E2E #1F0E1E #1F0E1E;
   border-right: 1px solid #1F0E1E;
   border-style: solid;
@@ -146,7 +136,22 @@ a,a:active,a:visited {
   /*_margin: 0px;*/
   max-width: 1000px;
   /*_max-width: 900px;*/
-	min-width: 970px;
+  min-width: 1000px;
+  /*_min-width: 870px;*/
+  /*_width:1003px;*/
+}
+
+#container { /* background-color: #1F0E1E; 
+	border-color: #2F1E2E #1F0E1E #1F0E1E;
+	border-right: 1px solid #1F0E1E;
+	border-style: solid;
+	border-width: 1px;
+	*/
+	margin: 0 auto;
+	/*_margin: 0px;*/
+	max-width: 1000px;
+	/*_max-width: 900px;*/
+	min-width: 1000px;
   /*_min-width: 870px;*/
   /*_width:1003px;*/
 }
@@ -250,13 +255,21 @@ a,a:active,a:visited {
 	text-decoration: none;
 }
 
-#navMenu1 li.navRight {
+#navMenu1 .navRight {
 	float: right;
 }
-
-#navMenu1 li a:hover,#navMenu1 li a:hover span ,#navMenu1 li.activate{
-	color: #BECDB6;
-	background: #1B3D1C;
+#navMenu1 li #nav_home {
+	background:url(/images/home.png) no-repeat center center transparent;
+	text-indent: -9999px;
+	width: 25px;
+}
+#navMenu1 li #nav_home:hover {
+	color: #aad7f1;
+	background:url(/images/home.png) no-repeat center center #1d5886;
+}
+#navMenu1 li a:hover,#navMenu1 li a:hover span,#navMenu1 .activate {
+	color: #aad7f1;
+	background-color: #1d5886;
 }
 
 #navMenu1 li.disabled a:hover,#navMenu1 li.disabled a:hover span {
@@ -264,24 +277,15 @@ a,a:active,a:visited {
 	background: #3c8bb9;
 }
 
-#navMenu1 li a#nav_home {
-	margin-right: 10px;
-}
 
-#navMenu1 li a#nav_basket,#navMenu1 li a#nav_home {
+#navMenu1 li #nav_home {
 	color: #FFFFFF;
 	padding: 0;
+	margin-right: 5px;
 }
 
-#navMenu1 li a#nav_home {
-	margin-right: 10px;
-}
 
-#navMenu1 li a#nav_basket {
-	margin-left: 10px;
-}
-
-#navMenu1 li a#nav_basket span,#navMenu1 li a#nav_home span {
+#navMenu1 li #nav_home span {
 	cursor: pointer;
 	display: block;
 	float: left;
@@ -447,7 +451,8 @@ p {
 }
 
 #footer {
-	background: url("../images/bg_page_bottom.png") no-repeat scroll center top transparent;
+	background: url("../images/bg_page_bottom.png") no-repeat scroll center
+		top transparent;
 	/* border-top: 1px solid #1F0E1E; */ 
 	clear: both;
 	height: 179px;
@@ -497,8 +502,8 @@ p {
 	/* width:50px; */
 	padding: 4px;
 	/* float:right; */
-
 }
+
 .buttonfield:hover, .buttonfield:focus {
 	background: #000;
 	border: solid 1px #fff;
