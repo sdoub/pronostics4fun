@@ -15,6 +15,10 @@
 		top transparent;
 }
 
+.matchesliveOfflimit {
+    background: url("../../images/matchbggray.png") no-repeat scroll center top transparent;
+}
+
 .liveteamHome {
 	width: 25px;
 	float: left;
@@ -23,9 +27,8 @@
 }
 
 .liveteamHome img {
-	width: 15px;
-	height: 15px;
-	padding-left:5px;
+	width: 20px;
+	height: 20px;
 }
 
 .liveteamsep {
@@ -42,8 +45,8 @@
 }
 
 .liveteamAway img {
-	width: 15px;
-	height: 15px;
+	width: 20px;
+	height: 20px;
 }
 
 .livescoreHome {
@@ -51,8 +54,6 @@
 	float: left;
 	text-align: right;
 	font-weight: bold;
-	position:absolute;
-	top:23px;
 }
 
 .livescoresep {
@@ -67,9 +68,6 @@
 	float: right;
 	text-align: left;
 	font-weight: bold;
-	position:absolute;
-	top:23px;
-	left:36px;
 }
 
 .livestatus {
@@ -91,6 +89,19 @@
 	height: 33px;
 	background: url("../../images/matchbg.result.png") no-repeat scroll
 		center top transparent;
+}
+
+.forecastmatchTooltip {
+    width:57px;
+}
+
+.forecastmatchofflimit {
+    float:left; 
+    width:57px;
+    margin-left:2px;
+    margin-right:2px;
+    height:33px;
+    background: url("../../images/matchbg.result.png") no-repeat scroll center top #ccc;
 }
 
 .forecastteamHome {
@@ -281,10 +292,10 @@
 }
 
 #mod-classements h4 {
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: bold;
-	background-color: #465723;
-	padding: 10px 5px 0px 15px;
+	background-color: #6D8AA8;
+	padding: 12px 5px 0px 15px;
 	font-family: Georgia;
 	text-transform: uppercase;
 }
@@ -387,8 +398,9 @@
 	background-position: -70px -214px;
 }
 
-#rankspan {
-	background-color: #1B3D1C;
+
+#rankspan,.rankspan {
+	background-color: #365F89;
 	border: 1px solid #FFFFFF;
 	color: #FFFFFF;
 	float: left;

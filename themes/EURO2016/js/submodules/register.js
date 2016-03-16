@@ -98,8 +98,8 @@ function callbackPost (data){
 					return false;
 				});	
 				$(userId).validate({
-                    expression: "if (VAL.length > 4 && VAL) return true; else return false;",
-                    message: "Veuillez saisir plus de 4 caract&egrave;res!"
+                    expression: "if (VAL && VAL.length > 4 && VAL.length < 16 && VAL.indexOf(' ')==-1) return true; else return false;",
+                    message: "Veuillez saisir entre 5 et 15 caract&egrave;res sans espace!"
                 });
 				$(passId).validate({
                     expression: "if (VAL.length > 5 && VAL) return true; else return false;",

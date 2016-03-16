@@ -144,14 +144,12 @@ function callbackPost (data){
 					$('#OriginalAvatar').fadeOut();
 					$('#OriginalAvatar').css("width","");
 					$('#OriginalAvatar').css("height","");
-					$.log("responseJSON");
-					$.log(responseJSON);
-					$('#OriginalAvatar').attr("src",responseJSON.filePath+ "?"+(new Date().getTime())).fadeIn('slow',function () {
+					$('#OriginalAvatar').attr("src",responseJSON.filePath).fadeIn('slow',function () {
 						_orginalW = $(this).width();    // Current image width
 						_orginalH = $(this).height();  // Current image height
 						_fileExt = responseJSON.fileExt;
 						$('#file-uploader').find("ul li:not(:has(.qq-upload-fail))").fadeOut();
-						$('#avatar').attr("src",responseJSON.filePath+ "?"+(new Date().getTime())).fadeIn();
+						$('#avatar').attr("src",responseJSON.filePath).fadeIn();
 						initJcrop();
 					});
 					
@@ -162,12 +160,18 @@ function callbackPost (data){
 					if (!$(this).hasClass("apply")){
 						$('#accountDiv').fadeOut('slow', function (){
 							var originalPath = $('#avatar').attr('src');
+							var filePath="";
+							if (originalPath.indexOf("DefaultAvatar.jpg") == -1) {
 							var fileName = originalPath.split('_');
 							var filePath = fileName[0]; 
 							var fileExt = fileName[1].split('.');
 							filePath+="original.";
 							_fileExt = fileExt[1].substring(0,3);
 							filePath+=fileExt[1];
+							} else {
+							  filePath=originalPath;
+							}
+							$.log(filePath);
 							$('#accountAvatarDiv img').attr('src',filePath);
 							$('#avatar').attr("src",filePath).fadeIn();
 							$('#accountAvatarDiv').fadeIn('slow',function (){

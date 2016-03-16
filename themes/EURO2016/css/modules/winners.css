@@ -1,0 +1,96 @@
+	#winnersContainer{
+		height:550px;
+	}
+	#winners {
+		color:#365F89;
+		height:550px;
+		overflow:auto;
+	}
+	#winners li {
+		margin-bottom:15px;	
+	}
+	#winners table tbody tr {
+		height:20px;
+	}
+	#winners table tbody tr td:first-child,#winners table tbody tr td.first {
+		background-color:#f3f3f3;
+	}
+	#winners table tbody tr.winnersP4FChp td:first-child,#winners table tbody tr.winnersP4FChp td.first {
+		background-color:#6D8AA8;
+	}
+	#winners table tbody tr td {
+		padding-left:5px;
+	}
+	.mainTitle {
+		text-align:center;
+		color:#ffffff;
+		font-size:16px;
+		font-weight:bold;
+		text-transform:uppercase;
+		margin-bottom:10px;
+	}
+	.competitionligue1{
+		background:url(/images/winners.ligue1.png) top right #D7E1F6 no-repeat;
+		/*background-color:#D7E1F6;*/
+	}
+	.competitionworldcup2010{
+		background:url(/images/winners.worldcup.2010.png) top right #D7E1F6 no-repeat;
+		/*background-color:#D7E1F6;*/
+	}
+	.competitionworldcup2014{
+		background:url(/images/winners.worldcup.2014.png) top right #D7E1F6 no-repeat;
+		/*background-color:#D7E1F6;*/
+	}
+	.competitionuefa2012{
+		background:url(/images/winners.uefa.2012.png) top right #D7E1F6 no-repeat;
+		/*background-color:#D7E1F6;*/
+	}
+	.competitionTitle {
+		text-align:center;
+		font-size:14px;
+		padding-top:5px;
+		margin-bottom:15px;
+		font-weight:bold;
+	}
+	.winners {
+		color:#365F89;
+	}
+	.winners thead {
+		color:#ffffff;
+		background-color:#6D8AA8;
+	}
+	.winners thead th {
+		width:250px;
+	}
+	
+	.winners thead th:first-child,.winners thead th.first {
+		width:200px;
+	}
+	.winners tbody {
+		font-size:12px;
+	}
+	.rowTitle {
+		margin-left:20px;
+	}
+	.player {
+		font-weight:bold;
+	}
+	.winnersP4FChp {
+		background-color:#6D8AA8;
+		color:#ffffff;
+	}
+	.winnersP4FChp td {
+		text-align:center;
+	}
+	.winnersP4FChpSeason td:first-child,.winnersP4FChpSeason td.first {
+		text-align:right;
+	}
+	.winnersP4FChpSeason td:first-child span,.winnersP4FChpSeason td.first span {
+		margin-right:20px;
+	}
+	.ligue1 {
+		width:25px;height:25px;
+	}
+	.worldcup2010, .worldcup2014, .uefa2012 {
+		width:18px;height:30px;
+	}

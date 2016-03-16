@@ -39,8 +39,8 @@
 
 #newsTitle {
 	background: url('../../images/actu.png') no-repeat scroll left top
-		#BECDB6;
-	height: 360px;
+		#D7E1F6;
+	height: 530px;
 	margin-bottom: 30px;
 	_width: 920px;
 }
@@ -50,10 +50,11 @@
 	border: solid 1px #BECDB6;
 	color: #FFFFFF;
 	font: bold 11px/normal Tahoma, Verdana;
-	margin-top: 10px;
-	padding: 4px;
+	margin-top: 0;
+	padding: 2px;
 	position: absolute;
-	right: 46px;
+	left: 560px;
+	top: 77px;
 }
 
 #newsTitle .buttonfield:hover,#newsTitle .buttonfield:focus {
@@ -78,11 +79,9 @@
 
 #news .newsDate {
 	float: right;
-	border-left: 1px solid #BECDB6;
-	border-bottom: 1px solid #BECDB6;
-	background: #1B3D1C;
-	color: #FFFFFF;
-	font: bold 11px/normal Tahoma, Verdana;
+	color: rgb(54, 95, 137);
+	font: bold 11px Tahoma,Verdana;
+	text-shadow: 0 0 8px #ffffff, 0 0 8px #ffffff;
 }
 
 img.news {
@@ -99,69 +98,114 @@ img.news {
 	float: left;
 }
 
+#resultsTitle {
+	float: left;
+	/*background: url('../../images/forecasts.home2.png') no-repeat scroll
+		left top #D7E1F6;*/
+	background-color:#D7E1F6;
+	height: 265px;
+	width: 250px;
+	margin-bottom: 0;
+}
+
+#resultsTitle .container {
+	text-align: left;
+	color: #365F89;
+	padding-bottom:7px;
+}
+
+#resultsTitle .containerTitle {
+	font-size: 14px;
+	text-transform: uppercase;
+	font-weight: bold;
+	margin-left: 10px;
+	margin-top: 21px;
+}
+
+#resultsTitle .container2 {
+	height: 221px;
+	width: 255px;
+	overflow: auto;
+	margin: 0;
+}
+
+#resultsTitle ul li .status {
+	float: right;
+	margin-right: 0;
+	padding-left: 3px;
+	padding-right: 3px;
+	/*border-left: 1px solid #D7E1F6;
+	border-bottom: 1px solid #D7E1F6;
+	background: #365F89;*/
+	color:#365F89;
+	font: bold 8.5px/normal Tahoma, Verdana;
+}
+
+#resultsTitle ul li {
+	/* height: 62px; */
+	color: #FFFFFF;
+	padding-left: 5px;
+	padding-top: 4px;
+	margin-left:5px;
+}
+
 #forecastsTitle {
 	float: left;
-	background: url('../../images/forecasts.home2.png') no-repeat scroll
-		left top #BECDB6;
-	height: 250px;
-	width: 450px;
-	margin-bottom: 30px;
+	/*background: url('../../images/forecasts.home2.png') no-repeat scroll
+		left top #D7E1F6;*/
+	background-color:#D7E1F6;
+	height: 265px;
+	width: 250px;
+	margin-bottom: 0;
 }
 
 #forecastsTitle .container {
 	text-align: left;
-	color: #1B3D1C;
-	top-margin: 5px;
-	left-margin: 10px;
+	color: #365F89;
+	padding-bottom:7px;
 }
 
 #forecastsTitle .containerTitle {
-	font-size: 16px;
+	font-size: 14px;
 	text-transform: uppercase;
 	font-weight: bold;
-	margin-left: 180px;
-	margin-top: 15px;
+	margin-left: 10px;
+	margin-top: 21px;
 }
 
 #forecastsTitle .container2 {
-	height: 180px;
-	width: 420px;
+	height: 221px;
+	width: 255px;
 	overflow: auto;
-	margin-top: 25px;
-	margin-left: 15px;
-	margin-right: 15px;
-	margin-bottom: 15px;
+	margin: 0;
 }
 
 #forecastsTitle ul li .status {
 	float: right;
-	margin-right: 12px;
+	margin-right: 0;
 	padding-left: 3px;
 	padding-right: 3px;
-	border-left: 1px solid #BECDB6;
-	border-bottom: 1px solid #BECDB6;
-	background: #1B3D1C;
-	color: #FFFFFF;
-	font: bold 11px/normal Tahoma, Verdana;
+	/*border-left: 1px solid #D7E1F6;
+	border-bottom: 1px solid #D7E1F6;
+	background: #365F89;*/
+	color:#365F89;
+	font: bold 10px/normal Tahoma, Verdana;
 }
 
 #forecastsTitle ul li {
-	height: 62px;
+	/*height: 62px;*/
 	color: #FFFFFF;
-	padding-left: 15px;
-	padding-top: 8px;
-	background: url('../../images/forecasts.row.home.png') no-repeat scroll
-		left top transparent;
+	padding-left: 5px;
+	padding-top: 4px;
+	margin-left:5px;
 }
 
 #globalRankingTitle {
 	text-align: left;
-	color: #1B3D1C;
-	background: url('../../images/top5.png') no-repeat scroll left top
-		#BECDB6;
-	height: 250px;
-	width: 430px;
-	margin-bottom: 30px;
+	color: #365F89;
+	background: url('/images/podium.png') no-repeat scroll left top #D7E1F6;
+	height: 50px;
+	width: 940px;
 }
 
 #globalRankingTitle table td {
@@ -176,19 +220,228 @@ img.news {
 }
 
 #newsContainer {
-	font-size: 16px;
-	color: #1B3D1C;
+	font-size: 14px;
+	color: #365F89;
 	font-weight: bold;
 	margin-left: 140px;
 	margin-top: 5px;
 }
 
 #news {
-	background: #465723;
-	height: 300px;
+	background: #6D8AA8;
+	height: 478px;
 	overflow: auto;
 	margin-top: 15px;
-	margin-left: 15px;
-	margin-right: 15px;
-	margin-bottom: 15px;
+	margin-left: 5px;
+	margin-right: 0;
+	margin-bottom: 5px;
 }
+
+/* HEADINGS
+------------------------------------------------ */
+.head,.head div {
+	height: 42px;
+}
+
+.head {
+	margin-bottom: 6px;
+}
+
+.head div {
+	position: relative;
+	margin-right: 10px;
+}
+
+.head h2 {
+	position: absolute;
+	bottom: 0;
+	left: 8px;
+	width: 100%;
+	height: 42px;
+	margin: 0;
+}
+
+/* PANEL
+------------------------------------------------ */
+.panel {
+	min-height: 220px;
+}
+
+.panel .liste {
+	display: none;
+}
+
+/* MODULE CLASSEMENT
+------------------------------------------------ */
+#mod-classements2 h2 {
+	background-position: left top;
+}
+
+#mod-classements2 ol {
+	margin: 0px 0 0 0;
+	list-style: none;
+}
+
+#mod-classements2 ol li {
+	_width: 100px;
+	_height: 30px;	
+}
+
+#mod-classements ol li:last-child {
+	margin-bottom: 0;
+}
+
+#mod-classements2 ol em {
+	display: block;
+	font-weight: bold;
+	font-style: normal;
+	font-size: 1.3em;
+}
+
+#mod-classements2 .var {
+	float:right;
+	width: 37px;
+	height: 25px;
+
+	/*position: absolute;
+	right:0px;
+	_left:160px;
+	top: 50%;
+	_top: 0px;
+	width: 37px;
+	height: 25px;
+	margin-top: -13px;
+	_margin-top: 0px;
+	*/
+}
+
+#mod-classements2 .head div {
+	background-position: left -42px;
+}
+
+/*node2*/
+#mod-classements2 .node2 .head {
+	background-color: #6D8AA8;
+	background-position: right -84px;
+}
+
+#mod-classements2 h4 {
+	font-size: 16px;
+	font-weight: bold;
+	background-color: #6D8AA8;
+	font-family: Georgia;
+	text-transform: uppercase;
+}
+
+#mod-classements2 ol li {
+	border-right: 1px solid #6D8AA8;
+	float: left;
+	width: 172px;
+	margin-right: 5px;
+}
+
+
+#mod-classements2 ol li:last-child,#mod-classements2 ol li.last {
+	border: 0;
+}
+
+#mod-classements2 .avat {
+	border: 1px solid #E6E7E9;
+}
+
+#mod-classements2 ol a {
+	display: block;
+	text-decoration: none;
+	float:left;
+}
+
+#mod-classements2 ol span {
+	display: block;
+	text-decoration: none;
+}
+
+#mod-classements2 ol li .avat {
+	width: 33px;
+	height: 33px;
+	float: left;
+	margin-right: 7px;
+	padding: 0px;
+}
+
+#mod-classements2 .var {
+	background-image: url(../../images/sprite.png);
+	background-repeat: no-repeat;
+}
+
+#mod-classements2 .eq {
+	background-position: -13px -263px;
+}
+
+#mod-classements2 .up {
+	background-position: -15px -315px;
+}
+
+#mod-classements2 .down {
+	background-position: -14px -366px;
+}
+
+/* first */
+#mod-classements ol li:first-child,#mod-classements ol li.first {
+	border-bottom: 0;
+	border-right: 1px solid #E6E7E9;
+}
+
+#mod-classements ol li:first-child .avat,#mod-classements ol li.first .avat
+	{
+	margin-bottom: 7px;
+	width: 82px;
+	height: 82px;
+}
+
+#mod-classements ol li:first-child .eq,#mod-classements ol li.first .eq
+	{
+	background-position: -2px -101px;
+}
+
+#mod-classements ol li:first-child .up,#mod-classements ol li.first .up
+	{
+	background-position: -8px -156px;
+}
+
+#mod-classements ol li:first-child .down,#mod-classements ol li.first .down
+	{
+	background-position: -7px -208px;
+}
+
+#mod-classements ol li.first .down {
+	background-position: -7px -208px;
+}
+
+#mod-classements2 .node2 {
+	padding: 43px 0;
+}
+
+#mod-classements2 .node2 .head div {
+	background-position: left -126px;
+}
+
+#mod-classements2 .node2 .head h4 {
+	/* background: url(../images/head2-txt.png) left 50px
+		no-repeat; */
+}
+
+/* node2 */
+#mod-classements2 .node2 .liste .low, #mod-classements2 .node2 .liste .low a {
+	color: #888
+}
+
+#mod-classements2 .node2 .liste li:hover {
+	background: #f1f4f6;
+}
+
+/*node2*/
+#mod-classements2 .node2 .more a {
+	color: #192435;
+	background-position: -70px -214px;
+}
+

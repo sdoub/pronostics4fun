@@ -1,6 +1,5 @@
 .matcheslive {
-	background: url("../../images/matchbg.png") no-repeat scroll center top
-		transparent;
+    background: url("../../images/matchbg.png") no-repeat scroll center top transparent;
 	color: #FFFFFF;
 	float: left;
 	height: 53px;
@@ -11,8 +10,11 @@
 }
 
 .matchesliveBonus {
-	background: url("../../images/matchbgbonus.png") no-repeat scroll center
-		top transparent;
+    background: url("../../images/matchbgbonus.png") no-repeat scroll center top transparent;
+}
+
+.matchesliveOfflimit {
+    background: url("../../images/matchbggray.png") no-repeat scroll center top transparent;
 }
 
 .liveteamHome {
@@ -23,10 +25,8 @@
 }
 
 .liveteamHome img {
-	width: 15px;
-	height: 15px;
-	padding-left: 5px;
-}
+width:20px;
+height:20px;}
 
 .liveteamsep {
 	width: 3px;
@@ -42,8 +42,8 @@
 }
 
 .liveteamAway img {
-	width: 15px;
-	height: 15px;
+width:20px;
+height:20px;
 }
 
 .livescoreHome {
@@ -51,8 +51,6 @@
 	float: left;
 	text-align: right;
 	font-weight: bold;
-	position: absolute;
-	top: 23px;
 }
 
 .livescoresep {
@@ -67,9 +65,6 @@
 	float: right;
 	text-align: left;
 	font-weight: bold;
-	position: absolute;
-	top: 23px;
-	left: 36px;
 }
 
 .livestatus {
@@ -89,8 +84,19 @@
 	margin-left: 2px;
 	margin-right: 2px;
 	height: 33px;
-	background: url("../../images/matchbg.result.png") no-repeat scroll
-		center top transparent;
+    background: url("../../images/matchbg.result.png") no-repeat scroll center top transparent;
+}
+.forecastmatchTooltip {
+    width:57px;
+}
+
+.forecastmatchofflimit {
+    float:left; 
+    width:57px;
+    margin-left:2px;
+    margin-right:2px;
+    height:33px;
+    background: url("../../images/matchbg.result.png") no-repeat scroll center top #ccc;
 }
 
 .forecastteamHome {
@@ -115,7 +121,7 @@
 	width: 55px;
 	text-align: center;
 	font-size: 9px;
-	padding-top: 15px;
+padding-top:19px;
 	_padding-top: 0px;
 }
 
@@ -347,6 +353,7 @@
 	margin-top: -15px;
 	width: 25px;
 	height: 25px;
+	
 }
 
 #PlayerRanking .eq {
@@ -372,7 +379,6 @@
 .node2 .head h4 {
 	/* background: url(<?php echo ROOT_SITE;?>/images/head2-txt.png) left 50px
 		no-repeat; */
-	
 }
 
 /* node2 */
@@ -413,7 +419,8 @@
 	width: 200px;
 }
 
-#tabsRanking a { /*
+#tabsRanking a {
+	/*
 	text-decoration: none;
 	color: #000;
 	font-size:9px;
@@ -424,8 +431,7 @@
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
 	padding-bottom: 4px;
-	padding-right: 29px;
-	padding-left: 29px;
+	padding-right: 29px; padding-left: 29px;
 	text-decoration: none;
 	text-align: center;
 	_line-height: 18px;

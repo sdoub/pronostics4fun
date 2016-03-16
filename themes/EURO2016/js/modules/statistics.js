@@ -271,7 +271,7 @@ function CreateRankingChartWithTimeScale (ptitle, plotBands, fullDay)
 	         plotBands: plotBands
 	      },
 	      yAxis: [{
-			min:-35,
+			min:-100,
 			max:-1,
 	         title: {
 	            text: 'Classement',
@@ -541,7 +541,7 @@ function CreateRankingChart(ptitle, pcategories) {
 	         }
 		},
 		yAxis: {
-			min:-30,
+			min:-100,
 			max:-1,
 			title: {
 				text: 'Classement',
@@ -699,7 +699,7 @@ function CreateMinMaxAvgRankingChart(ptitle, pcategories) {
 				dataLabels: {
 					enabled:true,
 	                formatter: function() {
-						return Math.abs(this.y) + (Math.abs(this.y)==1? ' er' : ' eme') ;            
+						return Math.abs(this.y) + (Math.abs(this.y)==1? ' er' : ' ème') ;            
 				    },
 					style: {
 						fontWeight:'bold',

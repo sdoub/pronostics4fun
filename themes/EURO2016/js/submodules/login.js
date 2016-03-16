@@ -42,16 +42,25 @@ var wrapperId 	=	'#wrapper';		// main container
 
 function callbackPostError (XMLHttpRequest, textStatus, errorThrown)
 {
-	$.log(XMLHttpRequest);
+$.log("error loading screen");	
+$.log(XMLHttpRequest.statusText);
 	$.log(textStatus);
 	$.log(errorThrown);
 }
 
 function callbackPost (data){
-	if(data.status==true) {
+$.log("Screen loaded");
+$.log(data.status);
+
+	if(data.status===true) {
 		// status is authorized
 		if(autoRedir){ 
-			$(waitId).hide().html('Redirection...').fadeIn('fast', function(){window.location.reload();});
+			$(waitId).hide().html('Redirection...').fadeIn('fast', function(){
+				if (window.location.href.indexOf('logoff=')>0 )
+					window.location=data.url;
+				else
+					window.location.reload();
+			});
 		} else {
 			$(waitId).fadeOut('slow', function(){ $(wrapperId).html(data.message).slideDown(); }).html();
 		}
@@ -74,7 +83,7 @@ function callbackPost (data){
 					  _kc = true;
 					}
 					
-					$.log(_kc);
+					//$.log(_kc);
 					$.ajax({
 						type: "POST",
 						url: postFile,
@@ -126,9 +135,12 @@ function callbackPost (data){
 
 function callbackAuthentication(data) {
 	
-	if(data.status==true){ 
+	if(data.status===true){ 
 		if(autoRedir){ 
 			$(waitId).html('Redirection...').fadeIn('fast', function(){
+				if (window.location.href.indexOf('logoff=')>0 )
+					window.location=data.url;
+				else
 				window.location.reload();
 			});
 		} else {

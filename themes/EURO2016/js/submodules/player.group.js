@@ -29,7 +29,7 @@ var wrapperId 	=	'#wrapper';		// main container
 		$(waitId).hide(); $(wrapperId).hide();
 	});
 	
-	function getPlayerGroupDetail (playerKey, groupKey) { 
+	function getPlayerGroupDetail (playerKey, groupKey, dayKey) { 
 
 		_playerKey = playerKey;
 		_groupKey = groupKey;
@@ -41,7 +41,7 @@ var wrapperId 	=	'#wrapper';		// main container
 		// get request to load form
 
 		$.ajax({
-			  url: postFile + "&playerKey="+playerKey+"&groupKey="+groupKey,
+			  url: postFile + "&playerKey="+playerKey+"&groupKey="+groupKey+"&dayKey="+dayKey,
 			  dataType: 'json',
 			  data: "",
 			  success: callbackPost,

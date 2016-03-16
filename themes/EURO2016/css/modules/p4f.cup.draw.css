@@ -1,0 +1,298 @@
+.matcheslive {
+    background: url("../../images/matchbg.png") no-repeat scroll center top transparent;
+color:#FFFFFF;
+float:left;
+height:53px;
+margin:0 2px;
+padding:0;
+position:relative;
+width:57px;
+}
+
+.matchesliveBonus {
+    background: url("../../images/matchbgbonus.png") no-repeat scroll center top transparent;
+}
+
+.matchesliveOfflimit {
+    background: url("../../images/matchbggray.png") no-repeat scroll center top transparent;
+}
+
+.liveteamHome {
+width:25px;
+float:left;
+padding-left:3px;
+padding-top:3px;
+}
+.liveteamHome img{
+width:20px;
+height:20px;}
+
+.liveteamsep {
+width:3px;
+float:left;
+padding-top:6px;
+}
+
+.liveteamAway{
+width:20px;
+float:right;
+padding-right:3px;
+padding-top:3px;
+}
+.liveteamAway img {
+width:20px;
+height:20px;
+}
+
+
+.livescoreHome {
+width:22px;
+float:left;
+text-align:right;
+font-weight:bold;
+}
+
+.livescoresep{
+width:5px;
+float:left;
+text-align:center;
+visibility:hidden;
+}
+
+.livescoreAway{
+width:21px;
+float:right;
+text-align:left;
+font-weight:bold;
+}
+.livestatus{
+width:55px;
+text-align:center;
+font-size:9px;
+padding-top:25px;
+}
+
+.postponed{
+  color:red;
+}
+
+.forecastmatch {
+    float:left; 
+    width:56px;
+    margin-left:2px;
+    margin-right:2px;
+    height:33px;
+    background: url("../../images/matchbg.result.png") no-repeat scroll center top transparent;
+}
+.forecastmatchTooltip {
+    width:57px;
+}
+
+.forecastmatchofflimit {
+    float:left; 
+    width:57px;
+    margin-left:2px;
+    margin-right:2px;
+    height:33px;
+    background: url("../../images/matchbg.result.png") no-repeat scroll center top #ccc;
+}
+
+.forecastteamHome {
+width:25px;
+float:left;
+text-align:center;
+}
+.forecastsep{
+width:3px;
+float:left;
+margin-right:3px;
+}
+.forecastteamAway{
+width:20px;
+float:left;
+text-align:center;
+}
+.forecastScore{
+width:55px;
+text-align:center;
+font-size:9px;
+padding-top:15px;
+_padding-top:0px;
+}
+.playerforecastrow {
+width:700px;
+}
+.playerforecastrowcontent{
+margin-bottom:3px;
+width:720px;
+height:30px;
+}
+#playerDetail {
+overflow:auto; 
+height:475px;
+margin-top:55px;
+_margin-top:0px;
+position: relative;
+_width:725px;
+}
+
+.Failed {
+color:#EF6868;
+}
+
+.Success {
+color:#96EF95;
+}
+.NotStarted {
+color:#cccccc;
+}
+
+
+.resultRow {
+	background-color: #D7E1F6;
+	color: #365F89;
+}
+
+.resultRowOdd {
+	background-color: #6D8AA8;
+	color: #FFFFFF;
+}
+
+.liveStatusMatchDetail {
+	width: 79px;
+	height: 15px;
+	background: none repeat scroll 0 0 #365F89;
+	border: 1px solid #D7E1F6;
+	color: #FFFFFF;
+	font: bold 9px Tahoma, Verdana;
+	padding-top: 4px;
+	text-align: center;
+	text-decoration: none;
+	float: left;
+}
+
+	#cupContainer {
+		background-color:#D7E1F6;
+		width:940px;
+		height:550px;
+	}
+	#cupHeader {
+		background-color:#6D8AA8;
+		color:#ffffff;
+		font-weight:bold;
+		width:940px;
+		height:40px;
+		margin-top:5px;
+		/*margin-bottom:5px;*/
+		border-bottom:1px solid #365F89;
+	}
+	#cupHeader .disable {
+		color:#cccccc;
+	}
+	
+	#cupHeader a {
+		text-decoration:none;
+		color:#ffffff;
+	}
+	.prev {
+		padding-top:5px;float:left;width:150px;padding-left:20px;
+	}
+	.cupRoundTitle {
+		padding-top:5px;float:left;text-align:center;width:600px;
+	}
+	.next {
+		padding-top:5px;float:right;width:150px;text-align:right;padding-right:20px;
+	}
+	#cupContainer ul {
+		overflow:auto;height:508px;
+	}
+	
+	#cupContainer ul li {
+		padding-left:20px;padding-right:20px;
+	}
+	.player {
+		width:600px;height:30px;
+	}
+	.spacerRight {
+		width:285px;float:right;height:30px;
+	}
+	.noscrollbar {
+		width:300px;
+	}
+	.first {
+		padding-top:10px;
+	}
+	.second {
+		padding-top:10px;
+	}
+	.odd .first {
+		border-bottom:1px solid #cccccc;height: 35px;
+	}
+	.odd .second {
+		padding-top:10px;
+		border-bottom:0;
+	}
+	.player a{
+		text-decoration:none;font-size:14px;font-weight:bold;
+	}
+	.player a .avatar {
+		float:left;margin-right:15px;margin-left:15px;
+	}
+	.player a .avatar img {
+		width:25px;height:25px;
+	}
+	.player .score {
+		font-size:14px;font-weight:bold;float:right;margin-right:20px;
+	}
+	.opponent {
+		width:600px;border-top:1px solid #cccccc;height:35px;padding-top:5px;border-right:1px solid #cccccc;
+	}
+	.loser {
+		color:#848484;
+	}
+	.loser a {
+		color:#848484;
+	}
+	li {
+		margin-top:10px;
+	}
+	li.odd {
+		margin-top:0;
+	}
+
+	.odd .first {
+		border-right:1px solid #cccccc;
+	}
+	.odd .opponent {
+		border-right:0;
+		border-top:0;
+	}
+	.oneMatch .opponent {
+		border-right:0;
+	}
+
+	.winner {
+		padding-top: 10px;
+	}
+	.oneMatch .winner {
+		position: absolute;
+		right: 30px;
+		top: 117px;
+		padding-top: 0;
+	}
+	.oneMatch .winner a {
+		background-color: #D7E1F6;
+		padding: 5px 10px;
+	}
+	.odd .winner {
+		padding-top: 10px;
+		border-top: 1px solid #cccccc;
+	}
+	.oneMatch .spacerRight {
+		border-bottom: 1px solid #cccccc;
+		padding-top: 10px;
+	}
+	.oneMatch .winner {
+		border-bottom: 0;
+		padding-top: 0;
+	}
