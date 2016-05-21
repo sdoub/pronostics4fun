@@ -283,7 +283,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
   $isToBeRefreshed = true;
   if ($isLive) {
     $isToBeRefreshed = false;
-    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2012/day=10/session=1/match=$_externalKey/feed/minute.json?t=".time();
+    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2016/day=10/session=1/match=$_externalKey/feed/minute.json?t=".time();
 
     $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
     $homeId="";

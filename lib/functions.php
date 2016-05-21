@@ -347,9 +347,7 @@ function ConvertUefaKeyToP4F($uefaKey) {
    Suède -> 127 -> 65
    France -> 43 -> 1
    Angleterre -> 39 -> 9
-   */
-
-  $arrUefaKeys = array(109 => 59,
+   109 => 59,
   49 => 8,
   57451 => 60,
   58837 => 61,
@@ -364,7 +362,36 @@ function ConvertUefaKeyToP4F($uefaKey) {
   57166 => 64,
   127 => 65,
   43 => 1,
-  39 => 9);
+  39 => 9
+	 */
+
+  $arrUefaKeys = 
+		array(
+			2 => 80, //Albanie
+			43 => 1, //France
+			113 => 81, //Roumanie
+			128 => 30, //Suisse
+			39 => 9, //Angleterre
+			57451 => 60, //Russie
+			58836 => 24, //Slovaquie
+			144 => 83, //Pays de Galles
+			47 => 13, //Allemagne
+			63 => 84, //Irlande du nord
+			109 => 59, //Pologne
+			57166 => 64, //Ukraine
+			56370 => 63, //Croatie
+			58837 => 61, // République tchèque
+			122 => 29, // Espagne
+			135 => 85, //Turquie
+			13 => 76, //Belgique
+			66 => 21, //Italie
+			64 => 62, //République d'irlande
+			127 => 65, //Suède
+			8 => 86, //Autriche
+			57 => 87, //Hongrie
+			58 => 88, //Islande
+			110 => 28 //Portugal
+	);
 
   if (array_key_exists($uefaKey,$arrUefaKeys)) {
     return $arrUefaKeys[$uefaKey];

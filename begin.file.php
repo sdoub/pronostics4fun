@@ -91,7 +91,7 @@ setlocale (LC_TIME, 'fr_FR.utf8','fra');
 //TODO: Récupérer l'information de la base de données
 //TODO: Créer une session pour stocker la session courante
 //if (isset($_GET["BetaEuro"]) || isset($_GET["BetaCDM"])) {
-	DEFINE ('COMPETITION','9');
+	DEFINE ('COMPETITION','10');
 	$_themePath = "/themes/EURO2016";
 	$_competitionType =3;
 	$_competitionName="Euro";

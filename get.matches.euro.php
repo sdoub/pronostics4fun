@@ -26,7 +26,7 @@ foreach ($rowsSet as $rowSet)
   $_error = "";
 
 
-  $url = "http://fr.uefa.com/uefaeuro/season=2012/standings/round=15172/group=$dayKey/index.html";
+  $url = "http://fr.uefa.com/uefaeuro/season=2016/standings/round=2000448/group=$dayKey/index.html";
 
   print($url);
   if ($html = HtmlDomParser::file_get_html($url))
