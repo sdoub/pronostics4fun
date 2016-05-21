@@ -8,7 +8,7 @@ require_once(dirname(__FILE__)."/begin.file.php");
 $query = "SELECT PrimaryKey GroupKey,DayKey,Status
             FROM groups
            WHERE IsCompleted=0 AND CompetitionKey = ".COMPETITION."
-           LIMIT 0,4";
+           LIMIT 0,6";
 $matches = "";
 $rowsSet = $_databaseObject -> queryGetFullArray ($query, "Get all groups of the current competition");
 $_databaseObject->close();
@@ -29,6 +29,7 @@ foreach ($rowsSet as $rowSet)
   $url = "http://fr.uefa.com/uefaeuro/season=2016/standings/round=2000448/group=$dayKey/index.html";
 
   print($url);
+  print('<br/>');
   if ($html = HtmlDomParser::file_get_html($url))
   {
     {
