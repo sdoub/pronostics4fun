@@ -758,7 +758,7 @@ html,body {
 }
 
 #PlayerRanking .var {
-	background-image: url(<?php echo ROOT_SITE;?>/images/sprite.png);
+	background-image: url(../images/sprite.png);
 	background-repeat: no-repeat;
 	display: block;
 	text-decoration: none;

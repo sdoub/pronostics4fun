@@ -11,7 +11,7 @@
 	value="Voter pour le match bonus" class="buttonfield" id="btnVote" name="btnVote">
 </center>
 <?php }?>
-<div id='loading' style='display:none'><label style="text-align: :center;vertical-align: middle;">chargement...</label></div>
+<div id='loading' style='display:none'><label style="text-align:center;vertical-align: middle;">chargement...</label></div>
 <div id='calendarLegend' style="float:right; ">
   <div style="width:80px;height: 16px;float:right; text-align:center;margin-top:20px;margin-right:130px;font-size:10px;margin-left:5px;" class="fc-event fc-event-hori fc-corner-left fc-corner-right ToBeDone0">
     <a><span class="fc-event-title"><?php echo __encode("Non Validé");?></span></a>

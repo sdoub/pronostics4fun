@@ -50,7 +50,7 @@ textarea::-webkit-scrollbar-button
 }
 
 *::-webkit-scrollbar,
-textarea::-webkit-scrollbar,
+textarea::-webkit-scrollbar
 {
 	border-radius:0
 }

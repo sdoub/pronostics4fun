@@ -175,7 +175,7 @@ table {
 }
 
 #FixedContent .var{
-	background-image: url('. ROOT_SITE . '/images/sprite.png);
+	background-image: url(../../images/sprite.png);
 	background-repeat: no-repeat;
 	height:25px;
 	width:37px;

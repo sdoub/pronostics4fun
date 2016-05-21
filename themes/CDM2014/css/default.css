@@ -42,43 +42,8 @@
 	background-color: transparent;
 }
 
-*
-
-
-
-
-:
-
-
-
-
-:-webkit-scrollbar
-,
-textarea
-
-
-
-
-:
-
-
-
-
-:-webkit-scrollbar
-,
-{
-border-radius
-
-
-
-
-:
-
-
-
-
-0
-}
+*::-webkit-scrollbar , textarea::-webkit-scrollbar
+{ border-radius : 0;}
 /* - END -- ScrollBar color for Chrome, Safari ---- */
 	/* - START -- ScrollBar color for IE ---- */
 html {

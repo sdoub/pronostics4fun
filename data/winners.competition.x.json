@@ -1,7 +1,7 @@
 { "competitionKey" : 8,
 	"competitionType" : "ligue1",
   "season" : "Saison 2014/2015",
-  "winners" : [
+  "winners" : [{ "players" : [ 
            ],
         "winTitle" : "Classement général"
       },
