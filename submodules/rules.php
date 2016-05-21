@@ -101,7 +101,7 @@ Si le participant, obtient au sein des 1/4 de final 3 bons résultats, il gagne 
 Le meilleur pronostiqueur d'un groupe ou d'une phase du tableau est le participant qui aura cumulé le plus de points sur les matchs de celui-ci.
 </p>
 <p>
-Le meilleur pronostiqueur de l'euro 2012, est le participant qui aura cumulé le plus de points sur les 64 matchs qui se déroulent pendant le tournoi
+Le meilleur pronostiqueur de la coupe du monde 2014, est le participant qui aura cumulé le plus de points sur les 64 matchs qui se déroulent pendant le tournoi
 </p>
 <br/>
 <h3>Article 3 - Acceptation du règlement</h3>
@@ -127,7 +127,7 @@ $arr["status"] = false;
 <div style='overflow: auto; width: 760px; height: 450px; margin: 58px 0px 0pt 0pt;'>
 <h5>Comptabilisation des points</h5>
 <br>
-<p>Note: Pour les matchs du tableau final (à partir de 1/4 de final), si un match va en prolongation, le résultat pris en compte sera le score à l'issue de la prolongation mais avant la séance des tirs au but.</p>
+<p>Note: Pour les matchs du tableau final (à partir de 1/8 de final), si un match va en prolongation, le résultat pris en compte sera le score à l'issue de la prolongation mais avant la séance des tirs au but.</p>
 <br>
 <p>
 - Bon r&eacute;sultat = <strong>5 points</strong>.<br>
@@ -143,6 +143,10 @@ Groupes :<br/>
 &nbsp;&nbsp;&nbsp;- 6 bons r&eacute;sultats = <strong>40 points</strong> suppl&eacute;mentaires<br>
 <br/>
 Tableau final :<br/>
+&nbsp;1/8 final<br/>
+&nbsp;&nbsp;&nbsp;- 6 bons r&eacute;sultats = <strong>10 points</strong> suppl&eacute;mentaires <br>
+&nbsp;&nbsp;&nbsp;- 7 bons r&eacute;sultats = <strong>40 points</strong> suppl&eacute;mentaires <br> 
+&nbsp;&nbsp;&nbsp;- 8 bons r&eacute;sultats = <strong>60 points</strong> suppl&eacute;mentaires<br> 
 &nbsp;1/4 final<br/>
 &nbsp;&nbsp;&nbsp;- 3 bons r&eacute;sultats = <strong>10 points</strong> suppl&eacute;mentaires <br>
 &nbsp;&nbsp;&nbsp;- 4 bons r&eacute;sultats = <strong>20 points</strong> suppl&eacute;mentaires<br>
@@ -200,6 +204,15 @@ Si le participant, obtient au sein d'un groupe 6 bons résultats, il gagne 40 po
 Si le participant, obtient au sein d'un groupe 5 bons résultats, il gagne 20 points supplémentaires
 </p>
 <p>
+Si le participant, obtient au sein des 1/8 de final 8 bons résultats, il gagne 60 points supplémentaires
+</p>
+<p>
+Si le participant, obtient au sein des 1/8 de final 7 bons résultats, il gagne 40 points supplémentaires
+</p>
+<p>
+Si le participant, obtient au sein des 1/8 de final 6 bons résultats, il gagne 10 points supplémentaires
+</p>
+<p>
 Si le participant, obtient au sein des 1/4 de final 4 bons résultats, il gagne 20 points supplémentaires
 </p>
 <p>
@@ -209,7 +222,7 @@ Si le participant, obtient au sein des 1/4 de final 3 bons résultats, il gagne 
 Le meilleur pronostiqueur d'un groupe ou d'une phase du tableau est le participant qui aura cumulé le plus de points sur les matchs de celui-ci.
 </p>
 <p>
-Le meilleur pronostiqueur de l'euro 2012, est le participant qui aura cumulé le plus de points sur les 31 matchs qui se déroulent pendant le tournoi
+Le meilleur pronostiqueur de l'euro 2016, est le participant qui aura cumulé le plus de points sur les 51 matchs qui se déroulent pendant le tournoi
 </p>
 <br/>
 <h3>Article 3 - Acceptation du règlement</h3>
