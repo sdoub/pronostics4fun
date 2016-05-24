@@ -142,38 +142,40 @@ if ($_isAuthenticated )
   $playerGlobalScore = (int)$playerScore[0]["Score"] + (int)$playerBonusScore[0]["BonusScore"];
   if ($_competitionType==2)
     $playerRank.=" ($playerGlobalScore pts)";
-  $playerDivisionRank = $playerDivisionRanking[0]["Rank"];
-  if ($playerDivisionRank==0)
-    $playerDivisionRank="-";
-  elseif ($playerDivisionRank==1)
-    $playerDivisionRank.="<sup>er</sup>";
-  else
-    $playerDivisionRank.="<sup>ème</sup>";
+	if ($_competitionType==1) {
+		$playerDivisionRank = $playerDivisionRanking[0]["Rank"];
+		if ($playerDivisionRank==0)
+			$playerDivisionRank="-";
+		elseif ($playerDivisionRank==1)
+			$playerDivisionRank.="<sup>er</sup>";
+		else
+			$playerDivisionRank.="<sup>ème</sup>";
 
-  $queryCupRounds = "SELECT cuprounds.Description 
-	FROM playercupmatches 
-	INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey 
-	INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey AND seasons.CompetitionKey=".COMPETITION." 
-	WHERE (playercupmatches.PlayerHomeKey=" . $_authorisation->getConnectedUserKey() . " OR playercupmatches.PlayerAwayKey=" . $_authorisation->getConnectedUserKey() . ")
-	ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
-  $playerCupRounds = $_databaseObject -> queryGetFullArray($queryCupRounds, "Get DivisionRanking");
-  if ($playerCupRounds)
-		$playerCupRound = $playerCupRounds[0]["Description"];
-	else
-		$playerCupRound='';
+		$queryCupRounds = "SELECT cuprounds.Description 
+		FROM playercupmatches 
+		INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey 
+		INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey AND seasons.CompetitionKey=".COMPETITION." 
+		WHERE (playercupmatches.PlayerHomeKey=" . $_authorisation->getConnectedUserKey() . " OR playercupmatches.PlayerAwayKey=" . $_authorisation->getConnectedUserKey() . ")
+		ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+		$playerCupRounds = $_databaseObject -> queryGetFullArray($queryCupRounds, "Get DivisionRanking");
+		if ($playerCupRounds)
+			$playerCupRound = $playerCupRounds[0]["Description"];
+		else
+			$playerCupRound='';
 
 
-  $queryCurrentCupRounds = "SELECT cuprounds.Description,playercupmatches.SeasonKey, seasons.Order FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
-  $playerCurrentCupRounds = $_databaseObject -> queryGetFullArray($queryCurrentCupRounds, "Get DivisionRanking");
-  $playerCurrentCupRound = $playerCurrentCupRounds[0]["Description"];
-  $playerCurrentSeason = $playerCurrentCupRounds[0]["Order"];
+		$queryCurrentCupRounds = "SELECT cuprounds.Description,playercupmatches.SeasonKey, seasons.Order FROM playercupmatches INNER JOIN cuprounds ON cuprounds.PrimaryKey=playercupmatches.CupRoundKey INNER JOIN seasons ON seasons.PrimaryKey=playercupmatches.SeasonKey ORDER BY playercupmatches.PrimaryKey DESC LIMIT 0,1";
+		$playerCurrentCupRounds = $_databaseObject -> queryGetFullArray($queryCurrentCupRounds, "Get DivisionRanking");
+		$playerCurrentCupRound = $playerCurrentCupRounds[0]["Description"];
+		$playerCurrentSeason = $playerCurrentCupRounds[0]["Order"];
 
-  $cupStatus = $playerCupRound;
-  if ($playerCupRound!=$playerCurrentCupRound)
-    $cupStatus = "éliminé";
-	if (!$playerCupRound) {
-		$cupStatus = "-";
-		$playerCurrentSeason = 0;
+		$cupStatus = $playerCupRound;
+		if ($playerCupRound!=$playerCurrentCupRound)
+			$cupStatus = "éliminé";
+		if (!$playerCupRound) {
+			$cupStatus = "-";
+			$playerCurrentSeason = 0;
+		}
 	}
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
   echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;" title="Classement général"/>';

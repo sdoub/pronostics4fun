@@ -1,4 +1,3 @@
-<div>
 <?php
 $additionalParameter = "";
 if (isset($_GET["Mode"]))
@@ -7,6 +6,8 @@ if (isset($_GET["Mode"]))
 $firstGroupKey = 169;
 
 ?>
+
+<div>
 <style	>
 	.groups > ul > li {
 		float:left;
@@ -60,47 +61,65 @@ $firstGroupKey = 169;
 	</div>
 	<div class="groups roundGroup" name="groups"	>
 		<ul >
-			<li>
+	<?php 
+		$groups = GroupsQuery::Create()
+			->filterByCompetitionkey(COMPETITION)
+			->filterByDescription('Groupe%')
+			->find();
+
+		foreach ($groups as $group) {
+			echo '<li>
 				<div>
-					<h3>
-						Groupe A
-					</h3>
-					<ul>
-						<li>Albanie</li>
-						<li>France</li>
-						<li>Roumanie</li>
-						<li>Suisse</li>
-					</ul>
+					<h3><a href="'.ROOT_SITE.'/index.php?Page=2&GroupKey='.$group->getPrimaryKey() . $additionalParameter.'" >'.
+						$group->getDescription()
+					.'</a></h3>
+					<ul>';
+			$teams = array();
+			foreach ($group->getMatchess() as $match) {
+				$teamName = $match->getTeamHome()->getName();
+				$teams[$teamName] = $teamName;
+				$teamName = $match->getTeamAway()->getName();
+				$teams[$teamName] = $teamName;
+			}
+			ksort($teams);
+			foreach ($teams as $key => $val) {
+					echo "<li>".$val."</li>";
+			}
+
+		echo '</ul>
 				</div>
-			</li>
-			<li>
-				<div>
-					Groupe B
-				</div>
-			</li>
-			<li>
-				<div>
-					Groupe C
-				</div>
-			</li>
-			<li>
-				<div>
-					Groupe D
-				</div>
-			</li>
-			<li>
-				<div>
-					Groupe E
-				</div>
-			</li>
-			<li>
-				<div>
-					Groupe F
-				</div>
-			</li>
+			</li>';
+		}
+	?>
 		</ul>
 	</div>
-	<div class="titleGroup">
+	<?php
+	$groupsDirect = GroupsQuery::Create()
+			->filterByCompetitionkey(COMPETITION)
+			//->where('groups.Description NOT LIKE ?', array('Groupe%'))	
+			->filterByDescription('Groupe%', \Propel\Runtime\ActiveQuery\Criteria::NOT_LIKE)
+			->find();	
+		
+	foreach ($groupsDirect as $groupDirect) {
+		echo '	<div class="titleGroup">
+				<h3>'.$groupDirect->getDescription().'</h3>
+			</div>
+			<div class="groups round16" >
+				<ul>';
+		foreach ($groupDirect->getMatchess() as $match) {
+			echo '<li>
+							<ul>
+								<li>'.$match->getTeamHome()->getName().'</li>
+								<li>'.$match->getTeamAway()->getName().'</li>
+							</ul>
+						</li>';
+			}
+		echo '</ul>
+		</div>';
+	}
+	
+	?>
+	<!-- div class="titleGroup">
 		<h3>
 			Huitièmes de finale
 		</h3>
@@ -173,16 +192,19 @@ $firstGroupKey = 169;
 	<div class="groups round4" name="FinalRound3">
 	 
 	</div>
-		<div class="titleGroup">
+	<div class="titleGroup">
 		<h3>
 			 Finale
 		</h3>
 	</div>
 	<div class="groups round2" name="FinalRound4">
 	  
+	</div -->
 	</div>
 </div>
-<img style="border:0px;" src="<?php echo ROOT_SITE. $_themePath; ?>/images/resultshomebg.png" USEMAP="#Map"/>
+<?php
+
+/*<img style="border:0px;" src="<?php echo ROOT_SITE. $_themePath; ?>/images/resultshomebg.png" USEMAP="#Map"/>
 <MAP NAME="Map">
 	<AREA SHAPE="rect"
 		   HREF="<?php echo ROOT_SITE; ?>/index.php?Page=2&GroupKey=<?php echo  $firstGroupKey . $additionalParameter; ?>"
@@ -258,6 +280,4 @@ $firstGroupKey = 169;
 		   COORDS="420,430,510,490" style="border: solid 1px #000; ">
 <!---->
 </MAP>
-
-
-</div>
+*/
