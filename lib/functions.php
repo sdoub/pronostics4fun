@@ -362,7 +362,7 @@ function ConvertUefaKeyToP4F($uefaKey) {
   57166 => 64,
   127 => 65,
   43 => 1,
-  39 => 9
+39 => 9
 	 */
 
   $arrUefaKeys = 
