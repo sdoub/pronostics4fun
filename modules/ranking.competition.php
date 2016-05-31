@@ -4,9 +4,8 @@
 
 ?>
 <div id="mainCol" >
-<!-- <img src="<?php echo ROOT_SITE.$_themePath; ?>/images/resultshomebg.svg" />-->
-  <?php
-$homepage = file_get_contents(ROOT_SITE.$_themePath.'/images/resultshomebg.svg');
-echo $homepage;
+<?php
+  
+  include (BASE_PATH.$_themePath.'/images/resultshomebg.svg');
 ?>
 </div>

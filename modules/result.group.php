@@ -831,8 +831,10 @@ SUM(IFNULL((SELECT SUM(playermatchresults.Score) FROM playermatchresults WHERE p
       ),0) +
       (SELECT
 CASE COUNT(*)
-WHEN 6 THEN 40
-WHEN 5 THEN 20
+WHEN 8 THEN 60
+WHEN 7 THEN 40
+WHEN 6 THEN IF (groups.Code='1/8',10,40)
+WHEN 5 THEN IF (groups.Code='1/8',0,20)
 WHEN 4 THEN IF (groups.Code='1/4',20,0)
 WHEN 3 THEN IF (groups.Code='1/4',10,0)
 ELSE 0 END
@@ -842,7 +844,23 @@ INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
 WHERE groups.PrimaryKey=$_groupKey
 AND playermatchresults.Score>=5
 AND playermatchresults.playerKey=players.PrimaryKey
-)) Score
+)) Score,
+IFNULL((SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+  WHERE players.PrimaryKey=playermatchresults.PlayerKey
+    AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
+    									FROM matches
+    									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+    									       AND groups.PrimaryKey=$_groupKey)
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
+      AND playermatchresults.Score>=5),0) ScoreCorrect,
+IFNULL((SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+  WHERE players.PrimaryKey=playermatchresults.PlayerKey
+    AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
+    									FROM matches
+    									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
+    									       AND groups.PrimaryKey=$_groupKey)
+      AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
+      AND playermatchresults.Score>=15),0) ScorePerfect
 FROM playersenabled players
 GROUP BY NickName
 ORDER BY Score DESC, NickName";
@@ -875,22 +893,22 @@ AND playermatchresults.playerKey=players.PrimaryKey
         INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
         WHERE groups.PrimaryKey=$_groupKey
           AND votes.playerKey=players.PrimaryKey)) Score,
-(SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+IFNULL((SELECT COUNT(playermatchresults.Score) FROM playermatchresults
   WHERE players.PrimaryKey=playermatchresults.PlayerKey
     AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
     									FROM matches
     									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
     									       AND groups.PrimaryKey=$_groupKey)
       AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
-      AND playermatchresults.Score>=5) ScoreCorrect,
-(SELECT COUNT(playermatchresults.Score) FROM playermatchresults
+      AND playermatchresults.Score>=5),0) ScoreCorrect,
+IFNULL((SELECT COUNT(playermatchresults.Score) FROM playermatchresults
   WHERE players.PrimaryKey=playermatchresults.PlayerKey
     AND playermatchresults.MatchKey IN (SELECT matches.PrimaryKey
     									FROM matches
     									INNER JOIN groups ON groups.PrimaryKey=matches.GroupKey
     									       AND groups.PrimaryKey=$_groupKey)
       AND playermatchresults.MatchKey IN (SELECT results.MatchKey FROM results WHERE results.LiveStatus=10)
-      AND playermatchresults.Score>=15) ScorePerfect
+      AND playermatchresults.Score>=15),0) ScorePerfect
 FROM playersenabled players
 GROUP BY players.PrimaryKey
 ORDER BY Score DESC, ScoreCorrect DESC, ScorePerfect DESC";
@@ -967,7 +985,7 @@ $(document).ready(function($) {
 	$("li",$("#groupranking")).cluetip(
 			{positionBy:'bottomTop',
 				showTitle:false,
-				width:715,
+				width:<?php echo $rowWidth+20; ?>,
 				ajaxCache:false,
 				cluetipClass:'p4f',
 				arrows:false,

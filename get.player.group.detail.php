@@ -184,7 +184,7 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 {
 
   $playerKey = $rowSet["PlayerKey"];
-	echo '<li id="li_' . $playerKey . '" class="playerforecastrow" style="width:714px;" player-key="'. $playerKey .'" >
+	echo '<li id="li_' . $playerKey . '" class="playerforecastrow" style="width:'.($rowWidth+15).'px;" player-key="'. $playerKey .'" >
 	<div style="width:100%" class="playerforecastrowcontent">';
 
   $realRank++;

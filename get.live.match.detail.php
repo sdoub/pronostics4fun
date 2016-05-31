@@ -57,9 +57,9 @@ while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet))
 
 
   echo "<div style='width:560px;padding-top:20px; _padding-top:0px;background: url(\"".ROOT_SITE."/images/tooltipmatchbg.png\") no-repeat scroll center bottom transparent;'>
-  <div  style='float: left; width: 100px; text-align: center;'><img src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png'></img></div>
+  <div  style='float: left; width: 100px; text-align: center;'><img src='" . ROOT_SITE . "/images/teamFlags/$teamHomeKey.png' class='teamFlag'></img></div>
   <div style='white-space:nowrap;color:#FFFFFF;float: left; text-align: center; font-weight: bold; font-size: 30px; width: 180px;height:36px;line-height:33px;' >$teamHomeName</div>
-  <div  style='float: right;width: 100px; text-align: center;' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png'></img></div>
+  <div  style='float: right;width: 100px; text-align: center;' ><img src='" . ROOT_SITE . "/images/teamFlags/$teamAwayKey.png' class='teamFlag'></img></div>
   <div  style='white-space:nowrap;color:#FFFFFF;float: right; width: 180px; text-align: center; font-size: 30px; font-weight: bold;height:36px;line-height:33px;'>$teamAwayName</div>
   <div style='text-align:center;font-family:Century Gothic,Trebuchet MS,Arial;font-size:55px;font-weight:bolder;color:#FFFFFF;width:180px;height:79px;float:left;background: url(\"".ROOT_SITE."/images/scorebg.png\") no-repeat scroll center top transparent;'><span style='margin-top: 15px; float: left; height: 55px; margin-left: 75px; line-height: 55px;'>$teamHomeScore</span></div>
   <div style='text-align:center;font-family:Century Gothic,Trebuchet MS,Arial;font-size:55px;font-weight:bolder;color:#FFFFFF;width:180px;height:79px;float:right;background: url(\"".ROOT_SITE."/images/scorebg.png\") no-repeat scroll center top transparent;' ><span style='margin-top: 15px; float: left; height: 55px; margin-left: 75px; line-height: 55px;'>$teamAwayScore</span></div>
