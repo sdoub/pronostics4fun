@@ -1113,7 +1113,7 @@ $(document).ready(function($) {
 	$("li",$("#groupranking")).cluetip(
 			{positionBy:'bottomTop',
 				showTitle:false,
-				width:715,
+				width:<?php echo $rowWidth+20; ?>,
 				ajaxCache:false,
 				cluetipClass:'p4f',
 				arrows:false,
@@ -1133,7 +1133,7 @@ $(document).ready(function($) {
 	$("li",$("#globalranking")).cluetip(
 			{positionBy:'bottomTop',
 				showTitle:false,
-				width:715,
+				width:<?php echo $rowWidth+20; ?>,
 				ajaxCache:false,
 				cluetipClass:'p4f',
 				arrows:false,

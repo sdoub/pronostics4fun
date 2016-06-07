@@ -94,8 +94,8 @@ table {
 }
 
 #tendancyHome {
-	background: url('../../images/green1px.gif') repeat-x scroll left center transparent;
-	/* background-color: #B3D207; */
+	/*background: url('../../images/green1px.gif') repeat-x scroll left center transparent;
+	 background-color: #B3D207; */
 	color:#FFFFFF;
 	font-size:10px;
 	font-weight:bold;
@@ -103,8 +103,8 @@ table {
 }
 
 #tendancyNull {
-	background: url('../../images/yellow1px.gif') repeat-x scroll left center transparent;
-	/* background-color: #2B9BC0; */
+	/*background: url('../../images/yellow1px.gif') repeat-x scroll left center transparent;
+	 background-color: #2B9BC0; */
 	color:#FFFFFF;
 	font-size:10px;
 	font-weight:bold;
@@ -112,8 +112,8 @@ table {
 }
 
 #tendancyAway {
-	background: url('../../images/red1px.gif') repeat-x scroll left center transparent;
-	/* background-color: #EF0000; */
+	/*background: url('../../images/red1px.gif') repeat-x scroll left center transparent;
+	 background-color: #EF0000; */
 	color:#FFFFFF;
 	font-size:10px;
 	font-weight:bold;
