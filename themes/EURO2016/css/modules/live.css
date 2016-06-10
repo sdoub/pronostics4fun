@@ -28,7 +28,7 @@
 
 .liveteamHome img {
 	width: 20px;
-	height: 20px;
+	height: 14px;
 }
 
 .liveteamsep {
@@ -46,7 +46,7 @@
 
 .liveteamAway img {
 	width: 20px;
-	height: 20px;
+	height: 14px;
 }
 
 .livescoreHome {
@@ -498,4 +498,9 @@
 	text-align: center;
 	text-decoration: none;
 	float: left;
+}
+
+.teamFlag {
+ 	width:80px;
+ 	height:54px;
 }
