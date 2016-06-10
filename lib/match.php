@@ -283,7 +283,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
   $isToBeRefreshed = true;
   if ($isLive) {
     $isToBeRefreshed = false;
-    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=3/season=2016/day=10/session=1/match=$_externalKey/feed/minute.json?t=".time();
+    $urlToGetMatchInfo = "http://fr.uefa.com/livecommon/match-centre/cup=4/season=2016/day=1/session=1/match=$_externalKey/feed/minute.json?t=".time();
 
     $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
     $homeId="";
@@ -416,7 +416,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
         // 1/2 finale
         //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15174/match=$_externalKey/index.html";
         // finale
-        $urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15175/match=$_externalKey/index.html";
+        $urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2016/matches/round=2000448/match=$_externalKey/index.html";
         break;
     }
     $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
