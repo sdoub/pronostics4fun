@@ -408,6 +408,7 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
         break;
       case 2:
       case 4:
+			case 10:
         // phases de groupe
         //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15172/match=$_externalKey/index.html";
         // après phase de groupe
@@ -416,318 +417,416 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
         // 1/2 finale
         //$urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2012/matches/round=15174/match=$_externalKey/index.html";
         // finale
-        $urlToGetMatchInfo = "http://fr.uefa.com/uefaeuro/season=2016/matches/round=2000448/match=$_externalKey/index.html";
+        $urlToGetMatchInfo = "http://daaseuro2016.uefa.com/api/v2/football/fr/matches/$_externalKey";
         break;
     }
+
     $objectReturn["urlToGetMatchInfo"]= $urlToGetMatchInfo;
     $homeId="";
     $awayId="";
-    if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
+    $jsonMatch = file_get_contents($urlToGetMatchInfo);
+    $infoMatch = json_decode($jsonMatch);
+		
+		$matchResult = $infoMatch->match->results;
+		
+		$peopleCount = 1;
+		$isSubstitute = 0;
+		// TODO: Get information from live information
+		$liveStatus=10;
+		$actualTime=90;
 
-      if ($htmlMatch->find('tr.people')!=null) {
-        $peopleCount = 1;
-        $isSubstitute = 0;
-        // TODO: Get information from live information
-        $liveStatus=10;
-        $actualTime=90;
+		$updateQuery = "INSERT IGNORE INTO results (MatchKey, LiveStatus, ActualTime) VALUES ($matchKey, $liveStatus, $actualTime) ON DUPLICATE KEY UPDATE LiveStatus=$liveStatus, ActualTime=$actualTime";
+		$queries[]=$updateQuery;
 
-        $updateQuery = "INSERT IGNORE INTO results (MatchKey, LiveStatus, ActualTime) VALUES ($matchKey, $liveStatus, $actualTime) ON DUPLICATE KEY UPDATE LiveStatus=$liveStatus, ActualTime=$actualTime";
-        $queries[]=$updateQuery;
+		$updateQuery = "DELETE FROM events WHERE ResultKey=(SELECT PrimaryKey ResultKey
+						FROM results
+					 WHERE results.MatchKey=$matchKey)";
 
-        $updateQuery = "DELETE FROM events WHERE ResultKey=(SELECT PrimaryKey ResultKey
-      			    FROM results
-      			   WHERE results.MatchKey=$matchKey)";
+		$resultKey="(SELECT PrimaryKey ResultKey
+						FROM results
+					 WHERE results.MatchKey=$matchKey)";
 
-        $resultKey="(SELECT PrimaryKey ResultKey
-      			    FROM results
-      			   WHERE results.MatchKey=$matchKey)";
+		$queries[]=$updateQuery;
+		
+		foreach ($matchResult->scorers->homeGoals as $homeScorer) {
+			$eventTime = $homeScorer->minute;
+			$eventAdditionalTime = $homeScorer->minuteExtra;
 
-        $queries[]=$updateQuery;
+			if ((int)$eventTime>105) {
+				$half = 7;
+			}
+			else if ((int)$eventTime>90) {
+				$half = 5;
+			}
+			else if ((int)$eventTime>45) {
+				$half = 3;
+			}
+			else {
+				$half = 1;
+			}
 
-        foreach($htmlMatch->find('tr.people') as $peoples) {
+			switch ($homeScorer->eventsubcode) {
+				case "P":
+					$eventType="2";
+					break;
+				case "O":
+					$eventType="3";
+					break;
+				default: // goals
+					$eventType="1";
+					break;
+			}
+			$teamPlayer = $homeScorer->playerWebNameAlt;
+			$eventTime += $eventAdditionalTime;
 
+			$updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+			$queries[]=$updateQuery;
+			$teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+			if ($eventType=="3") {
+				$teamKey = $_teamAwayKey;
+			} else {
+				$teamKey = $_teamHomeKey;
+			}
 
-          // is it a player record?
-          if (count_chars($peoples->find('td.w18',0)->innertext)>0){
+			$updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+				VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+				ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+			$queries[]=$updateQuery;
+		}
+		foreach ($matchResult->scorers->awayGoals as $awayScorer) {
+			$eventTime = $awayScorer->minute;
+			$eventAdditionalTime = $awayScorer->minuteExtra;
 
-            // Team Home Player
-            $teamPlayerDetail = $peoples->find('td.w160',0);
-            if ($teamPlayerDetail!=null){
-              $teamPlayerDetail2 = $teamPlayerDetail->find('td.w18',0);
-              if ($teamPlayerDetail2!=null){
-                $teamPlayerDetail3 = $teamPlayerDetail2->find('a',0);
-                if ($teamPlayerDetail3!=null){
-                  $teamPlayer = $teamPlayerDetail3->getAttribute("title");
-                  $timeIn = "NULL";
-                  $playerDetailReplaced='';
-                  $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
-                  $queries[]=$updateQuery;
+			if ((int)$eventTime>105) {
+				$half = 7;
+			}
+			else if ((int)$eventTime>90) {
+				$half = 5;
+			}
+			else if ((int)$eventTime>45) {
+				$half = 3;
+			}
+			else {
+				$half = 1;
+			}
 
-                  $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-                  $teamPlayerReplacedKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$playerDetailReplaced) . "')";
-                  $updateQuery = "INSERT IGNORE INTO lineups (MatchKey, TeamKey, TeamPlayerKey, IsSubstitute, TimeIn, TeamPlayerReplacedKey)
-            VALUES ($matchKey, $_teamHomeKey, $teamPlayerKey,$isSubstitute,$timeIn,$teamPlayerReplacedKey)
-            ON DUPLICATE KEY UPDATE TimeIn=$timeIn, TeamPlayerReplacedKey=$teamPlayerReplacedKey";
-                  $queries[]=$updateQuery;
+			switch ($awayScorer->eventsubcode) {
+				case "P":
+					$eventType="2";
+					break;
+				case "O":
+					$eventType="3";
+					break;
+				default: // goals
+					$eventType="1";
+					break;
+			}
+			$teamPlayer = $awayScorer->playerWebNameAlt;
+			$eventTime += $eventAdditionalTime;
 
-                  $events = $peoples->find('td.w155',0);
-                  if ($events->innertext!=null){
-                    foreach ($events->find('div') as $event) {
-                      $evtType = explode("/",$event->find('img',0)->getAttribute("src"));
-                      $eventType = str_replace(".gif","",$evtType[4]);
-                      $eventTime = $event->find('span',0)->innertext;
+			$updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+			$queries[]=$updateQuery;
+			$teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+			if ($eventType=="3") {
+				$teamKey = $_teamHomeKey;
+			} else {
+				$teamKey = $_teamAwayKey;
+			}
 
-                      if ($eventType=="goals" || $eventType=="goals_P" || $eventType=="goals_O") {
-                        $eventTime = str_replace("Prol.","",$eventTime);
-                        if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = explode("+",trim($eventTime));
-                          $eventAdditionalTime = $eventAddTime[1];
-                        }
-                        else {
-                          $eventAdditionalTime = 0;
-                        }
+			$updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+				VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+				ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+			$queries[]=$updateQuery;
+		}
+		
+//     if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
 
-                        if ((int)$eventTime>105) {
-                          $half = 7;
-                        }
-                        else if ((int)$eventTime>90) {
-                          $half = 5;
-                        }
-                        else if ((int)$eventTime>45) {
-                          $half = 3;
-                        }
-                        else {
-                          $half = 1;
-                        }
+//       if ($htmlMatch->find('tr.people')!=null) {
 
-
-                        switch ($eventType) {
-                          case "goals_P":
-                            $eventType="2";
-                            break;
-                          case "goals_O":
-                            $eventType="3";
-                            break;
-                          default: // goals
-                            $eventType="1";
-                            break;
-                        }
-
-                        $eventTime += $eventAdditionalTime;
-
-                        $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
-                        $queries[]=$updateQuery;
-                        $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-                        if ($eventType=="3") {
-                          $teamKey = $_teamAwayKey;
-                        } else {
-                          $teamKey = $_teamHomeKey;
-                        }
-
-                        $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
-        VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
-        ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
-                        $queries[]=$updateQuery;
-
-                      }
-
-                      if ($eventType=="yells" || $eventType=="yell_reds" || $eventType=="reds") {
-                        $eventTime = str_replace("Prol.","",$eventTime);
-                        if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = explode("+",trim($eventTime));
-                          $eventAdditionalTime = $eventAddTime[1];
-                        }
-                        else {
-                          $eventAdditionalTime = 0;
-                        }
-
-                        if ((int)$eventTime>105) {
-                          $half = 7;
-                        }
-                        else if ((int)$eventTime>90) {
-                          $half = 5;
-                        }
-                        else if ((int)$eventTime>45) {
-                          $half = 3;
-                        }
-                        else {
-                          $half = 1;
-                        }
+//         foreach($htmlMatch->find('tr.people') as $peoples) {
 
 
-                        switch ($eventType) {
-                          case "yells":
-                            $eventType="5";
-                            break;
-                          default: // red card
-                            $eventType="6";
-                            break;
-                        }
+//           // is it a player record?
+//           if (count_chars($peoples->find('td.w18',0)->innertext)>0){
 
-                        $eventTime += $eventAdditionalTime;
+//             // Team Home Player
+//             $teamPlayerDetail = $peoples->find('td.w160',0);
+//             if ($teamPlayerDetail!=null){
+//               $teamPlayerDetail2 = $teamPlayerDetail->find('td.w18',0);
+//               if ($teamPlayerDetail2!=null){
+//                 $teamPlayerDetail3 = $teamPlayerDetail2->find('a',0);
+//                 if ($teamPlayerDetail3!=null){
+//                   $teamPlayer = $teamPlayerDetail3->getAttribute("title");
+//                   $timeIn = "NULL";
+//                   $playerDetailReplaced='';
+//                   $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+//                   $queries[]=$updateQuery;
 
-                        $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
-                        $queries[]=$updateQuery;
-                        $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-                        $teamKey = $_teamHomeKey;
-                        $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
-        VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
-        ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
-                        $queries[]=$updateQuery;
+//                   $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+//                   $teamPlayerReplacedKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$playerDetailReplaced) . "')";
+//                   $updateQuery = "INSERT IGNORE INTO lineups (MatchKey, TeamKey, TeamPlayerKey, IsSubstitute, TimeIn, TeamPlayerReplacedKey)
+//             VALUES ($matchKey, $_teamHomeKey, $teamPlayerKey,$isSubstitute,$timeIn,$teamPlayerReplacedKey)
+//             ON DUPLICATE KEY UPDATE TimeIn=$timeIn, TeamPlayerReplacedKey=$teamPlayerReplacedKey";
+//                   $queries[]=$updateQuery;
 
-                      }
-                    }
-                  }
+//                   $events = $peoples->find('td.w155',0);
+//                   if ($events->innertext!=null){
+//                     foreach ($events->find('div') as $event) {
+//                       $evtType = explode("/",$event->find('img',0)->getAttribute("src"));
+//                       $eventType = str_replace(".gif","",$evtType[4]);
+//                       $eventTime = $event->find('span',0)->innertext;
 
+//                       if ($eventType=="goals" || $eventType=="goals_P" || $eventType=="goals_O") {
+//                         $eventTime = str_replace("Prol.","",$eventTime);
+//                         if (strpos($eventTime,"+")>0) {
+//                           $eventAddTime = explode("+",trim($eventTime));
+//                           $eventAdditionalTime = $eventAddTime[1];
+//                         }
+//                         else {
+//                           $eventAdditionalTime = 0;
+//                         }
 
-                }
-              }
-            }
-            // Team Away Player
-            $teamAwayPlayerDetail = $peoples->find('td.w160',1);
-            if ($teamAwayPlayerDetail!=null){
-              $teamAwayPlayerDetail2 = $teamAwayPlayerDetail->find('td.w18',0);
-              if ($teamAwayPlayerDetail2!=null){
-                $teamAwayPlayerDetail3 = $teamAwayPlayerDetail2->find('a',0);
-                if ($teamAwayPlayerDetail3!=null){
-
-                  $teamPlayer = $teamAwayPlayerDetail3->getAttribute("title");
-                  $timeIn = "NULL";
-                  $playerDetailReplaced='';
-                  $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
-                  $queries[]=$updateQuery;
-
-                  $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-                  $teamPlayerReplacedKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$playerDetailReplaced) . "')";
-                  $updateQuery = "INSERT IGNORE INTO lineups (MatchKey, TeamKey, TeamPlayerKey, IsSubstitute, TimeIn, TeamPlayerReplacedKey)
-            VALUES ($matchKey, $_teamAwayKey, $teamPlayerKey,$isSubstitute,$timeIn,$teamPlayerReplacedKey)
-            ON DUPLICATE KEY UPDATE TimeIn=$timeIn, TeamPlayerReplacedKey=$teamPlayerReplacedKey";
-                  $queries[]=$updateQuery;
-
-                  $events = $peoples->find('td.w155',1);
-                  if ($events->innertext!=null){
-                    foreach ($events->find('div') as $event) {
-                      $evtType = explode("/",$event->find('img',0)->getAttribute("src"));
-                      $eventType = str_replace(".gif","",$evtType[4]);
-                      $eventTime = $event->find('span',0)->innertext;
-
-                      if ($eventType=="goals" || $eventType=="goals_P" || $eventType=="goals_O") {
-                        $eventTime = str_replace("Prol.","",$eventTime);
-                        if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = explode("+",trim($eventTime));
-                          $eventAdditionalTime = $eventAddTime[1];
-                        }
-                        else {
-                          $eventAdditionalTime = 0;
-                        }
-
-                        if ((int)$eventTime>105) {
-                          $half = 7;
-                        }
-                        else if ((int)$eventTime>90) {
-                          $half = 5;
-                        }
-                        else if ((int)$eventTime>45) {
-                          $half = 3;
-                        }
-                        else {
-                          $half = 1;
-                        }
+//                         if ((int)$eventTime>105) {
+//                           $half = 7;
+//                         }
+//                         else if ((int)$eventTime>90) {
+//                           $half = 5;
+//                         }
+//                         else if ((int)$eventTime>45) {
+//                           $half = 3;
+//                         }
+//                         else {
+//                           $half = 1;
+//                         }
 
 
-                        switch ($eventType) {
-                          case "goals_P":
-                            $eventType="2";
-                            break;
-                          case "goals_O":
-                            $eventType="3";
-                            break;
-                          default: // goals
-                            $eventType="1";
-                            break;
-                        }
+//                         switch ($eventType) {
+//                           case "goals_P":
+//                             $eventType="2";
+//                             break;
+//                           case "goals_O":
+//                             $eventType="3";
+//                             break;
+//                           default: // goals
+//                             $eventType="1";
+//                             break;
+//                         }
 
-                        $eventTime += $eventAdditionalTime;
+//                         $eventTime += $eventAdditionalTime;
 
-                        $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
-                        $queries[]=$updateQuery;
-                        $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-                        if ($eventType=="3") {
-                          $teamKey = $_teamHomeKey;
-                        } else {
-                          $teamKey = $_teamAwayKey;
-                        }
-                        $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
-        VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
-        ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
-                        $queries[]=$updateQuery;
+//                         $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+//                         $queries[]=$updateQuery;
+//                         $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+//                         if ($eventType=="3") {
+//                           $teamKey = $_teamAwayKey;
+//                         } else {
+//                           $teamKey = $_teamHomeKey;
+//                         }
 
-                      }
+//                         $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+//         VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+//         ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+//                         $queries[]=$updateQuery;
 
-                      if ($eventType=="yells" || $eventType=="yell_reds" || $eventType=="reds") {
-                        $eventTime = str_replace("Prol.","",$eventTime);
-                        if (strpos($eventTime,"+")>0) {
-                          $eventAddTime = explode("+",trim($eventTime));
-                          $eventAdditionalTime = $eventAddTime[1];
-                        }
-                        else {
-                          $eventAdditionalTime = 0;
-                        }
+//                       }
 
-                        if ((int)$eventTime>105) {
-                          $half = 7;
-                        }
-                        else if ((int)$eventTime>90) {
-                          $half = 5;
-                        }
-                        else if ((int)$eventTime>45) {
-                          $half = 3;
-                        }
-                        else {
-                          $half = 1;
-                        }
+//                       if ($eventType=="yells" || $eventType=="yell_reds" || $eventType=="reds") {
+//                         $eventTime = str_replace("Prol.","",$eventTime);
+//                         if (strpos($eventTime,"+")>0) {
+//                           $eventAddTime = explode("+",trim($eventTime));
+//                           $eventAdditionalTime = $eventAddTime[1];
+//                         }
+//                         else {
+//                           $eventAdditionalTime = 0;
+//                         }
+
+//                         if ((int)$eventTime>105) {
+//                           $half = 7;
+//                         }
+//                         else if ((int)$eventTime>90) {
+//                           $half = 5;
+//                         }
+//                         else if ((int)$eventTime>45) {
+//                           $half = 3;
+//                         }
+//                         else {
+//                           $half = 1;
+//                         }
 
 
-                        switch ($eventType) {
-                          case "yells":
-                            $eventType="5";
-                            break;
-                          default: // red card
-                            $eventType="6";
-                            break;
-                        }
+//                         switch ($eventType) {
+//                           case "yells":
+//                             $eventType="5";
+//                             break;
+//                           default: // red card
+//                             $eventType="6";
+//                             break;
+//                         }
 
-                        $eventTime += $eventAdditionalTime;
+//                         $eventTime += $eventAdditionalTime;
 
-                        $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
-                        $queries[]=$updateQuery;
-                        $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-                        $teamKey = $_teamAwayKey;
-                        $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
-        VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
-        ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
-                        $queries[]=$updateQuery;
+//                         $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+//                         $queries[]=$updateQuery;
+//                         $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+//                         $teamKey = $_teamHomeKey;
+//                         $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+//         VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+//         ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+//                         $queries[]=$updateQuery;
 
-                      }
-                    }
-                  }
-                }
+//                       }
+//                     }
+//                   }
 
-              }
-            }
-          }
 
-          $peopleCount++;
-          if ($peopleCount==12) {
-            $isSubstitute = 1;
-          }
-        }
-      }
+//                 }
+//               }
+//             }
+//             // Team Away Player
+//             $teamAwayPlayerDetail = $peoples->find('td.w160',1);
+//             if ($teamAwayPlayerDetail!=null){
+//               $teamAwayPlayerDetail2 = $teamAwayPlayerDetail->find('td.w18',0);
+//               if ($teamAwayPlayerDetail2!=null){
+//                 $teamAwayPlayerDetail3 = $teamAwayPlayerDetail2->find('a',0);
+//                 if ($teamAwayPlayerDetail3!=null){
 
-      $htmlMatch->clear();
-      unset($htmlMatch);
+//                   $teamPlayer = $teamAwayPlayerDetail3->getAttribute("title");
+//                   $timeIn = "NULL";
+//                   $playerDetailReplaced='';
+//                   $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+//                   $queries[]=$updateQuery;
 
-    }
+//                   $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+//                   $teamPlayerReplacedKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$playerDetailReplaced) . "')";
+//                   $updateQuery = "INSERT IGNORE INTO lineups (MatchKey, TeamKey, TeamPlayerKey, IsSubstitute, TimeIn, TeamPlayerReplacedKey)
+//             VALUES ($matchKey, $_teamAwayKey, $teamPlayerKey,$isSubstitute,$timeIn,$teamPlayerReplacedKey)
+//             ON DUPLICATE KEY UPDATE TimeIn=$timeIn, TeamPlayerReplacedKey=$teamPlayerReplacedKey";
+//                   $queries[]=$updateQuery;
+
+//                   $events = $peoples->find('td.w155',1);
+//                   if ($events->innertext!=null){
+//                     foreach ($events->find('div') as $event) {
+//                       $evtType = explode("/",$event->find('img',0)->getAttribute("src"));
+//                       $eventType = str_replace(".gif","",$evtType[4]);
+//                       $eventTime = $event->find('span',0)->innertext;
+
+//                       if ($eventType=="goals" || $eventType=="goals_P" || $eventType=="goals_O") {
+//                         $eventTime = str_replace("Prol.","",$eventTime);
+//                         if (strpos($eventTime,"+")>0) {
+//                           $eventAddTime = explode("+",trim($eventTime));
+//                           $eventAdditionalTime = $eventAddTime[1];
+//                         }
+//                         else {
+//                           $eventAdditionalTime = 0;
+//                         }
+
+//                         if ((int)$eventTime>105) {
+//                           $half = 7;
+//                         }
+//                         else if ((int)$eventTime>90) {
+//                           $half = 5;
+//                         }
+//                         else if ((int)$eventTime>45) {
+//                           $half = 3;
+//                         }
+//                         else {
+//                           $half = 1;
+//                         }
+
+
+//                         switch ($eventType) {
+//                           case "goals_P":
+//                             $eventType="2";
+//                             break;
+//                           case "goals_O":
+//                             $eventType="3";
+//                             break;
+//                           default: // goals
+//                             $eventType="1";
+//                             break;
+//                         }
+
+//                         $eventTime += $eventAdditionalTime;
+
+//                         $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+//                         $queries[]=$updateQuery;
+//                         $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+//                         if ($eventType=="3") {
+//                           $teamKey = $_teamHomeKey;
+//                         } else {
+//                           $teamKey = $_teamAwayKey;
+//                         }
+//                         $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+//         VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+//         ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+//                         $queries[]=$updateQuery;
+
+//                       }
+
+//                       if ($eventType=="yells" || $eventType=="yell_reds" || $eventType=="reds") {
+//                         $eventTime = str_replace("Prol.","",$eventTime);
+//                         if (strpos($eventTime,"+")>0) {
+//                           $eventAddTime = explode("+",trim($eventTime));
+//                           $eventAdditionalTime = $eventAddTime[1];
+//                         }
+//                         else {
+//                           $eventAdditionalTime = 0;
+//                         }
+
+//                         if ((int)$eventTime>105) {
+//                           $half = 7;
+//                         }
+//                         else if ((int)$eventTime>90) {
+//                           $half = 5;
+//                         }
+//                         else if ((int)$eventTime>45) {
+//                           $half = 3;
+//                         }
+//                         else {
+//                           $half = 1;
+//                         }
+
+
+//                         switch ($eventType) {
+//                           case "yells":
+//                             $eventType="5";
+//                             break;
+//                           default: // red card
+//                             $eventType="6";
+//                             break;
+//                         }
+
+//                         $eventTime += $eventAdditionalTime;
+
+//                         $updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
+//                         $queries[]=$updateQuery;
+//                         $teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
+//                         $teamKey = $_teamAwayKey;
+//                         $updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
+//         VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
+//         ON DUPLICATE KEY UPDATE ResultKey=$resultKey,TeamPlayerKey=$teamPlayerKey";
+//                         $queries[]=$updateQuery;
+
+//                       }
+//                     }
+//                   }
+//                 }
+
+//               }
+//             }
+//           }
+
+//           $peopleCount++;
+//           if ($peopleCount==12) {
+//             $isSubstitute = 1;
+//           }
+//         }
+//       }
+
+//       $htmlMatch->clear();
+//       unset($htmlMatch);
+
+//     }
   }
   $objectReturn["Queries"] = $queries;
   return $objectReturn;

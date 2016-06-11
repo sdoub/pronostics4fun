@@ -10,6 +10,9 @@ $_logInfo = "";
 $selectQuery = "SELECT LastStatus,TIME_TO_SEC(TIMEDIFF(NOW(),LastExecution)) LastExecution FROM cronjobs WHERE JobName='$_jobName'";
 $resultSet = $_databaseObject -> queryPerf ($selectQuery , "Check cronjob status");
 $rowSet = $_databaseObject -> fetch_assoc ($resultSet);
+			$defaultLogger->addDebug("rowSet[LastStatus]: ".$rowSet["LastStatus"] );
+			$defaultLogger->addDebug("rowSet[LastExecution]: ".$rowSet["LastExecution"] );
+
 if ($rowSet["LastStatus"]!=1 || $rowSet["LastExecution"]>10) {
 
   $updateQuery = "UPDATE cronjobs SET LastStatus='1', LastExecutionInformation='" .str_replace("'","''",mysql_real_escape_string(__encode(utf8_decode($_logInfo))))."' WHERE JobName='$_jobName'";
@@ -76,7 +79,9 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
   $_databaseObject->close();
 
   $_queries = array();
-  if ($getData) {
+			$defaultLogger->addDebug("getdta: ".$getData );
+
+	if ($getData) {
     $totaltime = getElapsedTime();
     foreach ($rowsSet as $rowSet)
     {
@@ -102,6 +107,7 @@ WHERE $currentTime >= (UNIX_TIMESTAMP(matches.ScheduleDate)) AND $currentTime <=
           }
           break;
         case 3:
+					$defaultLogger->addDebug("Uefa: ".$matchKey . " -> ExternalKey:".$externalKey." -> live :".$isLive);
           $matchInfo = GetUefaMatchInfo($teamHomeKey,$teamAwayKey,$externalKey,$matchKey,$isLive=="1");
           foreach ($matchInfo["Queries"] as $query) {
             $_queries[] =$query;
