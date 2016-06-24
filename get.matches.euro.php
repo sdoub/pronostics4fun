@@ -26,7 +26,7 @@ foreach ($rowsSet as $rowSet)
   $_error = "";
 
 
-  $url = "http://fr.uefa.com/uefaeuro/season=2016/standings/round=2000448/group=$dayKey/index.html";
+  $url = "http://fr.uefa.com/uefaeuro/season=2016/standings/round=2000744/group=$dayKey/index.html";
 
   print($url);
   print('<br/>');
@@ -49,38 +49,41 @@ foreach ($rowsSet as $rowSet)
           }
           if ($numberOfTr==1) {
             $matchDetail = $row->find('td',2);
-            $uefaMatchUrl = split('/',$matchDetail->find('a',0)->getAttribute("href"));
-            $uefaMatchKey= str_replace("match=", "", $uefaMatchUrl[5]);
-            $hour = str_replace(".",":",$matchDetail->find('a',0)->plaintext);
-            $hourMatchArray = split(':',$hour);
-            $dateMatchArray = split('/',$scheduleDates);
-            $hours = (int)$hourMatchArray[0]==0?19:(int)$hourMatchArray[0];
-            $minutes = $hourMatchArray[1];
-            $scheduleDate = mktime((int)$hours, (int)$minutes, 0, (int)$dateMatchArray[1], (int)$dateMatchArray[0], (int)$dateMatchArray[2]);
+            $dataOptions = $matchDetail->getAttribute("data-options");
+            if ($dataOptions != "")
+              $uefaMatchUrl = split('/',$matchDetail->find('a',0)->getAttribute("href"));
+              $uefaMatchKey= str_replace("match=", "", $uefaMatchUrl[5]);
+              $hour = str_replace(".",":",$matchDetail->find('a',0)->plaintext);
+              $hourMatchArray = split(':',$hour);
+              $dateMatchArray = split('/',$scheduleDates);
+              $hours = (int)$hourMatchArray[0]==0?19:(int)$hourMatchArray[0];
+              $minutes = $hourMatchArray[1];
+              $scheduleDate = mktime((int)$hours, (int)$minutes, 0, (int)$dateMatchArray[1], (int)$dateMatchArray[0], (int)$dateMatchArray[2]);
 
-            $matchTeamHome = $row->find('td',0);
-            $uefaTeamHome = split('/',$matchTeamHome->find('a',0)->getAttribute("href"));
-            $uefaTeamHomeKey = str_replace ("team=","",$uefaTeamHome[4]);
-            $teamHomeKey = ConvertUefaKeyToP4F ($uefaTeamHomeKey);
+              $matchTeamHome = $row->find('td',0);
+              $uefaTeamHome = split('/',$matchTeamHome->find('a',0)->getAttribute("href"));
+              $uefaTeamHomeKey = str_replace ("team=","",$uefaTeamHome[4]);
+              $teamHomeKey = ConvertUefaKeyToP4F ($uefaTeamHomeKey);
 
-            $matchTeamAway = $row->find('td',4);
-            $uefaTeamAway = split('/',$matchTeamAway->find('a',0)->getAttribute("href"));
-            $uefaTeamAwayKey = str_replace ("team=","",$uefaTeamAway[4]);
-            $teamAwayKey = ConvertUefaKeyToP4F ($uefaTeamAwayKey);
+              $matchTeamAway = $row->find('td',4);
+              $uefaTeamAway = split('/',$matchTeamAway->find('a',0)->getAttribute("href"));
+              $uefaTeamAwayKey = str_replace ("team=","",$uefaTeamAway[4]);
+              $teamAwayKey = ConvertUefaKeyToP4F ($uefaTeamAwayKey);
 
-            $insertQuery = "INSERT IGNORE INTO matches (GroupKey, TeamHomeKey, TeamAwayKey, ExternalKey, ScheduleDate) VALUES ";
-            $insertQuery .= "($groupKey,";
-            $insertQuery .= "$teamHomeKey,";
-            $insertQuery .= "$teamAwayKey,";
-            $insertQuery .= "$uefaMatchKey,";
-            $insertQuery .= "FROM_UNIXTIME($scheduleDate)) ";
+              $insertQuery = "INSERT IGNORE INTO matches (GroupKey, TeamHomeKey, TeamAwayKey, ExternalKey, ScheduleDate) VALUES ";
+              $insertQuery .= "($groupKey,";
+              $insertQuery .= "$teamHomeKey,";
+              $insertQuery .= "$teamAwayKey,";
+              $insertQuery .= "$uefaMatchKey,";
+              $insertQuery .= "FROM_UNIXTIME($scheduleDate)) ";
 
-            $queries[]=$insertQuery;
+              $queries[]=$insertQuery;
 
-            $matchStatus=0;
-            $updateQuery = "UPDATE matches SET ExternalKey=$uefaMatchKey, ScheduleDate=FROM_UNIXTIME($scheduleDate), Status=$matchStatus WHERE GroupKey=";
-            $updateQuery .= "$groupKey AND TeamHomeKey=$teamHomeKey AND TeamAwayKey=$teamAwayKey";
-            $queries[]=$updateQuery;
+              $matchStatus=0;
+              $updateQuery = "UPDATE matches SET ExternalKey=$uefaMatchKey, ScheduleDate=FROM_UNIXTIME($scheduleDate), Status=$matchStatus WHERE GroupKey=";
+              $updateQuery .= "$groupKey AND TeamHomeKey=$teamHomeKey AND TeamAwayKey=$teamAwayKey";
+              $queries[]=$updateQuery;
+            }
           }
           $numberOfTr++;
           if ($numberOfTr==4){

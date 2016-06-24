@@ -482,11 +482,12 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
 			$updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
 			$queries[]=$updateQuery;
 			$teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-			if ($eventType=="3") {
-				$teamKey = $_teamAwayKey;
-			} else {
-				$teamKey = $_teamHomeKey;
-			}
+// 			if ($eventType=="3") {
+// 				$teamKey = $_teamAwayKey;
+// 			} else {
+// 				$teamKey = $_teamHomeKey;
+// 			}
+			$teamKey = $_teamHomeKey;
 
 			$updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
 				VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
@@ -527,11 +528,12 @@ function GetUefaMatchInfo ($_teamHomeKey,$_teamAwayKey,$_externalKey,$matchKey,$
 			$updateQuery = "INSERT IGNORE INTO teamplayers (FullName) VALUES ('". str_replace("'","''",$teamPlayer) . "')";
 			$queries[]=$updateQuery;
 			$teamPlayerKey = "(SELECT teamplayers.PrimaryKey FROM teamplayers WHERE FullName='" . str_replace("'","''",$teamPlayer) . "')";
-			if ($eventType=="3") {
-				$teamKey = $_teamHomeKey;
-			} else {
-				$teamKey = $_teamAwayKey;
-			}
+// 			if ($eventType=="3") {
+// 				$teamKey = $_teamHomeKey;
+// 			} else {
+// 				$teamKey = $_teamAwayKey;
+// 			}
+			$teamKey = $_teamAwayKey;
 
 			$updateQuery = "INSERT IGNORE INTO events (ResultKey, TeamKey, EventType, EventTime, Half, TeamPlayerKey)
 				VALUES ($resultKey, $teamKey, $eventType, $eventTime, $half, $teamPlayerKey)
