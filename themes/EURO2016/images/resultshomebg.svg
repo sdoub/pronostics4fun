@@ -137,8 +137,8 @@
   <text fill="#000000" stroke="#000" stroke-width="0" x="83" y="335.5" id="svg_114" font-size="9" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Pays de Galles</text>
   <image xlink:href="/images/teamFlags/83.png" id="svg_115" height="12" width="24" y="349.284864" x="56.669456" opacity="0.3"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="83" y="361.5" id="svg_116" font-size="9" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">Irlande du nord</text>
-  <image xlink:href="/images/teamFlags/86.png" id="svg_117" height="12" width="24" y="425.284864" x="56.669456"/>
-  <text fill="#000000" stroke="#000" stroke-width="0" x="83" y="437.5" id="svg_118" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Hongrie</text>
+  <image xlink:href="/images/teamFlags/86.png" id="svg_117" height="12" width="24" y="425.284864" x="56.669456" opacity="0.3"/>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="83" y="437.5" id="svg_118" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">Hongrie</text>
   <image xlink:href="/images/teamFlags/76.png" id="svg_119" height="12" width="24" y="451.284864" x="56.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="83" y="463.5" id="svg_120" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Belgique</text>
   <image xlink:href="/images/teamFlags/9.png" id="svg_121" height="12" width="24" y="128.284864" x="831.669456"/>
@@ -151,12 +151,12 @@
   <text fill="#000000" stroke="#000" stroke-width="0" x="781" y="265.5" id="svg_128" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">Irlande</text>
   <image xlink:href="/images/teamFlags/21.png" id="svg_129" height="12" width="24" y="324.284864" x="831.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="787" y="336.5" id="svg_130" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Italie</text>
-  <image xlink:href="/images/teamFlags/29.png" id="svg_131" height="12" width="24" y="350.284864" x="831.669456"/>
-  <text fill="#000000" stroke="#000" stroke-width="0" x="774" y="362.5" id="svg_132" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Espagne</text>
+  <image xlink:href="/images/teamFlags/29.png" id="svg_131" height="12" width="24" y="350.284864" x="831.669456" opacity="0.3"/>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="774" y="362.5" id="svg_132" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">Espagne</text>
   <image xlink:href="/images/teamFlags/13.png" id="svg_133" height="12" width="24" y="426.284864" x="831.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="759" y="438.5" id="svg_134" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Allemangne</text>
-  <image xlink:href="/images/teamFlags/24.png" id="svg_135" height="12" width="24" y="452.284864" x="831.669456"/>
-  <text fill="#000000" stroke="#000" stroke-width="0" x="769" y="464.5" id="svg_136" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Slovaquie</text>
+  <image xlink:href="/images/teamFlags/24.png" id="svg_135" height="12" width="24" y="452.284864" x="831.669456" opacity="0.3"/>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="769" y="464.5" id="svg_136" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">Slovaquie</text>
   <image xlink:href="/images/teamFlags/59.png" id="svg_149" height="12" width="24" y="182.284864" x="203.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="230" y="194.5" id="svg_150" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Pologne</text>
   <image xlink:href="/images/teamFlags/28.png" id="svg_151" height="12" width="24" y="208.284864" x="203.669456"/>
@@ -169,8 +169,8 @@
   <text fill="#000000" stroke="#000" stroke-width="0" x="646" y="193.5" id="svg_138" font-size="16" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0">Suisse 1</text>
   <image xlink:href="/images/teamFlags/1.png" id="svg_139" height="12" width="24" y="207.284864" x="696.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="646" y="219.5" id="svg_140" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">France</text>
-  <image xlink:href="/images/teamFlags/80.png" id="svg_141" height="12" width="24" y="372.284864" x="696.669456" opacity="0"/>
-  <text fill="#000000" stroke="#000" stroke-width="0" x="646" y="384.5" id="svg_142" font-size="16" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0">Suisse 3</text>
+  <image xlink:href="/images/teamFlags/21.png" id="svg_141" height="12" width="24" y="372.284864" x="696.669456"/>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="655" y="384.5" id="svg_142" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Italie</text>
   <image xlink:href="/images/teamFlags/13.png" id="svg_143" height="12" width="24" y="398.284864" x="696.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="625" y="410.5" id="svg_144" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Allemangne</text>
   <image xlink:href="/images/teamFlags/80.png" id="svg_157" height="12" width="24" y="282.284864" x="297.669456" opacity="0"/>
