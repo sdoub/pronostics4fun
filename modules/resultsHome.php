@@ -102,7 +102,7 @@ $firstGroupKey = 169;
 		
 	foreach ($groupsDirect as $groupDirect) {
 		echo '	<div class="titleGroup">
-				<h3><a href="'.ROOT_SITE.'/index.php?Page=2&GroupKey='.$group->getPrimaryKey() . $additionalParameter.'" >'.$groupDirect->getDescription().'</a></h3>
+				<h3><a style="color:#fff;text-decoration:none;" href="'.ROOT_SITE.'/index.php?Page=2&GroupKey='.$groupDirect->getPrimaryKey() . $additionalParameter.'" >'.$groupDirect->getDescription().'</a></h3>
 			</div>
 			<div class="groups round16">
 				<ul>';
