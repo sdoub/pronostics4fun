@@ -479,8 +479,8 @@ groups.Status,
   WHERE matches.GroupKey=groups.PrimaryKey) players,
 (SELECT SUM(Score) FROM playermatchresults INNER JOIN matches ON matches.PrimaryKey=playermatchresults.MatchKey WHERE playermatchresults.PlayerKey=".$_authorisation->getConnectedUserKey()." 
 AND matches.GroupKey=groups.PrimaryKey)
-+(SELECT SUM(Score) FROM playergroupresults WHERE playergroupresults.PlayerKey=".$_authorisation->getConnectedUserKey()."
-AND playergroupresults.GroupKey=groups.PrimaryKey) Score,
++IFNULL((SELECT SUM(IFNULL(Score,0)) FROM playergroupresults WHERE playergroupresults.PlayerKey=".$_authorisation->getConnectedUserKey()."
+AND playergroupresults.GroupKey=groups.PrimaryKey),0) Score,
 (SELECT Rank FROM playergroupranking WHERE GroupKey=groups.PrimaryKey and PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) Rank,
 (SELECT Rank FROM playerranking WHERE RankDate IN (SELECT MAX(pgr.RankDate) FROM playergroupranking pgr WHERE pgr.GroupKey=groups.PrimaryKey) AND
 PlayerKey=".$_authorisation->getConnectedUserKey()." ORDER BY RankDate DESC LIMIT 0,1) GlobalRank
@@ -737,11 +737,15 @@ AND playergroupresults.GroupKey=groups.PrimaryKey) WinnerScore */
 		->endUse()
 		->groupByPlayerkey()
 		->find()->toArray();
+	
 	$groupScore = PlayergroupresultsQuery::create()
 		->filterByPlayerkey($playergroupranking->getPlayerkey())
 		->filterByGroupkey($playergroupranking->getGroupkey())
 		->findOne();
-	$winnerScore=$groupMatchesScore[0]["sumscore"] + $groupScore->getScore();
+	if ($groupScore)
+		$winnerScore=$groupMatchesScore[0]["sumscore"] + $groupScore->getScore();
+	else
+		$winnerScore=$groupMatchesScore[0]["sumscore"];
 	
 	$rank = "";
 	if ($rowSet["Rank"]==1)
