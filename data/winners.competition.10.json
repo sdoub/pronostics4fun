@@ -1,0 +1,161 @@
+{ "competitionKey" : 10,
+	"competitionType" : "uefa2016",
+  "season" : "Euro 2016",
+  "winners" : [ { "players" : [ 
+          ],
+        "winTitle" : "Classement général"
+      },
+      { "players" : [ { "day" : "1/8 finale",
+              "name" : "tofred",
+              "score" : 103
+            },
+            { "day" : "Groupe A",
+              "name" : "chris57280",
+              "score" : 72
+            },
+            { "day" : "Groupe E",
+              "name" : "goldnlink",
+              "score" : 72
+            }
+          ],
+        "winTitle" : "Meilleur score"
+      },
+      { "players" : [ { "day" : "1/2 finale",
+              "name" : "akoma",
+              "score" : 23
+            },
+            { "day" : "1/2 finale",
+              "name" : "Rominou",
+              "score" : 21
+            },
+            { "day" : "1/2 finale",
+              "name" : "DUDU76",
+              "score" : 21
+            }
+          ],
+        "winTitle" : "1/2 finale"
+      },
+      { "players" : [ { "day" : "1/4 finale",
+              "name" : "jean-pierre",
+              "score" : 45
+            },
+            { "day" : "1/4 finale",
+              "name" : "WAR22",
+              "score" : 38
+            },
+            { "day" : "1/4 finale",
+              "name" : "Guigui60",
+              "score" : 38
+            }
+          ],
+        "winTitle" : "1/4 finale"
+      },
+      { "players" : [ { "day" : "1/8 finale",
+              "name" : "tofred",
+              "score" : 103
+            },
+            { "day" : "1/8 finale",
+              "name" : "jujudu27",
+              "score" : 58
+            },
+            { "day" : "1/8 finale",
+              "name" : "Mamychouette",
+              "score" : 56
+            }
+          ],
+        "winTitle" : "1/8 finale"
+      },
+      { "players" : [ { "day" : "Groupe F",
+              "name" : "fovplus",
+              "score" : 48
+            },
+            { "day" : "Groupe F",
+              "name" : "Mamychouette",
+              "score" : 38
+            },
+            { "day" : "Groupe F",
+              "name" : "Loulou",
+              "score" : 37
+            }
+          ],
+        "winTitle" : "Groupe F"
+      },
+      { "players" : [ { "day" : "Groupe E",
+              "name" : "goldnlink",
+              "score" : 72
+            },
+            { "day" : "Groupe E",
+              "name" : "Rominou",
+              "score" : 44
+            },
+            { "day" : "Groupe E",
+              "name" : "Lucette bonne mere",
+              "score" : 38
+            }
+          ],
+        "winTitle" : "Groupe E"
+      },
+      { "players" : [ { "day" : "Groupe D",
+              "name" : "paulinio",
+              "score" : 62
+            },
+            { "day" : "Groupe D",
+              "name" : "Loulou",
+              "score" : 37
+            },
+            { "day" : "Groupe D",
+              "name" : "BrestIsBack",
+              "score" : 32
+            }
+          ],
+        "winTitle" : "Groupe D"
+      },
+      { "players" : [ { "day" : "Groupe C",
+              "name" : "chatelin",
+              "score" : 61
+            },
+            { "day" : "Groupe C",
+              "name" : "elstef",
+              "score" : 59
+            },
+            { "day" : "Groupe C",
+              "name" : "paulinio",
+              "score" : 58
+            }
+          ],
+        "winTitle" : "Groupe C"
+      },
+      { "players" : [ { "day" : "Groupe B",
+              "name" : "Tutudu27",
+              "score" : 37
+            },
+            { "day" : "Groupe B",
+              "name" : "ducobu",
+              "score" : 36
+            },
+            { "day" : "Groupe B",
+              "name" : "JAV03",
+              "score" : 32
+            }
+          ],
+        "winTitle" : "Groupe B"
+      },
+      { "players" : [ { "day" : "Groupe A",
+              "name" : "chris57280",
+              "score" : 72
+            },
+            { "day" : "Groupe A",
+              "name" : "celenord",
+              "score" : 66
+            },
+            { "day" : "Groupe A",
+              "name" : "francky27",
+              "score" : 53
+            }
+          ],
+        "winTitle" : "Groupe A"
+      }
+    ],
+  "winnersChp" : [  ],
+  "winnersCup" : [  ]
+}

@@ -45,6 +45,10 @@
 		background:url(/images/winners.uefa.2012.png) top right #D7E1F6 no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
+	.competitionuefa2016{
+		background:url(/images/winners.uefa.2016.png) top right #D7E1F6 no-repeat;
+		/*background-color:#D7E1F6;*/
+	}
 	.competitionTitle {
 		text-align:center;
 		font-size:14px;
@@ -91,6 +95,6 @@
 	.ligue1 {
 		width:25px;height:25px;
 	}
-	.worldcup2010, .worldcup2014, .uefa2012 {
+	.worldcup2010, .worldcup2014, .uefa2012, .uefa2016 {
 		width:18px;height:30px;
 	}
