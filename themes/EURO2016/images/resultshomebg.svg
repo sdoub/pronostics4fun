@@ -183,7 +183,7 @@
   <text fill="#000000" stroke="#000" stroke-width="0" x="534" y="320.5" id="svg_148" font-size="12" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">Allemangne</text>
   <image xlink:href="/images/teamFlags/28.png" id="svg_161" height="12" width="24" y="151.284864" x="411.669456"/>
   <text fill="#000000" stroke="#000" stroke-width="0" x="438" y="163.5" id="svg_162" font-size="16" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">Portugal</text>
-  <image xlink:href="/images/teamFlags/1.png" id="svg_163" height="12" width="24" y="177.284864" x="411.669456"/>
-  <text fill="#000000" stroke="#000" stroke-width="0" x="438" y="189.5" id="svg_164" font-size="16" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve">France</text>
+  <image xlink:href="/images/teamFlags/1.png" id="svg_163" height="12" width="24" y="177.284864" x="411.669456" opacity="0.3"/>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="438" y="189.5" id="svg_164" font-size="16" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" opacity="0.3">France</text>
  </g>
 </svg>

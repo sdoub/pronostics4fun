@@ -1,7 +1,15 @@
 { "competitionKey" : 10,
 	"competitionType" : "uefa2016",
   "season" : "Euro 2016",
-  "winners" : [ { "players" : [ 
+  "winners" : [ { "players" : [ { "name" : "tofred",
+              "score" : 282
+            },
+            { "name" : "Alexdu27",
+              "score" : 268
+            },
+            { "name" : "celenord",
+              "score" : 260
+            }
           ],
         "winTitle" : "Classement général"
       },
