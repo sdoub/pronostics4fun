@@ -318,7 +318,10 @@ function ConvertLfpKeyToP4F($lfpKey) {
   "Stade_reims"=>67,
   "logo_nice_100" => 49,
 	501931 => 78,
-	546836 => 79	
+	546836 => 79,
+	"508009_bastia" => 66,
+	"500075_caen" => 54,
+	"Nancy_logo" => 45
   );
 
   if (array_key_exists($lfpKey,$arrlfpKeys)) {
