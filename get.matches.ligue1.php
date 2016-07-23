@@ -24,6 +24,7 @@ foreach ($rowsSet as $rowSet)
 {
   $groupKey= $rowSet["GroupKey"];
   $dayKey= $rowSet["DayKey"];
+	$groupStatus = $rowSet["Status"];
 
   //Get information from lfp
   $isGroupScheduled = true;
@@ -137,7 +138,7 @@ foreach ($rowsSet as $rowSet)
     if ($groupKey==195 || $groupKey==246) {
       $status="1";
     } else {
-      $status="coalesce(SELECT g.Status FROM groups g WHERE g.PrimaryKey=$groupKey AND g.Status>0,0)";
+			$status=$groupStatus;
     }
   }
 
