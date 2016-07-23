@@ -1,0 +1,880 @@
+.f /* Start: Recommended Isotope styles */ /**** Isotope Filtering ****/
+
+.isotope-item {
+	z-index: 2;
+}
+
+.isotope-hidden.isotope-item {
+	pointer-events: none;
+	z-index: 1;
+}
+
+/**** Isotope CSS3 transitions ****/
+.isotope,.isotope .isotope-item {
+	-webkit-transition-duration: 0.8s;
+	-moz-transition-duration: 0.8s;
+	transition-duration: 0.8s;
+}
+
+.isotope {
+	-webkit-transition-property: height, width;
+	-moz-transition-property: height, width;
+	transition-property: height, width;
+}
+
+.isotope .isotope-item {
+	-webkit-transition-property: -webkit-transform, opacity;
+	-moz-transition-property: -moz-transform, opacity;
+	transition-property: transform, opacity;
+}
+
+/**** disabling Isotope CSS3 transitions ****/
+.isotope.no-transition,.isotope.no-transition .isotope-item,.isotope .isotope-item.no-transition
+	{
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	transition-duration: 0s;
+}
+
+/* End: Recommended Isotope styles */
+	/* disable CSS transitions for containers with infinite scrolling*/
+.isotope.infinite-scrolling {
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
+}
+
+/**** Isotope styles ****/
+	/* required for containers to inherit vertical size from window */
+html,body {
+	height: 100%;
+}
+
+#groupContainer {
+	padding: 5px;
+	margin-bottom: 20px;
+}
+
+.element {
+	width: 220px;
+	height: 110px;
+	margin: 5px;
+	float: left;
+	overflow: hidden;
+	position: relative;
+	background: #8e9bab;
+	color: #222;
+	-webkit-border-top-right-radius: 1.2em;
+	-moz-border-radius-topright: 1.2em;
+	border-top-right-radius: 1.2em;
+}
+
+.ranking {
+	width: 220px;
+	height: 550px;
+	margin: 5px;
+	float: left;
+	overflow: auto;
+	position: relative;
+	background: #8e9bab;
+	color: #222;
+	-webkit-border-top-right-radius: 1.2em;
+	-moz-border-radius-topright: 1.2em;
+	border-top-right-radius: 1.2em;
+}
+
+.element .elementContent * {
+	position: absolute;
+	margin: 0;
+}
+
+.element .teamFlag {
+	width: 50px;
+	height: 50px;
+}
+
+.element .elementContent .onlyLarge {
+	display: none;
+}
+
+.element .elementContent #elementScore {
+	top: 25px;
+	left: 75px;
+	width: 70px;
+	float: left;
+	text-align: center;
+	font-size: 25px;
+	line-height: 25px;
+	color: #FFFFFF;
+	text-shadow: 0 0 10px white, 0 0 10px white;
+}
+
+.element.large .elementContent #elementScore {
+	left: 130px;
+	top: 5px;
+	width: 200px;
+	font-size: 50px;
+	line-height: 50px;
+}
+
+.element .elementContent #elementScoreForecast {
+	top: 55px;
+	left: 75px;
+	width: 70px;
+	float: left;
+	text-align: center;
+	font-size: 15px;
+	line-height: 15px;
+	color: #FFFFFF;
+	display: inline;
+}
+
+.element.large .elementContent #elementScoreForecast {
+	top: 55px;
+	left: 195px;
+	font-size: 25px;
+	line-height: 25px;
+}
+
+.element .elementContent #elementScoreForecast.success {
+	text-shadow: 0 0 10px #96EF95, 0 0 10px #96EF95;
+}
+
+.element .elementContent #elementScoreForecast.failed {
+	text-shadow: 0 0 10px #EF6868, 0 0 10px #EF6868;
+}
+
+.element .elementContent #teamHomeName {
+	top: 65px;
+	left: 30px;
+	width: 200px;
+	float: left;
+	text-align: left;
+	font-size: 25px;
+	line-height: 25px;
+	color: #FFFFFF;
+	text-shadow: 0 0 10px white, 0 0 10px white;
+}
+
+.element .elementContent #teamAwayName {
+	top: 65px;
+	right: 20px;
+	width: 200px;
+	float: left;
+	text-align: right;
+	font-size: 25px;
+	line-height: 25px;
+	color: #FFFFFF;
+	text-shadow: 0 0 10px white, 0 0 10px white;
+}
+
+.element.large .elementContent .onlyLarge {
+	display: inline;
+}
+
+.element.large {
+	width: 450px;
+	height: 350px;
+	z-index: 100;
+}
+
+.element .elementContent {
+	width: 200px;
+	height: 100px;
+}
+
+.element:HOVER .elementContent:HOVER {
+	cursor: pointer;
+}
+
+.element.large .elementContent {
+	width: 440px;
+	height: 340px;
+}
+
+.element .elementContent .score {
+	bottom: 18px;
+	left: 80px;
+	background: url(../../images/matchbg.result.png) no-repeat scroll center
+		top transparent;
+	background-position: 3px -16px;
+	width: 60px;
+	text-align: center;
+	font-size: 10px;
+}
+
+.element.large .elementContent .score {
+	top: 80px;
+	left: 200px;
+}
+
+.element .elementContent .score.success {
+	color: #96EF95;
+}
+
+.element .elementContent .score.perfect {
+	color: #96EF95;
+}
+
+.element .elementContent .score.failed {
+	color: #EF6868;
+}
+
+.element .elementContent .score.noneForecast {
+	visibility:hidden;
+}
+.element .elementContent #resultForecast {
+	display: inline;
+}
+
+.element .elementContent #scoreBad {
+	bottom: 5px;
+	left: 5px;
+	color: #ffffff;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+.element.large .elementContent #scoreBad {
+	bottom: 5px;
+	left: 5px;
+	font-size: 15px;
+	line-height: 15px;
+}
+
+.element .elementContent #scoreCorrect {
+	bottom: 5px;
+	left: 85px;
+	color: #ffffff;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+.element.large .elementContent #scoreCorrect {
+	bottom: 5px;
+	left: 190px;
+	color: #ffffff;
+	font-size: 15px;
+	line-height: 15px;
+}
+
+.element .elementContent #scorePerfect {
+	bottom: 5px;
+	right: 5px;
+	color: #ffffff;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+.element.large .elementContent #scorePerfect {
+	bottom: 5px;
+	right: 5px;
+	color: #ffffff;
+	font-size: 15px;
+	line-height: 15px;
+}
+
+.element .elementContent #teamAwayFlag {
+	top: 10px;
+	right: 80px;
+}
+
+.element.large .elementContent #teamAwayFlag {
+	top: 10px;
+	right: 60px;
+}
+
+.element .elementContent #teamHomeFlag {
+	top: 10px;
+	left: 30px;
+}
+
+.element.large .elementContent #teamHomeFlag {
+	top: 10px;
+	left: 20px;
+}
+
+.element .elementContent #teamHomeYellowCard {
+	top: 20px;
+	left: 10px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element.large .elementContent #teamHomeYellowCard {
+	top: 20px;
+	left: 80px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element .elementContent #teamAwayYellowCard {
+	top: 20px;
+	right: 10px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element.large .elementContent #teamAwayYellowCard {
+	top: 20px;
+	right: 60px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element .elementContent #teamHomeRedCard {
+	top: 50px;
+	left: 10px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element.large .elementContent #teamHomeRedCard {
+	top: 50px;
+	left: 80px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element .elementContent #teamAwayRedCard {
+	top: 50px;
+	right: 10px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element.large .elementContent #teamAwayRedCard {
+	top: 50px;
+	right: 60px;
+	width: 20px;
+	height: 20px;
+	color: #6D8AA8;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 2px;
+}
+
+.element .tabs {
+	position: absolute;
+	display: none;
+}
+
+.element.large .tabs {
+	display: inline;
+	float: left;
+	top: 100px;
+	left: 10px;
+	width: 425px;
+	height: 220px;
+}
+
+.ui-tabs .ui-tabs-panel {
+	height: 170px;
+	overflow: hidden;
+	width: 390px;
+}
+
+.ui-widget p {
+	color: #365F89;
+}
+
+.element.large .teamSeparator {
+	float: left;
+	height: 160px;
+	border-top: 1px solid #6D8AA8;
+	border-left: 1px solid #6D8AA8;
+	top: 50px;
+	left: 212px;
+	position: absolute;
+	_width: 2px;
+}
+
+.element.large .teamHomeEvents {
+	float: left;
+	width: 185px;
+	text-align: right;
+	height: 170px;
+	overflow: hidden;
+}
+
+.element.large .teamHomeEvents li {
+	padding-right: 30px;
+	padding-top: 2px;
+	font-size: 10px;
+}
+
+.element.large .teamHomeEvents li.goal {
+	background: url(../../images/events.png) no-repeat scroll right top
+		transparent;
+	background-position: 155px -2px;
+}
+
+.element.large .teamHomeEvents li.yellowCard {
+	background: url(../../images/events.png) no-repeat scroll right top
+		transparent;
+	background-position: 155px -32px;
+}
+
+.element.large .teamHomeEvents li.redCard {
+	background: url(../../images/events.png) no-repeat scroll right top
+		transparent;
+	background-position: 155px -69px;
+}
+
+.element.large .teamHomeEvents li.assist {
+	font-style: italic;
+	font-size: 10px;
+	height: 16px;
+	padding-top: 0px;
+	padding-bottom: 2px;
+	padding-right: 10px;
+}
+
+.element.large .teamHomeEvents li.assist .title {
+	color: #6D8AA8;
+	font-size: 8px;
+}
+
+.element.large .teamAwayEvents {
+	float: right;
+	width: 185px;
+	text-align: left;
+	height: 170px;
+	overflow: hidden;
+}
+
+.element.large .teamAwayEvents li {
+	padding-top: 2px;
+	padding-left: 30px;
+	font-size: 10px;
+}
+
+.element.large .teamAwayEvents li.goal {
+	background: url(../../images/events.png) no-repeat scroll right top
+		transparent;
+	background-position: 0px -2px;
+}
+
+.element.large .teamAwayEvents li.yellowCard {
+	background: url(../../images/events.png) no-repeat scroll right top
+		transparent;
+	background-position: 0px -32px;
+}
+
+.element.large .teamAwayEvents li.redCard {
+	background: url(../../images/events.png) no-repeat scroll right top
+		transparent;
+	background-position: 0px -69px;
+}
+
+.element.large .teamAwayEvents li.assist {
+	font-style: italic;
+	font-size: 10px;
+	height: 16px;
+	padding-top: 0px;
+	padding-bottom: 2px;
+	padding-left: 10px;
+}
+
+.element.large .teamAwayEvents li.assist .title {
+	color: #6D8AA8;
+	font-size: 8px;
+}
+
+.element.large .elementResult img {
+	height: 30px;
+	width: 30px;
+	float: left;
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	border: none;
+}
+
+.element.large .elementResult {
+	width: 120px;
+	height: 60px;
+	margin: 5px;
+	float: left;
+	overflow: hidden;
+	position: relative;
+	background: #8e9bab;
+	color: #FFFFFF;
+}
+
+.element.large .elementResult .playerName {
+	float: left;
+	overflow: hidden;
+	position: absolute;
+	color: #FFFFFF;
+	bottom: 3px;
+	left: 3px;
+}
+
+.element.large .elementResult .forecastScore {
+	width: 50px;
+	line-height: 20px;
+	overflow: hidden;
+	position: absolute;
+	color: #FFFFFF;
+	top: 20px;
+	right: 30px;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.element.large .elementResult .forecastResult {
+	float: left;
+	overflow: hidden;
+	position: absolute;
+	top: 3px;
+	right: 5px;
+	background: url(../../images/matchbg.result.png) no-repeat scroll center
+		top transparent;
+	background-position: 0px -16px;
+	width: 50px;
+	text-align: center;
+	font-size: 10px;
+}
+
+.element.large .elementResult .forecastResult.success,.element.large .elementResult .forecastResult.perfect
+	{
+	color: #96EF95;
+}
+
+.element.large .elementResult .forecastResult.failed {
+	color: #EF6868;
+}
+
+.element.large .elementResult .forecastResult.noneForecast {
+	visibility:hidden;
+}
+
+.element.large .tabResult {
+	padding-top: 3px;
+	padding-right: 3px;
+	padding-left: 3px;
+	padding-bottom: 0px;
+	width: 420px;
+	height: 180px;
+	overflow: auto;
+}
+
+.ui-buttonset {
+	position: absolute;
+	top: 8px;
+	right: 5px;
+}
+
+.ui-buttonset .ui-button {
+	margin-left: 0;
+	margin-right: -0.5em;
+	font-size: 10px;
+	height: 19px;
+	line-height: 10px;
+}
+
+/* MODULE CLASSEMENT
+
+------------------------------------------------ */
+#mod-classements h2 {
+	background-position: left top;
+}
+
+#mod-classements p {
+	color: #FFFFFF;
+}
+
+#mod-classements ol {
+	margin: 12px 0 0 0;
+	list-style: none;
+}
+
+#mod-classements ol li {
+	position: relative;
+	padding: 0px 5px 8px 0;
+	margin: 0 0 8px 0px;
+	_width: 200px;
+	height: 55px;
+	background-color: transparent;
+}
+
+#mod-classements ol li:hover {
+	background-color: #365F89;
+	cursor: pointer;
+}
+
+#mod-classements ol li div.Correct {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	color: #FFF;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+#mod-classements ol li div.Perfect {
+	position: absolute;
+	bottom: 5px;
+	left: 80px;
+	color: #FFF;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+#mod-classements ol li div.Bad {
+	position: absolute;
+	bottom: 5px;
+	right: 20px;
+	color: #FFF;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+#mod-classements ol em {
+	display: block;
+	font-weight: bold;
+	font-style: normal;
+	font-size: 1.3em;
+	_width: 110px;
+}
+
+#mod-classements .var {
+	position: absolute;
+	right: 0px;
+	_left: 160px;
+	top: 50%;
+	_top: 0px;
+	width: 37px;
+	height: 25px;
+	margin-top: -13px;
+	_margin-top: 0px;
+}
+
+.head div {
+	background-position: left -42px;
+}
+
+/*node2*/
+.node2 .head {
+	background-color: #6D8AA8;
+	background-position: right -84px;
+}
+
+#mod-classements h4 {
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #6D8AA8;
+	padding: 10px 5px 0px 50px;
+	font-family: Georgia;
+	text-transform: uppercase;
+}
+
+#mod-classements ol li {
+	border-bottom: 1px solid #E6E7E9;
+}
+
+#mod-classements .avat {
+	border: 1px solid #E6E7E9;
+}
+
+#mod-classements ol a {
+	display: block;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+#mod-classements ol span {
+	display: block;
+	text-decoration: none;
+}
+
+#mod-classements ol li .avat {
+	width: 27px;
+	height: 27px;
+	float: left;
+	margin-right: 7px;
+	padding: 3px;
+}
+
+/*
+
+#mod-classements .var {
+
+	background-image: url(<?php echo ROOT_SITE;?>/images/sprite.png);
+
+	background-repeat: no-repeat;
+
+}
+
+
+
+#mod-classements .eq {
+
+	background-position: -13px -263px;
+
+}
+
+
+
+#mod-classements .up {
+
+	background-position: -15px -315px;
+
+}
+
+*/
+#mod-classements .down {
+	background-position: -14px -366px;
+}
+
+#PlayerRanking .var {
+	background-image: url(../../images/sprite.png);
+	background-repeat: no-repeat;
+	display: block;
+	text-decoration: none;
+	float: right;
+	left: 270px;
+	position: absolute;
+	margin-top: -15px;
+	width: 25px;
+	height: 25px;
+}
+
+#PlayerRanking .eq {
+	background-position: -13px -263px;
+}
+
+#PlayerRanking .up {
+	background-position: -15px -315px;
+}
+
+#PlayerRanking .down {
+	background-position: -14px -366px;
+}
+
+#rankSpan {
+	background-color: #365F89;
+	border: 1px solid #FFFFFF;
+	color: #FFFFFF;
+	float: left;
+	font-family: tahoma;
+	font-size: 10px;
+	font-weight: bold;
+	margin-left: 2px;
+	margin-right: 5px;
+	padding: 2px 2px 4px 1px;
+	text-align: center;
+	width: 18px;
+}
+
+#mod-classements p {
+	padding: 0 10px 0 10px
+}
+
+/* ----- Graph css ------ */
+#detailChart .var {
+	background-image: url(../../images/rank.arrows.png);
+	background-repeat: no-repeat;
+}
+
+#detailChart .eq {
+	background-position: 0px 0px;
+}
+
+#detailChart .up {
+	background-position: 0px -29px;
+}
+
+#detailChart .down {
+	background-position: 0px -58px;
+}
+
+#detailChart .title {
+	font-size: 13px;
+	text-align: center;
+	font-weight: bold;
+	background-color: #365F89;
+	color: #FFFFFF;
+	vertical-align: top;
+}
+
+#detailChart .eventDetail {
+	font-size: 11px;
+}
+
+#detailChart .eventTypeImage {
+	float: left;
+	font-size: 12px;
+}
+
+#detailChart .eventTypeImage img {
+	width: 20px;
+	height: 20px;
+}
+
+#detailChart .eventType {
+	padding-left: 30px;
+}
+
+#detailChart .rankingDetail {
+	font-size: 11px;
+	padding-left: 20px;
+}
+
+#detailChart .rankingScore {
+	float: right;
+}
+
+#detailChart .rankingDetailEmpty {
+	font-size: 11px;
+}
+
+#detailChart .rankingVar {
+	font-size: 7px;
+}
+
+#containerCharts {
+	width: 930px;
+	height: 500px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.ui-accordion .ui-accordion-content {
+	padding: 0em 0em;
+	border-top: 0;
+	margin-top: -2px;
+	position: relative;
+	top: 1px;
+	margin-bottom: 2px;
+}
