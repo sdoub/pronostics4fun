@@ -39,7 +39,6 @@ foreach ($rowsSet as $rowSet)
       break;
   }
 
-  print($url);
 	$defaultLogger->addInfo($url);
   if ($html = HtmlDomParser::file_get_html($url))
   {
@@ -173,8 +172,7 @@ foreach ($rowsSet as $rowSet)
 $_databaseObject = new mysql (SQL_HOST, SQL_LOGIN,  SQL_PWD, SQL_DB, $_dbOptions);
 
 foreach ($queries as $query) {
-  print($query);
-  print("<br/>");
+	$defaultLogger->addDebug($query);
   $_databaseObject -> queryPerf ($query , "Execute query");
 }
 
@@ -261,8 +259,7 @@ if (sizeOf($arrDatabaseInfo["errorLog"])>0) {
   if ($arrDatabaseInfo["errorLog"]!="") {
     $_error = true;
     $_errorMessage="An error occured during queries execution";
-    print_r($arrDatabaseInfo["errorLog"]);
-		$defaultLogger->addError(var_export($arr["errorLog"], true));
+		$defaultLogger->addError(var_export($arrDatabaseInfo["errorLog"], true));
   }
 }
 
