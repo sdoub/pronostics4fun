@@ -38,17 +38,16 @@
 }
 
 #newsTitle {
-	background: url('../../images/actu.png') no-repeat scroll left top
-		#D7E1F6;
+	background: url('../../images/actu.png') no-repeat scroll left top lightgray;
 	height: 530px;
 	margin-bottom: 30px;
 	_width: 920px;
 }
 
 #newsTitle .buttonfield {
-	background: #365F89;
+	/*background: #365F89;
 	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
+	color: #FFFFFF;*/
 	font: bold 11px/normal Tahoma, Verdana;
 	margin-top: 0;
 	padding: 2px;
@@ -58,10 +57,10 @@
 }
 
 #newsTitle .buttonfield:hover,#newsTitle .buttonfield:focus {
-	background: #000;
+	/*background: #000;
 	border: solid 1px #fff;
 	color: #fff;
-	cursor: pointer;
+	cursor: pointer;*/
 }
 
 #news ul li.news {
@@ -102,7 +101,7 @@ img.news {
 	float: left;
 	/*background: url('../../images/forecasts.home2.png') no-repeat scroll
 		left top #D7E1F6;*/
-	background-color:#D7E1F6;
+	background-color:lightgray;
 	height: 265px;
 	width: 250px;
 	margin-bottom: 0;
@@ -110,7 +109,7 @@ img.news {
 
 #resultsTitle .container {
 	text-align: left;
-	color: #365F89;
+	color: gray;
 	padding-bottom:7px;
 }
 
@@ -137,7 +136,7 @@ img.news {
 	/*border-left: 1px solid #D7E1F6;
 	border-bottom: 1px solid #D7E1F6;
 	background: #365F89;*/
-	color:#365F89;
+	color:#313a59;
 	font: bold 8.5px/normal Tahoma, Verdana;
 }
 
@@ -153,7 +152,7 @@ img.news {
 	float: left;
 	/*background: url('../../images/forecasts.home2.png') no-repeat scroll
 		left top #D7E1F6;*/
-	background-color:#D7E1F6;
+	background-color:lightgray;
 	height: 265px;
 	width: 250px;
 	margin-bottom: 0;
@@ -161,7 +160,7 @@ img.news {
 
 #forecastsTitle .container {
 	text-align: left;
-	color: #365F89;
+	color: gray;
 	padding-bottom:7px;
 }
 
@@ -203,7 +202,7 @@ img.news {
 #globalRankingTitle {
 	text-align: left;
 	color: #365F89;
-	background: url('/images/podium.png') no-repeat scroll left top #D7E1F6;
+	background: url('/images/podium.png') no-repeat scroll left 10px transparent;
 	height: 50px;
 	width: 940px;
 }
@@ -221,14 +220,14 @@ img.news {
 
 #newsContainer {
 	font-size: 14px;
-	color: #365F89;
+	color: gray;
 	font-weight: bold;
 	margin-left: 140px;
 	margin-top: 5px;
 }
 
 #news {
-	background: #6D8AA8;
+	background: #313a59;
 	height: 478px;
 	overflow: auto;
 	margin-top: 15px;

@@ -30,8 +30,16 @@ Pronostics4fun - Ligue 1</title>
 <meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionné de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journée de la ligue 1.
 Des classements et des statistiques sont éblis à la fin de chaque journée de championnat. (Classement général, Classement par journée ...).">
 <meta name="keywords" content="p4f, pronostics 4 fun, pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
-<link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo ROOT_SITE; ?>/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="<?php echo ROOT_SITE; ?>/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="<?php echo ROOT_SITE; ?>/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="<?php echo ROOT_SITE; ?>/manifest.json">
+<link rel="mask-icon" href="<?php echo ROOT_SITE; ?>/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="apple-mobile-web-app-title" content="pronostics4fun">
+<meta name="application-name" content="pronostics4fun">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#808080">
 <link href="<?php echo ROOT_SITE.$_themePath ; ?>/css/default.css" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery.jmpopups.js"></script>

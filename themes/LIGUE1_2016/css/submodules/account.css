@@ -2,7 +2,7 @@
 
 #wrapper {
 	background: url('../../images/accountbg.png') no-repeat scroll center
-		top #6D8AA8;
+		top lightgray;
 	border: solid 1px #fff;
 	margin: 0 auto;
 	width: 455px;
@@ -21,8 +21,8 @@
 	color: #000;
 	font-size:9px;
 	font-weight:normal;*/
-	background: #365F89;
-	border: solid 1px #D7E1F6;
+	background: gray;
+	border: solid 1px lightgray;
 	color: #FFFFFF;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding-top: 4px;
@@ -44,8 +44,8 @@
 }
 
 #wrapper a.apply {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
+	background: gray;
+	border: solid 1px lightgray;
 	color: #FFFFFF;
 	font: bold 9px/normal Tahoma, Verdana;
 	padding: 4px;
@@ -70,25 +70,25 @@
 
 #msg {
 	text-align: center;
-	color: #FFFFFF;
+	color: gray;
 	padding: 0px 0 3px 0;
 }
 
 #wrapper label.title {
-	color: #FFFFFF;
+	color: gray;
 	font-weight: bold;
 	display: block;
 	font-size: 11px;
 }
 
 #wrapper label.titleCheckbox {
-	color: #FFFFFF;
+	color: gray;
 	font-weight: bold;
 	font-size: 11px;
 }
 
 #wrapper label.read { /* background: #b3a58f; */
-	border: solid 1px #D7E1F6;
+	border: solid 1px lightgray;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 87%;
@@ -98,8 +98,8 @@
 }
 
 #frmAccount .textfield {
-	background: #b3a58f;
-	border: solid 1px #D7E1F6;
+	background: gray;
+	border: solid 1px lightgray;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 90%;
@@ -107,14 +107,14 @@
 }
 
 #frmAccount .textfield:hover,#frmAccount .textfield:focus {
-	background: #365F89;
-	border: solid 1px #365F89;
+	background: gray;
+	border: solid 1px gray;
 	color: #fff;
 }
 
 #frmAccount .buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
+	background: gray;
+	border: solid 1px lightgray;
 	color: #FFFFFF;
 	font: bold 11px/normal Tahoma, Verdana;
 	margin-top: 10px;
@@ -132,12 +132,11 @@
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #6D8AA8;
+	background: gray;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 455px;
 	_width: 505px;
-	background: #6D8AA8;
 }
 
 #footer {

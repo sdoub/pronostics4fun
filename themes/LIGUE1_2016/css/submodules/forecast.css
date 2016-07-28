@@ -6,8 +6,7 @@
 	width: 350px;
 	text-align: left;
 	padding: 25px;
-	background: url("../../images/bg_page_bottom.png") no-repeat scroll
-		center top #f8f0e5;
+	background-color: #d3d3d3;
 	/* border-top: 1px solid #1F0E1E; */
 	clear: both;
 	background-position: bottom;
@@ -36,14 +35,14 @@
 }
 
 #wrapper label {
-	color: #365F89;
+	color: gray;
 	font-weight: bold;
 	display: block;
 }
 
 .textfield {
-	background: #b3a58f;
-	border: solid 1px #D7E1F6;
+	background: #313a59;
+	border: solid 1px lightgray;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 50%;
@@ -55,35 +54,18 @@
 }
 
 .textfield:hover,.textfield:focus {
-	background: #365F89;
-	border: solid 1px #365F89;
+	background: #313a59;
+	border: solid 1px #313a59;
 	color: #fff;
-}
-
-.buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
-	font: bold 11px/ normal Tahoma, Verdana;
-	margin-top: 10px;
-	padding: 4px;
-}
-
-.buttonfield:hover,.buttonfield:focus {
-	background: #000;
-	border: solid 1px #fff;
-	color: #fff;
-	cursor: pointer;
 }
 
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #6D8AA8;
+	background: lightgray;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 350px;
-	background: #6D8AA8;
 }
 
 #footerForecast {

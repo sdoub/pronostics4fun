@@ -41,8 +41,16 @@ Pronostics4fun</title>
 <meta name="description" content="Pronostics4Fun vous propose de vous mesurer entre passionnés de football. Pour participer, il vous suffit de vous inscrire (Inscription en haut de la page), et de pronostiquer chacune des journ�es de la ligue 1.
 Des classements et des statistiques sont établis à la fin de chaque journée de championnat. (Classement général, Classement par journée, ...).">
 <meta name="keywords" content="p4f, pronostics 4 fun, pronostics4fun, pronostic, pronostics, pronostic football, pronostic foot, pronostics foot, pronostics football, ligue 1, pronostique, prono foot, pronostic ligue 1, pronostic foot france, prono, prono foot, prono ligue 1">
-<link rel="icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="<?php echo ROOT_SITE; ?>/favico.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo ROOT_SITE; ?>/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="<?php echo ROOT_SITE; ?>/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="<?php echo ROOT_SITE; ?>/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="<?php echo ROOT_SITE; ?>/manifest.json">
+<link rel="mask-icon" href="<?php echo ROOT_SITE; ?>/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="apple-mobile-web-app-title" content="pronostics4fun">
+<meta name="application-name" content="pronostics4fun">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#808080">
 <link href="<?php echo ROOT_SITE.$_themePath; ?>/css/default.css?ver=1.3" type="text/css" rel="stylesheet"/>
 <script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.7.min.js"></script>
 <!--<script type="text/javascript" src="<?php echo ROOT_SITE; ?>/js/jquery-1.8.3.min.js"></script>-->
@@ -72,7 +80,7 @@ if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3
 ?>
 <style>
 #header h1 a span {
-	background: url(<?php echo ROOT_SITE; ?>/images/logodev.png) no-repeat scroll left top transparent;}
+	background: url(<?php echo ROOT_SITE.$themePath; ?>/images/Logo.png) no-repeat scroll left top transparent;}
 </style>
 <?php }?>
 
@@ -142,7 +150,7 @@ if ($_isAuthenticated )
   $playerGlobalScore = (int)$playerScore[0]["Score"] + (int)$playerBonusScore[0]["BonusScore"];
   if ($_competitionType==2)
     $playerRank.=" ($playerGlobalScore pts)";
-	if ($_competitionType==1) {
+	if ($_competitionType==1 && $playerDivisionRanking) {
 		$playerDivisionRank = $playerDivisionRanking[0]["Rank"];
 		if ($playerDivisionRank==0)
 			$playerDivisionRank="-";
@@ -180,7 +188,7 @@ if ($_isAuthenticated )
   echo '<span style="float: right;padding-right: 177px;height: 21px;"> ';
   echo '<img src="'.ROOT_SITE. '/images/podium.png" style="width:25px;height:25px;" title="Classement général"/>';
   echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerRank.'</span>';
-  if ($_competitionType==1) {
+  if ($_competitionType==1 && $playerDivisionRanking) {
     if (count($queryDivisionRanking)>0){
       echo '<img src="'.ROOT_SITE. $_themePath .'/images/division'.$playerDivisionRanking[0]["DivisionKey"].'.png" title="Division '.$playerDivisionRanking[0]["DivisionKey"].'"/>';
       echo '<span style="color:#ffffff; font-size:12px;padding-left:5px;padding-right:15px;">'.$playerDivisionRank.'</span>';

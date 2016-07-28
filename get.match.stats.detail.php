@@ -319,7 +319,7 @@ echo"</div>";
 echo "<div class='container-history' id='sameMatchHistoryContainer' style='margin-left:20px;height:140px;margin-right:20px;overflow:hidden;'>";
 echo"<table style='font-size:12px;color:#FFFFFF;font-weight:bold;text-align:center;'>";
 echo"<thead>";
-echo"<tr style='font-size: 12px;text-align: center;	background-color: #D7E1F6;	color: #365F89;	font-weight: bold;'>";
+echo"<tr style='font-size: 12px;text-align: center;	background-color: #313a59;	color: #fff;	font-weight: bold;'>";
 
 echo"<th style='width:100px;'>Saison</th>";
 echo"<th style='width:120px;'>Journée</th>";
@@ -367,7 +367,7 @@ TeamHome.PrimaryKey TeamHomeKey,
     $color = "#FFFFFF";
 
     $scheduleFormattedDate = strftime("%d %B %Y",$rowSet['ScheduleDate']);
-    echo '<tr style="height:12px;font-size:11px;">';
+    echo '<tr style="height:12px;font-size:11px;color:gray;">';
     echo '<td>'.$rowSet["CompetitionName"].'</td>';
     echo '<td>' . $rowSet["GroupDescription"] . '</td>';
     echo '<td>' . $scheduleFormattedDate . '</td>';

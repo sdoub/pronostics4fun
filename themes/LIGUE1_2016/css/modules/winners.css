@@ -2,7 +2,7 @@
 		height:550px;
 	}
 	#winners {
-		color:#365F89;
+		color:#313a59;
 		height:550px;
 		overflow:auto;
 	}
@@ -13,10 +13,10 @@
 		height:20px;
 	}
 	#winners table tbody tr td:first-child,#winners table tbody tr td.first {
-		background-color:#f3f3f3;
+		background-color:#eee;
 	}
 	#winners table tbody tr.winnersP4FChp td:first-child,#winners table tbody tr.winnersP4FChp td.first {
-		background-color:#6D8AA8;
+		background-color:gray;
 	}
 	#winners table tbody tr td {
 		padding-left:5px;
@@ -30,20 +30,24 @@
 		margin-bottom:10px;
 	}
 	.competitionligue1{
-		background:url(/images/winners.ligue1.png) top right #D7E1F6 no-repeat;
+		background:url(/images/winners.ligue1.png) top right lightgray no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
 	.competitionworldcup2010{
-		background:url(/images/winners.worldcup.2010.png) top right #D7E1F6 no-repeat;
+		background:url(/images/winners.worldcup.2010.png) top right lightgray no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
 	.competitionworldcup2014{
-		background:url(/images/winners.worldcup.2014.png) top right #D7E1F6 no-repeat;
+		background:url(/images/winners.worldcup.2014.png) top right lightgray no-repeat;
 		/*background-color:#D7E1F6;*/
 	}
 	.competitionuefa2012{
-		background:url(/images/winners.uefa.2012.png) top right #D7E1F6 no-repeat;
+		background:url(/images/winners.uefa.2012.png) top right lightgray no-repeat;
 		/*background-color:#D7E1F6;*/
+	}
+	.competitionuefa2016{
+		background:url(/images/winners.uefa.2016.png) top right lightgray no-repeat;
+		/* background-color:#D7E1F6; */
 	}
 	.competitionTitle {
 		text-align:center;
@@ -53,11 +57,11 @@
 		font-weight:bold;
 	}
 	.winners {
-		color:#365F89;
+		color:#313a59;
 	}
 	.winners thead {
 		color:#ffffff;
-		background-color:#6D8AA8;
+		background-color:gray;
 	}
 	.winners thead th {
 		width:250px;
@@ -76,7 +80,7 @@
 		font-weight:bold;
 	}
 	.winnersP4FChp {
-		background-color:#6D8AA8;
+		background-color:gray;
 		color:#ffffff;
 	}
 	.winnersP4FChp td {
@@ -91,6 +95,6 @@
 	.ligue1 {
 		width:25px;height:25px;
 	}
-	.worldcup2010, .worldcup2014, .uefa2012 {
+	.worldcup2010, .worldcup2014, .uefa2012, .uefa2016 {
 		width:18px;height:30px;
 	}

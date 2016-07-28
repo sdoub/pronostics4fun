@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 #wrapper {
-	background: url('../../images/loginbg.jpg') no-repeat scroll center top #D7E1F6;
+	background: url('../../images/loginbg.jpg') no-repeat scroll center top lightgray;
 	border: solid 1px #fff;
 	margin: 0 auto;
 	width: 250px;
@@ -28,27 +28,27 @@
 
 #msg {
 	text-align: center;
-	color: #6D8AA8;
+	color: gray;
 	padding: 0px 0 3px 0;
 }
 
 #wrapper label {
-	color: #6D8AA8;
+	color: gray;
 	font-weight: bold;
 	display: block;
 }
 
 .textfield {
-	background: #b3a58f;
-	border: solid 1px #D7E1F6;
+	background: gray;
+	border: solid 1px darkslategray;
 	padding: 3px;
 	margin: 4px 0px 4px 0px;
 	width: 90%;
 }
 
 .textfield:hover,.textfield:focus {
-	background: #365F89;
-	border: solid 1px #365F89;
+	background: gray;
+	border: solid 1px gray;
 	color: #fff;
 }
 
@@ -62,32 +62,15 @@
 	display:inline !important;
 }
 
-.buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
-	font: bold 11px/ normal Tahoma, Verdana;
-	margin-top: 10px;
-	padding: 4px;
-	float: right;
-}
-
-.buttonfield:hover,.buttonfield:focus {
-	background: #000;
-	border: solid 1px #fff;
-	color: #fff;
-	cursor: pointer;
-}
 
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #6D8AA8;
+	background: gray;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 250px;
 	_width: 300px;
-	background: #6D8AA8;
 }
 
 #footer {

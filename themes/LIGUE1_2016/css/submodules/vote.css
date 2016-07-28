@@ -6,7 +6,7 @@
 	width: 500px;
 	text-align: left;
 	padding: 25px;
-	background: #6D8AA8;
+	background: #ccc;
 	/* border-top: 1px solid #1F0E1E; */
 	clear: both;
 	background-position: bottom;
@@ -34,34 +34,17 @@
 }
 
 #wrapper label {
-	color: #365F89;
+	color: gray;
 	font-weight: bold;
 	display: block;
-}
-
-.buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
-	font: bold 11px/ normal Tahoma, Verdana;
-	margin-top: 10px;
-	padding: 4px;
-}
-
-.buttonfield:hover,.buttonfield:focus {
-	background: #000;
-	border: solid 1px #fff;
-	color: #fff;
-	cursor: pointer;
 }
 
 #wait {
 	text-align: center;
 	font-size: 10px;
-	background: #6D8AA8;
+	background: gray;
 	color: #fff;
 	padding: 3px 25px 3px 25px;
 	width: 500px;
-	background: #6D8AA8;
 }
 

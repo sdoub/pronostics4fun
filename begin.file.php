@@ -92,7 +92,7 @@ setlocale (LC_TIME, 'fr_FR.utf8','fra');
 //TODO: Créer une session pour stocker la session courante
 //if (isset($_GET["BetaEuro"]) || isset($_GET["BetaCDM"])) {
 	DEFINE ('COMPETITION','11');
-	$_themePath = "/themes/LIGUE1";
+	$_themePath = "/themes/LIGUE1_2016";
 	$_competitionType =1;
 	$_competitionName="Ligue 1";
 /*} else {

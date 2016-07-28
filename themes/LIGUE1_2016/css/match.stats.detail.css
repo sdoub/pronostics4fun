@@ -102,32 +102,32 @@
 
 .divPopup .teamRankings .home table .points {
 	width: 25px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .home table .goals {
 	width: 25px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .home table .goalsAgainst {
 	width: 25px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .home table .goalsHome {
 	width: 40px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .home table .goalsAgainstHome {
 	width: 40px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .home table .content {
@@ -138,7 +138,7 @@
 }
 
 .divPopup .teamRankings .home table .content td {
-	border-left: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .away {
@@ -176,32 +176,32 @@
 
 .divPopup .teamRankings .away table .points {
 	width: 25px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .away table .goals {
 	width: 25px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .away table .goalsAgainst {
 	width: 25px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .away table .goalsAway {
 	width: 40px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .away table .goalsAgainstAway {
 	width: 40px;
-	border-left: 1px solid #4F74A0;
-	border-bottom: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
 }
 
 .divPopup .teamRankings .away table .content {
@@ -212,7 +212,7 @@
 }
 
 .divPopup .teamRankings .away table .content td {
-	border-left: 1px solid #4F74A0;
+	border-left: 1px solid lightgray;
 }
 
 .divPopup .previousMatch {
@@ -286,9 +286,9 @@
 .divPopup .history table .title {
 	font-size: 12px;
 	text-align: center;
-	background-color: #D7E1F6;
-	color: #365F89;
+	color: #fff;
 	font-weight: bold;
+	background-color: #313a59;
 }
 
 .divPopup .history table .title .homeAway {

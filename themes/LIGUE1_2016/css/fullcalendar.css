@@ -246,8 +246,8 @@ table.fc-header {
 .fc-agenda .ToBeDone0,
 .ToBeDone0 a {
 	border-style: solid; 
-	border-color: #365F89;     /* default BORDER color (probably the same as background-color) */
-	background-color: #365F89; /* default BACKGROUND color */
+	border-color: #313a59;     /* default BORDER color (probably the same as background-color) */
+	background-color: #313a59; /* default BACKGROUND color */
 	color: #fff ;            /* default TEXT color */
 	}
 .ToBeDone0 .fc-event-title {
@@ -258,20 +258,20 @@ table.fc-header {
 .fc-agenda .AlreadyDone0  ,
 .AlreadyDone0 a {
 	border-style: solid; 
-	border-color: #365F89;     /* default BORDER color (probably the same as background-color) */
+	border-color: #313a59;     /* default BORDER color (probably the same as background-color) */
 	background-color: #f8f0e5; /* default BACKGROUND color */
-	color: #365F89 ;            /* default TEXT color */
+	color: #313a59 ;            /* default TEXT color */
 	}
 
 .AlreadyDone0 .fc-event-title {
-	color: #365F89 ;
+	color: #313a59 ;
 	}
 
 .TooLate0,
 .fc-agenda .TooLate0  ,
 .TooLate0 a {
 	border-style: solid; 
-	border-color: #365F89;     /* default BORDER color (probably the same as background-color) */
+	border-color: #313a59;     /* default BORDER color (probably the same as background-color) */
 	background-color: #cccccc; /* default BACKGROUND color */
 	color: #484747;            /* default TEXT color */
 	}
@@ -284,8 +284,8 @@ table.fc-header {
 .fc-agenda .ToBeDone1,
 .ToBeDone1 a {
 	border-style: solid; 
-	border-color: #365F89;     /* default BORDER color (probably the same as background-color) */
-	background: url("../images/star_15_20px.png") no-repeat scroll right top #365F89;
+	border-color: #313a59;     /* default BORDER color (probably the same as background-color) */
+	background: url("../images/star_15_20px.png") no-repeat scroll right top #313a59;
 	color: #fff ;            /* default TEXT color */
 	}
 .ToBeDone1 .fc-event-title {
@@ -296,20 +296,20 @@ table.fc-header {
 .fc-agenda .AlreadyDone1  ,
 .AlreadyDone1 a {
 	border-style: solid; 
-	border-color: #365F89;     /* default BORDER color (probably the same as background-color) */
+	border-color: #313a59;     /* default BORDER color (probably the same as background-color) */
 	background: url("../images/star_15_20px.png") no-repeat scroll right top #f8f0e5;
-	color: #365F89 ;            /* default TEXT color */
+	color: #313a59 ;            /* default TEXT color */
 	}
 
 .AlreadyDone1 .fc-event-title {
-	color: #365F89 ;
+	color: #313a59 ;
 	}
 
 .TooLate1,
 .fc-agenda .TooLate1  ,
 .TooLate1 a {
 	border-style: solid; 
-	border-color: #365F89;     /* default BORDER color (probably the same as background-color) */
+	border-color: #313a59;     /* default BORDER color (probably the same as background-color) */
 	background: url("../images/star_15_20px.png") no-repeat no-scroll right top #cccccc;
 	color: #484747;            /* default TEXT color */
 	}
@@ -353,7 +353,7 @@ table.fc-header {
 	}
 
 .fc-event-title:hover {
-	color: #D7E1F6;
+	color: lightgray;
 	}
 	
 /* for fake rounded corners */

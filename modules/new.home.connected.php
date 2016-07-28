@@ -606,19 +606,19 @@ foreach ($rowsSet as $rowSet)
 
 
 
-		echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel coupe P4F - '.$cupMatch->getCupMatchesCupRound()->getDescription().'</span><br/>';
+		echo '<span style="color:#313a59;font-weight:bold;height:10px;">Duel coupe P4F - '.$cupMatch->getCupMatchesCupRound()->getDescription().'</span><br/>';
 		//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
-		echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : '.$cupMatch->getCupMatchesGroup()->getDescription().'</span>';
+		echo '<span style="color:#313a59;font-size:9px;padding-left:20px;">Ligue 1 : '.$cupMatch->getCupMatchesGroup()->getDescription().'</span>';
 		if ($opponent) {
-			echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
-			<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
+			echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Adversaire : </span>
+			<span style="font-size:10px;color:#313a59;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
 		} else {
-			echo "<br/><span style='color:#365F89;padding-left:5px;font-size:10px;'>Adversaire : </span>
-			<span style='font-size:10px;color:#365F89;font-weight:bold;'>Pas d'adversaire</span>";
+			echo "<br/><span style='color:#313a59;padding-left:5px;font-size:10px;'>Adversaire : </span>
+			<span style='font-size:10px;color:#313a59;font-weight:bold;'>Pas d'adversaire</span>";
 		}
-		echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
-		<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playerScore.' pts</span><br/>
-		<span style="font-style:italic;color:#365F89;padding-left:15px;font-size:10px;">-> '.$matchResult.'</span>';
+		echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Score :</span>
+		<span style="font-size:10px;color:#313a59;font-weight:bold;">'.$playerScore.' pts</span><br/>
+		<span style="font-style:italic;color:#313a59;padding-left:15px;font-size:10px;">-> '.$matchResult.'</span>';
 		//echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
 		//<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
 		//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
@@ -687,14 +687,14 @@ foreach ($rowsSet as $rowSet)
 		} else {
 			$matchResult = "Match nul";
 		}
-		echo '<span style="color:#365F89;font-weight:bold;height:10px;">Duel P4F - '.$division->getCode().'</span><br/>';
+		echo '<span style="color:#313a59;font-weight:bold;height:10px;">Duel P4F - '.$division->getCode().'</span><br/>';
 		//$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
-		echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">Ligue 1 : '.$match->getDivisionMatchesGroup()->getDescription().'</span>';
-		echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Adversaire : </span>
-		<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
-		echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score :</span>
-		<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playerScore.' pts</span>
-		<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:10px;">-> '.$matchResult.'</span>';
+		echo '<span style="color:#313a59;font-size:9px;padding-left:20px;">Ligue 1 : '.$match->getDivisionMatchesGroup()->getDescription().'</span>';
+		echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Adversaire : </span>
+		<span style="font-size:10px;color:#313a59;font-weight:bold;">'.$opponent.' ('.$opponentScore.' pts)</span>';
+		echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Score :</span>
+		<span style="font-size:10px;color:#313a59;font-weight:bold;">'.$playerScore.' pts</span>
+		<span style="font-style:italic;color:#313a59;padding-left:5px;font-size:10px;">-> '.$matchResult.'</span>';
 		//echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
 		//<span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
 		//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
@@ -801,15 +801,15 @@ AND playergroupresults.GroupKey=groups.PrimaryKey) WinnerScore */
 	$rankWording .='</sup>';
 	
 	
-  echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
-	$players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
-  echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted . $players .'</span>';
-  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Score : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$groupScore.'</span>';
-  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Vainqueur : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$playergroupranking->getPlayerRanking()->getNickName().' ('.$winnerScore.'pts)</span>';
-  echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Classement général : </span>
-  <span style="font-size:10px;color:#365F89;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
+  echo '<span style="color:#313a59;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
+	$players = '<span style="color:#313a59;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . ' participants)</span>';
+  echo '<span style="color:#313a59;font-size:9px;padding-left:20px;">' . $groupDateFormatted . $players .'</span>';
+  echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Score : </span>
+  <span style="font-size:10px;color:#313a59;font-weight:bold;">'.$groupScore.'</span>';
+  echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Vainqueur : </span>
+  <span style="font-size:10px;color:#313a59;font-weight:bold;">'.$playergroupranking->getPlayerRanking()->getNickName().' ('.$winnerScore.'pts)</span>';
+  echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Classement général : </span>
+  <span style="font-size:10px;color:#313a59;font-weight:bold;">'.$rowSet["GlobalRank"].$rankWording.'</span><br/>';
 	//<span style="font-style:italic;color:#365F89;padding-left:5px;font-size:8px;">'.$variationRank.'</span>
 	echo '</li>';
 	
@@ -822,7 +822,7 @@ echo "</ul>";
 if ($_competitionType==3) {
   echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#1B3D1C;'>Aucun résultats !</div>";
 } else {
-  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>Aucun résultats !</div>";
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#313a59;'>Aucun résultats !</div>";
   }
 }
 ?>
@@ -951,32 +951,32 @@ foreach ($rowsSet as $rowSet)
   if ($rowSet["unixBeginDate"]==0){
     $groupDateFormatted ="";
   }
-  echo '<span style="color:#365F89;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
+  echo '<span style="color:#313a59;font-weight:bold;">'  . $rowSet["Description"] . '</span><br/>';
   $players = "";
 	if ($rowSet["Status"]>0) {
-	  $players = '<span style="color:#365F89;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . __encode(" participants") . ')</span>';
+	  $players = '<span style="color:#313a59;padding-left:5px;font-size:9px;">(' . $rowSet["players"] . __encode(" participants") . ')</span>';
   }
 
-	echo '<span style="color:#365F89;font-size:9px;padding-left:20px;">' . $groupDateFormatted .$players. '</span><br/>';
-  echo '<span style="color:#365F89;padding-left:5px;font-size:10px;">Pronostics : </span>
+	echo '<span style="color:#313a59;font-size:9px;padding-left:20px;">' . $groupDateFormatted .$players. '</span><br/>';
+  echo '<span style="color:#313a59;padding-left:5px;font-size:10px;">Pronostics : </span>
   <span style="font-size:10px;color:'.$colorStatus.'">'.$groupStatus.'</span>';
   if ($rowSet["Status"]>0) {
-    echo '<span title="'.__encode("Match pronostiqué / Pronostics ouvert").'" style="font-size:10px;color:#365F89;">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
+    echo '<span title="Match pronostiqué / Pronostics ouvert" style="font-size:10px;color:#313a59;">('. $rowSet["forecasts"] . "/" . $rowSet["OpenedMatch"] . ')</span>';
   }
   if ($rowSet["forecasts"] != $rowSet["OpenedMatch"] && $rowSet["RemainingDays"]<=2 && $rowSet["unixBeginDate"]!=0) {
-    echo '<span title="'. __encode("Moins de 2 jours pour donner vos pronostics!") . '" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+    echo '<span title="Moins de 2 jours pour donner vos pronostics!" style="width:20px;height:20px;background:url(\''. ROOT_SITE . '/images/warning.small.png\') no-repeat scroll left top transparent;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
   }
 	if ($rowSet["P4FChpHomeKey"] || $rowSet["P4FCupHomeKey"]) {
 		$P4FSeason = $rowSet["P4FChpSeason"] ? $rowSet["P4FChpSeason"] : $rowSet["P4FCupSeason"];
-		echo '<br/><span style="color:#365F89;padding-left:5px;font-size:10px;">Duel P4F ('.$P4FSeason.'): </span>';
+		echo '<br/><span style="color:#313a59;padding-left:5px;font-size:10px;">Duel P4F ('.$P4FSeason.'): </span>';
 	}
 	if ($rowSet["P4FChpHomeKey"]) {
 		$opponent = $_authorisation->getConnectedUserKey() == $rowSet["P4FChpHomeKey"] ? $rowSet["P4FChpAwayNickName"] : $rowSet["P4FChpHomeNickName"]; 
-		echo '<br/><span style="color:#365F89;padding-left:10px;font-size:10px;">Division ' . $rowSet["P4FChpDivisionKey"] .  " : <span style='font-weight:bold;'>". $opponent . '</span></span>';
+		echo '<br/><span style="color:#313a59;padding-left:10px;font-size:10px;">Division ' . $rowSet["P4FChpDivisionKey"] .  " : <span style='font-weight:bold;'>". $opponent . '</span></span>';
 	}
 	if ($rowSet["P4FCupHomeKey"]) {
 		$opponent = $_authorisation->getConnectedUserKey() == $rowSet["P4FCupHomeKey"] ? $rowSet["P4FCupAwayNickName"] : $rowSet["P4FCupHomeNickName"]; 
-		echo '<br/><span style="color:#365F89;padding-left:10px;font-size:10px;">Coupe - ' . $rowSet["P4FCupRound"] .  " : <span style='font-weight:bold;'>". $opponent . '</span></span>';
+		echo '<br/><span style="color:#313a59;padding-left:10px;font-size:10px;">Coupe - ' . $rowSet["P4FCupRound"] .  " : <span style='font-weight:bold;'>". $opponent . '</span></span>';
 	}
 	echo '</li>';
 }
@@ -985,7 +985,7 @@ echo "</ul>";
 if ($_competitionType==3) {
   echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#1B3D1C;'>La competition est terminée !</div>";
 } else {
-  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#365F89;'>La saison est terminée !</div>";
+  echo "<div style='font-size: 28px;font-weight:bold;text-align: center;padding-top: 60px;color:#313a59;'>La saison est terminée !</div>";
   }
 }
 ?>

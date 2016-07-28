@@ -33,12 +33,12 @@
 -------------------------------------- */
 
 .cluetip-default {
-  background-color: #d9d9c2;
+  background-color: lightgray;
 }
 .cluetip-default #cluetip-outer {
   position: relative;
   margin: 0;
-  background-color: #d9d9c2;
+  background-color: lightgray;
 }
 .cluetip-default h3#cluetip-title {
   margin: 0 0 5px;
@@ -95,7 +95,7 @@
 }
 .cluetip-p4f #cluetip-outer {
   position: relative;
-  background-color: #6D8AA8;
+  background-color: lightgray;
 }
 
 .cluetip-p4f h3#cluetip-title {

@@ -1,7 +1,7 @@
 .day {
 	font-size: 14px;
 	text-align: center;
-	background-color: #6D8AA8;
+	background-color: gray;
 	color: #FFFFFF;
 	font-weight: bold;
 }
@@ -153,23 +153,23 @@ table {
 }
 
 .forecastInput .textfield:hover,.forecastInput .textfield:focus {
-	background: #365F89;
-	border: solid 1px #365F89;
+	background: #313a59;
+	border: solid 1px #313a59;
 	color: #fff;
 }
 
 .buttonfield {
-	background: #365F89;
-	border: solid 1px #D7E1F6;
-	color: #FFFFFF;
+	background: lightgray;
+	border: solid 1px #313a59;
+	color: #313a59;
 	font: bold 11px/normal Tahoma, Verdana;
 	margin-top: 10px;
 	padding: 4px;
 }
 
 .buttonfield:hover,.buttonfield:focus {
-	background: #000;
-	border: solid 1px #fff;
+	background: gray;
+	border: solid 1px gray;
 	color: #fff;
 	cursor: pointer;
 }
@@ -188,28 +188,16 @@ input,select {
 	cursor: pointer;
 }
 
-#sameMatchHistory {
+#sameMatchHistory, #matchesHistory {
 	background: url(../../images/arrows.png) no-repeat
-		scroll top left #365F89;
-	background-position: 5px -47px;
+		scroll top left gray;
+	background-position: 5px -44px;
 }
 
-#matchesHistory {
+#sameMatchHistory.active, #matchesHistory.active {
 	background: url(../../images/arrows.png) no-repeat
-		scroll top left #365F89;
-	background-position: 5px -47px;
-}
-
-#sameMatchHistory.active {
-	background: url(../../images/arrows.png) no-repeat
-		scroll top left #365F89;
-	background-position: 5px -25px;
-}
-
-#matchesHistory.active {
-	background: url(../../images/arrows.png) no-repeat
-		scroll top left #365F89;
-	background-position: 5px -25px;
+		scroll top left gray;
+	background-position: 5px -24px;
 }
 
 .container-history {
@@ -262,7 +250,7 @@ input,select {
 	float: right;
 	margin-right: 10px;
 	font-size: 10px;
-	background: #365F89;
+	/*background: #365F89;*/
 }
 
 .onoffswitch {
@@ -274,7 +262,7 @@ input,select {
 }
 .onoffswitch-label {
 	display: block; overflow: hidden; cursor: pointer;
-	border: 1px solid #365F89; border-radius: 5px;
+	border: 1px solid #313a59; border-radius: 5px;
 }
 .onoffswitch-inner {
 	display: block; width: 200%; margin-left: -100%;
@@ -288,12 +276,12 @@ input,select {
 .onoffswitch-inner:before {
 	content: "OUI";
 	padding-left: 10px;
-	background-color: #6D8AA8; color: #FFFFFF;
+	background-color: gray; color: #FFFFFF;
 }
 .onoffswitch-inner:after {
 	content: "NON";
 	padding-right: 10px;
-	background-color: #D7E1F6; color: #365F89;
+	background-color: lightgray; color: #313a59;
 	text-align: right;
 }
 .onoffswitch-switch {
