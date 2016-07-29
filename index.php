@@ -80,7 +80,7 @@ if ($_SERVER['SERVER_NAME']=="preview.lcydfkcwzq3bx1orp5bkx9czikzc9pb9ldxe5deii3
 ?>
 <style>
 #header h1 a span {
-	background: url(<?php echo ROOT_SITE.$themePath; ?>/images/Logo.png) no-repeat scroll left top transparent;}
+	background: url(<?php echo ROOT_SITE; ?>/images/logodev.png) no-repeat scroll left top transparent;}
 </style>
 <?php }?>
 

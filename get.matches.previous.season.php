@@ -1,8 +1,7 @@
 #!/usr/local/bin/php
 <?php
 require_once(dirname(__FILE__)."/begin.file.php");
-require_once(BASE_PATH . "/lib/simple_html_dom.php");
-
+use Sunra\PhpSimple\HtmlDomParser;
 //$_databaseObject->close();
 $writeScript=true;
 
@@ -29,7 +28,7 @@ $writeScript=false;
 //     11 => "79");
 
     $arrSeasons = array(
-     15 => "83");
+     16 => "84");
 
     $arrGroups = array(
     1 => "1ère journée",
@@ -73,7 +72,26 @@ $writeScript=false;
 
 
     while (list ($Competitionkey, $lfpKey) = each ($arrSeasons)) {
+      $query = "SELECT COUNT(*) isExists
+            FROM competitions
+            WHERE PrimaryKey=".$Competitionkey;
 
+      $statement = $ligue1db->prepare($query);
+
+      $statement->execute();
+      $resultSet = $statement->fetchAll();
+
+      foreach($resultSet as $rowSet)
+      {
+        $isCompetitionExists =$rowSet["isExists"];
+      }
+			if ($isCompetitionExists==0) {
+				$query="INSERT INTO competitions (PrimaryKey,Name)
+					VALUES ($Competitionkey,'Ligue 1 - Saison 2015/2016')";
+				$statement = $ligue1db->prepare($query);
+				$statement->execute();
+				
+			}
       print($Competitionkey);
       print("<br/>");
 
@@ -93,7 +111,7 @@ $writeScript=false;
       {
         $numberOfDays =$rowSet["NumberOfDays"];
       }
-   print ($numberOfDays);
+      print ($numberOfDays);
       print ('<br/>');
       if ($numberOfDays==0) {
         print("Creation des groups");
@@ -128,7 +146,7 @@ $writeScript=false;
         //ligue1/competitionPluginCalendrierResultat/changeCalendrierJournee?sai=79&jour=2
         $url = "http://". EXTERNAL_WEB_SITE . "/ligue1/competitionPluginCalendrierResultat/changeCalendrierJournee?sai=$lfpKey&jour=$dayKey";
         print($url);
-        if ($html = file_get_html($url))
+        if ($html = HtmlDomParser::file_get_html($url,false,stream_context_create(array('http' => array('header'=>'Connection: close')))))
         {
           $scheduleDates = array();
           foreach($html->find('h4') as $h4) {
@@ -142,12 +160,12 @@ $writeScript=false;
               if ($rows->find('td',0)){
 
                 // Get "Feuille de match Id
-                $lfpUrl = split('/',$rows->find('td',0)->first_child ()->getAttribute("href"));
+                $lfpUrl = explode('/',$rows->find('td',0)->first_child ()->getAttribute("href"));
                 $lfpMatchKey = $lfpUrl[3];
 
-                $dateMatchArray = split('/',$scheduleDates[$currentTable]);
+                $dateMatchArray = explode('/',$scheduleDates[$currentTable]);
                 if (strpos($rows->find('td',0)->plaintext,":")!==false ) {
-                  $hourMatchArray = split(':',$rows->find('td',0)->plaintext);
+                  $hourMatchArray = explode(':',$rows->find('td',0)->plaintext);
                 } else {
                   $hourMatchArray = array();
                   $hourMatchArray[0] = 0;
@@ -158,9 +176,9 @@ $writeScript=false;
                 $scheduleDate = mktime((int)$hours, (int)$minutes, 0, (int)$dateMatchArray[1], (int)$dateMatchArray[0], (int)$dateMatchArray[2]);
 
                 if ($rows->find('td',2)->first_child()->hasAttribute("src")) {
-                  $lfpTeamHome = split('/',$rows->find('td',2)->first_child()->getAttribute("src"));
+                  $lfpTeamHome = explode('/',$rows->find('td',2)->first_child()->getAttribute("src"));
                 } else {
-                  $lfpTeamHome = split('/',$rows->find('td',2)->first_child()->first_child()->getAttribute("src"));
+                  $lfpTeamHome = explode('/',$rows->find('td',2)->first_child()->first_child()->getAttribute("src"));
                 }
                 $lfpTeamHomeKey = substr($lfpTeamHome[6], 0, -4);
                 $teamHomeKey = ConvertLfpKeyToP4F ($lfpTeamHomeKey);
@@ -173,9 +191,9 @@ $writeScript=false;
                 }
 
                 if ($rows->find('td',4)->first_child()->hasAttribute("src")) {
-                  $lfpTeamAway = split('/',$rows->find('td',4)->first_child()->getAttribute("src"));
+                  $lfpTeamAway = explode('/',$rows->find('td',4)->first_child()->getAttribute("src"));
                 } else {
-                  $lfpTeamAway = split('/',$rows->find('td',4)->first_child()->first_child()->getAttribute("src"));
+                  $lfpTeamAway = explode('/',$rows->find('td',4)->first_child()->first_child()->getAttribute("src"));
                 }
                 $lfpTeamAwayKey = substr($lfpTeamAway[6], 0, -4);
 
@@ -279,7 +297,7 @@ $writeScript=false;
 
       $urlToGetMatchInfo = "http://" .EXTERNAL_WEB_SITE . "/ligue1/feuille_match/$_externalKey";
       echo "<br/>" . $urlToGetMatchInfo;
-      if ($htmlMatch = file_get_html($urlToGetMatchInfo)){
+      if ($htmlMatch = HtmlDomParser::file_get_html($urlToGetMatchInfo,false,stream_context_create(array('http' => array('header'=>'Connection: close'))))){
 
         $liveStatus = 10;
         $actualTime = "90";
