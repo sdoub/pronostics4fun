@@ -41,7 +41,7 @@ WHERE players.ReceiveResult=1
 
   while ($rowSet = $_databaseObject -> fetch_assoc ($resultSet)) {
     $playerKey="";
-    if ($rowSet["PlayerKey"]) {
+    if ($rowSet["GroupKey"]) {
       $playerKey = $rowSet["PlayerKey"];
       echo "email to : ". $rowSet["NickName"]."<br/>";
       $mail             = new P4FMailer();
