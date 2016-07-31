@@ -77,7 +77,7 @@ WHERE players.ReceiveResult=1
 
         $mail->AddAddress($address, $nickName);
 
-        $mail->AddAttachment("images/Logo.png");      // attachment
+        //$mail->AddAttachment("images/Logo.png");      // attachment
 
         $mail->Send();
         echo "Message sent to $nickName!<br/>";

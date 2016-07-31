@@ -270,12 +270,12 @@ class Authorization
     {
       $activationKey = generatePassword(15,4);
       //INSERT INTO `pronostics4fun`.`players` (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`) VALUES (NULL, 'sdoub', 'S?bastien', 'Dubuc', 'sebastien.dubuc@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '0');
-      $sql = "INSERT INTO players (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`, AvatarName, ActivationKey, CreationDate)";
+      $sql = "INSERT INTO players (`NickName`, `FirstName`, `LastName`, `EmailAddress`, `Password`, `IsAdministrator`, AvatarName, ActivationKey, CreationDate, IsResultEmailSent)";
       $sql .= "VALUES ('". mysql_real_escape_string(__encode($nickName))."',
       '".mysql_real_escape_string($firstName)."',
       '".mysql_real_escape_string($lastName)."',
       '".mysql_real_escape_string($email)."',
-      '".md5(mysql_real_escape_string($password))."', '0', '', '" . $activationKey . "',CURRENT_DATE())";
+      '".md5(mysql_real_escape_string($password))."', '0', '', '" . $activationKey . "',CURRENT_DATE(),1)";
       if(!$_databaseObject->queryPerf($sql,"Account creation"))
       {
         return false;
