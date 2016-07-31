@@ -64,7 +64,7 @@ label.read { /* background: #b3a58f; */
 
 #containerTitle {
 	background: url('../../images/account.password.png') no-repeat scroll
-		left top #D7E1F6;
+		left top lightgray;
 	height: 360px;
 	margin-bottom: 30px;
 	_width: 920px;
@@ -88,7 +88,7 @@ label.read { /* background: #b3a58f; */
 	position: absolute;
 	left: 170px;
 	top: 45px;
-	background-color: #6D8AA8;
+	background-color: gray;
 	height: 275px;
 	width: 670px;
 }

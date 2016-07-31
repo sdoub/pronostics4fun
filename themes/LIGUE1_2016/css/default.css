@@ -49,14 +49,14 @@
 /* - END -- ScrollBar color for Chrome, Safari ---- */
 	/* - START -- ScrollBar color for IE ---- */
 html {
-	scrollbar-base-color: #d6e1f5;
-	scrollbar-arrow-color: #6D8AA8;
-	scrollbar-track-color: #6D8AA8;
-	scrollbar-shadow-color: #6D8AA8;
-	scrollbar-lightshadow-color: #d6e1f5;
-	scrollbar-darkshadow-color: #d6e1f5;
-	scrollbar-highlight-color: #d6e1f5;
-	scrollbar-3dlight-color: #d6e1f5;
+	scrollbar-base-color: lightgray;
+	scrollbar-arrow-color: gray;
+	scrollbar-track-color: gray;
+	scrollbar-shadow-color: gray;
+	scrollbar-lightshadow-color: lightgray;
+	scrollbar-darkshadow-color: lightgray;
+	scrollbar-highlight-color: lightgray;
+	scrollbar-3dlight-color: lightgray;
 }
 
 /* - END -- ScrollBar color for IE ---- */
@@ -416,7 +416,7 @@ h6 {
 }
 
 div.title {
-	color: #365F89;
+	color: #313a59;
 	font-size: 14px;
 	font-weight: bold;
 	margin-bottom: 7px;
