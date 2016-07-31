@@ -3,25 +3,25 @@
 .jspVerticalBar,
 .jspTrack
 {
-	background: #D7E1F6;
+	background: lightgray;
 }
 
 .jspDrag
 {
-	background:  #6D8AA8;
+	background: gray;
 }
 
 .jspTrack .jspActive,
 .jspTrack .jspHover,
 .jspDrag:hover
 {
-	background: #365f89;
+	background: gray;
 }
 
 
 .jspArrow
 {
-	background: url('./custom-theme/images/ui-icons_365f89_256x240.png') no-repeat;
+	background: url('./custom-theme/images/ui-icons_808080_256x240.png') no-repeat;
 	
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
@@ -31,7 +31,7 @@
 .jspVerticalBar>.jspActive,
 .jspArrow:hover
 {
-	background-image: url('./custom-theme/images/ui-icons_d7e1f6_256x240.png');
+	background-image: url('./custom-theme/images/ui-icons_ccc_256x240.png');
 }
 
 .jspVerticalBar>.jspDisabled,
@@ -40,7 +40,7 @@
 .jspHorizontalBar>.jspDisabled:hover
 {
 	background-color: transparent;
-	background-image: url('./custom-theme/images/ui-icons_469bdd_256x240.png');
+	background-image: url('./custom-theme/images/ui-icons_365f89_256x240.png');
 }
 
 .jspVerticalBar .jspArrow
