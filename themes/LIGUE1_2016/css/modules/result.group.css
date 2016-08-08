@@ -274,15 +274,15 @@ color:#cccccc;
 
 /*node2*/
 .node2 .head {
-	background-color: #6D8AA8;
+	background-color: #313a59;
 	background-position: right -84px;
 }
 
 #mod-classements h4 {
 	font-size: 12px;
 	font-weight: bold;
-	background-color: #6D8AA8;
-	padding: 10px 5px 0px 50px;
+	background-color: #313a59;
+	padding: 8px 5px 0px 50px;
 	font-family: Georgia;
 	text-transform: uppercase;
 }
@@ -389,20 +389,7 @@ color:#cccccc;
 	background-position: -70px -214px;
 }
 
-#rankSpan {
-background-color:#365F89;
-border:1px solid #FFFFFF;
-color:#FFFFFF;
-float:left;
-font-family:tahoma;
-font-size:10px;
-font-weight:bold;
-margin-left:2px;
-margin-right:5px;
-padding:2px 2px 4px 1px;
-text-align:center;
-width:18px;
-}
+#rankSpan {background-color: #313a59;border:1px solid #FFFFFF;color:#FFFFFF;float:left;font-family:tahoma;font-size:10px;font-weight:bold;margin-left:2px;margin-right:5px;padding:2px 2px 4px 1px;text-align:center;width:18px;}
 
 #mod-classements p {
 padding :0 10px 0 10px
@@ -464,12 +451,12 @@ z-index:999;
 }
 
 .resultRow {
-	background-color: #D7E1F6;
-	color: #365F89;
+	background-color: lightgray;
+	color: #313a59;
 }
 
 .resultRowOdd {
-	background-color: #6D8AA8;
+	background-color: gray;
 	color: #FFFFFF;
 }
 

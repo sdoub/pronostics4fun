@@ -1,9 +1,9 @@
 ul.token-input-list-p4f {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 1%;
     width: 400px;
-    /* border: 1px solid #365F89;*/
+    border: 1px solid #313a59;
     cursor: text;
     font-size: 12px;
     font-family: Verdana, sans-serif;
@@ -11,7 +11,7 @@ ul.token-input-list-p4f {
     z-index: 999;
     margin: 0;
     padding: 0;
-    background-color: #D7E1F6;
+    background-color: lightgray;
     list-style-type: none;
     clear: left;
 }
@@ -20,21 +20,21 @@ ul.token-input-list-p4f li input {
     border: 0;
     width: 100px;
     padding: 3px 8px;
-    background-color: #D7E1F6;
+    background-color: lightgray;
     margin: 2px 0;
     -webkit-appearance: caret;
 }
 
 li.token-input-token-p4f {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 15px;
     margin: 3px;
     padding: 1px 3px;
-    background-color: #6D8AA8;
+    background-color: gray;
     color: #000;
     cursor: default;
-    border: 1px solid #365F89;
+    border: 1px solid #313a59;
     font-size: 11px;
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -50,7 +50,7 @@ li.token-input-token-p4f p {
 }
 
 li.token-input-token-p4f span {
-    color: #a6b3cf;
+    color: #313a59;
     margin-left: 5px;
     font-weight: bold;
     cursor: pointer;
