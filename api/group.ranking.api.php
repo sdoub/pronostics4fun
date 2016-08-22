@@ -1,5 +1,5 @@
 <?php
-class playersapi extends baseapi
+class grouprankingapi extends baseapi
 {
     protected $User;
 
@@ -19,25 +19,37 @@ class playersapi extends baseapi
 // 				$this->User = $this->args["id"];
     }
 
-    protected function players() {
+    protected function groupranking() {
 			return $this->Call();
     }
 	
 		public function GetCall() {
-			global $defaultLogger;
-			$defaultLogger->addInfo(implode($this->args));
+			if (array_key_exists('day', $this->args)) {
+				
+			
 			if (array_key_exists('id', $this->args)) {
-				$q = new PlayersQuery();
-				$firstPlayer = $q->findPK($this->args["id"]);
 				$this->toBeEncoded = false;
-				return $firstPlayer->toJson();
+				
+				return PlayergrouprankingQuery::create()
+				->filterByPlayerkey($this->args["id"])
+				->orderByRankdate('desc')
+				->orderByRank()
+			  ->limit(1)
+				->findByCompetitionkey(11)
+				->toJson();
+				
+// 				$q = new PlayersQuery();
+// 				$firstPlayer = $q->findPK($this->args["id"]);
+// 				$this->toBeEncoded = false;
+// 				return $firstPlayer->toJson();
 			}
 			else {
 				$this->toBeEncoded = false;
-				return PlayersQuery::create()
-				->orderByNickname()
-				->limit(10)
-				->find()
+				return PlayergrouprankingQuery::create()
+				->orderByRankdate('desc')
+				->orderByRank()
+			  ->limit(10)
+				->findByCompetitionkey(11)
 				->toJson();
 			}
 		}  

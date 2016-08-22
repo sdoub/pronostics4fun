@@ -60,6 +60,10 @@ $uri = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 		$r->addRoute('GET', '/api/v1/players', 'players');
 		$r->addRoute('GET', '/api/v1/players/{id:\d+}', 'players');
+		$r->addRoute('GET', '/api/v1/ranking', 'globalranking');
+		$r->addRoute('GET', '/api/v1/ranking/{id:\d+}', 'globalranking');
+		$r->addRoute('GET', '/api/v1/groupranking/{day:\d+}', 'groupranking');
+		$r->addRoute('GET', '/api/v1/groupranking/{day:\d+}/{id:\d+}', 'groupranking');
 		$r->addRoute('GET', '/api/v1/login', 'login');
 		$r->addRoute('POST', '/api/v1/login', 'login');
 });
@@ -92,7 +96,7 @@ switch ($routeInfo[0]) {
 						$instanceApi = APIFactory::create($routeInfo[1], $_REQUEST['request'], $vars, $_SERVER['HTTP_ORIGIN']);
 						echo $instanceApi->processAPI();
 				} catch (Exception $e) {
-						echo json_encode(Array('error' => $e->getMessage()));
+					echo json_encode(Array('error' => $e->getMessage()));
 				}
 				break;
 }
