@@ -144,24 +144,24 @@ color:#EF6868;
 color:#96EF95;
 }
 .NotStarted {
-color:#cccccc;
+color:#808080;
 }
 
 
 .resultRow {
-	background-color: #D7E1F6;
-	color: #365F89;
+	background-color: lightgray;
+	color: #313a59;
 }
 
 .resultRowOdd {
-	background-color: #6D8AA8;
+	background-color: darkgray;
 	color: #FFFFFF;
 }
 
 .liveStatusMatchDetail {
 	width: 79px;
 	height: 15px;
-	background: none repeat scroll 0 0 #365F89;
+	background: none repeat scroll 0 0 #313a59;
 	border: 1px solid #D7E1F6;
 	color: #FFFFFF;
 	font: bold 9px Tahoma, Verdana;
@@ -172,22 +172,22 @@ color:#cccccc;
 }
 
 	#cupContainer {
-		background-color:#D7E1F6;
+		background-color:lightgray;
 		width:940px;
 		height:550px;
 	}
 	#cupHeader {
-		background-color:#6D8AA8;
+		background-color:#313a59;
 		color:#ffffff;
 		font-weight:bold;
 		width:940px;
 		height:40px;
 		margin-top:5px;
 		/*margin-bottom:5px;*/
-		border-bottom:1px solid #365F89;
+		border-bottom:1px solid #313a59;
 	}
 	#cupHeader .disable {
-		color:#cccccc;
+		color:#808080;
 	}
 	
 	#cupHeader a {
@@ -226,7 +226,7 @@ color:#cccccc;
 		padding-top:10px;
 	}
 	.odd .first {
-		border-bottom:1px solid #cccccc;height: 35px;
+		border-bottom:1px solid #808080;height: 35px;
 	}
 	.odd .second {
 		padding-top:10px;
@@ -245,7 +245,7 @@ color:#cccccc;
 		font-size:14px;font-weight:bold;float:right;margin-right:20px;
 	}
 	.opponent {
-		width:600px;border-top:1px solid #cccccc;height:35px;padding-top:5px;border-right:1px solid #cccccc;
+		width:600px;border-top:1px solid #808080;height:35px;padding-top:5px;border-right:1px solid #808080;
 	}
 	.loser {
 		color:#848484;
@@ -261,7 +261,7 @@ color:#cccccc;
 	}
 
 	.odd .first {
-		border-right:1px solid #cccccc;
+		border-right:1px solid #808080;
 	}
 	.odd .opponent {
 		border-right:0;
@@ -281,15 +281,15 @@ color:#cccccc;
 		padding-top: 0;
 	}
 	.oneMatch .winner a {
-		background-color: #D7E1F6;
+		background-color: lightgray;
 		padding: 5px 10px;
 	}
 	.odd .winner {
 		padding-top: 10px;
-		border-top: 1px solid #cccccc;
+		border-top: 1px solid #808080;
 	}
 	.oneMatch .spacerRight {
-		border-bottom: 1px solid #cccccc;
+		border-bottom: 1px solid #808080;
 		padding-top: 10px;
 	}
 	.oneMatch .winner {
