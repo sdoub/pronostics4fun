@@ -321,7 +321,8 @@ function ConvertLfpKeyToP4F($lfpKey) {
 	546836 => 79,
 	"508009_bastia" => 66,
 	"500075_caen" => 54,
-	"Nancy_logo" => 45
+	"Nancy_logo" => 45,
+	"logo_metz_500154"=>77
   );
 
   if (array_key_exists($lfpKey,$arrlfpKeys)) {
