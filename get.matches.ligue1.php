@@ -53,7 +53,7 @@ foreach ($rowsSet as $rowSet)
       foreach($html->find('table') as $table) {
         foreach($table->find('tbody tr') as $rows) {
 
-          if ($rows->find('td',0)){
+          if ($rows->find('td',0) && $rows->find('td',0)->first_child ()){
             $isMatchReported = false;
             // Get "Feuille de match Id
             $lfpUrl = explode ('/',$rows->find('td',0)->first_child ()->getAttribute("href"));
